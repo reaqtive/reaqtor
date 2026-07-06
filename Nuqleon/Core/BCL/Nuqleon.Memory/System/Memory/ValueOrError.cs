@@ -33,8 +33,7 @@ namespace System.Memory
         /// <returns>An object representing the specified <paramref name="exception"/>.</returns>
         public static IValueOrError<T> CreateError<T>(Exception exception)
         {
-            if (exception == null)
-                throw new ArgumentNullException(nameof(exception));
+            ArgumentNullException.ThrowIfNull(exception);
 
             return new ValueOrErrorError<T>(ExceptionDispatchInfo.Capture(exception));
         }

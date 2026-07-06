@@ -133,7 +133,7 @@ namespace Reaqtor.QueryEngine
 
             if (de1 != 0xDE || de2 != 0xDE || ad1 != 0xAD || ad2 != 0xAD)
             {
-                throw MissingTerminator(position, new[] { de1, ad1, de2, ad2 });
+                throw MissingTerminator(position, [de1, ad1, de2, ad2]);
             }
         }
 

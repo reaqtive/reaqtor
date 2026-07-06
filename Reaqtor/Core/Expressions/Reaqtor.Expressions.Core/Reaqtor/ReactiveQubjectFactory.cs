@@ -38,10 +38,8 @@ namespace Reaqtor.Expressions.Core
         /// <returns>Instance of a subject factory with the specified expression tree as its representation.</returns>
         public static IReactiveQubjectFactory<TInput, TOutput> MakeQubjectFactory<TInput, TOutput>(this IReactiveQueryProvider provider, Expression<Func<IReactiveQubjectFactory<TInput, TOutput>>> expression)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(expression);
 
             return provider.CreateQubjectFactory<TInput, TOutput>(expression.Body);
         }
@@ -57,10 +55,8 @@ namespace Reaqtor.Expressions.Core
         /// <returns>Instance of a parameterized subject factory with the specified expression tree as its representation.</returns>
         public static IReactiveQubjectFactory<TInput, TOutput, TArg> MakeQubjectFactory<TArg, TInput, TOutput>(this IReactiveQueryProvider provider, Expression<Func<IReactiveQubjectFactory<TInput, TOutput, TArg>>> expression)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(expression);
 
             return provider.CreateQubjectFactory<TArg, TInput, TOutput>(expression.Body);
         }

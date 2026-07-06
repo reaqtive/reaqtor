@@ -25,11 +25,11 @@ namespace Tests.System.Linq.CompilerServices
         public void TypeBasedExpressionRewriter_ArgumentChecking()
         {
             var rewriter = new TypeBasedExpressionRewriter();
-            Assert.ThrowsException<ArgumentNullException>(() => rewriter.Add(type: null, e => e));
-            Assert.ThrowsException<ArgumentNullException>(() => rewriter.AddDefinition(type: null, e => e));
-            Assert.ThrowsException<ArgumentNullException>(() => rewriter.Add(typeof(int), rewriter: null));
-            Assert.ThrowsException<ArgumentNullException>(() => rewriter.AddDefinition(typeof(List<>), rewriter: null));
-            Assert.ThrowsException<ArgumentException>(() => rewriter.AddDefinition(typeof(int), e => e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => rewriter.Add(type: null, e => e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => rewriter.AddDefinition(type: null, e => e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => rewriter.Add(typeof(int), rewriter: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => rewriter.AddDefinition(typeof(List<>), rewriter: null));
+            Assert.ThrowsExactly<ArgumentException>(() => rewriter.AddDefinition(typeof(int), e => e));
         }
 
         [TestMethod]

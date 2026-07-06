@@ -30,8 +30,8 @@ namespace Tests
             var testSerializer = new TestSerializer();
             var bonsai = testSerializer.Serialize(testSerializer.Lift(Expression.Constant(42)));
 
-            Assert.ThrowsException<NotImplementedException>(() => serializer.Serialize(serializer.Lift(Expression.Constant(42))));
-            Assert.ThrowsException<NotImplementedException>(() => serializer.Reduce(serializer.Deserialize(bonsai)));
+            Assert.ThrowsExactly<NotImplementedException>(() => serializer.Serialize(serializer.Lift(Expression.Constant(42))));
+            Assert.ThrowsExactly<NotImplementedException>(() => serializer.Reduce(serializer.Deserialize(bonsai)));
         }
 
         [TestMethod]
@@ -74,9 +74,7 @@ namespace Tests
 
             static string StripMscorlib(string bonsai) =>
                 bonsai
-                .Replace("mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "STD")
-                .Replace("System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD")
-                .Replace("System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD");
+                .Replace("System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD");
         }
 
         [TestMethod]

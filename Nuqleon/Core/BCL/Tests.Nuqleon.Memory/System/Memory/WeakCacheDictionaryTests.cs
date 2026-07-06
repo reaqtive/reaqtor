@@ -9,7 +9,9 @@
 //
 
 using System;
+#if DEBUG
 using System.Linq;
+#endif
 using System.Memory;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -47,7 +49,7 @@ namespace Tests
             Assert.AreEqual(3, n);
 
 #if DEBUG
-            Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(new[] { "bar", "foo" }));
+            Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo"]));
 #endif
         }
 
@@ -86,14 +88,10 @@ namespace Tests
             {
                 Assert.IsTrue(GetOrAdd(cd).Contains("Obj"));
 
-                // NB: This has shown to be flaky on Mono.
-                if (Type.GetType("Mono.Runtime") == null)
-                {
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
-                    Assert.AreEqual(i, Obj.FinalizeCount - initial);
-                }
+                Assert.AreEqual(i, Obj.FinalizeCount - initial);
             }
         }
 

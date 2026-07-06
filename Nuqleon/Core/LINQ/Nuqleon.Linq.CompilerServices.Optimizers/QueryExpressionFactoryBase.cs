@@ -140,11 +140,9 @@ namespace System.Linq.CompilerServices.Optimizers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected static void RequireTypesAssignable(Type left, Type right, string paramName)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
+            ArgumentNullException.ThrowIfNull(left);
 
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(right);
 
             if (!left.IsAssignableFrom(right))
                 throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, "Type {0} is not assignable from type {1}.", left, right), paramName);

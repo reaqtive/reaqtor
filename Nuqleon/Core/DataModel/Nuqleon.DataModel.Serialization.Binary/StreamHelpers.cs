@@ -326,7 +326,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="value">Boolean value to write to the stream.</param>
-        public static unsafe void WriteBoolean(this Stream stream, bool value)
+        public static void WriteBoolean(this Stream stream, bool value)
         {
             var array = value ? s_trueBool : s_falseBool;
             stream.Write(array, 0, 1);

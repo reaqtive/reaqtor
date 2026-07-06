@@ -18,7 +18,7 @@ namespace Test.Reaqtive
         [TestMethod]
         public void ItemProcessingTask_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ItemProcessingTask(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ItemProcessingTask(null));
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ namespace Test.Reaqtive
             public int ItemCount { get; private set; }
 
             private int _index;
-            public ManualResetEvent[] Events = new[] { new ManualResetEvent(false), new ManualResetEvent(false) };
+            public ManualResetEvent[] Events = [new ManualResetEvent(false), new ManualResetEvent(false)];
 
             public void Process(int batchSize)
             {

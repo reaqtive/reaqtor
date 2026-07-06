@@ -28,8 +28,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TResult>(uri);
         }
@@ -59,8 +58,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TResult>(uri);
         }
@@ -92,8 +90,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TResult>(uri);
         }
@@ -127,8 +124,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(uri);
         }
@@ -164,8 +160,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(uri);
         }
@@ -203,8 +198,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(uri);
         }
@@ -244,8 +238,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(uri);
         }
@@ -287,8 +280,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(uri);
         }
@@ -332,8 +324,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(uri);
         }
@@ -379,8 +370,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(uri);
         }
@@ -428,8 +418,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(uri);
         }
@@ -479,8 +468,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(uri);
         }
@@ -532,8 +520,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(uri);
         }
@@ -587,8 +574,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(uri);
         }
@@ -635,8 +621,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TResult>(uri);
         }
@@ -666,8 +651,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TResult>(uri);
         }
@@ -699,8 +683,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TResult>(uri);
         }
@@ -734,8 +717,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(uri);
         }
@@ -771,8 +753,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(uri);
         }
@@ -810,8 +791,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(uri);
         }
@@ -851,8 +831,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(uri);
         }
@@ -894,8 +873,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(uri);
         }
@@ -939,8 +917,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(uri);
         }
@@ -986,8 +963,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(uri);
         }
@@ -1035,8 +1011,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(uri);
         }
@@ -1086,8 +1061,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(uri);
         }
@@ -1139,8 +1113,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(uri);
         }
@@ -1194,8 +1167,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(uri);
         }
@@ -1243,8 +1215,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> GetStreamFactory<TArg1, TArg2, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(uri);
         }
@@ -1276,8 +1247,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> GetStreamFactory<TArg1, TArg2, TArg3, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TInput, TOutput>(uri);
         }
@@ -1311,8 +1281,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TInput, TOutput>(uri);
         }
@@ -1348,8 +1317,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TInput, TOutput>(uri);
         }
@@ -1387,8 +1355,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TInput, TOutput>(uri);
         }
@@ -1428,8 +1395,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TInput, TOutput>(uri);
         }
@@ -1471,8 +1437,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TInput, TOutput>(uri);
         }
@@ -1516,8 +1481,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TInput, TOutput>(uri);
         }
@@ -1563,8 +1527,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TInput, TOutput>(uri);
         }
@@ -1612,8 +1575,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TInput, TOutput>(uri);
         }
@@ -1663,8 +1625,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TInput, TOutput>(uri);
         }
@@ -1716,8 +1677,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TInput, TOutput>(uri);
         }
@@ -1771,8 +1731,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TInput, TOutput>(uri);
         }
@@ -1828,8 +1787,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> GetStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TInput, TOutput>(uri);
         }
@@ -1876,8 +1834,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2> GetSubscriptionFactory<TArg1, TArg2>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2>(uri);
         }
@@ -1905,8 +1862,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3> GetSubscriptionFactory<TArg1, TArg2, TArg3>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3>(uri);
         }
@@ -1936,8 +1892,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4>(uri);
         }
@@ -1969,8 +1924,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5>(uri);
         }
@@ -2004,8 +1958,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(uri);
         }
@@ -2041,8 +1994,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(uri);
         }
@@ -2080,8 +2032,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(uri);
         }
@@ -2121,8 +2072,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(uri);
         }
@@ -2164,8 +2114,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(uri);
         }
@@ -2209,8 +2158,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(uri);
         }
@@ -2256,8 +2204,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(uri);
         }
@@ -2305,8 +2252,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(uri);
         }
@@ -2356,8 +2302,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(uri);
         }
@@ -2409,8 +2354,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> GetSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(uri);
         }

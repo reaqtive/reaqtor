@@ -46,8 +46,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression without name conflicts for bound variables. Global variables are not affected.</returns>
         public static Expression EliminateNameConflicts(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return new Impl("Param_").Visit(expression);
         }

@@ -30,17 +30,17 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of non-generic members which are considered pure.
         /// </summary>
-        private readonly HashSet<MemberInfo> Members = new();
+        private readonly HashSet<MemberInfo> Members = [];
 
         /// <summary>
         /// A set of open generic methods. Any of their closed instantiations is considered to be present in the table.
         /// </summary>
-        private readonly HashSet<MethodInfo> GenericMethods = new();
+        private readonly HashSet<MethodInfo> GenericMethods = [];
 
         /// <summary>
         /// Dictionary mapping of open generic types onto members on these types.
         /// </summary>
-        private readonly Dictionary<Type, HashSet<MemberInfo>> MembersOnGenericTypes = new();
+        private readonly Dictionary<Type, HashSet<MemberInfo>> MembersOnGenericTypes = [];
 
         // CONSIDER: Add an overload that enables visiting the expression to gather all reflection members.
 
@@ -60,8 +60,7 @@ namespace System.Linq.Expressions
         /// <param name="expression">The expression to obtain the member to add from.</param>
         public void Add(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             CheckReadOnly();
 
@@ -96,8 +95,7 @@ namespace System.Linq.Expressions
         /// <param name="table">The member table whose entries to copy.</param>
         public void Add(MemberTable table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             CheckReadOnly();
 
@@ -113,7 +111,7 @@ namespace System.Linq.Expressions
 
             foreach (var member in table.MembersOnGenericTypes)
             {
-                MembersOnGenericTypes.Add(member.Key, new HashSet<MemberInfo>(member.Value));
+                MembersOnGenericTypes.Add(member.Key, [.. member.Value]);
             }
         }
 
@@ -123,8 +121,7 @@ namespace System.Linq.Expressions
         /// <param name="member">The member to add to the table.</param>
         public void Add(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             CheckReadOnly();
 
@@ -153,8 +150,7 @@ namespace System.Linq.Expressions
         /// <param name="method">The method to add to the table.</param>
         public void Add(MethodInfo method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             CheckReadOnly();
 
@@ -181,8 +177,7 @@ namespace System.Linq.Expressions
         /// <param name="property">The property to add to the table.</param>
         public void Add(PropertyInfo property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
 
             CheckReadOnly();
 
@@ -209,8 +204,7 @@ namespace System.Linq.Expressions
         /// <param name="field">The field to add to the table.</param>
         public void Add(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
             CheckReadOnly();
 
@@ -229,8 +223,7 @@ namespace System.Linq.Expressions
         /// <param name="constructor">The constructor to add to the table.</param>
         public void Add(ConstructorInfo constructor)
         {
-            if (constructor == null)
-                throw new ArgumentNullException(nameof(constructor));
+            ArgumentNullException.ThrowIfNull(constructor);
 
             CheckReadOnly();
 
@@ -268,14 +261,11 @@ namespace System.Linq.Expressions
 
             if (!MembersOnGenericTypes.TryGetValue(definingType, out var members))
             {
-                members = new HashSet<MemberInfo>();
+                members = [];
                 MembersOnGenericTypes.Add(definingType, members);
             }
 
-            if (!members.Contains(definingMember))
-            {
-                members.Add(definingMember);
-            }
+            members.Add(definingMember);
         }
 
         /// <summary>
@@ -334,8 +324,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified <paramref name="member"/> is present in the table; otherwise, <c>false</c>.</returns>
         public bool Contains(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             if (Members.Contains(member))
             {

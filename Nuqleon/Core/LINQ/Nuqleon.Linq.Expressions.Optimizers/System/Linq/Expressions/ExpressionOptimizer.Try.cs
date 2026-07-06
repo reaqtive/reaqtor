@@ -251,7 +251,7 @@ namespace System.Linq.Expressions
 
                     newBody =
                         Expression.Block(
-                            new[] { variable },
+                            [variable],
                             Expression.Assign(variable, exception),
                             newBody
                         );

@@ -69,7 +69,7 @@ namespace SampleTrees.Logic
 
         public abstract bool Eval(Dictionary<BoolSymbol, BoolConst> bindings);
 
-        public bool Eval() => Eval(new Dictionary<BoolSymbol, BoolConst>());
+        public bool Eval() => Eval([]);
 
         public static Not operator !(LogicExpr expr) => new(expr);
 

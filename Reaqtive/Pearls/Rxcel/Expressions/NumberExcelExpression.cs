@@ -13,6 +13,8 @@
 // BD - November 2014 - Created this file.
 //
 
+using System.Globalization;
+
 namespace Rxcel
 {
     internal sealed class NumberExcelExpression : ExcelExpression
@@ -33,7 +35,8 @@ namespace Rxcel
 
         public override string ToString()
         {
-            return Value.ToString();
+            // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
+            return Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
         }
     }
 }

@@ -8,26 +8,20 @@
 // BD, ER - June 2013 - Created this file.
 //
 
-using Nuqleon.DataModel.TypeSystem;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-
-#if NETSTANDARD2_0
-using Nuqleon.Reflection.Emit;
-#else
 using System.Reflection.Emit;
-#endif
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Nuqleon.DataModel.CompilerServices
 {
     /// <summary>
     /// Expression tree visitor to substitute user-defined mapped types with an anonymous or record type.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Substitutor", Justification = "Identifier adequately reflects the intent of the class.")]
     public abstract partial class ExpressionEntityTypeSubstitutor
     {
         #region Fields
@@ -59,8 +53,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <returns>An expression with entity types replaced.</returns>
         public virtual Expression Apply(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var entityInfo = FindEntityTypes.Apply(expression);
 

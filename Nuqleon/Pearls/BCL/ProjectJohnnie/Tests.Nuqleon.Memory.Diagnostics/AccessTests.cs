@@ -18,7 +18,7 @@ namespace Tests
         [TestMethod]
         public void Access_Field_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Field(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Field(null));
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace Tests
         [TestMethod]
         public void Access_VectorElement_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.VectorElement(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Access.VectorElement(-1));
         }
 
         [TestMethod]
@@ -80,16 +80,16 @@ namespace Tests
             Assert.AreEqual(42, x1.Apply(new[] { 41, 42 }));
 
             var p = Expression.Parameter(typeof(int[]));
-            Assert.AreEqual(41, Expression.Lambda<Func<int[], int>>(x0.ToExpression(p), p).Compile()(new[] { 41, 42 }));
-            Assert.AreEqual(42, Expression.Lambda<Func<int[], int>>(x1.ToExpression(p), p).Compile()(new[] { 41, 42 }));
+            Assert.AreEqual(41, Expression.Lambda<Func<int[], int>>(x0.ToExpression(p), p).Compile()([41, 42]));
+            Assert.AreEqual(42, Expression.Lambda<Func<int[], int>>(x1.ToExpression(p), p).Compile()([41, 42]));
         }
 
         [TestMethod]
         public void Access_MultidimensionalArrayElement_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.MultidimensionalArrayElement(default));
-            Assert.ThrowsException<ArgumentException>(() => Access.MultidimensionalArrayElement(Array.Empty<int>()));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.MultidimensionalArrayElement(-1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.MultidimensionalArrayElement(default));
+            Assert.ThrowsExactly<ArgumentException>(() => Access.MultidimensionalArrayElement([]));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Access.MultidimensionalArrayElement(-1));
         }
 
         [TestMethod]
@@ -118,9 +118,9 @@ namespace Tests
         [TestMethod]
         public void Access_Composite_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite(default));
-            Assert.ThrowsException<ArgumentException>(() => Access.Composite(Array.Empty<Access>()));
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite(new Access[] { null }));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Composite(default));
+            Assert.ThrowsExactly<ArgumentException>(() => Access.Composite([]));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Composite([null]));
         }
 
         [TestMethod]

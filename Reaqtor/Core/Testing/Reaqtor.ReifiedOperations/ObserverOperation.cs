@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ObserverOperation : ServiceOperation
     {
         public ObserverOperation(ServiceOperationKind kind, Uri observerUri)

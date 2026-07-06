@@ -34,8 +34,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression after applying eta conversions.</returns>
         public static Expression Convert(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return new Impl().Visit(expression);
         }

@@ -32,10 +32,8 @@ namespace Reaqtor
         public ReactiveClient(IReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
             : base(new ReactiveQueryProvider(provider, expressionServices))
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (expressionServices == null)
-                throw new ArgumentNullException(nameof(expressionServices));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(expressionServices);
 
             _provider = new ReactiveQueryProvider(provider, expressionServices);
 

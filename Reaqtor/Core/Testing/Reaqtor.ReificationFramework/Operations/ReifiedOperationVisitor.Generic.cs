@@ -33,10 +33,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The result of visiting the operation.</returns>
         public virtual TResult Visit(ReifiedOperation operation)
         {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation));
-            }
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {
@@ -83,7 +80,7 @@ namespace Reaqtor.ReificationFramework
             if (genericType != null)
             {
                 var method = s_catchGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (TResult)method.Invoke(this, new object[] { operation });
+                return (TResult)method.Invoke(this, [operation]);
             }
 
             throw new InvalidOperationException(

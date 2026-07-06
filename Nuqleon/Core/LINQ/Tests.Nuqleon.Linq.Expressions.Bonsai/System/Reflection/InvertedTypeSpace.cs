@@ -23,14 +23,22 @@ namespace Tests.System.Linq.Expressions.Bonsai
         public void InvertedTypeSpace_ArgumentChecks()
         {
             var ts = new InvertedTypeSpace();
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetMember(memberSlim: null), ex => Assert.AreEqual(ex.ParamName, "memberSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetConstructor(constructorSlim: null), ex => Assert.AreEqual(ex.ParamName, "constructorSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetField(fieldSlim: null), ex => Assert.AreEqual(ex.ParamName, "fieldSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetMethod(methodSlim: null), ex => Assert.AreEqual(ex.ParamName, "methodSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetProperty(propertySlim: null), ex => Assert.AreEqual(ex.ParamName, "propertySlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.ConvertType(type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.MapType(typeSlim: null, type: null), ex => Assert.AreEqual(ex.ParamName, "typeSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.MapType(SlimType, type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMember(memberSlim: null));
+            Assert.AreEqual("memberSlim", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetConstructor(constructorSlim: null));
+            Assert.AreEqual("constructorSlim", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetField(fieldSlim: null));
+            Assert.AreEqual("fieldSlim", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMethod(methodSlim: null));
+            Assert.AreEqual("methodSlim", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetProperty(propertySlim: null));
+            Assert.AreEqual("propertySlim", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.ConvertType(type: null));
+            Assert.AreEqual("type", ex6.ParamName);
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(typeSlim: null, type: null));
+            Assert.AreEqual("typeSlim", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(SlimType, type: null));
+            Assert.AreEqual("type", ex8.ParamName);
         }
 
         [TestMethod]
@@ -65,8 +73,8 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var quxGenericDef = typeof(Qux).GetMethod("Qux2");
             Assert.AreEqual(quxGenericDef, MemberInfoRoundtrip(fooGenericDef, ts, its));
 
-            var fooGeneric = fooGenericDef.MakeGenericMethod(new[] { typeof(int) });
-            var quxGeneric = quxGenericDef.MakeGenericMethod(new[] { typeof(int) });
+            var fooGeneric = fooGenericDef.MakeGenericMethod([typeof(int)]);
+            var quxGeneric = quxGenericDef.MakeGenericMethod([typeof(int)]);
             Assert.AreEqual(quxGeneric, MemberInfoRoundtrip(fooGeneric, ts, its));
         }
 
@@ -79,25 +87,25 @@ namespace Tests.System.Linq.Expressions.Bonsai
             its.MapType(fooSlim, typeof(Bar));
 
             var ctor = typeof(Foo).GetConstructors().Single();
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(ctor, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(ctor, ts, its));
 
             var field = typeof(Foo).GetField("baz");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(field, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(field, ts, its));
 
             var prop = typeof(Foo).GetProperty("Bar");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(prop, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(prop, ts, its));
 
             var idxProp = typeof(Foo).GetProperty("Item");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(idxProp, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(idxProp, ts, its));
 
             var simple = typeof(Foo).GetMethod("Qux1");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(simple, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(simple, ts, its));
 
             var genericDef = typeof(Foo).GetMethod("Qux2");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(genericDef, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(genericDef, ts, its));
 
-            var generic = genericDef.MakeGenericMethod(new[] { typeof(int) });
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(generic, ts, its));
+            var generic = genericDef.MakeGenericMethod([typeof(int)]);
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(generic, ts, its));
         }
     }
 }

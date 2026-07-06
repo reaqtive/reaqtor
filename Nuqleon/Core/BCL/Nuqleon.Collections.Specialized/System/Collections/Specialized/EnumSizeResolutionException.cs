@@ -11,14 +11,11 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1032 // Add other exception constructors. (This exception is only instantiated by the library.)
 
-using System.Runtime.Serialization;
-
 namespace System.Collections.Specialized
 {
     /// <summary>
     /// The exception representing a failure to determine the size needed for an EnumDictionary.
     /// </summary>
-    [Serializable]
     public sealed class EnumSizeResolutionException : Exception
     {
         /// <summary>
@@ -30,28 +27,6 @@ namespace System.Collections.Specialized
             : base()
         {
             ErrorCode = errorCode;
-        }
-
-        private EnumSizeResolutionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            ErrorCode = (EnumSizeResolutionError)info.GetInt32(nameof(ErrorCode));
-        }
-
-        /// <summary>
-        /// Populates a SerializationInfo with the data needed to serialize the target object.
-        /// </summary>
-        /// <param name="info">The SerializationInfo to populate with data.</param>
-        /// <param name="context">The destination (see StreamingContext) for this serialization.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            base.GetObjectData(info, context);
-            info.AddValue(nameof(ErrorCode), ErrorCode, typeof(EnumSizeResolutionError));
         }
     }
 }

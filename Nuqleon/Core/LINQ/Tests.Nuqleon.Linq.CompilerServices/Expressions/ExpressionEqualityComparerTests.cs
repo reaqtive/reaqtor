@@ -50,7 +50,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 try
                 {
-                    Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }), equals.ToString());
+                    Assert.IsTrue((bool)equals.Invoke(eq, [null, null]), equals.ToString());
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -70,8 +70,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 try
                 {
-                    var res = (int)getHashCode.Invoke(eq, new object[] { null });
-                    Assert.IsTrue(true);
+                    _ = (int)getHashCode.Invoke(eq, [null]); // does not throw
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -195,13 +194,13 @@ namespace Tests.System.Linq.CompilerServices
             return
                 Expression.Lambda<Func<int, List<int>>>(
                     Expression.Block(
-                        new[] { res },
+                        [res],
                         Expression.Assign(
                             res,
                             Expression.New(typeof(List<int>))
                         ),
                         Expression.Block(
-                            new[] { n },
+                            [n],
                             Expression.Assign(
                                 n,
                                 Expression.Constant(2)
@@ -218,13 +217,13 @@ namespace Tests.System.Linq.CompilerServices
                                         Expression.Break(breakOuter)
                                     ),
                                     Expression.Block(
-                                        new[] { found },
+                                        [found],
                                         Expression.Assign(
                                             found,
                                             Expression.Constant(false)
                                         ),
                                         Expression.Block(
-                                            new[] { d },
+                                            [d],
                                             Expression.Assign(
                                                 d,
                                                 Expression.Constant(2)
@@ -777,12 +776,12 @@ namespace Tests.System.Linq.CompilerServices
             var p2 = Expression.Parameter(typeof(int), "y");
             var p3 = Expression.Parameter(typeof(long), "x");
 
-            var e1 = Expression.Block(new[] { p1 }, Expression.Add(Expression.Constant(1), p1));
-            var e2 = Expression.Block(new[] { p1 }, Expression.Add(Expression.Constant(1), p1));
-            var e3 = Expression.Block(new[] { p2 }, Expression.Add(Expression.Constant(1), p2));
-            var e4 = Expression.Block(new[] { p3 }, Expression.Add(Expression.Constant(1L), p3));
-            var e5 = Expression.Block(new[] { p1 }, Expression.Add(Expression.Constant(1), p2));
-            var e6 = Expression.Block(new[] { p1 }, Expression.Add(p1, Expression.Constant(1)));
+            var e1 = Expression.Block([p1], Expression.Add(Expression.Constant(1), p1));
+            var e2 = Expression.Block([p1], Expression.Add(Expression.Constant(1), p1));
+            var e3 = Expression.Block([p2], Expression.Add(Expression.Constant(1), p2));
+            var e4 = Expression.Block([p3], Expression.Add(Expression.Constant(1L), p3));
+            var e5 = Expression.Block([p1], Expression.Add(Expression.Constant(1), p2));
+            var e6 = Expression.Block([p1], Expression.Add(p1, Expression.Constant(1)));
 
             AssertEqual(e1, e2);
             AssertEqual(e1, e3);
@@ -1117,10 +1116,10 @@ namespace Tests.System.Linq.CompilerServices
             var c1 = Expression.Constant(new List<int>());
             var c2 = Expression.Constant(new Dictionary<string, int>());
 
-            var e1 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), new Expression[] { Expression.Constant(1) });
-            var e2 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), new Expression[] { Expression.Constant(1) });
-            var e3 = Expression.MakeIndex(c2, c2.Type.GetProperty("Item"), new Expression[] { Expression.Constant("") });
-            var e4 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), new Expression[] { Expression.Constant(2) });
+            var e1 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), [Expression.Constant(1)]);
+            var e2 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), [Expression.Constant(1)]);
+            var e3 = Expression.MakeIndex(c2, c2.Type.GetProperty("Item"), [Expression.Constant("")]);
+            var e4 = Expression.MakeIndex(c1, c1.Type.GetProperty("Item"), [Expression.Constant(2)]);
 
             AssertEqual(e1, e2);
             AssertNotEqual(e1, e3);
@@ -1141,11 +1140,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var e1 = Expression.Dynamic(
@@ -1381,8 +1379,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var eq = CreateComparator();
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(new MyExt(), new MyExt()));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(new MyExt()));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(new MyExt(), new MyExt()));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(new MyExt()));
         }
 
         [TestMethod]
@@ -1480,8 +1478,8 @@ namespace Tests.System.Linq.CompilerServices
             var e1 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 1, 1, 1);
             var e2 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 1, 1, 1);
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(e1, e2));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(e1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(e1, e2));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(e1));
         }
 
         [TestMethod]
@@ -1542,9 +1540,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var e = Expression.Constant(42).ToExpressionSlim();
 
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ExpressionSlimEqualityComparer(null));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).Equals(e, e));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).GetHashCode(e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ExpressionSlimEqualityComparer(null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).Equals(e, e));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).GetHashCode(e));
         }
 #else
         [TestMethod]
@@ -1552,9 +1550,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var e = Expression.Constant(42);
 
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ExpressionEqualityComparer(null));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).Equals(e, e));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).GetHashCode(e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ExpressionEqualityComparer(null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).Equals(e, e));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).GetHashCode(e));
         }
 #endif
 
@@ -1614,16 +1612,16 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new[]
             {
                 new[] { p1, p2 },
-                new[] { p2, p1 },
-                new[] { p5, p6 },
-                new[] { p6, p5 },
+                [p2, p1],
+                [p5, p6],
+                [p6, p5],
 
-                new[] { p1, p1 },
-                new[] { p2, p2 },
-                new[] { p3, p3 },
-                new[] { p4, p4 },
-                new[] { p5, p5 },
-                new[] { p6, p6 },
+                [p1, p1],
+                [p2, p2],
+                [p3, p3],
+                [p4, p4],
+                [p5, p5],
+                [p6, p6],
             };
 
             foreach (var e in eq)
@@ -1641,11 +1639,11 @@ namespace Tests.System.Linq.CompilerServices
             var neq = new[]
             {
                 new[] { p1, p3 },
-                new[] { p3, p1 },
-                new[] { p2, p3 },
-                new[] { p3, p2 },
-                new[] { p1, p4 },
-                new[] { p4, p1 },
+                [p3, p1],
+                [p2, p3],
+                [p3, p2],
+                [p1, p4],
+                [p4, p1],
             };
 
             foreach (var e in neq)
@@ -1732,12 +1730,12 @@ namespace Tests.System.Linq.CompilerServices
             var eq = CreateComparator();
 
             var equals = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith("Equals") && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { e, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { null, e }));
+            Assert.IsTrue((bool)equals.Invoke(eq, [null, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [e, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [null, e]));
 
             var getHashCode = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith("GetHashCode") && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, new object[] { null }));
+            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, [null]));
         }
 
         private static void AssertProtectedNull<T>(T e, string methodDiscriminator)
@@ -1745,12 +1743,12 @@ namespace Tests.System.Linq.CompilerServices
             var eq = CreateComparator();
 
             var equals = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith(string.Format("Equals{0}", methodDiscriminator)) && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { e, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { null, e }));
+            Assert.IsTrue((bool)equals.Invoke(eq, [null, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [e, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [null, e]));
 
             var getHashCode = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith(string.Format("GetHashCode{0}", methodDiscriminator)) && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, new object[] { null }));
+            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, [null]));
         }
 
 #if USE_SLIM

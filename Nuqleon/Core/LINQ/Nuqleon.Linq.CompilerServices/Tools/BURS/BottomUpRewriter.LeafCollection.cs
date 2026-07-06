@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly List<Leaf<TSource, TTarget>> _leaves;
 
-        internal LeafCollection() => _leaves = new List<Leaf<TSource, TTarget>>();
+        internal LeafCollection() => _leaves = [];
 
         /// <summary>
         /// Adds a new leaf rule.
@@ -34,10 +34,8 @@ namespace System.Linq.CompilerServices
         public void Add<TLeaf>(Expression<Func<TLeaf, TTarget>> convert, int cost)
             where TLeaf : TSource
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5)
 #pragma warning disable IDE0150 // Prefer 'null' check over type check. (`is` patterns can't be captured in expression trees.)
@@ -56,12 +54,9 @@ namespace System.Linq.CompilerServices
         public void Add<TLeaf>(Expression<Func<TLeaf, TTarget>> convert, Expression<Func<TLeaf, bool>> predicate, int cost)
             where TLeaf : TSource
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentNullException.ThrowIfNull(predicate);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }

@@ -22,7 +22,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void DelegateInvocationInliner_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DelegateInvocationInliner.Apply(expression: null, inlineNonPublicMethods: true), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DelegateInvocationInliner.Apply(expression: null, inlineNonPublicMethods: true));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]

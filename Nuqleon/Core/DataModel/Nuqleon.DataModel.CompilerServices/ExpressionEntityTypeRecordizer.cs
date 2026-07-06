@@ -8,20 +8,15 @@
 // ER, BD - June 2013 - Created this file.
 //
 
-using Nuqleon.DataModel.TypeSystem;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
-
-#if NETSTANDARD2_0
-using Nuqleon.Reflection.Emit;
-#else
 using System.Reflection.Emit;
-#endif
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Nuqleon.DataModel.CompilerServices
 {
@@ -64,7 +59,7 @@ namespace Nuqleon.DataModel.CompilerServices
             {
                 var constructor = type.GetConstructor(Type.EmptyTypes);
 
-                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), Array.Empty<MemberInfo>());
+                var newExpression = Expression.New(constructor, [], []);
 
                 var bindings = new MemberAssignment[memberAssignments.Count];
 

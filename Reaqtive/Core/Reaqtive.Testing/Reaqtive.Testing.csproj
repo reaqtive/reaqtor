@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Description>Provides testing support for reactive operators, using the MSTest unit testing framework.</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
 
 </Project>

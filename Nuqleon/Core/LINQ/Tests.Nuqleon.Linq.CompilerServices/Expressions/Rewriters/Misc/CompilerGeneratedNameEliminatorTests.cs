@@ -23,7 +23,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void CompilerGeneratedNameEliminator_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => CompilerGeneratedNameEliminator.Prettify(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => CompilerGeneratedNameEliminator.Prettify(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]

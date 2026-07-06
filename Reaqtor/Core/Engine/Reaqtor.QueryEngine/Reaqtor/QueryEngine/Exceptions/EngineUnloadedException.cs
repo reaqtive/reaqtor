@@ -3,14 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Runtime.Serialization;
 
 namespace Reaqtor.QueryEngine
 {
     /// <summary>
     /// Exception used to signal the engine has unloaded.
     /// </summary>
-    [Serializable]
     public class EngineUnloadedException : InvalidOperationException
     {
         private const string UNLOADED = "The engine has been unloaded and cannot serve further requests.";
@@ -48,16 +46,6 @@ namespace Reaqtor.QueryEngine
         /// <param name="innerException">Inner exception.</param>
         public EngineUnloadedException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="EngineUnloadedException"/> class from serialized state.
-        /// </summary>
-        /// <param name="info">Serialization information to deserialize state from.</param>
-        /// <param name="context">Streaming context to deserialize state from.</param>
-        protected EngineUnloadedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }

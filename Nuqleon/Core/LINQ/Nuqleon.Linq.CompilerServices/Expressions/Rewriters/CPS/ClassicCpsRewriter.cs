@@ -83,10 +83,8 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite(Expression expression, Expression continuation)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (continuation == null)
-                throw new ArgumentNullException(nameof(continuation));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(continuation);
 
             return base.RewriteCore(expression, continuation);
         }
@@ -121,10 +119,8 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite(Expression<Action> expression, Expression<Action> continuation)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (continuation == null)
-                throw new ArgumentNullException(nameof(continuation));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(continuation);
 
             return base.RewriteCore(expression.Body, continuation);
         }
@@ -160,10 +156,8 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite<TResult>(Expression<Func<TResult>> expression, Expression<Action<TResult>> continuation)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (continuation == null)
-                throw new ArgumentNullException(nameof(continuation));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(continuation);
 
             return base.RewriteCore(expression.Body, continuation);
         }
@@ -201,14 +195,13 @@ namespace System.Linq.CompilerServices
         /// </example>
         public LambdaExpression Rewrite(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.Type == typeof(void))
             {
                 var p = Expression.Parameter(typeof(Action), "callback");
                 var b = base.RewriteCore(expression, p);
-                return Expression.Lambda(typeof(Action<Action>), b, p);
+                return Expression.Lambda<Action<Action>>(b, p);
             }
             else
             {
@@ -243,22 +236,21 @@ namespace System.Linq.CompilerServices
         /// </example>
         public LambdaExpression Rewrite(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.Body.Type == typeof(void))
             {
                 var p = Expression.Parameter(typeof(Action), "callback");
                 var b = base.RewriteCore(expression.Body, p);
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { typeof(Action) }).ToArray());
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), typeof(Action)]);
+                return Expression.Lambda(f, b, expression.Parameters.Concat([p]));
             }
             else
             {
                 var p = Expression.Parameter(typeof(Action<>).MakeGenericType(expression.Body.Type), "callback");
                 var b = base.RewriteCore(expression.Body, p);
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { p.Type }).ToArray());
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), p.Type]);
+                return Expression.Lambda(f, b, expression.Parameters.Concat([p]));
             }
         }
 
@@ -291,8 +283,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<Action>> Rewrite(Expression<Action> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -325,8 +316,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T, Action>> Rewrite<T>(Expression<Action<T>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -360,8 +350,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, Action>> Rewrite<T1, T2>(Expression<Action<T1, T2>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -396,8 +385,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, T3, Action>> Rewrite<T1, T2, T3>(Expression<Action<T1, T2, T3>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -434,8 +422,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<Action<TResult>>> Rewrite<TResult>(Expression<Func<TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action<TResult>), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -469,8 +456,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T, Action<TResult>>> Rewrite<T, TResult>(Expression<Func<T, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action<TResult>), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -505,8 +491,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, Action<TResult>>> Rewrite<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action<TResult>), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -542,8 +527,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, T3, Action<TResult>>> Rewrite<T1, T2, T3, TResult>(Expression<Func<T1, T2, T3, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var p = Expression.Parameter(typeof(Action<TResult>), "callback");
             var b = base.RewriteCore(expression.Body, p);
@@ -563,9 +547,9 @@ namespace System.Linq.CompilerServices
         {
             Debug.Assert(method != null);
 
-            return new[] {
+            return [
                 method.ReturnType == typeof(void) ? typeof(Action) : typeof(Action<>).MakeGenericType(method.ReturnType)
-            };
+            ];
         }
 
         /// <summary>
@@ -580,7 +564,7 @@ namespace System.Linq.CompilerServices
         {
             Debug.Assert(method != null);
 
-            return Expression.Call(instance, method, arguments.Concat(new[] { continuation }));
+            return Expression.Call(instance, method, arguments.Concat([continuation]));
         }
 
         /// <summary>

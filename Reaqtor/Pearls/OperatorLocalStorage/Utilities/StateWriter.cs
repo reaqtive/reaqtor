@@ -24,7 +24,7 @@ namespace Utilities
     public sealed class StateWriter : IStateWriter
     {
         private readonly Store _store;
-        private readonly List<StateWriterOperation> _log = new();
+        private readonly List<StateWriterOperation> _log = [];
 
         public StateWriter(Store store, CheckpointKind checkpointKind)
         {
@@ -34,7 +34,7 @@ namespace Utilities
 
         public CheckpointKind CheckpointKind { get; private set; }
 
-        public StateWriterOperation[] GetLog() => _log.ToArray();
+        public StateWriterOperation[] GetLog() => [.. _log];
 
         public Task CommitAsync(CancellationToken token, IProgress<int> progress)
         {
@@ -42,7 +42,7 @@ namespace Utilities
 
             lock (_log)
             {
-                log = _log.ToArray();
+                log = [.. _log];
             }
 
             foreach (var item in log)

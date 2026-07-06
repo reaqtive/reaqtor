@@ -24,7 +24,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     V,
                     Expression.Constant(1)
                 );
@@ -46,7 +46,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.Block(
                     typeof(void),
-                    new[] { x },
+                    [x],
                     V,
                     Expression.Constant(1)
                 );
@@ -70,7 +70,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x, y, z },
+                    [x, y, z],
                     V,
                     Expression.Assign(x, F),
                     Expression.Assign(z, G),
@@ -79,7 +79,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var r =
                 Expression.Block(
-                    new[] { x, z },
+                    [x, z],
                     V,
                     Expression.Assign(x, F),
                     Expression.Assign(z, G),
@@ -96,7 +96,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     V,
                     x
                 );
@@ -117,7 +117,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     V,
                     WriteLine(x)
                 );
@@ -140,7 +140,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x, y, z },
+                    [x, y, z],
                     Expression.Assign(x, Expression.Constant(1)),
                     WriteLine(y),
                     Expression.Assign(z, Expression.Constant(3)),
@@ -150,7 +150,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var r =
                 Expression.Block(
-                    new[] { x, z },
+                    [x, z],
                     Expression.Assign(x, Expression.Constant(1)),
                     WriteLine(Expression.Default(typeof(int))),
                     Expression.Assign(z, Expression.Constant(3)),
@@ -239,10 +239,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Block(
                         Expression.Block(
-                            new[] { y },
+                            [y],
                             Expression.Block(
                                 Expression.Assign(x, F),
                                 Expression.Assign(y, G),
@@ -254,7 +254,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var r =
                 Expression.Block(
-                    new[] { x, y },
+                    [x, y],
                     Expression.Assign(x, F),
                     Expression.Assign(y, G),
                     Expression.Add(x, y)
@@ -340,7 +340,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Constant(1),
                     Expression.Throw(ex, typeof(void)),
                     Expression.Assign(x, Expression.Constant(2))
@@ -359,7 +359,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Constant(1),
                     x,
                     Expression.Constant(3)

@@ -164,7 +164,7 @@ namespace Tests.System.Linq.CompilerServices
                 new Val(6)
             );
 
-            Assert.ThrowsException<InvalidOperationException>(() => burw.Rewrite(e));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burw.Rewrite(e));
         }
 
         [TestMethod]

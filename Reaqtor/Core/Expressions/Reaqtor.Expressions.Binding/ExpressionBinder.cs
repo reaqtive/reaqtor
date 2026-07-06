@@ -23,8 +23,8 @@ namespace Reaqtor.Expressions.Binding
         /// <summary>
         /// All empty generic types for Func.
         /// </summary>
-        protected static readonly HashSet<Type> FuncTypes = new()
-        {
+        protected static readonly HashSet<Type> FuncTypes =
+        [
             typeof(Func<>),
             typeof(Func<,>),
             typeof(Func<,,>),
@@ -41,7 +41,7 @@ namespace Reaqtor.Expressions.Binding
             typeof(Func<,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,,>),
-        };
+        ];
 
         /// <summary>
         /// Create an instance of ExpressionBinder type.
@@ -57,8 +57,7 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>The result of binding unbound parameters in the given expression..</returns>
         public Expression Bind(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var freeVariables = FreeVariableScanner.Scan(expression);
 
@@ -135,8 +134,7 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>Bound expression represented by the original expression.</returns>
         public virtual Expression Lookup(ParameterExpression variable)
         {
-            if (variable == null)
-                throw new ArgumentNullException(nameof(variable));
+            ArgumentNullException.ThrowIfNull(variable);
 
             Expression value = LookupCore(variable.Name, variable.Type);
             if (value == null)
@@ -195,8 +193,7 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>Resolved expression.</returns>
         protected virtual Expression LookupCore(string id, Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             Func<string, Type, Type, Expression> lookupFunc;
             Type funcType = null;
@@ -248,8 +245,7 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>Result type.</returns>
         protected static Type GetResultType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsGenericType)
             {
@@ -278,8 +274,7 @@ namespace Reaqtor.Expressions.Binding
 
             public override Type Visit(Type type)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
+                ArgumentNullException.ThrowIfNull(type);
 
                 // This check is not optimized, do not use this visitor except for debugging purposes.
                 ContainsWildcard |= type.IsDefined(typeof(TypeWildcardAttribute), inherit: false);

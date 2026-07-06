@@ -297,7 +297,6 @@ namespace System.Reflection
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public static MethodInfo GetMethod(this ITypeIntrospectionProvider provider, Type type, string name) => NotNull(NotNull(provider)).GetMethod(type, name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified public method whose parameters match the specified generic parameter count and argument types.
         /// </summary>
@@ -334,7 +333,6 @@ namespace System.Reflection
         /// <param name="modifiers">An array of <see cref="ParameterModifier" /> objects representing the attributes associated with the corresponding element in the <paramref name="types" /> array. The default binder does not process this parameter.</param>
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public static MethodInfo GetMethod(this ITypeIntrospectionProvider provider, Type type, string name, int genericParameterCount, BindingFlags bindingAttr, Binder binder, Type[] types, ParameterModifier[] modifiers) => NotNull(NotNull(provider)).GetMethod(type, name, genericParameterCount, bindingAttr, binder, CallingConventions.Any, types, modifiers);
-#endif
 
         /// <summary>
         /// Searches for a public nested type with the specified name.

@@ -68,13 +68,12 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         public DataTypeToSerializer()
         {
-            _visited = new HashSet<Type>();
+            _visited = [];
         }
 
         protected override LambdaExpression MakeArray(ArrayDataType type, LambdaExpression elementType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var valueParameter = Expression.Parameter(type.UnderlyingType, "value");
             var streamParameter = Expression.Parameter(typeof(Stream), "stream");
@@ -84,7 +83,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
             var accessExpression = type.UnderlyingType.IsArray
                 ? (Expression)Expression.ArrayIndex(valueParameter, loopParameter)
-                : Expression.Call(valueParameter, type.UnderlyingType.GetMethod("get_Item", new[] { typeof(int) }), loopParameter);
+                : Expression.Call(valueParameter, type.UnderlyingType.GetMethod("get_Item", [typeof(int)]), loopParameter);
 
             var serializerParameter = default(ParameterExpression);
             var innerInvoke = MakeInnerSerialize(elementType, streamParameter, accessExpression, ref serializerParameter);
@@ -92,7 +91,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCode = Protocol.TYPE_ARRAY;
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = typeCode;
                 Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                 // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -108,7 +107,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     // {
                     Expression.Block(
                         // int length, i;
-                        new[] { lengthParameter, loopParameter },
+                        [lengthParameter, loopParameter],
                         // length = value.Length;
                         Expression.Assign(lengthParameter, Expression.Property(valueParameter, s_count.Value)),
                         // stream.WriteUInt32Compact((uint)length);
@@ -148,8 +147,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression MakeQuotation(QuotationDataType type, LambdaExpression functionType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             Debug.Assert(functionType == null);
             return MakeExpressionCore(type.UnderlyingType);
@@ -157,8 +155,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitStructural(StructuralDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (!_visited.Add(type.UnderlyingType))
             {
@@ -188,11 +185,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<DataProperty, LambdaExpression>> properties)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             switch (type.StructuralKind)
             {
@@ -252,7 +247,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // stream.WriteByte(tc);
@@ -261,7 +256,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                         // int count, bufferLength;
                         // PooledMemoryStream memoryStream;
                         // byte[] buffer;
-                        new[] { countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter },
+                        [countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter],
                         serializeBody
                     )
                 );
@@ -270,7 +265,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -288,7 +283,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                             // int count, bufferLength;
                             // PooledMemoryStream memoryStream;
                             // byte[] buffer;
-                            new[] { countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter },
+                            [countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter],
                             serializeBody
                         )
                     // }
@@ -305,8 +300,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitExpression(ExpressionDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return MakeExpressionCore(type.UnderlyingType);
         }
@@ -315,8 +309,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitPrimitive(PrimitiveDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.PrimitiveKind switch
             {
@@ -404,7 +397,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 return Expression.Lambda(
                     // {
                     Expression.Block(
-                        new[] { inner.Parameters[1] },
+                        [inner.Parameters[1]],
                         Expression.Condition(
                             Expression.Equal(enumValueParameter, s_nullObject.Value),
                             Expression.Assign(inner.Parameters[1], Expression.Convert(s_nullObject.Value, underlyingType)),
@@ -420,7 +413,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 return Expression.Lambda(
                     Expression.Block(
-                        new[] { inner.Parameters[1] },
+                        [inner.Parameters[1]],
                         Expression.Assign(inner.Parameters[1], Expression.Convert(enumValueParameter, underlyingType)),
                         inner.Body
                     ),

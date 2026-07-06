@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -39,14 +40,14 @@ namespace Reaqtive.Operators
 
             private TSource _value;
             private bool _hasValue;
-            private readonly object _gate;
+            private readonly Lock _gate;
             private ulong _id;
             private IOperatorContext _context;
 
             public _(Throttle<TSource, TThrottle> parent, IObserver<TSource> observer)
                 : base(parent, observer)
             {
-                _gate = new object();
+                _gate = new Lock();
             }
 
             public override string Name => "rc:Throttle";
@@ -58,7 +59,7 @@ namespace Reaqtive.Operators
                 _cancelable = new SerialSubscription();
                 _id = 0UL;
 
-                return new[] { Params._source.Subscribe(this), _cancelable };
+                return [Params._source.Subscribe(this), _cancelable];
             }
 
             public override void SetContext(IOperatorContext context)

@@ -220,7 +220,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.Call(
                     Expression.Constant(value: null, typeof(string)),
-                    typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }),
+                    typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]),
                     Expression.Constant(1),
                     Expression.Parameter(typeof(int))
                 );
@@ -234,7 +234,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.Call(
                     Expression.Constant(value: null, typeof(string)),
-                    typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }),
+                    typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]),
                     F,
                     Expression.Constant(1)
                 );

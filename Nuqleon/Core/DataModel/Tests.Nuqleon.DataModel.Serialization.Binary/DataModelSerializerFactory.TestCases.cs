@@ -11,6 +11,7 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.Serialization.Binary;
@@ -238,7 +239,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             {
                 { "(int [] [])null, ArrayComparer.Instance", typeof(int[][]), null, ArrayComparer.Instance },
                 { "(int [] [])new int [][] {null}, ArrayComparer.Instance", typeof(int[][]), new int[][] { null }, ArrayComparer.Instance },
-                { "(int [] [])new int [][] {new int [0]}, ArrayComparer.Instance", typeof(int[][]), new int[][] { Array.Empty<int>() }, ArrayComparer.Instance },
+                { "(int [] [])new int [][] {new int [0]}, ArrayComparer.Instance", typeof(int[][]), new int[][] { [] }, ArrayComparer.Instance },
                 { "(int [] [])Enumerable.Range(0, 10).Select(i => i % 2 == 0 ? new int [0] : null ).ToArray()", typeof(int[][]), Enumerable.Range(0, 10).Select(i => i % 2 == 0 ? Array.Empty<int>() : null ).ToArray(), ArrayComparer.Instance },
             };
 
@@ -412,7 +413,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             var tests = new Tests
             {
-                { "new ExpressionHolder { Expression = new Expression[] { Expression.Constant(42, typeof(int)) } }", typeof(ExpressionHolder), new ExpressionHolder { Expression = new Expression[] { Expression.Constant(42, typeof(int)) } }, new DataTypeObjectEqualityComparer(() => new DataTypeExpressionComparator()) },
+                { "new ExpressionHolder { Expression = new Expression[] { Expression.Constant(42, typeof(int)) } }", typeof(ExpressionHolder), new ExpressionHolder { Expression = [Expression.Constant(42, typeof(int))] }, new DataTypeObjectEqualityComparer(() => new DataTypeExpressionComparator()) },
                 { "new QuotationHolder { Quotation = () => 42 }", typeof(QuotationHolder), new QuotationHolder { Quotation = () => 42 }, new DataTypeObjectEqualityComparer(() => new DataTypeExpressionComparator()) },
             };
 
@@ -431,8 +432,8 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                     Inner = new InnerCycleType
                     {
                         Outer = instances[i - 1],
-                        OuterArray = new[] { instances[i - 1] },
-                        OuterList = new List<OuterCycleType> { instances[i - 1] },
+                        OuterArray = [instances[i - 1]],
+                        OuterList = [instances[i - 1]],
                     }
                 };
             }
@@ -456,8 +457,8 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                 { "Self", atb },
             });
             var at = atb.CreateType();
-            var inner = Activator.CreateInstance(at, new object[] { null });
-            var outer = Activator.CreateInstance(at, new object[] { inner });
+            var inner = Activator.CreateInstance(at, [null]);
+            var outer = Activator.CreateInstance(at, [inner]);
 
             var tests = new Tests
             {
@@ -497,20 +498,18 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                         )
                     )
                 ),
-                ArrayListTupleArray = new[]
-                {
-                    new List<Tuple<int[], string>>
-                    {
+                ArrayListTupleArray =
+                [
+                    [
                         Tuple.Create(new[] { 1, 2, 3 }, "foo"),
                         Tuple.Create(new[] { 4, 5, 6 }, "bar"),
-                    },
-                    new List<Tuple<int[], string>>
-                    {
+                    ],
+                    [
                         Tuple.Create(default(int[]), default(string)),
                         Tuple.Create(Array.Empty<int>(), ""),
                         null
-                    }
-                }
+                    ]
+                ]
             };
 
             var tests = new Tests
@@ -624,7 +623,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
         public class IsotopeTestCase : IEnumerable<IsotopeValue>
         {
-            private readonly List<IsotopeValue> isotopes = new();
+            private readonly List<IsotopeValue> isotopes = [];
 
             public void Add(Type type, object value)
             {
@@ -638,7 +637,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
         public class Tests : IEnumerable<TestCase>
         {
-            private readonly List<TestCase> _list = new();
+            private readonly List<TestCase> _list = [];
 
             public void Add(string name, Type type, object value)
             {
@@ -832,13 +831,13 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
             private static List<PropertyInfo> GetProperties(Type type)
             {
-                return type.GetProperties().ToList();
+                return [.. type.GetProperties()];
             }
         }
 
         private class StructuralHelper : IEnumerable<KeyValuePair<string, Type>>
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private readonly StructuralDataTypeKinds _kind;
             private readonly List<KeyValuePair<string, Type>> _properties;
             private readonly Dictionary<string, object> _values;
@@ -846,8 +845,8 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             public StructuralHelper(StructuralDataTypeKinds kind)
             {
                 _kind = kind;
-                _properties = new List<KeyValuePair<string, Type>>();
-                _values = new Dictionary<string, object>();
+                _properties = [];
+                _values = [];
             }
 
             public void Add(string name, Type type, object value)
@@ -875,7 +874,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                             {
                                 _type = _kind switch
                                 {
-                                    StructuralDataTypeKinds.Anonymous => RuntimeCompiler.CreateAnonymousType(this, _properties.Select(p => p.Key).ToArray()),
+                                    StructuralDataTypeKinds.Anonymous => RuntimeCompiler.CreateAnonymousType(this, [.. _properties.Select(p => p.Key)]),
                                     StructuralDataTypeKinds.Record => RuntimeCompiler.CreateRecordType(this, valueEquality: true),
                                     _ => throw new NotSupportedException(),
                                 };
@@ -887,30 +886,28 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                 }
             }
 
-            private object _instance;
-
             public object Instance
             {
                 get
                 {
                     var type = Type;
-                    if (_instance == null)
+                    if (field == null)
                     {
                         lock (_gate)
                         {
-                            if (_instance == null)
+                            if (field == null)
                             {
-                                _instance = Activator.CreateInstance(type);
+                                field = Activator.CreateInstance(type);
                                 foreach (var kv in _values)
                                 {
                                     var property = type.GetProperty(kv.Key);
-                                    property.SetValue(_instance, kv.Value);
+                                    property.SetValue(field, kv.Value);
                                 }
                             }
                         }
                     }
 
-                    return _instance;
+                    return field;
                 }
             }
 

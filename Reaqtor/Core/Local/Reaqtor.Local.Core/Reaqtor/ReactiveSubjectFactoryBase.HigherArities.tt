@@ -65,8 +65,7 @@ for (int j = 1; j <= i; j++) {
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveSubject<TInput, TOutput> Create(Uri streamUri, <#=parameters#>, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, <#=arguments#>, state);
         }

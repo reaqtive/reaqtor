@@ -62,11 +62,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose <#=what#> element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the <#=what#> value found in the source sequence.<#=emptyRemark#></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<<#=tn#>> <#=op#>(this ISubscribable<<#=tn#>> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new <#=op#><#=cn#>(source);
         }
@@ -78,7 +76,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose <#=what#> value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the <#=what#> value found in the source sequence.<#=emptyRemark#></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<<#=tn#>> <#=op#><TSource>(this ISubscribable<TSource> source, Func<TSource, <#=tn#>> selector)
         {
             //

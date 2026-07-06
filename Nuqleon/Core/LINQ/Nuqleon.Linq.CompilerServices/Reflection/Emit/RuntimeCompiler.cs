@@ -17,9 +17,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
-#if NETSTANDARD2_0
-using Nuqleon.Reflection.Emit;
-#endif
 
 namespace System.Linq.CompilerServices
 {
@@ -38,7 +35,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Singleton instance of an empty byte array.
         /// </summary>
-        private static readonly byte[] s_emptyBytes = Array.Empty<byte>();
+        private static readonly byte[] s_emptyBytes = [];
 
         /// <summary>
         /// Lazily instantiated module builder.
@@ -102,8 +99,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<KeyValuePair<string, Type>> properties)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -141,8 +137,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<StructuralFieldDeclaration> properties)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -181,8 +176,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<KeyValuePair<string, Type>> properties, params string[] keys)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -221,8 +215,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<StructuralFieldDeclaration> properties, params string[] keys)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -240,8 +233,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Closure type with the specified public assignable fields.</returns>
         public static Type CreateClosureType(IEnumerable<KeyValuePair<string, Type>> fields)
         {
-            if (fields == null)
-                throw new ArgumentNullException(nameof(fields));
+            ArgumentNullException.ThrowIfNull(fields);
 
             var flds = fields.AsArray();
             CheckAccess(flds);
@@ -260,8 +252,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Record type with the specified public assignable properties.</returns>
         public static Type CreateRecordType(IEnumerable<KeyValuePair<string, Type>> properties, bool valueEquality)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -280,8 +271,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Record type with the specified public assignable properties.</returns>
         public static Type CreateRecordType(IEnumerable<StructuralFieldDeclaration> properties, bool valueEquality)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -344,10 +334,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -390,10 +378,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -435,10 +421,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties, params string[] keys)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -482,10 +466,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties, params string[] keys)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -504,16 +486,16 @@ namespace System.Linq.CompilerServices
                 if (!keys.All(propertyNames.Contains))
                     throw new ArgumentException("One or more specified keys do not appear in the properties list.", nameof(keys));
 
-                propertyDeclarations = properties.Select(p =>
+                propertyDeclarations = [.. properties.Select(p =>
 #pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     var isKey = keys.Contains(p.Name);
                     return new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = isKey, CanRead = true, CanWrite = !isKey };
-                }).ToList();
+                })];
             }
             else
             {
-                propertyDeclarations = properties.Select(p => new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = true, CanRead = true, CanWrite = false }).ToList();
+                propertyDeclarations = [.. properties.Select(p => new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = true, CanRead = true, CanWrite = false })];
             }
 
             new AnonymousTypeGenerator(anonymousTypeBuilder, propertyDeclarations).Build();
@@ -540,10 +522,8 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineClosureType(TypeBuilder closureTypeBuilder, IEnumerable<KeyValuePair<string, Type>> fields)
         {
-            if (closureTypeBuilder == null)
-                throw new ArgumentNullException(nameof(closureTypeBuilder));
-            if (fields == null)
-                throw new ArgumentNullException(nameof(fields));
+            ArgumentNullException.ThrowIfNull(closureTypeBuilder);
+            ArgumentNullException.ThrowIfNull(fields);
 
             var flds = fields.AsArray();
             CheckAccess(flds);
@@ -574,15 +554,13 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineRecordType(TypeBuilder recordTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties, bool valueEquality)
         {
-            if (recordTypeBuilder == null)
-                throw new ArgumentNullException(nameof(recordTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(recordTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
 
-            new RecordTypeGenerator(recordTypeBuilder, props.Select(p => new PropertyDeclaration { Name = p.Key, Type = p.Value, CustomAttributes = Array.Empty<CustomAttributeDeclaration>(), CanRead = true, CanWrite = true, IsKey = valueEquality }), valueEquality).Build();
+            new RecordTypeGenerator(recordTypeBuilder, props.Select(p => new PropertyDeclaration { Name = p.Key, Type = p.Value, CustomAttributes = [], CanRead = true, CanWrite = true, IsKey = valueEquality }), valueEquality).Build();
         }
 
         /// <summary>
@@ -595,10 +573,8 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineRecordType(TypeBuilder recordTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties, bool valueEquality)
         {
-            if (recordTypeBuilder == null)
-                throw new ArgumentNullException(nameof(recordTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(recordTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -619,11 +595,7 @@ namespace System.Linq.CompilerServices
         {
             var asmn = new AssemblyName("__GeneratedTypes_" + Guid.NewGuid());
 
-#if NETSTANDARD || NET6_0
             var asmb = AssemblyBuilder.DefineDynamicAssembly(
-#else
-            var asmb = AppDomain.CurrentDomain.DefineDynamicAssembly(
-#endif
                 asmn,
                 AssemblyBuilderAccess.RunAndCollect
             );
@@ -724,12 +696,12 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Cached method info for <see cref="StringBuilder.Append(string)"/>.
             /// </summary>
-            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(string) });
+            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(string)]);
 
             /// <summary>
             /// Cached method info for <see cref="StringBuilder.Append(object)"/>.
             /// </summary>
-            private static readonly MethodInfo s_appendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(object) });
+            private static readonly MethodInfo s_appendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(object)]);
 
             /// <summary>
             /// Cached method info for <see cref="object.ToString()"/>.
@@ -765,7 +737,7 @@ namespace System.Linq.CompilerServices
             {
                 _builder = builder;
                 _properties = properties;
-                _fields = new Dictionary<string, FieldBuilder>();
+                _fields = [];
             }
 
             #endregion
@@ -821,7 +793,7 @@ namespace System.Linq.CompilerServices
 
                     foreach (var attribute in property.CustomAttributes)
                     {
-                        var customAttributeBuilder = new CustomAttributeBuilder(attribute.Constructor, attribute.Arguments.ToArray());
+                        var customAttributeBuilder = new CustomAttributeBuilder(attribute.Constructor, [.. attribute.Arguments]);
                         prop.SetCustomAttribute(customAttributeBuilder);
                     }
 
@@ -838,7 +810,7 @@ namespace System.Linq.CompilerServices
 
                     if (property.CanWrite)
                     {
-                        var propSet = _builder.DefineMethod("set_" + name, MethodAttributes.Public, typeof(void), new[] { type });
+                        var propSet = _builder.DefineMethod("set_" + name, MethodAttributes.Public, typeof(void), [type]);
 
                         var propSetILGen = propSet.GetILGenerator();  // [S] 0
                         propSetILGen.Emit(OpCodes.Ldarg_0);           // [S] 1
@@ -862,7 +834,7 @@ namespace System.Linq.CompilerServices
             {
                 var keys = _properties.Where(p => p.IsKey).ToList();
 
-                var equals = _builder.DefineMethod(nameof(Equals), MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual, CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
+                var equals = _builder.DefineMethod(nameof(Equals), MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual, CallingConventions.HasThis, typeof(bool), [typeof(object)]);
 
                 var equalsILGen = equals.GetILGenerator();                             // [EQ] 0
                 var equalsRightLocal = equalsILGen.DeclareLocal(_builder);
@@ -883,11 +855,7 @@ namespace System.Linq.CompilerServices
                 {
                     var name = property.Name;
 
-#if NET6_0 || NETSTANDARD2_1
                     var nameHash = name.GetHashCode(StringComparison.Ordinal);
-#else
-                    var nameHash = name.GetHashCode();
-#endif
 
                     initialHash = (int)((prime * initialHash) + nameHash);
                 }
@@ -913,9 +881,6 @@ namespace System.Linq.CompilerServices
                         var name = property.Name;
                         var type = property.Type;
 
-#if NETSTANDARD2_0
-                        type = type.Unwrap();
-#endif
 
                         var field = _fields[name];
 
@@ -932,15 +897,15 @@ namespace System.Linq.CompilerServices
                         if (type.GetType().Namespace == "System.Reflection.Emit")
                         {
                             var compParam = compOpen.GetGenericArguments()[0];
-                            comparerGetDefault = TypeBuilder.GetMethod(compClosed, compOpen.GetProperty(nameof(EqualityComparer<object>.Default)).GetGetMethod());
-                            comparerEquals = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(Equals), new[] { compParam, compParam }));
-                            comparerGetHashCode = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(GetHashCode), new[] { compParam }));
+                            comparerGetDefault = TypeBuilder.GetMethod(compClosed, compOpen.GetProperty(nameof(EqualityComparer<>.Default)).GetGetMethod());
+                            comparerEquals = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(Equals), [compParam, compParam]));
+                            comparerGetHashCode = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(GetHashCode), [compParam]));
                         }
                         else
                         {
-                            comparerGetDefault = compClosed.GetProperty(nameof(EqualityComparer<object>.Default)).GetGetMethod();
-                            comparerEquals = compClosed.GetMethod(nameof(Equals), new[] { type, type });
-                            comparerGetHashCode = compClosed.GetMethod(nameof(GetHashCode), new[] { type });
+                            comparerGetDefault = compClosed.GetProperty(nameof(EqualityComparer<>.Default)).GetGetMethod();
+                            comparerEquals = compClosed.GetMethod(nameof(Equals), [type, type]);
+                            comparerGetHashCode = compClosed.GetMethod(nameof(GetHashCode), [type]);
                         }
 
                         equalsILGen.Emit(OpCodes.Call, comparerGetDefault);            // [EQ] 1     { comparer }

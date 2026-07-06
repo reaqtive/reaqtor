@@ -36,14 +36,27 @@ namespace Tests.Reaqtor.QueryEngine
 
         public static void ClassSetup()
         {
+            //
+            // NB: The scheduler is held in static fields shared by all derived test classes, each
+            //     of which calls ClassSetup/ClassCleanup from its [ClassInitialize]/[ClassCleanup].
+            //     The scheduler's worker threads are foreground threads, so a leaked instance
+            //     keeps the Microsoft.Testing.Platform test executable from ever exiting. Dispose
+            //     defensively here in case a previous class's cleanup did not run before the next
+            //     class's setup (as was the case with MSTest v3's end-of-assembly cleanup).
+            //
+            ClassCleanup();
+
             _physicalScheduler = PhysicalScheduler.Create();
             _scheduler = new LogicalScheduler(_physicalScheduler);
         }
 
         public static void ClassCleanup()
         {
-            _scheduler.Dispose();
-            _physicalScheduler.Dispose();
+            _scheduler?.Dispose();
+            _physicalScheduler?.Dispose();
+
+            _scheduler = null;
+            _physicalScheduler = null;
         }
 
         protected void Setup()
@@ -261,7 +274,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -325,7 +338,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -381,7 +394,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -454,7 +467,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -521,7 +534,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new[] { Params._source.Subscribe(Output) };
+                    return [Params._source.Subscribe(Output)];
                 }
 
                 protected override void OnDispose()

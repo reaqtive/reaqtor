@@ -198,10 +198,7 @@ namespace Reaqtor.QueryEngine
 
         public void TruncateLoggedEntities(IQueryEngineRegistrySnapshot snapshot)
         {
-            if (snapshot == null)
-            {
-                throw new ArgumentNullException(nameof(snapshot));
-            }
+            ArgumentNullException.ThrowIfNull(snapshot);
 
             Observers.ClearRemovedKeys(snapshot.RemovedObservers);
             Observables.ClearRemovedKeys(snapshot.RemovedObservables);

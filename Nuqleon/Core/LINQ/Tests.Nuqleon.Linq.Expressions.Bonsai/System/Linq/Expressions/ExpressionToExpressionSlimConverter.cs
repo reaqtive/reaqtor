@@ -26,8 +26,10 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionToExpressionSlimConverter_NullArgument()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionToExpressionSlimConverter(typeSpace: null), ex => Assert.AreEqual("typeSpace", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionToExpressionSlimConverter(new TypeSpace(), factory: null), ex => Assert.AreEqual("factory", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionToExpressionSlimConverter(typeSpace: null));
+            Assert.AreEqual("typeSpace", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionToExpressionSlimConverter(new TypeSpace(), factory: null));
+            Assert.AreEqual("factory", ex2.ParamName);
         }
 
         [TestMethod]
@@ -212,7 +214,7 @@ namespace Tests.System.Linq.Expressions
                 Expression.Loop(
                     Expression.Block(
                         typeof(int),
-                        new[] { counter },
+                        [counter],
                         Expression.AddAssign(counter, Expression.Constant(2)),
                         Expression.Condition(
                             Expression.GreaterThanOrEqual(
@@ -236,7 +238,7 @@ namespace Tests.System.Linq.Expressions
             var l =
                 Expression.Lambda<Func<int, int>>(
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         Expression.Assign(p, Expression.Constant(1))
                     ),
                     p
@@ -246,9 +248,9 @@ namespace Tests.System.Linq.Expressions
 
             var e =
                 Expression.Block(
-                    new[] { p },
+                    [p],
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p
                     )
                 );

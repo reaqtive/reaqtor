@@ -150,8 +150,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitBinary(BinaryExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var l = Visit(node.Left);
             var c = VisitAndConvert<TLambdaExpression>(node.Conversion);
@@ -181,8 +180,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitBlock(BlockExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var v = VisitAndConvert<ParameterExpressionAlias, TParameterExpression>(node.Variables);
             var e = Visit(node.Expressions);
@@ -210,8 +208,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TCatchBlock VisitCatchBlock(CatchBlockAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var v = VisitAndConvert<TParameterExpression>(node.Variable);
             var b = Visit(node.Body);
@@ -241,8 +238,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitConditional(ConditionalExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var t = Visit(node.Test);
             var p = Visit(node.IfTrue);
@@ -272,8 +268,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitConstant(ConstantExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return MakeConstant(node);
         }
@@ -293,8 +288,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the expression.</returns>
         protected override TExpression VisitDebugInfo(DebugInfoExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return MakeDebugInfo(node);
         }
@@ -319,8 +313,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitDefault(DefaultExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return MakeDefault(node);
         }
@@ -340,8 +333,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the expression.</returns>
         protected override TExpression VisitDynamic(DynamicExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var a = Visit(node.Arguments);
             return MakeDynamic(node, a);
@@ -368,8 +360,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TElementInit VisitElementInit(ElementInitAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var a = Visit(node.Arguments);
             return MakeElementInit(node, a);
@@ -410,8 +401,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitGoto(GotoExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var t = VisitIfNotNull(node.Target, VisitLabelTarget);
             var v = Visit(node.Value);
@@ -439,8 +429,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitIndex(IndexExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var o = Visit(node.Object);
             var a = Visit(node.Arguments);
@@ -476,8 +465,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitInvocation(InvocationExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var e = Visit(node.Expression);
 #if USE_SLIM
@@ -509,8 +497,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitLabel(LabelExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var t = VisitIfNotNull(node.Target, VisitLabelTarget);
             var d = Visit(node.DefaultValue);
@@ -538,8 +525,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TLabelTarget VisitLabelTarget(LabelTargetAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return MakeLabelTarget(node);
         }
@@ -568,8 +554,7 @@ namespace System.Linq.CompilerServices
         protected override TExpression VisitLambda<T>(Expression<T> node)
 #endif
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Body);
             var p = VisitAndConvert<ParameterExpressionAlias, TParameterExpression>(node.Parameters);
@@ -613,8 +598,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitListInit(ListInitExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var n = VisitAndConvert<TNewExpression>(node.NewExpression);
             var e = Visit(node.Initializers, VisitElementInit);
@@ -642,8 +626,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitLoop(LoopExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Body);
             var k = VisitIfNotNull(node.BreakLabel, VisitLabelTarget);
@@ -673,8 +656,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitMember(MemberExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var e = Visit(node.Expression);
             return MakeMember(node, e);
@@ -700,8 +682,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TMemberAssignment VisitMemberAssignment(MemberAssignmentAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var e = Visit(node.Expression);
             return MakeMemberAssignment(node, e);
@@ -727,8 +708,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TMemberBinding VisitMemberBinding(MemberBindingAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return node.BindingType switch
             {
@@ -751,8 +731,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitMemberInit(MemberInitExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var n = VisitAndConvert<TNewExpression>(node.NewExpression);
             var b = Visit(node.Bindings, VisitMemberBinding);
@@ -780,8 +759,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TMemberListBinding VisitMemberListBinding(MemberListBindingAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var i = Visit(node.Initializers, VisitElementInit);
             return MakeMemberListBinding(node, i);
@@ -807,8 +785,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TMemberMemberBinding VisitMemberMemberBinding(MemberMemberBindingAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Bindings, VisitMemberBinding);
             return MakeMemberMemberBinding(node, b);
@@ -834,8 +811,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitMethodCall(MethodCallExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var o = Visit(node.Object);
 #if USE_SLIM
@@ -875,8 +851,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitNew(NewExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
 #if USE_SLIM
             var a = VisitArguments(node);
@@ -906,8 +881,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitNewArray(NewArrayExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var e = Visit(node.Expressions);
             return MakeNewArray(node, e);
@@ -933,8 +907,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitParameter(ParameterExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return MakeParameter(node);
         }
@@ -954,8 +927,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the expression.</returns>
         protected override TExpression VisitRuntimeVariables(RuntimeVariablesExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var v = VisitAndConvert<ParameterExpression, TParameterExpression>(node.Variables);
             return MakeRuntimeVariables(node, v);
@@ -982,8 +954,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitSwitch(SwitchExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var s = Visit(node.SwitchValue);
             var d = Visit(node.DefaultBody);
@@ -1013,8 +984,7 @@ namespace System.Linq.CompilerServices
 #endif
         virtual TSwitchCase VisitSwitchCase(SwitchCaseAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Body);
             var t = Visit(node.TestValues);
@@ -1042,8 +1012,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitTry(TryExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Body);
             var i = Visit(node.Finally);
@@ -1081,8 +1050,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitTypeBinary(TypeBinaryExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var e = Visit(node.Expression);
             return MakeTypeBinary(node, e);
@@ -1108,8 +1076,7 @@ namespace System.Linq.CompilerServices
 #endif
         override TExpression VisitUnary(UnaryExpressionAlias node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var o = Visit(node.Operand);
             return MakeUnary(node, o);

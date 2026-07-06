@@ -26,14 +26,14 @@ namespace Tests.System.Linq.CompilerServices
         public void MemberInfoComparer_Equals_Nulls()
         {
             AssertEqual(null, null);
-            AssertNotEqual(null, typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }));
-            AssertNotEqual(typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }), null);
+            AssertNotEqual(null, typeof(Foo).GetConstructor([typeof(int), typeof(int)]));
+            AssertNotEqual(typeof(Foo).GetConstructor([typeof(int), typeof(int)]), null);
         }
 
         [TestMethod]
         public void MemberInfoComparer_Equals_DifferentMemberTypes()
         {
-            AssertNotEqual(typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }), typeof(Foo).GetField("Field1"));
+            AssertNotEqual(typeof(Foo).GetConstructor([typeof(int), typeof(int)]), typeof(Foo).GetField("Field1"));
         }
 
         #endregion
@@ -43,9 +43,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void MemberInfoComparer_EqualsConstructor_Simple()
         {
-            var ctor1 = typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) });
-            var ctor1copy = typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) });
-            var ctor2 = typeof(Foo).GetConstructor(new Type[] { typeof(int) });
+            var ctor1 = typeof(Foo).GetConstructor([typeof(int), typeof(int)]);
+            var ctor1copy = typeof(Foo).GetConstructor([typeof(int), typeof(int)]);
+            var ctor2 = typeof(Foo).GetConstructor([typeof(int)]);
 
             AssertEqual(ctor1, ctor1copy);
             AssertNotEqual(ctor1, ctor2);
@@ -146,7 +146,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var members = new[]
             {
-                typeof(Foo).GetConstructor(new[] { typeof(int) }),
+                typeof(Foo).GetConstructor([typeof(int)]),
                 typeof(Foo).GetEvent("Changed"),
                 ReflectionHelpers.InfoOf((Foo foo) => foo.Field1),
                 ReflectionHelpers.InfoOf((Foo foo) => foo.Property1),
@@ -169,8 +169,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var eq = new MemberInfoEqualityComparer();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => eq.ResolveMember(targetType: null, typeof(object).GetMethods().First()), ex => Assert.AreEqual("targetType", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => eq.ResolveMember(typeof(object), member: null), ex => Assert.AreEqual("member", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eq.ResolveMember(targetType: null, typeof(object).GetMethods().First()));
+            Assert.AreEqual("targetType", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => eq.ResolveMember(typeof(object), member: null));
+            Assert.AreEqual("member", ex2.ParamName);
         }
 
         [TestMethod]
@@ -180,9 +182,9 @@ namespace Tests.System.Linq.CompilerServices
             var custom1 = new MyCustomMemberInfo();
             var custom2 = new MyCustomMemberInfo();
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(custom1, custom2));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(custom1));
-            Assert.ThrowsException<NotImplementedException>(() => eq.ResolveMember(typeof(object), custom1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(custom1, custom2));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(custom1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.ResolveMember(typeof(object), custom1));
         }
 
         [TestMethod]
@@ -193,9 +195,9 @@ namespace Tests.System.Linq.CompilerServices
             var member1 = new MyMemberInfo();
             var member2 = new MyMemberInfo();
 
-            Assert.ThrowsException<NotSupportedException>(() => eq.Equals(member1, member2));
-            Assert.ThrowsException<NotSupportedException>(() => eq.GetHashCode(member1));
-            Assert.ThrowsException<NotSupportedException>(() => eq.ResolveMember(typeof(object), member1));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.Equals(member1, member2));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.GetHashCode(member1));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.ResolveMember(typeof(object), member1));
         }
 
         #endregion

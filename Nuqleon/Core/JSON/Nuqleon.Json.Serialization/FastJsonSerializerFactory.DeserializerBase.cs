@@ -56,8 +56,7 @@ namespace Nuqleon.Json.Serialization
             /// <returns>An instance of type <typeparamref name="T"/> containing the deserialized JSON payload.</returns>
             public T Deserialize(string json)
             {
-                if (json == null)
-                    throw new ArgumentNullException(nameof(json));
+                ArgumentNullException.ThrowIfNull(json);
 
                 //
                 // CONSIDER: Change the signature to take in an index and a length as well.
@@ -91,8 +90,7 @@ namespace Nuqleon.Json.Serialization
             /// <returns>An instance of type <typeparamref name="T"/> containing the deserialized JSON payload.</returns>
             public T Deserialize(System.IO.TextReader reader)
             {
-                if (reader == null)
-                    throw new ArgumentNullException(nameof(reader));
+                ArgumentNullException.ThrowIfNull(reader);
 
                 //
                 // CONSIDER: Change the signature to take in an index and a length as well.

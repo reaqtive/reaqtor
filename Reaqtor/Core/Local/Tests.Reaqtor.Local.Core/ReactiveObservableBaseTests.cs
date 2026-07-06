@@ -22,8 +22,8 @@ namespace Tests
             var uri = new Uri("foo://bar");
             var state = "qux";
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(null, uri, state));
-            Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(iv, null, state));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(null, uri, state));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(iv, null, state));
         }
 
         [TestMethod]

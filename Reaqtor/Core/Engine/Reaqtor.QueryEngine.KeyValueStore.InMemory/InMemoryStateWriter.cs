@@ -111,15 +111,9 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>A stream which must be used to store the item content.</returns>
         public Stream GetItemWriter(string category, string key)
         {
-            if (category == null)
-            {
-                throw new ArgumentNullException(nameof(category));
-            }
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (key == null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
+            ArgumentNullException.ThrowIfNull(key);
 
             CheckDisposed();
 
@@ -146,15 +140,9 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="key">The item key.</param>
         public void DeleteItem(string category, string key)
         {
-            if (category == null)
-            {
-                throw new ArgumentNullException(nameof(category));
-            }
+            ArgumentNullException.ThrowIfNull(category);
 
-            if (key == null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
+            ArgumentNullException.ThrowIfNull(key);
 
             CheckDisposed();
 
@@ -193,10 +181,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// </summary>
         protected void CheckDisposed()
         {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("InMemoryStateWriter instance already disposed.");
-            }
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
 
         /// <summary>

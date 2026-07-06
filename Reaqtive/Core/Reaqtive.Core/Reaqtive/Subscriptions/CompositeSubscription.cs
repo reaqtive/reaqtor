@@ -17,7 +17,7 @@ namespace Reaqtive
     {
         private const int MinimumCapacityToShrinkList = 64;
 
-        private readonly object _syncLock = new();
+        private readonly Lock _syncLock = new();
         private List<ISubscription> _subscriptions;
         private bool _disposed;
         private int _activeSubscriptionsCount;
@@ -37,12 +37,9 @@ namespace Reaqtive
         /// <param name="subscriptions">Inner subscriptions.</param>
         public CompositeSubscription(IEnumerable<ISubscription> subscriptions)
         {
-            if (subscriptions == null)
-            {
-                throw new ArgumentNullException(nameof(subscriptions));
-            }
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
-            _subscriptions = new List<ISubscription>(subscriptions);
+            _subscriptions = [.. subscriptions];
             _activeSubscriptionsCount = _subscriptions.Count;
         }
 
@@ -52,10 +49,7 @@ namespace Reaqtive
         /// <param name="capacity">Initial capacity of the number of inner subscriptions the composite subscription can hold.</param>
         public CompositeSubscription(int capacity)
         {
-            if (capacity <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(capacity);
 
             _subscriptions = new List<ISubscription>(capacity);
         }
@@ -77,10 +71,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to add.</param>
         public void Add(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool shouldDispose = false;
 
@@ -107,10 +98,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to remove.</param>
         public void Remove(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool subscriptionFound = false;
 
@@ -204,7 +192,7 @@ namespace Reaqtive
             {
                 if (_activeSubscriptionsCount == 0)
                 {
-                    return Array.Empty<ISubscription>();
+                    return [];
                 }
 
                 var snapshot = new ISubscription[_activeSubscriptionsCount];
@@ -230,7 +218,7 @@ namespace Reaqtive
         /// </summary>
         private void ShrinkSubscriptionList()
         {
-            Debug.Assert(Monitor.IsEntered(_syncLock));
+            Debug.Assert(_syncLock.IsHeldByCurrentThread);
 
             var newSubscriptionList = new List<ISubscription>(_subscriptions.Capacity / 2);
 

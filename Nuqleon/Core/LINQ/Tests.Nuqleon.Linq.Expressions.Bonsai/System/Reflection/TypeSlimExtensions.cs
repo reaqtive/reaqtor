@@ -26,13 +26,13 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void TypeSlimExtensions_ToTypeSlim_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.ToTypeSlim(type: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.ToTypeSlim(type: null));
         }
 
         [TestMethod]
         public void TypeSlimExtensions_ToType_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.ToType(type: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.ToType(type: null));
         }
 
         [TestMethod]
@@ -40,8 +40,8 @@ namespace Tests.System.Reflection
         {
             var ts = typeof(int).ToTypeSlim();
 
-            Assert.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Array.Empty<TypeSlim>().ToReadOnly()));
-            Assert.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(ts, parameterTypes: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Array.Empty<TypeSlim>().ToReadOnly()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(ts, parameterTypes: null));
         }
 
         [TestMethod]
@@ -344,7 +344,7 @@ namespace Tests.System.Reflection
             var res2 = genType.GetGenericTypeDefinition();
             Assert.AreSame(res2, genType.GenericTypeDefinition);
 
-            Assert.ThrowsException<InvalidOperationException>(() => typeof(int).ToTypeSlim().GetGenericTypeDefinition());
+            Assert.ThrowsExactly<InvalidOperationException>(() => typeof(int).ToTypeSlim().GetGenericTypeDefinition());
         }
 
         [TestMethod]
@@ -377,8 +377,8 @@ namespace Tests.System.Reflection
             Assert.IsTrue(res.GenericArguments.Count == 1);
             Assert.AreSame(genArg, res.GenericArguments[0]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => typeof(int).ToTypeSlim().MakeGenericType(genArgs));
-            Assert.ThrowsException<InvalidOperationException>(() => typeof(List<int>).ToTypeSlim().MakeGenericType(genArgs));
+            Assert.ThrowsExactly<InvalidOperationException>(() => typeof(int).ToTypeSlim().MakeGenericType(genArgs));
+            Assert.ThrowsExactly<InvalidOperationException>(() => typeof(List<int>).ToTypeSlim().MakeGenericType(genArgs));
         }
 
         [TestMethod]

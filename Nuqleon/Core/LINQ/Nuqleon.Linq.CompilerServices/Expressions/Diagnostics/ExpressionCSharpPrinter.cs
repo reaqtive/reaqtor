@@ -29,7 +29,7 @@ namespace System.Linq.Expressions
         private readonly Dictionary<ParameterExpression, string> _globalAliases;
         private int _globalAliasesMax = 0;
 
-        private readonly Dictionary<object, string> _constantNames = new();
+        private readonly Dictionary<object, string> _constantNames = [];
 
         public IDictionary<string, ConstantExpression> Constants { get; } = new Dictionary<string, ConstantExpression>();
 
@@ -40,12 +40,12 @@ namespace System.Linq.Expressions
             _allowCompilerGeneratedNames = allowCompilerGeneratedNames;
 
             _environment = new Stack<IEnumerable<ParameterExpression>>();
-            Globals = new List<ParameterExpression>();
+            Globals = [];
 
             _aliases = new Stack<Dictionary<ParameterExpression, string>>();
             _aliasesMax = new Stack<int>();
 
-            _globalAliases = new Dictionary<ParameterExpression, string>();
+            _globalAliases = [];
             _aliases.Push(_globalAliases);
             _aliasesMax.Push(-1);
         }
@@ -561,18 +561,14 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
                     n = n[0..^2];
-#else
-                    n = n.Substring(0, n.Length - 2);
-#endif
                 }
             }
 
             return n + " " + JoinCurly(Visit(expression.Initializers));
         }
 
-        private IEnumerable<string> Visit(IEnumerable<ElementInit> elements) => elements.Select(Visit).ToArray();
+        private IEnumerable<string> Visit(IEnumerable<ElementInit> elements) => [.. elements.Select(Visit)];
 
         private string Visit(ElementInit element)
         {
@@ -626,18 +622,14 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
                     n = n[0..^2];
-#else
-                    n = n.Substring(0, n.Length - 2);
-#endif
                 }
             }
 
             return n + " " + JoinCurly(Visit(expression.Bindings));
         }
 
-        private IEnumerable<string> Visit(IEnumerable<MemberBinding> bindings) => bindings.Select(Visit).ToArray();
+        private IEnumerable<string> Visit(IEnumerable<MemberBinding> bindings) => [.. bindings.Select(Visit)];
 
         private string Visit(MemberBinding binding)
         {
@@ -671,7 +663,7 @@ namespace System.Linq.Expressions
 
         private string Visit(MemberMemberBinding binding) => GetMemberName(binding.Member) + " = " + JoinCurly(Visit(binding.Bindings));
 
-        private readonly Dictionary<MemberInfo, string> _memberAliases = new();
+        private readonly Dictionary<MemberInfo, string> _memberAliases = [];
 
         protected override string VisitNew(NewExpression expression)
         {

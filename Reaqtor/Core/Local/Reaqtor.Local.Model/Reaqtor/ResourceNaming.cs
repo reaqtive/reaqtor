@@ -25,10 +25,7 @@ namespace Reaqtor
         /// <returns>Typed "this" reference expression representation.</returns>
         public static Expression GetThisReferenceExpression(object value)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            ArgumentNullException.ThrowIfNull(value);
 
             return GetThisReferenceExpression(value.GetType());
         }
@@ -40,10 +37,7 @@ namespace Reaqtor
         /// <returns>Typed "this" reference expression representation.</returns>
         public static Expression GetThisReferenceExpression(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             return Expression.Parameter(type, Constants.CurrentInstanceUri);
         }
@@ -56,10 +50,7 @@ namespace Reaqtor
         /// <returns>True if this is a "this" reference expression or false otherwise.</returns>
         public static bool IsThisReferenceExpression(Type type, ParameterExpression parameter)
         {
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(nameof(parameter));
-            }
+            ArgumentNullException.ThrowIfNull(parameter);
 
             return
                 parameter.Type == type &&

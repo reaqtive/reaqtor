@@ -23,8 +23,8 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var tt = new TypeTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => tt.Add(default(Type)));
-            Assert.ThrowsException<ArgumentNullException>(() => tt.Add(default(TypeTable)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(Type)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(TypeTable)));
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var tt = new TypeTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => tt.Contains(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Contains(default));
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var tt = new TypeTable();
             var rtt = tt.ToReadOnly();
 
-            Assert.ThrowsException<InvalidOperationException>(() => rtt.Add(typeof(int)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rtt.Add(typeof(int)));
         }
     }
 }

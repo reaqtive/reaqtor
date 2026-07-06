@@ -25,8 +25,7 @@ namespace System.Linq.Expressions
         /// <returns>Lightweight representation of the specified expression.</returns>
         public static ExpressionSlim ToExpressionSlim(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return new ExpressionToExpressionSlimConverter().Visit(expression);
         }
@@ -39,10 +38,8 @@ namespace System.Linq.Expressions
         /// <returns>Lightweight representation of the specified expression.</returns>
         public static ExpressionSlim ToExpressionSlim(this Expression expression, IExpressionSlimFactory factory)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ExpressionToExpressionSlimConverter(new TypeSpace(), factory).Visit(expression);
         }
@@ -56,8 +53,7 @@ namespace System.Linq.Expressions
         /// <returns>Expression represented by the slim expression.</returns>
         public static Expression ToExpression(this ExpressionSlim expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return new ExpressionSlimToExpressionConverter().Visit(expression);
         }
@@ -70,10 +66,8 @@ namespace System.Linq.Expressions
         /// <returns>Expression represented by the slim expression.</returns>
         public static Expression ToExpression(this ExpressionSlim expression, IExpressionFactory factory)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(), factory).Visit(expression);
         }
@@ -87,12 +81,9 @@ namespace System.Linq.Expressions
         /// <returns>Expression represented by the slim expression.</returns>
         public static Expression ToExpression(this ExpressionSlim expression, IExpressionFactory factory, IReflectionProvider provider)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(factory);
+            ArgumentNullException.ThrowIfNull(provider);
 
             return new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(provider), factory).Visit(expression);
         }

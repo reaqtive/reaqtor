@@ -24,20 +24,25 @@ namespace Tests.System.Linq.CompilerServices
         public void InfoOf_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action>)));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action<int>>)));
+            Assert.AreEqual("expression", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int>>)));
+            Assert.AreEqual("expression", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)));
+            Assert.AreEqual("expression", ex5.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void InfoOf_NoReflectionInfo()
         {
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
         }
 
         [TestMethod]
@@ -49,7 +54,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void InfoOf_MethodCall_MethodInfo2()
         {
-            Assert.AreSame(typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
+            Assert.AreSame(typeof(Console).GetMethod("WriteLine", [typeof(string)]), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
         }
 
         [TestMethod]
@@ -82,7 +87,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void InfoOf_New_ConstructorInfo()
         {
-            Assert.AreSame(typeof(Exception).GetConstructor(new[] { typeof(string) }), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
+            Assert.AreSame(typeof(Exception).GetConstructor([typeof(string)]), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
         }
     }
 }

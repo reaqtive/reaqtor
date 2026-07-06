@@ -181,25 +181,16 @@ namespace System.Memory
                 var prev = node.Previous;
                 var next = node.Next;
 
-                if (prev != null)
-                {
-                    prev.Next = next;
-                }
+                prev?.Next = next;
 
-                if (next != null)
-                {
-                    next.Previous = prev;
-                }
+                next?.Previous = prev;
 
                 if (node == list.Last)
                 {
                     list.Last = prev;
                 }
 
-                if (list.First != null)
-                {
-                    list.First.Previous = node;
-                }
+                list.First?.Previous = node;
 
                 list.Last ??= node;
 

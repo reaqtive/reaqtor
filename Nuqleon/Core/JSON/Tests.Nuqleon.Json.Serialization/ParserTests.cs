@@ -129,11 +129,11 @@ namespace Tests
                 var inp = json + suffix;
 
                 var i = 0;
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWith(inp, inp.Length, 0, ref i, value));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWith(inp, inp.Length, 0, ref i, value));
 
 #if !NO_IO
                 var reader = new Reader(inp);
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWithReader(reader, value));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWithReader(reader, value));
 #endif
             }
         }
@@ -143,7 +143,7 @@ namespace Tests
             AssertParseCore(parser, s, expected);
 
 #if !NO_IO
-            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, new[] { typeof(System.IO.TextReader), typeof(ParserContext) }, modifiers: null);
+            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextReader), typeof(ParserContext)], modifiers: null);
             var parseReaderFnc = (ParseReader<T>)Delegate.CreateDelegate(typeof(ParseReader<T>), parseReaderMtd);
             var parserWithReader = ParseWithReader(parseReaderFnc);
             AssertParseCore(parserWithReader, s, expected);
@@ -175,7 +175,7 @@ namespace Tests
             AssertParseFailCore(parser, s);
 
 #if !NO_IO
-            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, new[] { typeof(System.IO.TextReader), typeof(ParserContext) }, modifiers: null);
+            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextReader), typeof(ParserContext)], modifiers: null);
             var parseReaderFnc = (ParseReader<T>)Delegate.CreateDelegate(typeof(ParseReader<T>), parseReaderMtd);
             var parserWithReader = ParseWithReader(parseReaderFnc);
             AssertParseFailCore(parserWithReader, s);
@@ -194,7 +194,7 @@ namespace Tests
                     var b = i;
                     var ctx = GetParserContext();
 
-                    Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => parser(str, str.Length, ref i, ctx));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => parser(str, str.Length, ref i, ctx));
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace Tests
 
         private static ParseString<T> ParseWithReader<T>(ParseReader<T> parse)
         {
-            return (string str, int len, ref int i, ParserContext ctx) =>
+            return (str, len, ref i, ctx) =>
             {
                 var reader = new Reader(str);
 

@@ -25,9 +25,9 @@ namespace System.Linq.CompilerServices
             Levels = n;
 
             if (n == 1)
-                _leaf = new Dictionary<TKey, TValue>();
+                _leaf = [];
             else
-                _map = new Dictionary<TKey, NAryMap<TKey, TValue>>();
+                _map = [];
         }
 
         public int Levels { get; }
@@ -183,7 +183,7 @@ namespace System.Linq.CompilerServices
             if (Levels == 1)
             {
                 foreach (var kv in _leaf)
-                    yield return new KeyValuePair<IEnumerable<TKey>, TValue>(new[] { kv.Key }, kv.Value);
+                    yield return new KeyValuePair<IEnumerable<TKey>, TValue>([kv.Key], kv.Value);
             }
             else
             {

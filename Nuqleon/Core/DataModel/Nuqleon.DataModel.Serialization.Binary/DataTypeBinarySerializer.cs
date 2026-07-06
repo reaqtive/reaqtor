@@ -24,8 +24,8 @@ namespace Nuqleon.DataModel.Serialization.Binary
         private static readonly Lazy<MethodInfo> s_hashSetPoolGetInstance = new(() => (MethodInfo)ReflectionHelpers.InfoOf(() => PooledHashSet<object>.GetInstance()));
         private static readonly Lazy<MethodInfo> s_pooledHashSetFree = new(() => (MethodInfo)ReflectionHelpers.InfoOf((PooledHashSet<object> p) => p.Free()));
 
-        private readonly ConditionalWeakTable<Type, Delegate> _deserializers = new();
-        private readonly ConditionalWeakTable<Type, Delegate> _serializers = new();
+        private readonly ConditionalWeakTable<Type, Delegate> _deserializers = [];
+        private readonly ConditionalWeakTable<Type, Delegate> _serializers = [];
 
         internal DataTypeBinarySerializer() { }
 
@@ -37,16 +37,13 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         internal IExpressionSerializer ExpressionSerializer { get; }
 
-        private ConditionalWeakTable<Type, Delegate>.CreateValueCallback _getSerializerCore;
-        private ConditionalWeakTable<Type, Delegate>.CreateValueCallback _getDeserializerCore;
-
         private ConditionalWeakTable<Type, Delegate>.CreateValueCallback GetDeserializerCoreMethod
         {
             get
             {
-                _getDeserializerCore ??= GetDeserializerCore;
+                field ??= GetDeserializerCore;
 
-                return _getDeserializerCore;
+                return field;
             }
         }
 
@@ -54,9 +51,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             get
             {
-                _getSerializerCore ??= GetSerializerCore;
+                field ??= GetSerializerCore;
 
-                return _getSerializerCore;
+                return field;
             }
         }
 
@@ -75,15 +72,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         /// <returns>Deserialized object.</returns>
         public object Deserialize(Type type, Stream stream)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             var function = _deserializers.GetValue(type, GetDeserializerCoreMethod);
             if (function is Func<Stream, object> simpleFunction)
@@ -112,15 +103,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         /// <param name="value">Object to be serialized.</param>
         public void Serialize(Type type, Stream stream, object value)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             var action = _serializers.GetValue(type, GetSerializerCoreMethod);
             if (action is Action<Stream, object> simpleAction)
@@ -192,7 +177,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                         Expression.IfThen(
                             needsCheckParameter,
                             Expression.Block(
-                                new[] { visitedParameter },
+                                [visitedParameter],
                                 Expression.Assign(visitedParameter, Expression.Call(s_hashSetPoolGetInstance.Value)),
                                 Expression.TryFinally(
                                     Expression.Invoke(checkCycle, valueParameter, Expression.Convert(visitedParameter, typeof(HashSet<object>))),
@@ -206,7 +191,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
                 return Expression.Lambda<Action<DataTypeBinarySerializer, bool, Stream, object>>(
                     Expression.Block(
-                        new[] { innerValueParameter },
+                        [innerValueParameter],
                         bodyExpressions
                     ),
                     serializerParameter,
@@ -219,7 +204,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             return Expression.Parameter(typeof(object), "input").Let(input =>
                 Expression.Lambda<Action<Stream, object>>(
                     Expression.Block(
-                        new[] { expression.Parameters[1] },
+                        [expression.Parameters[1]],
                         Expression.Assign(expression.Parameters[1], Expression.Convert(input, type)),
                         expression.Body
                     ),

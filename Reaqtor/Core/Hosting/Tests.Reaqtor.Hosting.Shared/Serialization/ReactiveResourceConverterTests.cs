@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel;
-using Nuqleon.DataModel.Serialization.Json;
 
 using Reaqtor;
 using Reaqtor.Hosting.Shared.Serialization;
@@ -25,39 +24,39 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_Observable_Roundtrip()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
             AssertEqual(observable, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_Observer_Roundtrip()
         {
             var observer = new Observer(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observer);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObserverDefinition>(serialized);
 
             AssertEqual(observer, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObserver<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObserver<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObserver<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObserver<object, object>());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_StreamFactory_Roundtrip()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -65,16 +64,16 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsFalse(roundtripped.IsParameterized);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object, object>());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -82,45 +81,45 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsFalse(roundtripped.IsParameterized);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscriptionFactory());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscriptionFactory<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscriptionFactory());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscriptionFactory<object>());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_Stream_Roundtrip()
         {
             var stream = new Stream(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(stream);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamProcess>(serialized);
 
             AssertEqual(stream, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.CreationTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStream<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.CreationTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStream<object, object>());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_Subscription_Roundtrip()
         {
             var subscription = new Subscription(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscription);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
             AssertEqual(subscription, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.CreationTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscription());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.CreationTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscription());
         }
 
         [TestMethod]
         public void ReactiveResourceConverter_Null_Roundtrip()
         {
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize<IAsyncReactiveSubscriptionProcess>(null);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
@@ -132,7 +131,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), null);
             var expressionServices = new ExpressionServices();
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter(expressionServices) });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter(expressionServices)]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -146,7 +145,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_DefinedResource_Roundtrip_Parameterized()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQbservable<int>>>(Expression.Default(typeof(IAsyncReactiveQbservable<int>)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -160,7 +159,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_StreamFactory_Roundtrip_Parameterized_Func()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQubject<int, int>>>(Expression.Default(typeof(IAsyncReactiveQubject<int, int>)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -172,7 +171,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_StreamFactory_Roundtrip_Parameterized_StreamFactory()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Default(typeof(IAsyncReactiveQubjectFactory<int, int, int>)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -184,7 +183,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip_Parameterized_Func()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQubscription>>(Expression.Default(typeof(IAsyncReactiveQubscription)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -196,7 +195,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip_Parameterized_SubscriptionFactory()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Default(typeof(IAsyncReactiveQubscriptionFactory<int>)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -208,7 +207,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_DefinedResource_Roundtrip_State()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), 42);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<int>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<int>()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -219,7 +218,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_ProcessResource_Roundtrip_State()
         {
             var subscription = new Subscription(new Uri("test://uri"), Expression.Default(typeof(object)), 42);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<int>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<int>()]);
             var serialized = serializer.Serialize(subscription);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
@@ -231,7 +230,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         {
             var state = new State { Foo = "foo", Bar = 42 };
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), state);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<State>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<State>()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -241,9 +240,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.AreEqual(((State)observable.State).Bar, ((State)roundtripped.State).Bar);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
         }
 
         public class State
@@ -298,11 +297,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
 
             public DateTimeOffset CreationTime => DateTimeOffset.Now;
 
-#if NET6_0
             public ValueTask DisposeAsync() => throw new NotImplementedException();
-#else
-            public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();
-#endif
         }
 
         private class DefinedResource : Resource, IAsyncReactiveDefinedResource

@@ -16,7 +16,7 @@ namespace Test.Reaqtive
         [TestMethod]
         public void FaultObserver_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FaultObserver<int>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new FaultObserver<int>(null));
         }
 
         [TestMethod]
@@ -24,9 +24,9 @@ namespace Test.Reaqtive
         {
             var d = FaultObserver<int>.Disposed;
 
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnNext(42));
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnError(new Exception()));
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnCompleted());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnNext(42));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnError(new Exception()));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnCompleted());
         }
 
         [TestMethod]
@@ -36,9 +36,12 @@ namespace Test.Reaqtive
 
             var d = new FaultObserver<int>(() => ex);
 
-            AssertEx.ThrowsException<Exception>(() => d.OnNext(42), err => Assert.AreSame(ex, err));
-            AssertEx.ThrowsException<Exception>(() => d.OnError(new Exception()), err => Assert.AreSame(ex, err));
-            AssertEx.ThrowsException<Exception>(() => d.OnCompleted(), err => Assert.AreSame(ex, err));
+            var err = Assert.ThrowsExactly<Exception>(() => d.OnNext(42));
+            Assert.AreSame(ex, err);
+            var err2 = Assert.ThrowsExactly<Exception>(() => d.OnError(new Exception()));
+            Assert.AreSame(ex, err2);
+            var err3 = Assert.ThrowsExactly<Exception>(() => d.OnCompleted());
+            Assert.AreSame(ex, err3);
         }
     }
 }

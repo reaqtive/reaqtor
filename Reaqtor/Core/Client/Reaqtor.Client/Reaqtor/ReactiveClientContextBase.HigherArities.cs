@@ -1825,10 +1825,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1>(Uri uri, Expression<Func<TArg1, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1>(subscriptionFactory), state, token);
         }
@@ -1857,10 +1855,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2>(subscriptionFactory), state, token);
         }
@@ -1891,10 +1887,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3>(subscriptionFactory), state, token);
         }
@@ -1927,10 +1921,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(subscriptionFactory), state, token);
         }
@@ -1965,10 +1957,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(subscriptionFactory), state, token);
         }
@@ -2005,10 +1995,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(subscriptionFactory), state, token);
         }
@@ -2047,10 +2035,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(subscriptionFactory), state, token);
         }
@@ -2091,10 +2077,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(subscriptionFactory), state, token);
         }
@@ -2137,10 +2121,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(subscriptionFactory), state, token);
         }
@@ -2185,10 +2167,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(subscriptionFactory), state, token);
         }
@@ -2235,10 +2215,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(subscriptionFactory), state, token);
         }
@@ -2287,10 +2265,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(subscriptionFactory), state, token);
         }
@@ -2341,10 +2317,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(subscriptionFactory), state, token);
         }
@@ -2397,10 +2371,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(subscriptionFactory), state, token);
         }
@@ -2455,10 +2427,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(subscriptionFactory), state, token);
         }

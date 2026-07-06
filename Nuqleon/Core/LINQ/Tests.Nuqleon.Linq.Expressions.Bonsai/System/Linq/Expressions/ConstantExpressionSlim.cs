@@ -27,12 +27,17 @@ namespace Tests.System.Linq.Expressions
             var t = typeof(string).ToTypeSlim();
             var v = ObjectSlim.Create(value: null, t, typeof(string));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Constant(value: null, t), ex => Assert.AreEqual("value", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Constant(v, type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Constant(value: null, t));
+            Assert.AreEqual("value", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Constant(v, type: null));
+            Assert.AreEqual("type", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ConstantExpressionSlim(value: null), ex => Assert.AreEqual("value", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypedConstantExpressionSlim(value: null, t), ex => Assert.AreEqual("value", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypedConstantExpressionSlim(v, type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new ConstantExpressionSlim(value: null));
+            Assert.AreEqual("value", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => new TypedConstantExpressionSlim(value: null, t));
+            Assert.AreEqual("value", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => new TypedConstantExpressionSlim(v, type: null));
+            Assert.AreEqual("type", ex5.ParamName);
         }
     }
 }

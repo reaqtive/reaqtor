@@ -15,13 +15,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly DictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledDictionary(DictionaryPool<TKey, TValue> pool)
@@ -73,22 +67,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledDictionary<TKey, TValue>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledDictionary{TKey, TValue}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledDictionary{TKey, TValue}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledDictionary{TKey, TValue}"/>.</param>
-        protected PooledDictionary(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Dictionary{TKey, TValue}"/> instances.
@@ -304,7 +282,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled dictionary object.
         /// </summary>
         /// <param name="obj">Pooled dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledDictionaryHolder(PooledObject<PooledDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -373,13 +350,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the hash set.</typeparam>
     public partial class PooledHashSet<T> : HashSet<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly HashSetPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledHashSet(HashSetPool<T> pool)
@@ -419,22 +390,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledHashSet<T>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledHashSet{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledHashSet{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledHashSet{T}"/>.</param>
-        protected PooledHashSet(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="HashSet{T}"/> instances.
@@ -580,7 +535,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled hash set object.
         /// </summary>
         /// <param name="obj">Pooled hash set object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledHashSetHolder(PooledObject<PooledHashSet<T>> obj)
         {
             _obj = obj;
@@ -649,13 +603,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     public partial class PooledList<T> : List<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ListPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledList(ListPool<T> pool)
@@ -695,13 +643,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledList<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="List{T}"/> instances.
@@ -847,7 +788,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled list object.
         /// </summary>
         /// <param name="obj">Pooled list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledListHolder(PooledObject<PooledList<T>> obj)
         {
             _obj = obj;
@@ -916,13 +856,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     public partial class PooledQueue<T> : Queue<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly QueuePool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledQueue(QueuePool<T> pool)
@@ -962,13 +896,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledQueue<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Queue{T}"/> instances.
@@ -1114,7 +1041,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled queue object.
         /// </summary>
         /// <param name="obj">Pooled queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledQueueHolder(PooledObject<PooledQueue<T>> obj)
         {
             _obj = obj;
@@ -1183,13 +1109,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the type of elements in the stack.</typeparam>
     public partial class PooledStack<T> : Stack<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly StackPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledStack(StackPool<T> pool)
@@ -1229,13 +1149,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledStack<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Stack{T}"/> instances.
@@ -1381,7 +1294,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled stack object.
         /// </summary>
         /// <param name="obj">Pooled stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStackHolder(PooledObject<PooledStack<T>> obj)
         {
             _obj = obj;
@@ -1449,13 +1361,7 @@ namespace System.IO
     /// </summary>
     public partial class PooledMemoryStream : MemoryStream, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly MemoryStreamPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledMemoryStream(MemoryStreamPool pool)
@@ -1504,13 +1410,6 @@ namespace System.IO
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledMemoryStream
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="MemoryStream"/> instances.
@@ -1654,7 +1553,6 @@ namespace System.IO
         /// Creates a new holder for the given pooled memory stream object.
         /// </summary>
         /// <param name="obj">Pooled memory stream object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledMemoryStreamHolder(PooledObject<PooledMemoryStream> obj)
         {
             _obj = obj;
@@ -1729,7 +1627,6 @@ namespace System.Text
         /// Gets the <see cref="StringBuilder"/> instance held by this pooled string builder instance.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "StringBuilder is sealed, so we can't inherit from it to provide straight accesses. We want to get as close as direct invocations of the pooled object's members without extra layers of abstractions on the code path.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "No amount of 'security' will protect against aliasing of mutable object instances.")]
         public readonly StringBuilder StringBuilder;
 
         internal PooledStringBuilder(StringBuilderPool pool)
@@ -1920,7 +1817,6 @@ namespace System.Text
         /// Creates a new holder for the given pooled string builder object.
         /// </summary>
         /// <param name="obj">Pooled string builder object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStringBuilderHolder(PooledObject<PooledStringBuilder> obj)
         {
             _obj = obj;
@@ -1989,13 +1885,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledArrayList : ArrayList, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ArrayListPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledArrayList(ArrayListPool pool)
@@ -2035,13 +1925,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledArrayList
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ArrayList"/> instances.
@@ -2185,7 +2068,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled array list object.
         /// </summary>
         /// <param name="obj">Pooled array list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledArrayListHolder(PooledObject<PooledArrayList> obj)
         {
             _obj = obj;
@@ -2256,13 +2138,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledHashtable : Hashtable, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly HashtablePool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledHashtable(HashtablePool pool)
@@ -2302,22 +2178,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledHashtable
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledHashtable"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledHashtable"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledHashtable"/>.</param>
-        protected PooledHashtable(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Hashtable"/> instances.
@@ -2461,7 +2321,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled hashtable object.
         /// </summary>
         /// <param name="obj">Pooled hashtable object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledHashtableHolder(PooledObject<PooledHashtable> obj)
         {
             _obj = obj;
@@ -2532,13 +2391,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledQueue : Queue, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly QueuePool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledQueue(QueuePool pool)
@@ -2578,13 +2431,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledQueue
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Queue"/> instances.
@@ -2728,7 +2574,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled queue object.
         /// </summary>
         /// <param name="obj">Pooled queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledQueueHolder(PooledObject<PooledQueue> obj)
         {
             _obj = obj;
@@ -2799,13 +2644,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledStack : Stack, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly StackPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledStack(StackPool pool)
@@ -2845,13 +2684,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledStack
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Stack"/> instances.
@@ -2995,7 +2827,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled stack object.
         /// </summary>
         /// <param name="obj">Pooled stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStackHolder(PooledObject<PooledStack> obj)
         {
             _obj = obj;
@@ -3066,13 +2897,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledSortedList : SortedList, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedListPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedList(SortedListPool pool)
@@ -3124,13 +2949,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedList
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedList"/> instances.
@@ -3348,7 +3166,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled sorted list object.
         /// </summary>
         /// <param name="obj">Pooled sorted list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedListHolder(PooledObject<PooledSortedList> obj)
         {
             _obj = obj;
@@ -3420,13 +3237,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the element type of the linked list.</typeparam>
     public partial class PooledLinkedList<T> : LinkedList<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly LinkedListPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledLinkedList(LinkedListPool<T> pool)
@@ -3460,22 +3271,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledLinkedList<T>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledLinkedList{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledLinkedList{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledLinkedList{T}"/>.</param>
-        protected PooledLinkedList(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="LinkedList{T}"/> instances.
@@ -3587,7 +3382,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled linked list object.
         /// </summary>
         /// <param name="obj">Pooled linked list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledLinkedListHolder(PooledObject<PooledLinkedList<T>> obj)
         {
             _obj = obj;
@@ -3660,13 +3454,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedDictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedDictionary(SortedDictionaryPool<TKey, TValue> pool)
@@ -3706,13 +3494,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedDictionary<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedDictionary{TKey, TValue}"/> instances.
@@ -3860,7 +3641,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted dictionary object.
         /// </summary>
         /// <param name="obj">Pooled sorted dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedDictionaryHolder(PooledObject<PooledSortedDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -3933,13 +3713,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of values in the collection.</typeparam>
     public partial class PooledSortedList<TKey, TValue> : SortedList<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedListPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedList(SortedListPool<TKey, TValue> pool)
@@ -3991,13 +3765,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedList<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedList{TKey, TValue}"/> instances.
@@ -4219,7 +3986,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted list object.
         /// </summary>
         /// <param name="obj">Pooled sorted list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedListHolder(PooledObject<PooledSortedList<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -4291,13 +4057,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the set.</typeparam>
     public partial class PooledSortedSet<T> : SortedSet<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedSetPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedSet(SortedSetPool<T> pool)
@@ -4337,22 +4097,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedSet<T>
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledSortedSet{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledSortedSet{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledSortedSet{T}"/>.</param>
-        protected PooledSortedSet(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedSet{T}"/> instances.
@@ -4498,7 +4242,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted set object.
         /// </summary>
         /// <param name="obj">Pooled sorted set object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedSetHolder(PooledObject<PooledSortedSet<T>> obj)
         {
             _obj = obj;
@@ -4570,13 +4313,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements to be stored in the collection.</typeparam>
     public partial class PooledConcurrentBag<T> : ConcurrentBag<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentBagPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentBag(ConcurrentBagPool<T> pool)
@@ -4619,13 +4356,6 @@ namespace System.Collections.Concurrent
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentBag<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentBag{T}"/> instances.
@@ -4737,7 +4467,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent bag object.
         /// </summary>
         /// <param name="obj">Pooled concurrent bag object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentBagHolder(PooledObject<PooledConcurrentBag<T>> obj)
         {
             _obj = obj;
@@ -4810,13 +4539,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledConcurrentDictionary<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentDictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentDictionary(ConcurrentDictionaryPool<TKey, TValue> pool)
@@ -4856,13 +4579,6 @@ namespace System.Collections.Concurrent
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentDictionary<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentDictionary{TKey, TValue}"/> instances.
@@ -5010,7 +4726,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent dictionary object.
         /// </summary>
         /// <param name="obj">Pooled concurrent dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentDictionaryHolder(PooledObject<PooledConcurrentDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -5082,13 +4797,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements contained in the queue.</typeparam>
     public partial class PooledConcurrentQueue<T> : ConcurrentQueue<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentQueuePool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentQueue(ConcurrentQueuePool<T> pool)
@@ -5131,13 +4840,6 @@ namespace System.Collections.Concurrent
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentQueue<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentQueue{T}"/> instances.
@@ -5249,7 +4951,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent queue object.
         /// </summary>
         /// <param name="obj">Pooled concurrent queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentQueueHolder(PooledObject<PooledConcurrentQueue<T>> obj)
         {
             _obj = obj;
@@ -5321,13 +5022,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements contained in the stack.</typeparam>
     public partial class PooledConcurrentStack<T> : ConcurrentStack<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentStackPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentStack(ConcurrentStackPool<T> pool)
@@ -5361,13 +5056,6 @@ namespace System.Collections.Concurrent
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentStack<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentStack{T}"/> instances.
@@ -5479,7 +5167,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent stack object.
         /// </summary>
         /// <param name="obj">Pooled concurrent stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentStackHolder(PooledObject<PooledConcurrentStack<T>> obj)
         {
             _obj = obj;

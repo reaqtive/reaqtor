@@ -111,11 +111,7 @@ namespace System.Linq.Expressions
         /// <param name="value">The string value to get the hash code for.</param>
         /// <returns>A hash code for the specified string <paramref name="value"/>.</returns>
         protected virtual int GetHashCode(string value) =>
-#if NET6_0 || NETSTANDARD2_1
             value?.GetHashCode(StringComparison.Ordinal) ?? 0
-#else
-            value?.GetHashCode() ?? 0
-#endif
             ;
 
         /// <summary>
@@ -226,7 +222,7 @@ namespace System.Linq.Expressions
             {
                 if (node.Variable != null)
                 {
-                    _environment.Push(new[] { node.Variable });
+                    _environment.Push([node.Variable]);
                 }
 
                 var variable = MakeParameterDeclaration(node.Variable);

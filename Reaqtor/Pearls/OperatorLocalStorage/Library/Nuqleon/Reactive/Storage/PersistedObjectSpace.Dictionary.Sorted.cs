@@ -26,8 +26,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
         public IPersistedSortedDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var set = new SortedDictionary(this);
             _items.Add(id, set);
@@ -46,8 +45,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidCastException">A persisted object with identifier <paramref name="id"/> was found but is incompatible with the requested persisted sorted dictionary type.</exception>
         public IPersistedSortedDictionary<TKey, TValue> GetSortedDictionary<TKey, TValue>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return CreateSortedDictionaryCore<TKey, TValue>(id, (SortedDictionary)_items[id]);
         }

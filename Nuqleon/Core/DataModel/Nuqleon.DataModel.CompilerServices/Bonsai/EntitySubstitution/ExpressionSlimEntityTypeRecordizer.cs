@@ -8,7 +8,9 @@
 // ER, BD - November 2013 - Created this file.
 //
 
+#if DEBUG
 using System;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
@@ -65,7 +67,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
             {
                 var constructor = type.GetConstructor(EmptyReadOnlyCollection<Type>.Instance);
 
-                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), Array.Empty<MemberInfo>());
+                var newExpression = Expression.New(constructor, [], []);
 
                 var bindings = new MemberAssignment[memberAssignments.Count];
 

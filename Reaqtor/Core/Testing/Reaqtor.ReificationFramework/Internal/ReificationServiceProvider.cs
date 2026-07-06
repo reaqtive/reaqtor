@@ -15,9 +15,9 @@ namespace Reaqtor.ReificationFramework
 {
     internal class ReificationServiceProvider : IReactiveServiceProvider
     {
-        private readonly List<ServiceOperation> _operations = new();
+        private readonly List<ServiceOperation> _operations = [];
 
-        public ServiceOperation[] Operations => _operations.ToArray();
+        public ServiceOperation[] Operations => [.. _operations];
 
         public async Task CreateSubscriptionAsync(Uri subscriptionUri, Expression subscription, object state, CancellationToken token)
         {

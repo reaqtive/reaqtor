@@ -32,7 +32,7 @@ namespace Tests
             var pbr = new FastJsonSerializerFactory.ParserReaderBuilder(DefaultNameResolver.Instance);
             var bdr = typeof(FastJsonSerializerFactory.ParserReaderBuilder).GetMethod("Build", BindingFlags.Public | BindingFlags.Instance);
 #endif
-            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateDeserializer", new[] { typeof(INameResolver), typeof(FastJsonConcurrencyMode) });
+            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateDeserializer", [typeof(INameResolver), typeof(FastJsonConcurrencyMode)]);
 
             foreach (var type in new[] { typeof(E), typeof(E?), typeof(C), typeof(int[,]), typeof(D), typeof(I), typeof(G<int>), typeof(IDictionary<int, int>) })
             {
@@ -67,13 +67,13 @@ namespace Tests
         {
             var des = FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, FastJsonConcurrencyMode.SingleThreaded);
 
-            Assert.ThrowsException<ArgumentNullException>(() => des.Deserialize(default(string)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => des.Deserialize(default(string)));
 #if !NO_IO
-            Assert.ThrowsException<ArgumentNullException>(() => des.Deserialize(default(System.IO.TextReader)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => des.Deserialize(default(System.IO.TextReader)));
 #endif
-            Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
+            Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
 
-            Assert.ThrowsException<ArgumentNullException>(() => FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, settings: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, settings: null));
         }
 
         [TestMethod]
@@ -307,8 +307,8 @@ namespace Tests
             {
                 { "null", null },
                 { "[null]", new int[][] { null } },
-                { "[[42]]", new int[][] { new int[] { 42 } } },
-                { "[  [ 42 ] \t , null\r\n, [ 43, 44 ]\r\n]", new int[][] { new int[] { 42 }, null, new int[] { 43, 44 } } },
+                { "[[42]]", new int[][] { [42] } },
+                { "[  [ 42 ] \t , null\r\n, [ 43, 44 ]\r\n]", new int[][] { [42], null, [43, 44] } },
             },
             (expected, actual) =>
             {
@@ -901,10 +901,10 @@ namespace Tests
 
             foreach (var json in inputs)
             {
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
 
 #if !NO_IO
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
 #endif
             }
         }

@@ -33,7 +33,6 @@ namespace System
 
         public static int GetHashCode<TDefinition>(TDefinition def, Type[] args)
         {
-#if NET6_0
             HashCode h = new();
 
             h.Add(def);
@@ -44,16 +43,6 @@ namespace System
             }
 
             return h.ToHashCode();
-#else
-            var res = def.GetHashCode();
-
-            foreach (var arg in args)
-            {
-                res = res * 17 + arg.GetHashCode();
-            }
-
-            return res;
-#endif
         }
     }
 }

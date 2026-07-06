@@ -31,8 +31,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static MemberInfo InfoOf<T, TResult>(Expression<Func<T, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return InfoOf(expression.Body);
         }
@@ -49,8 +48,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static MemberInfo InfoOf<TResult>(Expression<Func<TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return InfoOf(expression.Body);
         }
@@ -67,8 +65,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static MemberInfo InfoOf<T>(Expression<Action<T>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return InfoOf(expression.Body);
         }
@@ -84,8 +81,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static MemberInfo InfoOf(Expression<Action> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return InfoOf(expression.Body);
         }
@@ -97,8 +93,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Member information of the top-level node in the body of the lambda expression. An exception occurs if this node does not contain member information.</returns>
         public static MemberInfo InfoOf(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return expression switch
             {

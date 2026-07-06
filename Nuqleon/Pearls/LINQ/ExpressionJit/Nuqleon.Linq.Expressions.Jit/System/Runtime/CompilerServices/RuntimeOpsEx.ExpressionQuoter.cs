@@ -61,7 +61,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Parameters.Count > 0)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(node.Parameters));
+                    _environment.Push([.. node.Parameters]);
                 }
 
                 var body = Visit(node.Body);
@@ -90,7 +90,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Variables.Count > 0)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(node.Variables));
+                    _environment.Push([.. node.Variables]);
                 }
 
                 var expressions = Visit(node.Expressions);
@@ -119,7 +119,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Variable != null)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(new[] { node.Variable }));
+                    _environment.Push([node.Variable]);
                 }
 
                 var filter = Visit(node.Filter);
@@ -224,7 +224,7 @@ namespace System.Runtime.CompilerServices
                 // Convert the list of hoisted variables to an array (to prune excess storage slots) and
                 // store the result in a constant expression of type IRuntimeVariables.
                 //
-                var hoistedRuntimeVariables = Expression.Constant(new RuntimeVariables(hoistedVariables.ToArray()), typeof(IRuntimeVariables));
+                var hoistedRuntimeVariables = Expression.Constant(new RuntimeVariables([.. hoistedVariables]), typeof(IRuntimeVariables));
 
                 //
                 // No local variables found; we can simply return the hoisted variables. We won't use the
@@ -240,7 +240,7 @@ namespace System.Runtime.CompilerServices
                 // at runtime. Emit a MergeRuntimeVariables call using our positive and negative indices to
                 // indicate which IRuntimeVariables object to index into.
                 //
-                return Expression.Call(typeof(RuntimeOps).GetMethod(nameof(RuntimeOps.MergeRuntimeVariables)), Expression.RuntimeVariables(localVariables.ToArray()), hoistedRuntimeVariables, Expression.Constant(indexes));
+                return Expression.Call(typeof(RuntimeOps).GetMethod(nameof(RuntimeOps.MergeRuntimeVariables)), Expression.RuntimeVariables([.. localVariables]), hoistedRuntimeVariables, Expression.Constant(indexes));
             }
 
             /// <summary>

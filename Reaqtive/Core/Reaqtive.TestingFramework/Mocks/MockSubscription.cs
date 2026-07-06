@@ -18,8 +18,7 @@ namespace Reaqtive.TestingFramework.Mocks
 
         public MockSubscription(IDisposable disposable)
         {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
+            ArgumentNullException.ThrowIfNull(disposable);
 
             _dispose = disposable.Dispose;
         }

@@ -63,7 +63,7 @@ namespace Tests.System.Linq.CompilerServices
         public void ExpressionFactory_ExpressionUnsafe_Static()
         {
             var ctor = typeof(ExpressionUnsafe).GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Single();
-            var eu = ctor.Invoke(Array.Empty<object>());
+            var eu = ctor.Invoke([]);
             Assert.IsNotNull(eu);
         }
 #endif
@@ -80,44 +80,44 @@ namespace Tests.System.Linq.CompilerServices
             var k = Expression.Constant(ObjectOf(2));
 
             AssertExpr(f => f.ArrayAccess(arr1, i));
-            AssertExpr(f => f.ArrayAccess(arr1, new Expression[] { i }));
+            AssertExpr(f => f.ArrayAccess(arr1, [i]));
             AssertExpr(f => f.ArrayAccess(arr1, new List<Expression> { i }));
 
             AssertExpr(f => f.ArrayAccess(arr2, i, j));
-            AssertExpr(f => f.ArrayAccess(arr2, new Expression[] { i, j }));
+            AssertExpr(f => f.ArrayAccess(arr2, [i, j]));
             AssertExpr(f => f.ArrayAccess(arr2, new List<Expression> { i, j }));
 
             AssertExpr(f => f.ArrayAccess(arr3, i, j, k));
-            AssertExpr(f => f.ArrayAccess(arr3, new Expression[] { i, j, k }));
+            AssertExpr(f => f.ArrayAccess(arr3, [i, j, k]));
             AssertExpr(f => f.ArrayAccess(arr3, new List<Expression> { i, j, k }));
 
             AssertExpr(f => f.ArrayIndex(arr1, i));
 
 #if !USE_SLIM
-            AssertExpr(f => f.ArrayIndex(arr1, new Expression[] { i }));
+            AssertExpr(f => f.ArrayIndex(arr1, [i]));
             AssertExpr(f => f.ArrayIndex(arr1, new List<Expression> { i }));
 
             AssertExpr(f => f.ArrayIndex(arr2, i, j));
-            AssertExpr(f => f.ArrayIndex(arr2, new Expression[] { i, j }));
+            AssertExpr(f => f.ArrayIndex(arr2, [i, j]));
             AssertExpr(f => f.ArrayIndex(arr2, new List<Expression> { i, j }));
 
             AssertExpr(f => f.ArrayIndex(arr3, i, j, k));
-            AssertExpr(f => f.ArrayIndex(arr3, new Expression[] { i, j, k }));
+            AssertExpr(f => f.ArrayIndex(arr3, [i, j, k]));
             AssertExpr(f => f.ArrayIndex(arr3, new List<Expression> { i, j, k }));
 #endif
 
             AssertExpr(f => f.ArrayLength(arr1));
 
-            AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), new Expression[] { i }));
+            AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), [i]));
             AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), new List<Expression> { i }.Select(x => x)));
 
-            AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), new Expression[] { i, j }));
+            AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), [i, j]));
             AssertExpr(f => f.NewArrayBounds(TypeOf(typeof(int)), new List<Expression> { i, j }.Select(x => x)));
 
-            AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), new Expression[] { i }));
+            AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), [i]));
             AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), new List<Expression> { i }.Select(x => x)));
 
-            AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), new Expression[] { i, j }));
+            AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), [i, j]));
             AssertExpr(f => f.NewArrayInit(TypeOf(typeof(int)), new List<Expression> { i, j }.Select(x => x)));
         }
 
@@ -147,14 +147,14 @@ namespace Tests.System.Linq.CompilerServices
             var r = Expression.Parameter(TypeOf(typeof(double)));
             var j = Expression.Lambda(r, r);
 
-            var bAdd = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Addition", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bSub = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Subtraction", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bMul = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Multiply", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bDiv = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Division", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bMod = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Modulus", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bLsh = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LeftShift", new[] { typeof(BigInteger), typeof(int) }));
-            var bRsh = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_RightShift", new[] { typeof(BigInteger), typeof(int) }));
-            var pow = (MethodInfo)GetMember(typeof(Math).GetMethod("Pow", new[] { typeof(double), typeof(double) }));
+            var bAdd = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Addition", [typeof(BigInteger), typeof(BigInteger)]));
+            var bSub = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Subtraction", [typeof(BigInteger), typeof(BigInteger)]));
+            var bMul = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Multiply", [typeof(BigInteger), typeof(BigInteger)]));
+            var bDiv = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Division", [typeof(BigInteger), typeof(BigInteger)]));
+            var bMod = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Modulus", [typeof(BigInteger), typeof(BigInteger)]));
+            var bLsh = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LeftShift", [typeof(BigInteger), typeof(int)]));
+            var bRsh = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_RightShift", [typeof(BigInteger), typeof(int)]));
+            var pow = (MethodInfo)GetMember(typeof(Math).GetMethod("Pow", [typeof(double), typeof(double)]));
 
             Assert.IsNotNull(bAdd);
             Assert.IsNotNull(bSub);
@@ -286,9 +286,9 @@ namespace Tests.System.Linq.CompilerServices
             var q = Expression.Parameter(TypeOf(typeof(BigInteger)));
             var i = Expression.Lambda(q, q);
 
-            var bAnd = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_BitwiseAnd", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bOr = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_BitwiseOr", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bXor = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_ExclusiveOr", new[] { typeof(BigInteger), typeof(BigInteger) }));
+            var bAnd = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_BitwiseAnd", [typeof(BigInteger), typeof(BigInteger)]));
+            var bOr = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_BitwiseOr", [typeof(BigInteger), typeof(BigInteger)]));
+            var bXor = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_ExclusiveOr", [typeof(BigInteger), typeof(BigInteger)]));
 
             Assert.IsNotNull(bAnd);
             Assert.IsNotNull(bOr);
@@ -333,8 +333,8 @@ namespace Tests.System.Linq.CompilerServices
             var c1 = Expression.Constant(ObjectOf(b));
             var c2 = Expression.Constant(ObjectOf(b));
 
-            var bAnd = (MethodInfo)GetMember(typeof(MyBool).GetMethod("op_BitwiseAnd", new[] { typeof(MyBool), typeof(MyBool) }));
-            var bOr = (MethodInfo)GetMember(typeof(MyBool).GetMethod("op_BitwiseOr", new[] { typeof(MyBool), typeof(MyBool) }));
+            var bAnd = (MethodInfo)GetMember(typeof(MyBool).GetMethod("op_BitwiseAnd", [typeof(MyBool), typeof(MyBool)]));
+            var bOr = (MethodInfo)GetMember(typeof(MyBool).GetMethod("op_BitwiseOr", [typeof(MyBool), typeof(MyBool)]));
 
             Assert.IsNotNull(bAnd);
             Assert.IsNotNull(bOr);
@@ -361,7 +361,7 @@ namespace Tests.System.Linq.CompilerServices
             var c = Expression.Constant(ObjectOf(new BigInteger(43)));
             var d = Expression.Parameter(TypeOf(typeof(BigInteger)));
 
-            var add = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Addition", new[] { typeof(BigInteger), typeof(BigInteger) }));
+            var add = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Addition", [typeof(BigInteger), typeof(BigInteger)]));
 
             var p = Expression.Parameter(TypeOf(typeof(BigInteger)));
             var i = Expression.Lambda(p, p);
@@ -453,8 +453,8 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.MakeBinary(ExpressionType.AndAlso, b, c));
             AssertExpr(f => f.MakeBinary(ExpressionType.OrElse, b, c));
 
-            Assert.ThrowsException<ArgumentException>(() => ExpressionFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
-            Assert.ThrowsException<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
         }
 
         [TestMethod]
@@ -486,12 +486,12 @@ namespace Tests.System.Linq.CompilerServices
             var b1 = Expression.Constant(ObjectOf(new BigInteger(1)));
             var b2 = Expression.Constant(ObjectOf(new BigInteger(2)));
 
-            var bEq = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Equality", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bNe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Inequality", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bGt = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_GreaterThan", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bGe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_GreaterThanOrEqual", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bLt = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LessThan", new[] { typeof(BigInteger), typeof(BigInteger) }));
-            var bLe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LessThanOrEqual", new[] { typeof(BigInteger), typeof(BigInteger) }));
+            var bEq = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Equality", [typeof(BigInteger), typeof(BigInteger)]));
+            var bNe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_Inequality", [typeof(BigInteger), typeof(BigInteger)]));
+            var bGt = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_GreaterThan", [typeof(BigInteger), typeof(BigInteger)]));
+            var bGe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_GreaterThanOrEqual", [typeof(BigInteger), typeof(BigInteger)]));
+            var bLt = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LessThan", [typeof(BigInteger), typeof(BigInteger)]));
+            var bLe = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_LessThanOrEqual", [typeof(BigInteger), typeof(BigInteger)]));
 
             Assert.IsNotNull(bEq);
             Assert.IsNotNull(bNe);
@@ -544,12 +544,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Block(stmt1, stmt2, stmt3, stmt4, stmt5));
             AssertExpr(f => f.Block(stmt1, stmt2, stmt3, stmt4, stmt5, stmt6));
 
-            AssertExpr(f => f.Block(new Expression[] { stmt1 }));
-            AssertExpr(f => f.Block(new Expression[] { stmt1, stmt2 }));
-            AssertExpr(f => f.Block(new Expression[] { stmt1, stmt2, stmt3 }));
-            AssertExpr(f => f.Block(new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(new Expression[] { stmt1, stmt2, stmt3, stmt4, stmt5 }));
-            AssertExpr(f => f.Block(new Expression[] { stmt1, stmt2, stmt3, stmt4, stmt5, stmt6 }));
+            AssertExpr(f => f.Block([stmt1]));
+            AssertExpr(f => f.Block([stmt1, stmt2]));
+            AssertExpr(f => f.Block([stmt1, stmt2, stmt3]));
+            AssertExpr(f => f.Block([stmt1, stmt2, stmt3, stmt4]));
+            AssertExpr(f => f.Block([stmt1, stmt2, stmt3, stmt4, stmt5]));
+            AssertExpr(f => f.Block([stmt1, stmt2, stmt3, stmt4, stmt5, stmt6]));
 
             AssertExpr(f => f.Block(new List<Expression> { stmt1 }));
             AssertExpr(f => f.Block(new List<Expression> { stmt1, stmt2 }));
@@ -558,18 +558,18 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Block(new List<Expression> { stmt1, stmt2, stmt3, stmt4, stmt5 }));
             AssertExpr(f => f.Block(new List<Expression> { stmt1, stmt2, stmt3, stmt4, stmt5, stmt6 }));
 
-            AssertExpr(f => f.Block(TypeOf(typeof(double)), new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block(TypeOf(typeof(double)), [stmt1, stmt2, stmt3, stmt4]));
             AssertExpr(f => f.Block(TypeOf(typeof(double)), new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
 
-            AssertExpr(f => f.Block(TypeOf(typeof(double)), new ParameterExpression[] { p1 }, new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(TypeOf(typeof(double)), new List<ParameterExpression> { p1 }, new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(TypeOf(typeof(double)), new ParameterExpression[] { p1 }, new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(TypeOf(typeof(double)), new List<ParameterExpression> { p1 }, new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block(TypeOf(typeof(double)), [p1], new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block(TypeOf(typeof(double)), [p1], new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block(TypeOf(typeof(double)), [p1], [stmt1, stmt2, stmt3, stmt4]));
+            AssertExpr(f => f.Block(TypeOf(typeof(double)), [p1], [stmt1, stmt2, stmt3, stmt4]));
 
-            AssertExpr(f => f.Block(new ParameterExpression[] { p1 }, new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(new List<ParameterExpression> { p1 }, new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(new ParameterExpression[] { p1 }, new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
-            AssertExpr(f => f.Block(new List<ParameterExpression> { p1 }, new Expression[] { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block([p1], new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block([p1], new List<Expression> { stmt1, stmt2, stmt3, stmt4 }));
+            AssertExpr(f => f.Block([p1], [stmt1, stmt2, stmt3, stmt4]));
+            AssertExpr(f => f.Block([p1], [stmt1, stmt2, stmt3, stmt4]));
         }
 
         [TestMethod]
@@ -642,19 +642,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Call(baz, bazQux4, ci, cb, cl, cd));
             AssertExpr(f => f.Call(baz, bazQux5, ci, cb, cl, cd, cs));
 
-            AssertExpr(f => f.Call(baz, bazFoo0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(baz, bazFoo1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(baz, bazFoo2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(baz, bazFoo3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(baz, bazFoo4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(baz, bazFoo5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(baz, bazFoo0, []));
+            AssertExpr(f => f.Call(baz, bazFoo1, [ci]));
+            AssertExpr(f => f.Call(baz, bazFoo2, [ci, cb]));
+            AssertExpr(f => f.Call(baz, bazFoo3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(baz, bazFoo4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(baz, bazFoo5, [ci, cb, cl, cd, cs]));
 
-            AssertExpr(f => f.Call(baz, bazQux0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(baz, bazQux1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(baz, bazQux2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(baz, bazQux3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(baz, bazQux4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(baz, bazQux5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(baz, bazQux0, []));
+            AssertExpr(f => f.Call(baz, bazQux1, [ci]));
+            AssertExpr(f => f.Call(baz, bazQux2, [ci, cb]));
+            AssertExpr(f => f.Call(baz, bazQux3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(baz, bazQux4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(baz, bazQux5, [ci, cb, cl, cd, cs]));
 
             AssertExpr(f => f.Call(baz, bazFoo0, new List<Expression> { }));
             AssertExpr(f => f.Call(baz, bazFoo1, new List<Expression> { ci }));
@@ -684,19 +684,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Call(instance: null, barQux4, ci, cb, cl, cd));
             AssertExpr(f => f.Call(instance: null, barQux5, ci, cb, cl, cd, cs));
 
-            AssertExpr(f => f.Call(instance: null, barFoo0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(instance: null, barFoo1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(instance: null, barFoo2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(instance: null, barFoo3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(instance: null, barFoo4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(instance: null, barFoo5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(instance: null, barFoo0, []));
+            AssertExpr(f => f.Call(instance: null, barFoo1, [ci]));
+            AssertExpr(f => f.Call(instance: null, barFoo2, [ci, cb]));
+            AssertExpr(f => f.Call(instance: null, barFoo3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(instance: null, barFoo4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(instance: null, barFoo5, [ci, cb, cl, cd, cs]));
 
-            AssertExpr(f => f.Call(instance: null, barQux0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(instance: null, barQux1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(instance: null, barQux2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(instance: null, barQux3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(instance: null, barQux4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(instance: null, barQux5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(instance: null, barQux0, []));
+            AssertExpr(f => f.Call(instance: null, barQux1, [ci]));
+            AssertExpr(f => f.Call(instance: null, barQux2, [ci, cb]));
+            AssertExpr(f => f.Call(instance: null, barQux3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(instance: null, barQux4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(instance: null, barQux5, [ci, cb, cl, cd, cs]));
 
             AssertExpr(f => f.Call(instance: null, barFoo0, new List<Expression> { }));
             AssertExpr(f => f.Call(instance: null, barFoo1, new List<Expression> { ci }));
@@ -726,19 +726,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Call(barQux4, ci, cb, cl, cd));
             AssertExpr(f => f.Call(barQux5, ci, cb, cl, cd, cs));
 
-            AssertExpr(f => f.Call(barFoo0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(barFoo1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(barFoo2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(barFoo3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(barFoo4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(barFoo5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(barFoo0, []));
+            AssertExpr(f => f.Call(barFoo1, [ci]));
+            AssertExpr(f => f.Call(barFoo2, [ci, cb]));
+            AssertExpr(f => f.Call(barFoo3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(barFoo4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(barFoo5, [ci, cb, cl, cd, cs]));
 
-            AssertExpr(f => f.Call(barQux0, Array.Empty<Expression>()));
-            AssertExpr(f => f.Call(barQux1, new Expression[] { ci }));
-            AssertExpr(f => f.Call(barQux2, new Expression[] { ci, cb }));
-            AssertExpr(f => f.Call(barQux3, new Expression[] { ci, cb, cl }));
-            AssertExpr(f => f.Call(barQux4, new Expression[] { ci, cb, cl, cd }));
-            AssertExpr(f => f.Call(barQux5, new Expression[] { ci, cb, cl, cd, cs }));
+            AssertExpr(f => f.Call(barQux0, []));
+            AssertExpr(f => f.Call(barQux1, [ci]));
+            AssertExpr(f => f.Call(barQux2, [ci, cb]));
+            AssertExpr(f => f.Call(barQux3, [ci, cb, cl]));
+            AssertExpr(f => f.Call(barQux4, [ci, cb, cl, cd]));
+            AssertExpr(f => f.Call(barQux5, [ci, cb, cl, cd, cs]));
 
             AssertExpr(f => f.Call(barFoo0, new List<Expression> { }));
             AssertExpr(f => f.Call(barFoo1, new List<Expression> { ci }));
@@ -854,9 +854,9 @@ namespace Tests.System.Linq.CompilerServices
         public void ExpressionFactory_Dynamic()
         {
             var conv = CS.Binder.Convert(CS.CSharpBinderFlags.ConvertExplicit, TypeOf(typeof(int)), TypeOf(typeof(UnsafeExpressionTests)));
-            var add = CS.Binder.BinaryOperation(CS.CSharpBinderFlags.None, ExpressionType.Add, TypeOf(typeof(UnsafeExpressionTests)), new[] { CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null) });
-            var mtd3 = CS.Binder.InvokeMember(CS.CSharpBinderFlags.None, "foo", Type.EmptyTypes, TypeOf(typeof(UnsafeExpressionTests)), new[] { CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null) });
-            var mtd4 = CS.Binder.InvokeMember(CS.CSharpBinderFlags.None, "foo", Type.EmptyTypes, TypeOf(typeof(UnsafeExpressionTests)), new[] { CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null) });
+            var add = CS.Binder.BinaryOperation(CS.CSharpBinderFlags.None, ExpressionType.Add, TypeOf(typeof(UnsafeExpressionTests)), [CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null)]);
+            var mtd3 = CS.Binder.InvokeMember(CS.CSharpBinderFlags.None, "foo", Type.EmptyTypes, TypeOf(typeof(UnsafeExpressionTests)), [CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null)]);
+            var mtd4 = CS.Binder.InvokeMember(CS.CSharpBinderFlags.None, "foo", Type.EmptyTypes, TypeOf(typeof(UnsafeExpressionTests)), [CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null), CS.CSharpArgumentInfo.Create(CS.CSharpArgumentInfoFlags.None, name: null)]);
 
             var c = Expression.Constant(ObjectOf(42L));
             var x = Expression.Constant(ObjectOf(1));
@@ -865,35 +865,35 @@ namespace Tests.System.Linq.CompilerServices
             var u = Expression.Constant(ObjectOf(4));
 
             AssertExpr(f => f.Dynamic(conv, TypeOf(typeof(int)), c));
-            AssertExpr(f => f.Dynamic(conv, TypeOf(typeof(int)), new Expression[] { c }));
+            AssertExpr(f => f.Dynamic(conv, TypeOf(typeof(int)), [c]));
             AssertExpr(f => f.Dynamic(conv, TypeOf(typeof(int)), new List<Expression> { c }));
 
             AssertExpr(f => f.Dynamic(add, TypeOf(typeof(int)), x, y));
-            AssertExpr(f => f.Dynamic(add, TypeOf(typeof(int)), new Expression[] { x, y }));
+            AssertExpr(f => f.Dynamic(add, TypeOf(typeof(int)), [x, y]));
             AssertExpr(f => f.Dynamic(add, TypeOf(typeof(int)), new List<Expression> { x, y }));
 
             AssertExpr(f => f.Dynamic(mtd3, TypeOf(typeof(int)), x, y, z));
-            AssertExpr(f => f.Dynamic(mtd3, TypeOf(typeof(int)), new Expression[] { x, y, z }));
+            AssertExpr(f => f.Dynamic(mtd3, TypeOf(typeof(int)), [x, y, z]));
             AssertExpr(f => f.Dynamic(mtd3, TypeOf(typeof(int)), new List<Expression> { x, y, z }));
 
             AssertExpr(f => f.Dynamic(mtd4, TypeOf(typeof(int)), x, y, z, u));
-            AssertExpr(f => f.Dynamic(mtd4, TypeOf(typeof(int)), new Expression[] { x, y, z, u }));
+            AssertExpr(f => f.Dynamic(mtd4, TypeOf(typeof(int)), [x, y, z, u]));
             AssertExpr(f => f.Dynamic(mtd4, TypeOf(typeof(int)), new List<Expression> { x, y, z, u }));
 
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, long, int>)), conv, c));
-            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, long, int>)), conv, new Expression[] { c }));
+            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, long, int>)), conv, [c]));
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, long, int>)), conv, new List<Expression> { c }));
 
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int>)), add, x, y));
-            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int>)), add, new Expression[] { x, y }));
+            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int>)), add, [x, y]));
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int>)), add, new List<Expression> { x, y }));
 
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, object>)), mtd3, x, y, z));
-            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, object>)), mtd3, new Expression[] { x, y, z }));
+            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, object>)), mtd3, [x, y, z]));
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, object>)), mtd3, new List<Expression> { x, y, z }));
 
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, int, object>)), mtd4, x, y, z, u));
-            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, int, object>)), mtd4, new Expression[] { x, y, z, u }));
+            AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, int, object>)), mtd4, [x, y, z, u]));
             AssertExpr(f => f.MakeDynamic(TypeOf(typeof(Func<CallSite, int, int, int, int, object>)), mtd4, new List<Expression> { x, y, z, u }));
         }
 #endif
@@ -936,31 +936,31 @@ namespace Tests.System.Linq.CompilerServices
             var a6 = Expression.Constant(ObjectOf(6));
 
             AssertExpr(f => f.Invoke(f0));
-            AssertExpr(f => f.Invoke(f0, Array.Empty<Expression>()));
+            AssertExpr(f => f.Invoke(f0, []));
             AssertExpr(f => f.Invoke(f0, new List<Expression> { }));
 
             AssertExpr(f => f.Invoke(f1, a1));
-            AssertExpr(f => f.Invoke(f1, new Expression[] { a1 }));
+            AssertExpr(f => f.Invoke(f1, [a1]));
             AssertExpr(f => f.Invoke(f1, new List<Expression> { a1 }));
 
             AssertExpr(f => f.Invoke(f2, a1, a2));
-            AssertExpr(f => f.Invoke(f2, new Expression[] { a1, a2 }));
+            AssertExpr(f => f.Invoke(f2, [a1, a2]));
             AssertExpr(f => f.Invoke(f2, new List<Expression> { a1, a2 }));
 
             AssertExpr(f => f.Invoke(f3, a1, a2, a3));
-            AssertExpr(f => f.Invoke(f3, new Expression[] { a1, a2, a3 }));
+            AssertExpr(f => f.Invoke(f3, [a1, a2, a3]));
             AssertExpr(f => f.Invoke(f3, new List<Expression> { a1, a2, a3 }));
 
             AssertExpr(f => f.Invoke(f4, a1, a2, a3, a4));
-            AssertExpr(f => f.Invoke(f4, new Expression[] { a1, a2, a3, a4 }));
+            AssertExpr(f => f.Invoke(f4, [a1, a2, a3, a4]));
             AssertExpr(f => f.Invoke(f4, new List<Expression> { a1, a2, a3, a4 }));
 
             AssertExpr(f => f.Invoke(f5, a1, a2, a3, a4, a5));
-            AssertExpr(f => f.Invoke(f5, new Expression[] { a1, a2, a3, a4, a5 }));
+            AssertExpr(f => f.Invoke(f5, [a1, a2, a3, a4, a5]));
             AssertExpr(f => f.Invoke(f5, new List<Expression> { a1, a2, a3, a4, a5 }));
 
             AssertExpr(f => f.Invoke(f6, a1, a2, a3, a4, a5, a6));
-            AssertExpr(f => f.Invoke(f6, new Expression[] { a1, a2, a3, a4, a5, a6 }));
+            AssertExpr(f => f.Invoke(f6, [a1, a2, a3, a4, a5, a6]));
             AssertExpr(f => f.Invoke(f6, new List<Expression> { a1, a2, a3, a4, a5, a6 }));
         }
 
@@ -994,12 +994,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(b1, p1, p2));
             AssertExpr(f => f.Lambda(b2, p1, p2));
 
-            AssertExpr(f => f.Lambda(b1, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(b2, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(b1, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(b2, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(b1, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda(b2, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda(b1, []));
+            AssertExpr(f => f.Lambda(b2, []));
+            AssertExpr(f => f.Lambda(b1, [p1]));
+            AssertExpr(f => f.Lambda(b2, [p1]));
+            AssertExpr(f => f.Lambda(b1, [p1, p2]));
+            AssertExpr(f => f.Lambda(b2, [p1, p2]));
 
             AssertExpr(f => f.Lambda(b1, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda(b2, new List<ParameterExpression> { }));
@@ -1016,12 +1016,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(b1, tailCall: false, p1, p2));
             AssertExpr(f => f.Lambda(b2, tailCall: false, p1, p2));
 
-            AssertExpr(f => f.Lambda(b1, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(b2, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(b1, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(b2, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(b1, tailCall: false, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda(b2, tailCall: false, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda(b1, tailCall: false, []));
+            AssertExpr(f => f.Lambda(b2, tailCall: false, []));
+            AssertExpr(f => f.Lambda(b1, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(b2, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(b1, tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda(b2, tailCall: false, [p1, p2]));
 
             AssertExpr(f => f.Lambda(b1, tailCall: false, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda(b2, tailCall: false, new List<ParameterExpression> { }));
@@ -1030,19 +1030,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(b1, tailCall: false, new List<ParameterExpression> { p1, p2 }));
             AssertExpr(f => f.Lambda(b2, tailCall: false, new List<ParameterExpression> { p1, p2 }));
 
-            AssertExpr(f => f.Lambda(b1, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(b2, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(b1, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(b2, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(b1, "f", new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda(b2, "f", new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda(b1, "f", []));
+            AssertExpr(f => f.Lambda(b2, "f", []));
+            AssertExpr(f => f.Lambda(b1, "f", [p1]));
+            AssertExpr(f => f.Lambda(b2, "f", [p1]));
+            AssertExpr(f => f.Lambda(b1, "f", [p1, p2]));
+            AssertExpr(f => f.Lambda(b2, "f", [p1, p2]));
 
-            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(b1, "f", tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda(b2, "f", tailCall: false, [p1, p2]));
 #endif
 
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1));
@@ -1052,12 +1052,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, p1, p2));
             AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, p1, p2));
 
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, [p1, p2]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, [p1, p2]));
 
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, new List<ParameterExpression> { }));
@@ -1074,12 +1074,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, tailCall: false, p1, p2));
             AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, tailCall: false, p1, p2));
 
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, tailCall: false, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, tailCall: false, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, tailCall: false, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, tailCall: false, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, tailCall: false, [p1, p2]));
 
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, tailCall: false, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, tailCall: false, new List<ParameterExpression> { }));
@@ -1088,19 +1088,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, tailCall: false, new List<ParameterExpression> { p1, p2 }));
             AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, tailCall: false, new List<ParameterExpression> { p1, p2 }));
 
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, "f", new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, "f", new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, "f", []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, "f", []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, "f", [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, "f", [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, "f", [p1, p2]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, "f", [p1, p2]));
 
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action)), b1, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int>)), b2, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int>)), b1, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, int>)), b2, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Action<int, string>)), b1, "f", tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda(TypeOf(typeof(Func<int, string, int>)), b2, "f", tailCall: false, [p1, p2]));
 
             AssertExpr(f => f.Lambda<Action>(b1));
             AssertExpr(f => f.Lambda<Func<int>>(b2));
@@ -1109,12 +1109,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda<Action<int, string>>(b1, p1, p2));
             AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, p1, p2));
 
-            AssertExpr(f => f.Lambda<Action>(b1, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda<Func<int>>(b2, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda<Action<int>>(b1, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda<Func<int, int>>(b2, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda<Action<int, string>>(b1, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda<Action>(b1, []));
+            AssertExpr(f => f.Lambda<Func<int>>(b2, []));
+            AssertExpr(f => f.Lambda<Action<int>>(b1, [p1]));
+            AssertExpr(f => f.Lambda<Func<int, int>>(b2, [p1]));
+            AssertExpr(f => f.Lambda<Action<int, string>>(b1, [p1, p2]));
+            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, [p1, p2]));
 
             AssertExpr(f => f.Lambda<Action>(b1, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda<Func<int>>(b2, new List<ParameterExpression> { }));
@@ -1130,12 +1130,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda<Action<int, string>>(b1, tailCall: false, p1, p2));
             AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, tailCall: false, p1, p2));
 
-            AssertExpr(f => f.Lambda<Action>(b1, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda<Func<int>>(b2, tailCall: false, Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.Lambda<Action<int>>(b1, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda<Func<int, int>>(b2, tailCall: false, new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.Lambda<Action<int, string>>(b1, tailCall: false, new ParameterExpression[] { p1, p2 }));
-            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, tailCall: false, new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.Lambda<Action>(b1, tailCall: false, []));
+            AssertExpr(f => f.Lambda<Func<int>>(b2, tailCall: false, []));
+            AssertExpr(f => f.Lambda<Action<int>>(b1, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda<Func<int, int>>(b2, tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda<Action<int, string>>(b1, tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, tailCall: false, [p1, p2]));
 
             AssertExpr(f => f.Lambda<Action>(b1, tailCall: false, new List<ParameterExpression> { }));
             AssertExpr(f => f.Lambda<Func<int>>(b2, tailCall: false, new List<ParameterExpression> { }));
@@ -1144,19 +1144,19 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Lambda<Action<int, string>>(b1, tailCall: false, new List<ParameterExpression> { p1, p2 }));
             AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, tailCall: false, new List<ParameterExpression> { p1, p2 }));
 
-            AssertExpr(f => f.Lambda<Action>(b1, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda<Func<int>>(b2, "f", new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda<Action<int>>(b1, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda<Func<int, int>>(b2, "f", new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda<Action<int, string>>(b1, "f", new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, "f", new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda<Action>(b1, "f", []));
+            AssertExpr(f => f.Lambda<Func<int>>(b2, "f", []));
+            AssertExpr(f => f.Lambda<Action<int>>(b1, "f", [p1]));
+            AssertExpr(f => f.Lambda<Func<int, int>>(b2, "f", [p1]));
+            AssertExpr(f => f.Lambda<Action<int, string>>(b1, "f", [p1, p2]));
+            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, "f", [p1, p2]));
 
-            AssertExpr(f => f.Lambda<Action>(b1, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda<Func<int>>(b2, "f", tailCall: false, new List<ParameterExpression> { }));
-            AssertExpr(f => f.Lambda<Action<int>>(b1, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda<Func<int, int>>(b2, "f", tailCall: false, new List<ParameterExpression> { p1 }));
-            AssertExpr(f => f.Lambda<Action<int, string>>(b1, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
-            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, "f", tailCall: false, new List<ParameterExpression> { p1, p2 }));
+            AssertExpr(f => f.Lambda<Action>(b1, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda<Func<int>>(b2, "f", tailCall: false, []));
+            AssertExpr(f => f.Lambda<Action<int>>(b1, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda<Func<int, int>>(b2, "f", tailCall: false, [p1]));
+            AssertExpr(f => f.Lambda<Action<int, string>>(b1, "f", tailCall: false, [p1, p2]));
+            AssertExpr(f => f.Lambda<Func<int, string, int>>(b2, "f", tailCall: false, [p1, p2]));
 #endif
         }
 
@@ -1166,8 +1166,8 @@ namespace Tests.System.Linq.CompilerServices
             var n = Expression.New(TypeOf(typeof(List<int>)));
             var d = Expression.New(TypeOf(typeof(Dictionary<string, int>)));
 
-            var add = (MethodInfo)GetMember(typeof(List<int>).GetMethod("Add", new[] { typeof(int) }));
-            var addDict = (MethodInfo)GetMember(typeof(Dictionary<string, int>).GetMethod("Add", new[] { typeof(string), typeof(int) }));
+            var add = (MethodInfo)GetMember(typeof(List<int>).GetMethod("Add", [typeof(int)]));
+            var addDict = (MethodInfo)GetMember(typeof(Dictionary<string, int>).GetMethod("Add", [typeof(string), typeof(int)]));
 
             var c1 = Expression.Constant(ObjectOf(1));
             var c2 = Expression.Constant(ObjectOf(2));
@@ -1182,9 +1182,9 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.ListInit(n, e1, e2));
             AssertExpr(f => f.ListInit(n, e1, e2, e3));
 
-            AssertExpr(f => f.ListInit(n, new ElementInit[] { e1 }));
-            AssertExpr(f => f.ListInit(n, new ElementInit[] { e1, e2 }));
-            AssertExpr(f => f.ListInit(n, new ElementInit[] { e1, e2, e3 }));
+            AssertExpr(f => f.ListInit(n, [e1]));
+            AssertExpr(f => f.ListInit(n, [e1, e2]));
+            AssertExpr(f => f.ListInit(n, [e1, e2, e3]));
 
             AssertExpr(f => f.ListInit(n, new List<ElementInit> { e1 }));
             AssertExpr(f => f.ListInit(n, new List<ElementInit> { e1, e2 }));
@@ -1195,9 +1195,9 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.ListInit(n, c1, c2));
             AssertExpr(f => f.ListInit(n, c1, c2, c3));
 
-            AssertExpr(f => f.ListInit(n, new Expression[] { c1 }));
-            AssertExpr(f => f.ListInit(n, new Expression[] { c1, c2 }));
-            AssertExpr(f => f.ListInit(n, new Expression[] { c1, c2, c3 }));
+            AssertExpr(f => f.ListInit(n, [c1]));
+            AssertExpr(f => f.ListInit(n, [c1, c2]));
+            AssertExpr(f => f.ListInit(n, [c1, c2, c3]));
 
             AssertExpr(f => f.ListInit(n, new List<Expression> { c1 }));
             AssertExpr(f => f.ListInit(n, new List<Expression> { c1, c2 }));
@@ -1208,20 +1208,20 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.ListInit(n, add, c1, c2));
             AssertExpr(f => f.ListInit(n, add, c1, c2, c3));
 
-            AssertExpr(f => f.ListInit(n, add, new Expression[] { c1 }));
-            AssertExpr(f => f.ListInit(n, add, new Expression[] { c1, c2 }));
-            AssertExpr(f => f.ListInit(n, add, new Expression[] { c1, c2, c3 }));
+            AssertExpr(f => f.ListInit(n, add, [c1]));
+            AssertExpr(f => f.ListInit(n, add, [c1, c2]));
+            AssertExpr(f => f.ListInit(n, add, [c1, c2, c3]));
 
             AssertExpr(f => f.ListInit(n, add, new List<Expression> { c1 }));
             AssertExpr(f => f.ListInit(n, add, new List<Expression> { c1, c2 }));
             AssertExpr(f => f.ListInit(n, add, new List<Expression> { c1, c2, c3 }));
 
             AssertExpr(f => f.ListInit(n, f.ElementInit(add, c1)));
-            AssertExpr(f => f.ListInit(n, f.ElementInit(add, new Expression[] { c1 })));
+            AssertExpr(f => f.ListInit(n, f.ElementInit(add, [c1])));
             AssertExpr(f => f.ListInit(n, f.ElementInit(add, new List<Expression> { c1 })));
 
             AssertExpr(f => f.ListInit(d, f.ElementInit(addDict, c4, c1)));
-            AssertExpr(f => f.ListInit(d, f.ElementInit(addDict, new Expression[] { c4, c1 })));
+            AssertExpr(f => f.ListInit(d, f.ElementInit(addDict, [c4, c1])));
             AssertExpr(f => f.ListInit(d, f.ElementInit(addDict, new List<Expression> { c4, c1 })));
         }
 
@@ -1292,12 +1292,12 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.Property(c, "Item", i));
 #endif
             AssertExpr(f => f.Property(c, idx, i));
-            AssertExpr(f => f.Property(c, idx, new Expression[] { i }));
+            AssertExpr(f => f.Property(c, idx, [i]));
             AssertExpr(f => f.Property(c, idx, new List<Expression> { i }));
 
-            AssertExpr(f => f.MakeIndex(c, idx, new List<Expression> { i }));
+            AssertExpr(f => f.MakeIndex(c, idx, [i]));
 
-            AssertExpr(f => f.MakeIndex(xs, indexer: null, new List<Expression> { i }));
+            AssertExpr(f => f.MakeIndex(xs, indexer: null, [i]));
         }
 
         [TestMethod]
@@ -1312,7 +1312,7 @@ namespace Tests.System.Linq.CompilerServices
             var ct = TypeOf(typeof(City));
             var cz = (PropertyInfo)GetMember(typeof(City).GetProperty("Zip"));
 
-            var add = (MethodInfo)GetMember(typeof(List<int>).GetMethod("Add", new[] { typeof(int) }));
+            var add = (MethodInfo)GetMember(typeof(List<int>).GetMethod("Add", [typeof(int)]));
 
             var n = Expression.New((ConstructorInfo)GetMember(typeof(Person).GetConstructor(global::System.Type.EmptyTypes)));
 
@@ -1321,14 +1321,14 @@ namespace Tests.System.Linq.CompilerServices
             var b3 = Expression.MemberBind(pc, Expression.Bind(cz, Expression.Constant(ObjectOf("98004"))));
             var b4 = Expression.ListBind(px, Expression.ElementInit(add, Expression.Constant(ObjectOf(42))));
 
-            AssertExpr(f => f.MemberInit(n, new MemberBinding[] { b1, b2, b3, b4 }));
+            AssertExpr(f => f.MemberInit(n, [b1, b2, b3, b4]));
             AssertExpr(f => f.MemberInit(n, new List<MemberBinding> { b1, b2, b3, b4 }));
 
             AssertExpr(f => f.MemberInit(n,
                 f.Bind(pn, Expression.Constant(ObjectOf("Bart"))),
                 f.Bind(pa, Expression.Constant(ObjectOf(21))),
-                f.MemberBind(pc, new MemberBinding[] { f.Bind(cz, Expression.Constant(ObjectOf("98004"))) }),
-                f.ListBind(px, new ElementInit[] { f.ElementInit(add, Expression.Constant(ObjectOf(42))) })
+                f.MemberBind(pc, [f.Bind(cz, Expression.Constant(ObjectOf("98004")))]),
+                f.ListBind(px, [f.ElementInit(add, Expression.Constant(ObjectOf(42)))])
             ));
 
             AssertExpr(f => f.MemberInit(n,
@@ -1342,8 +1342,8 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.MemberInit(n,
                 f.Bind(pn.GetSetMethod(), Expression.Constant(ObjectOf("Bart"))),
                 f.Bind(pa.GetSetMethod(), Expression.Constant(ObjectOf(21))),
-                f.MemberBind(pc.GetSetMethod(), new MemberBinding[] { f.Bind(cz.GetSetMethod(), Expression.Constant(ObjectOf("98004"))) }),
-                f.ListBind(px.GetSetMethod(), new ElementInit[] { f.ElementInit(add, Expression.Constant(ObjectOf(42))) })
+                f.MemberBind(pc.GetSetMethod(), [f.Bind(cz.GetSetMethod(), Expression.Constant(ObjectOf("98004")))]),
+                f.ListBind(px.GetSetMethod(), [f.ElementInit(add, Expression.Constant(ObjectOf(42)))])
             ));
 
             AssertExpr(f => f.MemberInit(n,
@@ -1360,7 +1360,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var t = TypeOf(typeof(Tuple<string, int>));
 
-            var c = (ConstructorInfo)GetMember(typeof(Tuple<string, int>).GetConstructor(new[] { typeof(string), typeof(int) }));
+            var c = (ConstructorInfo)GetMember(typeof(Tuple<string, int>).GetConstructor([typeof(string), typeof(int)]));
             var i = (PropertyInfo)GetMember(typeof(Tuple<string, int>).GetProperty("Item1"));
             var j = (PropertyInfo)GetMember(typeof(Tuple<string, int>).GetProperty("Item2"));
 
@@ -1375,14 +1375,14 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.New(newObj));
 
             AssertExpr(f => f.New(c, s, x));
-            AssertExpr(f => f.New(c, new Expression[] { s, x }));
+            AssertExpr(f => f.New(c, [s, x]));
             AssertExpr(f => f.New(c, new List<Expression> { s, x }));
 
-            AssertExpr(f => f.New(c, new Expression[] { s, x }, new MemberInfo[] { i, j }));
-            AssertExpr(f => f.New(c, new List<Expression> { s, x }, new MemberInfo[] { i, j }));
+            AssertExpr(f => f.New(c, [s, x], [i, j]));
+            AssertExpr(f => f.New(c, [s, x], [i, j]));
 
-            AssertExpr(f => f.New(c, new Expression[] { s, x }, new List<MemberInfo> { i, j }));
-            AssertExpr(f => f.New(c, new List<Expression> { s, x }, new List<MemberInfo> { i, j }));
+            AssertExpr(f => f.New(c, [s, x], new List<MemberInfo> { i, j }));
+            AssertExpr(f => f.New(c, [s, x], new List<MemberInfo> { i, j }));
         }
 
         [TestMethod]
@@ -1398,43 +1398,43 @@ namespace Tests.System.Linq.CompilerServices
             var t0 = TypeOf(typeof(A0));
             var c0 = (ConstructorInfo)GetMember(typeof(A0).GetConstructors().Single());
             AssertExpr(f => f.New(c0));
-            AssertExpr(f => f.New(c0, Array.Empty<Expression>()));
+            AssertExpr(f => f.New(c0, []));
             AssertExpr(f => f.New(c0, new List<Expression> { }));
 
             var t1 = TypeOf(typeof(A1));
             var c1 = (ConstructorInfo)GetMember(typeof(A1).GetConstructors().Single());
             AssertExpr(f => f.New(c1, a1));
-            AssertExpr(f => f.New(c1, new Expression[] { a1 }));
+            AssertExpr(f => f.New(c1, [a1]));
             AssertExpr(f => f.New(c1, new List<Expression> { a1 }));
 
             var t2 = TypeOf(typeof(A2));
             var c2 = (ConstructorInfo)GetMember(typeof(A2).GetConstructors().Single());
             AssertExpr(f => f.New(c2, a1, a2));
-            AssertExpr(f => f.New(c2, new Expression[] { a1, a2 }));
+            AssertExpr(f => f.New(c2, [a1, a2]));
             AssertExpr(f => f.New(c2, new List<Expression> { a1, a2 }));
 
             var t3 = TypeOf(typeof(A3));
             var c3 = (ConstructorInfo)GetMember(typeof(A3).GetConstructors().Single());
             AssertExpr(f => f.New(c3, a1, a2, a3));
-            AssertExpr(f => f.New(c3, new Expression[] { a1, a2, a3 }));
+            AssertExpr(f => f.New(c3, [a1, a2, a3]));
             AssertExpr(f => f.New(c3, new List<Expression> { a1, a2, a3 }));
 
             var t4 = TypeOf(typeof(A4));
             var c4 = (ConstructorInfo)GetMember(typeof(A4).GetConstructors().Single());
             AssertExpr(f => f.New(c4, a1, a2, a3, a4));
-            AssertExpr(f => f.New(c4, new Expression[] { a1, a2, a3, a4 }));
+            AssertExpr(f => f.New(c4, [a1, a2, a3, a4]));
             AssertExpr(f => f.New(c4, new List<Expression> { a1, a2, a3, a4 }));
 
             var t5 = TypeOf(typeof(A5));
             var c5 = (ConstructorInfo)GetMember(typeof(A5).GetConstructors().Single());
             AssertExpr(f => f.New(c5, a1, a2, a3, a4, a5));
-            AssertExpr(f => f.New(c5, new Expression[] { a1, a2, a3, a4, a5 }));
+            AssertExpr(f => f.New(c5, [a1, a2, a3, a4, a5]));
             AssertExpr(f => f.New(c5, new List<Expression> { a1, a2, a3, a4, a5 }));
 
             var t6 = TypeOf(typeof(A6));
             var c6 = (ConstructorInfo)GetMember(typeof(A6).GetConstructors().Single());
             AssertExpr(f => f.New(c6, a1, a2, a3, a4, a5, a6));
-            AssertExpr(f => f.New(c6, new Expression[] { a1, a2, a3, a4, a5, a6 }));
+            AssertExpr(f => f.New(c6, [a1, a2, a3, a4, a5, a6]));
             AssertExpr(f => f.New(c6, new List<Expression> { a1, a2, a3, a4, a5, a6 }));
         }
 
@@ -1506,9 +1506,9 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.RuntimeVariables(p1));
             AssertExpr(f => f.RuntimeVariables(p1, p2));
 
-            AssertExpr(f => f.RuntimeVariables(Array.Empty<ParameterExpression>()));
-            AssertExpr(f => f.RuntimeVariables(new ParameterExpression[] { p1 }));
-            AssertExpr(f => f.RuntimeVariables(new ParameterExpression[] { p1, p2 }));
+            AssertExpr(f => f.RuntimeVariables([]));
+            AssertExpr(f => f.RuntimeVariables([p1]));
+            AssertExpr(f => f.RuntimeVariables([p1, p2]));
 
             AssertExpr(f => f.RuntimeVariables(new List<ParameterExpression> { }));
             AssertExpr(f => f.RuntimeVariables(new List<ParameterExpression> { p1 }));
@@ -1531,62 +1531,62 @@ namespace Tests.System.Linq.CompilerServices
             var c4 = Expression.Constant(ObjectOf("b"));
 
             var s = Expression.Constant(ObjectOf("bar"));
-            var mtd = (MethodInfo)GetMember(typeof(EqualityComparer<string>).GetMethod("Equals", new[] { typeof(string), typeof(string) }));
+            var mtd = (MethodInfo)GetMember(typeof(EqualityComparer<string>).GetMethod("Equals", [typeof(string), typeof(string)]));
 
             AssertExpr(f => f.Switch(c, f.SwitchCase(v, c1)));
             AssertExpr(f => f.Switch(c, f.SwitchCase(v, c1, c2)));
-            AssertExpr(f => f.Switch(c, f.SwitchCase(v, new Expression[] { c1 })));
-            AssertExpr(f => f.Switch(c, f.SwitchCase(v, new Expression[] { c1, c2 })));
+            AssertExpr(f => f.Switch(c, f.SwitchCase(v, [c1])));
+            AssertExpr(f => f.Switch(c, f.SwitchCase(v, [c1, c2])));
             AssertExpr(f => f.Switch(c, f.SwitchCase(v, new List<Expression> { c1 })));
             AssertExpr(f => f.Switch(c, f.SwitchCase(v, new List<Expression> { c1, c2 })));
 
-            AssertExpr(f => f.Switch(c, new SwitchCase[] { f.SwitchCase(v, c1), f.SwitchCase(v, c2) }));
+            AssertExpr(f => f.Switch(c, [f.SwitchCase(v, c1), f.SwitchCase(v, c2)]));
 
             AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, c1)));
             AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, c1, c2)));
-            AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, new Expression[] { c1 })));
-            AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, new Expression[] { c1, c2 })));
+            AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, [c1])));
+            AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, [c1, c2])));
             AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, new List<Expression> { c1 })));
             AssertExpr(f => f.Switch(c, e, f.SwitchCase(d, new List<Expression> { c1, c2 })));
 
-            AssertExpr(f => f.Switch(c, e, new SwitchCase[] { f.SwitchCase(d, c1), f.SwitchCase(e, c2) }));
+            AssertExpr(f => f.Switch(c, e, [f.SwitchCase(d, c1), f.SwitchCase(e, c2)]));
 
             AssertExpr(f => f.Switch(s, f.SwitchCase(v, c3)));
             AssertExpr(f => f.Switch(s, f.SwitchCase(v, c3, c4)));
-            AssertExpr(f => f.Switch(s, f.SwitchCase(v, new Expression[] { c3 })));
-            AssertExpr(f => f.Switch(s, f.SwitchCase(v, new Expression[] { c3, c4 })));
+            AssertExpr(f => f.Switch(s, f.SwitchCase(v, [c3])));
+            AssertExpr(f => f.Switch(s, f.SwitchCase(v, [c3, c4])));
             AssertExpr(f => f.Switch(s, f.SwitchCase(v, new List<Expression> { c3 })));
             AssertExpr(f => f.Switch(s, f.SwitchCase(v, new List<Expression> { c3, c4 })));
 
-            AssertExpr(f => f.Switch(s, new SwitchCase[] { f.SwitchCase(v, c3), f.SwitchCase(v, c4) }));
+            AssertExpr(f => f.Switch(s, [f.SwitchCase(v, c3), f.SwitchCase(v, c4)]));
 
             AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, c3)));
             AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, c3, c4)));
-            AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, new Expression[] { c3 })));
-            AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, new Expression[] { c3, c4 })));
+            AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, [c3])));
+            AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, [c3, c4])));
             AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, new List<Expression> { c3 })));
             AssertExpr(f => f.Switch(s, e, f.SwitchCase(d, new List<Expression> { c3, c4 })));
 
-            AssertExpr(f => f.Switch(s, e, new SwitchCase[] { f.SwitchCase(d, c3), f.SwitchCase(e, c4) }));
+            AssertExpr(f => f.Switch(s, e, [f.SwitchCase(d, c3), f.SwitchCase(e, c4)]));
 
             AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, c3)));
             AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, c3, c4)));
-            AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, new Expression[] { c3 })));
-            AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, new Expression[] { c3, c4 })));
+            AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, [c3])));
+            AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, [c3, c4])));
             AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, new List<Expression> { c3 })));
             AssertExpr(f => f.Switch(s, e, mtd, f.SwitchCase(d, new List<Expression> { c3, c4 })));
 
-            AssertExpr(f => f.Switch(s, e, mtd, new SwitchCase[] { f.SwitchCase(d, c3), f.SwitchCase(e, c4) }));
+            AssertExpr(f => f.Switch(s, e, mtd, [f.SwitchCase(d, c3), f.SwitchCase(e, c4)]));
             AssertExpr(f => f.Switch(s, e, mtd, new List<SwitchCase> { f.SwitchCase(d, c3), f.SwitchCase(e, c4) }));
 
             AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, c3)));
             AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, c3, c4)));
-            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, new Expression[] { c3 })));
-            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, new Expression[] { c3, c4 })));
+            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, [c3])));
+            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, [c3, c4])));
             AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, new List<Expression> { c3 })));
             AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, f.SwitchCase(d, new List<Expression> { c3, c4 })));
 
-            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, new SwitchCase[] { f.SwitchCase(d, c3), f.SwitchCase(e, c4) }));
+            AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, [f.SwitchCase(d, c3), f.SwitchCase(e, c4)]));
             AssertExpr(f => f.Switch(TypeOf(typeof(string)), s, e, mtd, new List<SwitchCase> { f.SwitchCase(d, c3), f.SwitchCase(e, c4) }));
         }
 
@@ -1737,7 +1737,7 @@ namespace Tests.System.Linq.CompilerServices
             var a = Expression.Constant(ObjectOf(1));
             var b = Expression.Constant(ObjectOf(new BigInteger(42)));
 
-            var neg = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_UnaryNegation", new[] { typeof(BigInteger) }));
+            var neg = (MethodInfo)GetMember(typeof(BigInteger).GetMethod("op_UnaryNegation", [typeof(BigInteger)]));
 
             Assert.IsNotNull(neg);
 
@@ -1793,8 +1793,8 @@ namespace Tests.System.Linq.CompilerServices
 
             AssertExpr(f => f.MakeUnary(ExpressionType.Throw, ex, TypeOf(typeof(Exception))));
 
-            Assert.ThrowsException<ArgumentException>(() => ExpressionFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
-            Assert.ThrowsException<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
         }
 
         [TestMethod]
@@ -1868,10 +1868,10 @@ namespace Tests.System.Linq.CompilerServices
             var y = Expression.Constant(ObjectOf(43));
             var b = Expression.Constant(ObjectOf(true));
 
-            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, new[] { f.Catch(TypeOf(typeof(Exception)), y) }));
-            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, new[] { f.MakeCatchBlock(TypeOf(typeof(Exception)), Expression.Parameter(TypeOf(typeof(Exception))), y, b) }));
-            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, new[] { f.MakeCatchBlock(TypeOf(typeof(Exception)), Expression.Parameter(TypeOf(typeof(Exception))), y, filter: null) }));
-            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, new[] { f.MakeCatchBlock(TypeOf(typeof(Exception)), variable: null, y, b) }));
+            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, [f.Catch(TypeOf(typeof(Exception)), y)]));
+            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, [f.MakeCatchBlock(TypeOf(typeof(Exception)), Expression.Parameter(TypeOf(typeof(Exception))), y, b)]));
+            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, [f.MakeCatchBlock(TypeOf(typeof(Exception)), Expression.Parameter(TypeOf(typeof(Exception))), y, filter: null)]));
+            AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, e, fault: null, [f.MakeCatchBlock(TypeOf(typeof(Exception)), variable: null, y, b)]));
             AssertExpr(f => f.MakeTry(TypeOf(typeof(int)), x, @finally: null, e, handlers: null));
         }
 

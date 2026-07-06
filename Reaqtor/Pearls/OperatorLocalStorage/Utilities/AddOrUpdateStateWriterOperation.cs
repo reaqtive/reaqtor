@@ -30,18 +30,11 @@ namespace Utilities
 
             if (!store.Data.TryGetValue(Category, out var table))
             {
-                table = new Dictionary<string, byte[]>();
+                table = [];
                 store.Data.Add(Category, table);
             }
 
-            if (!table.ContainsKey(Key))
-            {
-                table.Add(Key, data);
-            }
-            else
-            {
-                table[Key] = data;
-            }
+            table[Key] = data;
         }
     }
 }

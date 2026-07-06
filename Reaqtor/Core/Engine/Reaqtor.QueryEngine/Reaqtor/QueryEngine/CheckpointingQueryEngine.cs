@@ -68,12 +68,10 @@ namespace Reaqtor.QueryEngine
             // TODO: remove trace source and make it an option
             // TODO: remove delegate cache and make it an option
 
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (uri.ToCanonicalString().EndsWith("/", StringComparison.Ordinal))
+            ArgumentNullException.ThrowIfNull(uri);
+            if (uri.ToCanonicalString().EndsWith('/'))
                 throw new ArgumentException("Container URI must not end in '/'.", nameof(uri));
-            if (metadataRegistry == null)
-                throw new ArgumentNullException(nameof(metadataRegistry));
+            ArgumentNullException.ThrowIfNull(metadataRegistry);
 
             Uri = uri;
             _serviceResolver = serviceResolver ?? throw new ArgumentNullException(nameof(serviceResolver));
@@ -240,8 +238,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public async Task CheckpointAsync(IStateWriter writer, CancellationToken token = default, IProgress<int> progress = null)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             using var _ = _tracker.Enter();
 
@@ -259,8 +256,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public async Task RecoverAsync(IStateReader reader, CancellationToken token = default, IProgress<int> progress = null)
         {
-            if (reader == null)
-                throw new ArgumentNullException(nameof(reader));
+            ArgumentNullException.ThrowIfNull(reader);
 
             using var _ = _tracker.Enter();
 
@@ -286,20 +282,11 @@ namespace Reaqtor.QueryEngine
 #pragma warning disable IDE0079 // Remove unnecessary suppressions.
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not yet know about IAsyncDisposable.)
 
-#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Disposes resources asynchronously.
         /// </summary>
         /// <returns>A task to await the completion of the dispose operation.</returns>
         public async ValueTask DisposeAsync()
-#else
-        /// <summary>
-        /// Disposes resources asynchronously.
-        /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>A task to await the completion of the dispose operation.</returns>
-        public async Task DisposeAsync(CancellationToken token)
-#endif
         {
             await DisposeAsyncCore().ConfigureAwait(false);
 
@@ -314,11 +301,7 @@ namespace Reaqtor.QueryEngine
         /// Disposes resources asynchronously.
         /// </summary>
         /// <returns>A task to await the completion of the dispose operation.</returns>
-#if NET6_0 || NETSTANDARD2_1
         protected virtual async ValueTask DisposeAsyncCore()
-#else
-        protected virtual async Task DisposeAsyncCore()
-#endif
         {
             if (!_disposed)
             {
@@ -359,9 +342,7 @@ namespace Reaqtor.QueryEngine
 
                     UnloadAsync().Wait();
                     _tracker.DisposeAsync()
-#if NET6_0 || NETSTANDARD2_1
                         .AsTask()
-#endif
                         .Wait();
 
                     _checkpointManager.Dispose();

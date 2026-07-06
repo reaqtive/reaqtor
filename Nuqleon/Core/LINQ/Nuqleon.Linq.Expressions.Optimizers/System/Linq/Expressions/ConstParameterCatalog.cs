@@ -101,10 +101,8 @@ namespace System.Linq.Expressions
                 (byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options),
                 (byte[] inArray, global::System.Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options),
 
-#if NET6_0
                 (byte[] inArray) => global::System.Convert.ToHexString(inArray),
                 (byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length),
-#endif
             }.ToReadOnly();
 
             /// <summary>

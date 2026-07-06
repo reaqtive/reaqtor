@@ -19,19 +19,15 @@ namespace Tests
     [TestClass]
     public class PooledMemoryStreamTests : TestBase
     {
-#if !NET472_OR_GREATER
 #pragma warning disable IDE0230 // Use UTF-8 string literal. Not actually a UTF-8 string.
-#endif
-        private static readonly byte[] bytes = new byte[] { 0x42, 0xDE, 0xAD, 0x43 };
-#if !NET472_OR_GREATER
+        private static readonly byte[] bytes = [0x42, 0xDE, 0xAD, 0x43];
 #pragma warning restore IDE0230
-#endif
 
         [TestMethod]
         public void PooledMemoryStream_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, 16, -1));
         }
 
         [TestMethod]
@@ -196,7 +192,7 @@ namespace Tests
         public void PooledMemoryStream_GetBufferAndFree_ArgumentChecking()
         {
             var obj = PooledMemoryStream.GetInstance();
-            Assert.ThrowsException<ArgumentNullException>(() => obj.GetBufferAndFree(processBuffer: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => obj.GetBufferAndFree(processBuffer: null));
         }
 
         [TestMethod]

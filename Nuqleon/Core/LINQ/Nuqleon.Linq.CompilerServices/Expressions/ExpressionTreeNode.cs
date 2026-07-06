@@ -356,8 +356,7 @@ namespace System.Linq.Expressions
         public MemberAssignmentExpressionTreeNode(MemberAssignment memberAssignment)
             : base(ExpressionTreeNodeType.MemberAssignment, memberAssignment)
         {
-            if (memberAssignment == null)
-                throw new ArgumentNullException(nameof(memberAssignment));
+            ArgumentNullException.ThrowIfNull(memberAssignment);
         }
 
         /// <summary>
@@ -405,8 +404,7 @@ namespace System.Linq.Expressions
         public MemberListBindingExpressionTreeNode(MemberListBinding memberListBinding)
             : base(ExpressionTreeNodeType.MemberListBinding, memberListBinding)
         {
-            if (memberListBinding == null)
-                throw new ArgumentNullException(nameof(memberListBinding));
+            ArgumentNullException.ThrowIfNull(memberListBinding);
         }
 
         /// <summary>
@@ -454,8 +452,7 @@ namespace System.Linq.Expressions
         public MemberMemberBindingExpressionTreeNode(MemberMemberBinding memberMemberBinding)
             : base(ExpressionTreeNodeType.MemberMemberBinding, memberMemberBinding)
         {
-            if (memberMemberBinding == null)
-                throw new ArgumentNullException(nameof(memberMemberBinding));
+            ArgumentNullException.ThrowIfNull(memberMemberBinding);
         }
 
         /// <summary>

@@ -18,14 +18,14 @@ namespace Tests
         public void Analyze_Unbound()
         {
             var e = Expression.Lambda<Func<int>>(Expression.Parameter(typeof(int)));
-            Assert.ThrowsException<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
         }
 
         [TestMethod]
         public void Analyze_Extension()
         {
             var e = Expression.Lambda<Func<int>>(new Extension());
-            Assert.ThrowsException<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
         }
 
         [TestMethod]
@@ -192,7 +192,7 @@ namespace Tests
         {
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(int));
-            var b = Expression.Block(new[] { y }, Expression.Add(x, y));
+            var b = Expression.Block([y], Expression.Add(x, y));
             var e = Expression.Lambda<Func<int, int>>(b, x);
 
             var a = Analyzer.Analyze(e, methodTable: null);

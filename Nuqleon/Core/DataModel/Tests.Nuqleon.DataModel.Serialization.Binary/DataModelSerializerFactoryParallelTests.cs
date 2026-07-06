@@ -149,13 +149,13 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
                         var rt = factory.Deserialize(t.OutputType, holder.MemoryStream);
 
-                        Assert.IsTrue(t.Comparer.Equals(t.Value, rt), "Expected: {0} Actual: {1}", t.Value, rt);
+                        Assert.IsTrue(t.Comparer.Equals(t.Value, rt), $"Expected: {t.Value} Actual: {rt}");
                     }
                 );
             }
 
             // Each test in random order
-            var r = new Random();
+            var r = Random.Shared;
             Parallel.ForEach(
                 Enumerable.Repeat(tests, Repeat).SelectMany(t => t).OrderBy(_ => r.Next()),
                 t =>
@@ -168,7 +168,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
                     var rt = factory.Deserialize(t.OutputType, holder.MemoryStream);
 
-                    Assert.IsTrue(t.Comparer.Equals(t.Value, rt), "Expected: {0} Actual: {1}", t.Value, rt);
+                    Assert.IsTrue(t.Comparer.Equals(t.Value, rt), $"Expected: {t.Value} Actual: {rt}");
                 }
             );
         }

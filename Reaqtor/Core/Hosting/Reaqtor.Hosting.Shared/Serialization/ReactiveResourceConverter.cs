@@ -180,8 +180,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private abstract class DefinedResource : Resource, IAsyncReactiveDefinedResource
         {
-            private static readonly HashSet<Type> s_funcTypes = new()
-            {
+            private static readonly HashSet<Type> s_funcTypes =
+            [
                 typeof(Func<,>),
                 typeof(Func<,,>),
                 typeof(Func<,,,>),
@@ -198,7 +198,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(Func<,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
 
@@ -238,11 +238,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
             public DateTimeOffset CreationTime => throw new NotImplementedException();
 
-#if NET6_0 || NETSTANDARD2_1
             public ValueTask DisposeAsync() => throw new NotImplementedException();
-#else
-            public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();
-#endif
         }
 
         private sealed class Observable : DefinedResource, IAsyncReactiveObservableDefinition
@@ -283,8 +279,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private sealed class StreamFactory : DefinedResource, IAsyncReactiveStreamFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes = new()
-            {
+            private static readonly HashSet<Type> s_factoryTypes =
+            [
                 typeof(IAsyncReactiveQubjectFactory<,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,>),
@@ -300,7 +296,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
 
@@ -353,8 +349,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private sealed class SubscriptionFactory : DefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes = new()
-            {
+            private static readonly HashSet<Type> s_factoryTypes =
+            [
                 typeof(IAsyncReactiveQubscriptionFactory<>),
                 typeof(IAsyncReactiveQubscriptionFactory<,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,>),
@@ -370,7 +366,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
 

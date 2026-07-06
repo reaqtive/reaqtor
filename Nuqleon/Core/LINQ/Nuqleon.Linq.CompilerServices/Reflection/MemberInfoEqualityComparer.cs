@@ -225,15 +225,9 @@ namespace System.Reflection
         /// <returns>The comparable member on the target type.</returns>
         public MemberInfo ResolveMember(Type targetType, MemberInfo member)
         {
-            if (targetType == null)
-            {
-                throw new ArgumentNullException(nameof(targetType));
-            }
+            ArgumentNullException.ThrowIfNull(targetType);
 
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
+            ArgumentNullException.ThrowIfNull(member);
 
             return member.MemberType switch
             {

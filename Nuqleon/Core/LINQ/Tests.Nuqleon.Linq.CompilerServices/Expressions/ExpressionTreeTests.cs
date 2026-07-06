@@ -23,10 +23,14 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTree_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(ElementInit)), ex => Assert.AreEqual("elementInitializer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(MemberBinding)), ex => Assert.AreEqual("memberBinding", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionExpressionTreeNode(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(ElementInit)));
+            Assert.AreEqual("elementInitializer", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(MemberBinding)));
+            Assert.AreEqual("memberBinding", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionExpressionTreeNode(expression: null));
+            Assert.AreEqual("expression", ex4.ParamName);
         }
 
         [TestMethod]
@@ -43,8 +47,10 @@ namespace Tests.System.Linq.CompilerServices
             var et = Expression.Constant(42).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -360,7 +366,7 @@ namespace Tests.System.Linq.CompilerServices
             var a2 = et.Children[1];
 
             var bu = et.Update(a1, a2);
-            var bv = et.Update((IEnumerable<ExpressionTree>)new[] { a1, (ExpressionTree)a2 });
+            var bv = et.Update((IEnumerable<ExpressionTree>)[a1, (ExpressionTree)a2]);
 
             Assert.AreSame(a1, bu.Children[0]);
             Assert.AreSame(a2, bu.Children[1]);
@@ -476,7 +482,7 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(i2, ((ExpressionTree<InvocationExpression>)iu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a2));
         }
 
         [TestMethod]
@@ -527,9 +533,9 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(l2, ((ExpressionTree<ListInitExpression>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1, a2, a3, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1, a2, a3, a2));
         }
 
         [TestMethod]
@@ -575,8 +581,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MethodCallExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a2));
 #pragma warning restore IDE0057
         }
 
@@ -620,8 +626,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MethodCallExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
         }
 
         [TestMethod]
@@ -664,8 +670,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MemberExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
         }
 
         [TestMethod]
@@ -701,7 +707,7 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.AreSame(et, mu);
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(et));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(et));
         }
 
         [TestMethod]
@@ -750,9 +756,9 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MemberInitExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1, a2, a2));
         }
 
         [TestMethod]
@@ -799,8 +805,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(n2, ((ExpressionTree<NewExpression>)nu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
         }
 
         [TestMethod]
@@ -869,8 +875,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(n2, ((ExpressionTree<NewArrayExpression>)nu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
         }
 
         [TestMethod]
@@ -912,7 +918,7 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(nt, ((ExpressionTree<Expression<Func<int>>>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb, Expression.Parameter(typeof(int)).ToExpressionTree()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb, Expression.Parameter(typeof(int)).ToExpressionTree()));
         }
 
         [TestMethod]
@@ -934,8 +940,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(nt, ((ExpressionTree<Expression<Func<int, int, int>>>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb, et.Children[1]));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb, et.Children[1]));
         }
 
         [TestMethod]
@@ -1091,7 +1097,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTree_ElementInit_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ElementInitExpressionTreeNode(elementInit: null), ex => Assert.AreEqual("elementInit", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ElementInitExpressionTreeNode(elementInit: null));
+            Assert.AreEqual("elementInit", ex.ParamName);
         }
 
         [TestMethod]
@@ -1123,7 +1130,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1134,8 +1141,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, eu.ElementInit));
             Assert.IsTrue(eq.Equals(e2, ev.ElementInit));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1144,15 +1151,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = Expression.ElementInit(typeof(List<int>).GetMethod("Add"), Expression.Constant(2)).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberAssignment_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberAssignmentExpressionTreeNode(memberAssignment: null), ex => Assert.AreEqual("memberAssignment", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberAssignmentExpressionTreeNode(memberAssignment: null));
+            Assert.AreEqual("memberAssignment", ex.ParamName);
         }
 
         [TestMethod]
@@ -1187,7 +1197,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1198,8 +1208,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, ((MemberAssignmentExpressionTree)eu).MemberAssignment));
             Assert.IsTrue(eq.Equals(e2, ((MemberAssignmentExpressionTree)ev).MemberAssignment));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1213,7 +1223,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1224,8 +1234,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, eu.MemberAssignment));
             Assert.IsTrue(eq.Equals(e2, ev.MemberAssignment));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1234,15 +1244,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberAssignmentExpressionTree)Expression.Bind(typeof(Foo).GetProperty("Baz"), Expression.Constant(2)).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberMemberBinding_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberMemberBindingExpressionTreeNode(memberMemberBinding: null), ex => Assert.AreEqual("memberMemberBinding", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberMemberBindingExpressionTreeNode(memberMemberBinding: null));
+            Assert.AreEqual("memberMemberBinding", ex.ParamName);
         }
 
         [TestMethod]
@@ -1279,7 +1292,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = bar.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1290,8 +1303,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(m2, ((MemberMemberBindingExpressionTree)eu).MemberMemberBinding));
             Assert.IsTrue(eq.Equals(m2, ((MemberMemberBindingExpressionTree)ev).MemberMemberBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1307,7 +1320,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = bar.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1318,8 +1331,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(m2, eu.MemberMemberBinding));
             Assert.IsTrue(eq.Equals(m2, ev.MemberMemberBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1328,15 +1341,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberMemberBindingExpressionTree)Expression.MemberBind(typeof(Bar).GetProperty("Foo"), Expression.Bind(typeof(Foo).GetProperty("Baz"), Expression.Constant(2))).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<MemberBindingExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(MemberBindingExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<MemberBindingExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(MemberBindingExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberListBinding_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberListBindingExpressionTreeNode(memberListBinding: null), ex => Assert.AreEqual("memberListBinding", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberListBindingExpressionTreeNode(memberListBinding: null));
+            Assert.AreEqual("memberListBinding", ex.ParamName);
         }
 
         [TestMethod]
@@ -1373,7 +1389,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ei2.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1384,8 +1400,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(l2, ((MemberListBindingExpressionTree)eu).MemberListBinding));
             Assert.IsTrue(eq.Equals(l2, ((MemberListBindingExpressionTree)ev).MemberListBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1401,7 +1417,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ei2.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1412,8 +1428,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(l2, eu.MemberListBinding));
             Assert.IsTrue(eq.Equals(l2, ev.MemberListBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1422,8 +1438,10 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberListBindingExpressionTree)Expression.ListBind(typeof(Foo).GetProperty("Xs"), Expression.ElementInit(typeof(List<int>).GetMethod("Add"), Expression.Constant(2))).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ElementInitExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ElementInitExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ElementInitExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ElementInitExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

@@ -27,13 +27,13 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 var one = table["A"];
 
                 CollectionAssert.AreEqual(new byte[] { 1 }, one);
 
-                table.Update("A", new byte[] { 2 });
+                table.Update("A", [2]);
 
                 Assert.IsTrue(table.Contains("A"));
 
@@ -43,8 +43,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var contents = table.ToList();
 
-                Assert.AreEqual(contents.Count, 1);
-                Assert.AreEqual(contents[0].Key, "A");
+                Assert.AreEqual(1, contents.Count);
+                Assert.AreEqual("A", contents[0].Key);
                 CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
                 table.Remove("A");
@@ -58,16 +58,16 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                Assert.AreEqual(table.Count(), 0);
+                Assert.AreEqual(0, table.Count());
             }
         }
 
         [TestMethod]
         public void InMemoryKeyValueStore_Extensions()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.Clear<string, byte[]>(null));
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.TryRemove<string, byte[]>(null, "aa"));
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.TryGet<string, byte[]>(null, "aa", out _));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.Clear<string, byte[]>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.TryRemove<string, byte[]>(null, "aa"));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.TryGet<string, byte[]>(null, "aa", out _));
 
             var kvs = new InMemoryKeyValueStore();
 
@@ -79,7 +79,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 table.Clear();
 
@@ -89,7 +89,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Assert.IsFalse(table.TryRemove("A"));
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 Assert.IsTrue(table.TryRemove("A"));
                 Assert.IsFalse(table.Contains("A"));
@@ -97,12 +97,12 @@ namespace Tests.Reaqtor.QueryEngine
                 // TryGet
 
                 Assert.IsFalse(table.TryGet("A", out var value));
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
                 Assert.IsTrue(table.TryGet("A", out value));
                 CollectionAssert.AreEquivalent(value, new byte[] { 1 });
             }
 
-            Assert.ThrowsException<ArgumentNullException>(() => Transaction.CommitAsync(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Transaction.CommitAsync(null));
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 tx.CommitAsync().Wait();
             }
@@ -161,7 +161,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Update("A", new byte[] { 2 });
+                table.Update("A", [2]);
 
                 tx.CommitAsync().Wait();
             }
@@ -198,8 +198,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var contents = table.ToList();
 
-                Assert.AreEqual(contents.Count, 1);
-                Assert.AreEqual(contents[0].Key, "A");
+                Assert.AreEqual(1, contents.Count);
+                Assert.AreEqual("A", contents[0].Key);
                 CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
                 tx.CommitAsync().Wait();
@@ -233,7 +233,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                Assert.AreEqual(table.Count(), 0);
+                Assert.AreEqual(0, table.Count());
             }
         }
 
@@ -252,8 +252,8 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable1.Enter(tx2);
 
-                writer1.Add("A", new byte[] { 1 });
-                writer2.Add("B", new byte[] { 1 });
+                writer1.Add("A", [1]);
+                writer2.Add("B", [1]);
 
                 tx1.CommitAsync().Wait();
                 tx2.CommitAsync().Wait();
@@ -274,8 +274,8 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable2.Enter(tx2);
 
-                writer1.Add("C", new byte[] { 1 });
-                writer2.Add("C", new byte[] { 2 });
+                writer1.Add("C", [1]);
+                writer2.Add("C", [2]);
 
                 tx1.CommitAsync().Wait();
                 tx2.CommitAsync().Wait();
@@ -297,12 +297,12 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable1.Enter(tx2);
 
-                writer1.Add("D", new byte[] { 1 });
-                writer2.Add("D", new byte[] { 2 });
+                writer1.Add("D", [1]);
+                writer2.Add("D", [2]);
 
                 tx1.CommitAsync().Wait();
 
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx2.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx2.CommitAsync()).Wait();
             }
         }
 
@@ -322,12 +322,12 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer = subtable1.Enter(tx2);
 
                 reader.Contains("A");
-                writer.Add("A", Array.Empty<byte>());
+                writer.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
                 // Throw because contains was false before and true now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -342,7 +342,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because contains was true before and false now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Get
@@ -363,12 +363,12 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leak the fact that the table doesn't contain "A"
                 }
 
-                writer.Add("A", Array.Empty<byte>());
+                writer.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -383,7 +383,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get returned the original version before but will return the updated version now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -398,7 +398,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get didn't throw before but will now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Update
@@ -411,7 +411,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 try
                 {
-                    writer1.Update("A", Array.Empty<byte>());
+                    writer1.Update("A", []);
                     Assert.Fail();
                 }
                 catch
@@ -419,12 +419,12 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leaked that "A" is not in the kvs
                 }
 
-                writer2.Add("A", Array.Empty<byte>());
+                writer2.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
                 // Throw because Updaete threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Add
@@ -437,7 +437,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 try
                 {
-                    writer1.Add("A", Array.Empty<byte>());
+                    writer1.Add("A", []);
                     Assert.Fail();
                 }
                 catch
@@ -450,7 +450,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Add threw before and won't now (since the writer has removed the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Remove
@@ -471,12 +471,12 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leaked that "A" is already in the kvs
                 }
 
-                writer2.Add("A", Array.Empty<byte>());
+                writer2.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
                 // Throw because Remove threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Enumerate
@@ -494,7 +494,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because iteration is not consistent with before
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
         }
     }

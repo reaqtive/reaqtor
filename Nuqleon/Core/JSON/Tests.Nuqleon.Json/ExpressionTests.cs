@@ -25,37 +25,37 @@ namespace Tests
         [TestMethod]
         public void Expression_ArgumentChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(default(Json.Expression[])));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(default(IEnumerable<Json.Expression>)));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(default(IList<Json.Expression>)));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Object(members: null));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Parse(input: null));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Parse(input: null, ensureTopLevelObjectOrArray: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(default(Json.Expression[])));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(default(IEnumerable<Json.Expression>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(default(IList<Json.Expression>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Object(members: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Parse(input: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Parse(input: null, ensureTopLevelObjectOrArray: false));
 
             var n = default(Json.Expression);
             var e = Json.Expression.Null();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, n));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, n, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, n));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, n));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, n, e));
-            Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, e, n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, n, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, n));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(n, e, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, n, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, n, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, n, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, n, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, e, n));
         }
 
 #pragma warning disable IDE0100 // Remove redundant equality (clarity for Boolean asserts)
@@ -177,8 +177,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(0));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(0));
 
                 Assert.IsTrue(arr.ElementCount == 0);
                 Assert.IsTrue(arr.Elements.Count == 0);
@@ -195,8 +195,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(1));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -223,8 +223,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(2));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(2));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -252,8 +252,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(3));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(3));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -282,8 +282,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(4));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(4));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -313,8 +313,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(5));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(5));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -345,8 +345,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(6));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(6));
 
                 for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
                 {
@@ -378,8 +378,8 @@ namespace Tests
 
             foreach (var arr in new[] { t, (Json.ArrayExpression)o })
             {
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => arr.GetElement(7));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(7));
 
                 for (var k = 0; k < 2; k++) // Twice for consistency with other tests above.
                 {
@@ -421,7 +421,7 @@ namespace Tests
         public void Expression_Array_Optimize0()
         {
             var arr0 = Json.Expression.Array();
-            var arr1 = Json.Expression.Array(Array.Empty<Json.Expression>());
+            var arr1 = Json.Expression.Array([]);
             var arr2 = Json.Expression.Array(new List<Json.Expression>());
             var arr3 = Json.Expression.Array(Enumerable.Empty<Json.Expression>());
 
@@ -456,7 +456,7 @@ namespace Tests
             var exprs = Enumerable.Range(0, n).Select(i => Json.Expression.Number(n.ToString())).Cast<Json.Expression>().ToArray();
 
             var arr1 = Json.Expression.Array(exprs.Select(e => e));
-            var arr2 = Json.Expression.Array(exprs.ToArray());
+            var arr2 = Json.Expression.Array([.. exprs]);
             var arr3 = Json.Expression.Array(exprs.ToList());
 
             foreach (var arr in new[] { arr1, arr2, arr3 })
@@ -499,7 +499,7 @@ namespace Tests
                 { "Age", Json.Expression.Number("21") },
             });
 
-            Assert.ThrowsException<ArgumentNullException>(() => t.ToString(builder: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => t.ToString(builder: null));
 
             var s1 = t.ToString();
 

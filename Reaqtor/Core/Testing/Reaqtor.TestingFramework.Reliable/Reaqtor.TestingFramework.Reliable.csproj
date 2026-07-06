@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net6.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Description>Reaqtor testing framework for reliable event delivery.</Description>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,8 +41,7 @@ if (requireNullChecks)
 for (var i = 1; i <= n; i++)
 {
 #>
-            if (comparer<#=i#> == null)
-                throw new ArgumentNullException(nameof(comparer<#=i#>));
+            ArgumentNullException.ThrowIfNull(comparer<#=i#>);
 <#
 }
 #>
@@ -51,8 +50,7 @@ for (var i = 1; i <= n; i++)
 for (var i = 1; i <= n; i++)
 {
 #>
-            if (get<#=i#> == null)
-                throw new ArgumentNullException(nameof(get<#=i#>));
+            ArgumentNullException.ThrowIfNull(get<#=i#>);
 <#
 }
 #>
@@ -152,8 +150,7 @@ if (requireNullChecks)
 for (var i = 1; i <= n; i++)
 {
 #>
-            if (comparer<#=i#> == null)
-                throw new ArgumentNullException(nameof(comparer<#=i#>));
+            ArgumentNullException.ThrowIfNull(comparer<#=i#>);
 <#
 }
 #>

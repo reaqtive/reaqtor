@@ -30,7 +30,7 @@ namespace Reaqtive.Operators
         private sealed class _ : StatefulUnaryOperator<LastAsync<TSource>, TSource>, IObserver<TSource>
         {
             private bool _hasValue;
-            private TSource _lastValue = default!;
+            private TSource _lastValue = default;
 
             public _(LastAsync<TSource> parent, IObserver<TSource> observer)
                 : base(parent, observer)
@@ -54,7 +54,7 @@ namespace Reaqtive.Operators
                 }
                 else
                 {
-                    Output.OnNext(default!);
+                    Output.OnNext(default);
                     Output.OnCompleted();
                 }
 

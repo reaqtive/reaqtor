@@ -20,18 +20,18 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Gets a table of members that are deemed to be pure.
         /// </summary>
-        public MemberTable PureMembers { get; set; } = new MemberTable();
+        public MemberTable PureMembers { get; set; } = [];
 
         /// <summary>
         /// Gets a table of parameters that are used in a <c>const</c> way, i.e. the callee doesn't mutate the values
         /// passed to these parameters.
         /// </summary>
-        public ParameterTable ConstParameters { get; set; } = new ParameterTable();
+        public ParameterTable ConstParameters { get; set; } = [];
 
         /// <summary>
         /// Gets a table of types whose instances are immutable.
         /// </summary>
-        public TypeTable ImmutableTypes { get; set; } = new TypeTable();
+        public TypeTable ImmutableTypes { get; set; } = [];
 
         /// <summary>
         /// Checks if the specified <paramref name="member"/> is pure and doesn't have any side-effects for

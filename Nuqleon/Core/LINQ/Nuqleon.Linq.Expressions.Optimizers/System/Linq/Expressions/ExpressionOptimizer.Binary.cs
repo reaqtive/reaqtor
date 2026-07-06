@@ -256,7 +256,7 @@ namespace System.Linq.Expressions
         {
             do
             {
-                var result = type.GetMethod(name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, binder: null, new[] { type }, modifiers: null);
+                var result = type.GetMethod(name, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [type], modifiers: null);
 
                 if (result != null && result.IsSpecialName && !result.ContainsGenericParameters)
                 {
@@ -309,7 +309,7 @@ namespace System.Linq.Expressions
                                 var rightValue = GetConstantValue(node.Right);
 
                                 var evaluator = GetEvaluator(method);
-                                return Evaluate(node, evaluator, new[] { leftValue, rightValue });
+                                return Evaluate(node, evaluator, [leftValue, rightValue]);
                             }
                             else
                             {
@@ -451,7 +451,7 @@ namespace System.Linq.Expressions
                                     if (rightValue != null) // NB: Should never be null if IsAlwaysNull is correctly overridden.
                                     {
                                         var evaluator = GetEvaluator(method);
-                                        return Evaluate(node, evaluator, new[] { leftValue, rightValue });
+                                        return Evaluate(node, evaluator, [leftValue, rightValue]);
                                     }
                                 }
                                 else
@@ -821,7 +821,7 @@ namespace System.Linq.Expressions
                 if (leftValue != null && rightValue != null)
                 {
                     var evaluator = GetEvaluator(node.Method);
-                    var result = Evaluate(node, evaluator, new[] { leftValue, rightValue });
+                    var result = Evaluate(node, evaluator, [leftValue, rightValue]);
 
                     return result;
                 }
@@ -906,7 +906,7 @@ namespace System.Linq.Expressions
                 var rightValue = GetConstantValue(node.Right);
 
                 var evaluator = GetEvaluator(node.Method);
-                var result = Evaluate(node, evaluator, new[] { leftValue, rightValue });
+                var result = Evaluate(node, evaluator, [leftValue, rightValue]);
 
                 return result;
             }

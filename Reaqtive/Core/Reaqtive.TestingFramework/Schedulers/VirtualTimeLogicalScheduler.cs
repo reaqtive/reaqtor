@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Reaqtive.Scheduler;
@@ -21,7 +22,7 @@ namespace Reaqtive.TestingFramework
         private readonly VirtualTimeLogicalScheduler<TAbsolute, TRelative> _parent;
         private readonly List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>> _children;
         private readonly List<IWorkItem<TAbsolute>> _tasks;
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
 
         protected VirtualTimeLogicalScheduler(
             VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> physical,
@@ -29,8 +30,8 @@ namespace Reaqtive.TestingFramework
         {
             Physical = physical;
             _parent = parent;
-            _tasks = new List<IWorkItem<TAbsolute>>();
-            _children = new List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>>();
+            _tasks = [];
+            _children = [];
         }
 
         /// <summary>
@@ -73,8 +74,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public virtual void ScheduleAbsolute(TAbsolute dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             lock (_gate)
             {
@@ -91,8 +91,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void ScheduleRelative(TRelative dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             lock (_gate)
             {
@@ -108,8 +107,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleAbsolute(Physical.Clock, task);
         }
@@ -121,8 +119,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(TimeSpan dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleRelative(Physical.ToRelative(dueTime), task);
         }
@@ -134,8 +131,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleRelative(Physical.ToRelative(dueTime - Now), task);
         }
@@ -236,8 +232,7 @@ namespace Reaqtive.TestingFramework
         /// <returns>true if the exception was handled; otherwise, false.</returns>
         public bool TryCatch(Exception exception, IWorkItem task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             var handler = UnhandledException;
             if (handler != null)

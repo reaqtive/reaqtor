@@ -24,14 +24,14 @@ namespace System
     /// </summary>
     public static class TypeExtensions
     {
-        private static readonly HashSet<Type> s_knownWildcards = new()
-        {
+        private static readonly HashSet<Type> s_knownWildcards =
+        [
             typeof(T),
             typeof(T1),
             typeof(T2),
             typeof(T3),
             typeof(R),
-        };
+        ];
 
         #region Anonymous and closure types
 
@@ -42,8 +42,7 @@ namespace System
         /// <returns><c>true</c> if the specified type is a closure class; otherwise, <c>false</c>.</returns>
         public static bool IsClosureClass(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             //
             // Yes, this is ugly. Unfortunately there's no better way to detect closure types. However, in
@@ -65,8 +64,7 @@ namespace System
         /// <returns><c>true</c> if the specified type is an anonymous type; otherwise, <c>false</c>.</returns>
         public static bool IsAnonymousType(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             //
             // Yes, this is ugly. Unfortunately there's no better way to detect anonymous types in isolation
@@ -89,8 +87,7 @@ namespace System
         /// <returns><c>true</c> if the specified type is a record type; otherwise, <c>false</c>.</returns>
         public static bool IsRecordType(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.Name.StartsWith(Constants.RECORD_PREFIX, StringComparison.Ordinal))
             {
@@ -107,8 +104,7 @@ namespace System
         /// <returns><c>true</c> if the specified type is compiler generated; otherwise, <c>false</c>.</returns>
         public static bool IsCompilerGenerated(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false);
         }
@@ -125,10 +121,8 @@ namespace System
         /// <returns>Closed generic type implemented by the given type, matching the given generic type definition.</returns>
         public static Type FindGenericType(this Type type, Type definition)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (definition == null)
-                throw new ArgumentNullException(nameof(definition));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(definition);
             if (!definition.IsGenericTypeDefinition)
                 throw new ArgumentException("Expected a generic type definition.", nameof(definition));
 
@@ -158,10 +152,8 @@ namespace System
         /// <exception cref="InvalidOperationException">Thrown when the assignment check failed and <paramref name="throwException"/> is set to true.</exception>
         public static bool IsReferenceAssignableFrom(this Type lhsType, Type rhsType, out IDictionary<Type, Type> substitutions, bool throwException = false)
         {
-            if (lhsType == null)
-                throw new ArgumentNullException(nameof(lhsType));
-            if (rhsType == null)
-                throw new ArgumentNullException(nameof(rhsType));
+            ArgumentNullException.ThrowIfNull(lhsType);
+            ArgumentNullException.ThrowIfNull(rhsType);
 
             substitutions = new Dictionary<Type, Type>();
 
@@ -625,8 +617,7 @@ namespace System
         /// <returns>C# code string representation of the type.</returns>
         public static string ToCSharpString(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return new TypePrinter(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: true).Visit(type);
         }
@@ -639,8 +630,7 @@ namespace System
         /// <returns>String representation of the type using C# syntax. If compiler-generated type names occur, the output will not be valid C#.</returns>
         public static string ToCSharpStringPretty(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return ToCSharpString(type, useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false);
         }
@@ -657,8 +647,7 @@ namespace System
         /// <returns>C# code string representation of the type.</returns>
         public static string ToCSharpString(this Type type, bool useNamespaceQualifiedNames, bool useCSharpTypeAliases, bool disallowCompilerGeneratedTypes)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             // TODO: add overloads with support for specification of imported namespaces
 
@@ -767,7 +756,7 @@ namespace System
                 var backtick = name.LastIndexOf('`');
                 if (backtick >= 0)
                 {
-                    nameWithoutArity = nameWithoutArity.Substring(0, backtick);
+                    nameWithoutArity = nameWithoutArity[..backtick];
                 }
 
                 return nameWithoutArity;
@@ -810,10 +799,8 @@ namespace System
         /// </remarks>
         public static IDictionary<Type, Type> UnifyExact(this Type type1, Type type2)
         {
-            if (type1 == null)
-                throw new ArgumentNullException(nameof(type1));
-            if (type2 == null)
-                throw new ArgumentNullException(nameof(type2));
+            ArgumentNullException.ThrowIfNull(type1);
+            ArgumentNullException.ThrowIfNull(type2);
 
             return UnifyExactImpl(type1, type2, comparer: null);
         }
@@ -832,12 +819,9 @@ namespace System
         /// </remarks>
         public static IDictionary<Type, Type> UnifyExact(this Type type1, Type type2, IEqualityComparer<Type> comparer)
         {
-            if (type1 == null)
-                throw new ArgumentNullException(nameof(type1));
-            if (type2 == null)
-                throw new ArgumentNullException(nameof(type2));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(type1);
+            ArgumentNullException.ThrowIfNull(type2);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return UnifyExactImpl(type1, type2, comparer);
         }
@@ -852,10 +836,8 @@ namespace System
         /// <returns>Map of wildcards to their resolved bound type.</returns>
         public static IDictionary<Type, Type> UnifyWith(this Type left, Type right)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             return UnifyWithImpl(left, right, comparer: null);
         }
@@ -871,12 +853,9 @@ namespace System
         /// <returns>Map of wildcards to their resolved bound type.</returns>
         public static IDictionary<Type, Type> UnifyWith(this Type left, Type right, IEqualityComparer<Type> comparer)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return UnifyWithImpl(left, right, comparer);
         }
@@ -895,10 +874,8 @@ namespace System
         /// </remarks>
         public static bool TryUnifyExact(this Type type1, Type type2, out IDictionary<Type, Type> result)
         {
-            if (type1 == null)
-                throw new ArgumentNullException(nameof(type1));
-            if (type2 == null)
-                throw new ArgumentNullException(nameof(type2));
+            ArgumentNullException.ThrowIfNull(type1);
+            ArgumentNullException.ThrowIfNull(type2);
 
             var error = TryUnifyExactImpl(type1, type2, comparer: null, out result);
             return error == null;
@@ -919,12 +896,9 @@ namespace System
         /// </remarks>
         public static bool TryUnifyExact(this Type type1, Type type2, IEqualityComparer<Type> comparer, out IDictionary<Type, Type> result)
         {
-            if (type1 == null)
-                throw new ArgumentNullException(nameof(type1));
-            if (type2 == null)
-                throw new ArgumentNullException(nameof(type2));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(type1);
+            ArgumentNullException.ThrowIfNull(type2);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             var error = TryUnifyExactImpl(type1, type2, comparer, out result);
             return error == null;
@@ -941,10 +915,8 @@ namespace System
         /// <returns><c>true</c> if unification succeeded; otherwise, <c>false</c>.</returns>
         public static bool TryUnifyWith(this Type left, Type right, out IDictionary<Type, Type> result)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             var error = TryUnifyWithImpl(left, right, comparer: null, out result);
             return error == null;
@@ -962,12 +934,9 @@ namespace System
         /// <returns><c>true</c> if unification succeeded; otherwise, <c>false</c>.</returns>
         public static bool TryUnifyWith(this Type left, Type right, IEqualityComparer<Type> comparer, out IDictionary<Type, Type> result)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             var error = TryUnifyWithImpl(left, right, comparer, out result);
             return error == null;
@@ -1009,7 +978,7 @@ namespace System
                 {
                     if (kv.Value == null)
                     {
-                        unbound ??= new List<string>();
+                        unbound ??= [];
 
                         unbound.Add(kv.Key.Name);
                     }
@@ -1063,7 +1032,7 @@ namespace System
             public TypeUnifier(IEqualityComparer<Type> comparer)
             {
                 _comparer = comparer;
-                _map = new Dictionary<Type, TypeHolder>();
+                _map = [];
             }
 
             public Dictionary<Type, Type> Map => _map.ToDictionary(e => e.Key, e => e.Value.Type);
@@ -1200,7 +1169,7 @@ namespace System
 
             private sealed class TypeHolder
             {
-                public HashSet<Type> Wildcards { get; } = new HashSet<Type>();
+                public HashSet<Type> Wildcards { get; } = [];
                 public Type Type;
             }
         }
@@ -1214,7 +1183,7 @@ namespace System
                 _comparer = comparer;
             }
 
-            public Dictionary<Type, Type> Map { get; } = new Dictionary<Type, Type>();
+            public Dictionary<Type, Type> Map { get; } = [];
 
             public Exception Error { get; private set; }
 
@@ -1294,8 +1263,7 @@ namespace System
         /// </remarks>
         public static bool IsSZArray(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.IsArray && type.GetElementType().MakeArrayType() == type;
         }

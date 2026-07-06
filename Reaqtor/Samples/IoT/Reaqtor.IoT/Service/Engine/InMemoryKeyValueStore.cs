@@ -35,7 +35,7 @@ namespace Reaqtor.IoT
 
     public sealed class InMemoryKeyValueStore : IKeyValueStore
     {
-        private readonly Dictionary<string, Dictionary<string, byte[]>> _data = new();
+        private readonly Dictionary<string, Dictionary<string, byte[]>> _data = [];
 
         public IKeyValueStoreTransaction CreateTransaction() => new Transaction(this);
 
@@ -68,7 +68,7 @@ namespace Reaqtor.IoT
 
                             sb.AppendLine($"  Key '{row.Key}':");
                             sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
-                            sb.AppendLine($"    ASCII = {new string(row.Value.Select(b => (char)b).ToArray())}");
+                            sb.AppendLine($"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
                             sb.AppendLine($"    Size  = {rowSize}");
                             sb.AppendLine();
 
@@ -118,7 +118,7 @@ namespace Reaqtor.IoT
         private sealed class Transaction : IKeyValueStoreTransaction
         {
             private readonly InMemoryKeyValueStore _parent;
-            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = new();
+            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
 
             public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
 
@@ -126,10 +126,8 @@ namespace Reaqtor.IoT
             {
                 get
                 {
-                    if (tableName == null)
-                        throw new ArgumentNullException(nameof(tableName));
-                    if (key == null)
-                        throw new ArgumentNullException(nameof(key));
+                    ArgumentNullException.ThrowIfNull(tableName);
+                    ArgumentNullException.ThrowIfNull(key);
 
                     lock (_edits)
                     {
@@ -166,12 +164,9 @@ namespace Reaqtor.IoT
 
             public void Add(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 lock (_edits)
                 {
@@ -200,7 +195,7 @@ namespace Reaqtor.IoT
                             }
                         }
 
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
 
                         table[key] = value;
                     }
@@ -217,7 +212,7 @@ namespace Reaqtor.IoT
                         {
                             if (!_parent._data.TryGetValue(table.Key, out var existingTable))
                             {
-                                _parent._data[table.Key] = existingTable = new Dictionary<string, byte[]>();
+                                _parent._data[table.Key] = existingTable = [];
                             }
 
                             foreach (var entry in table.Value)
@@ -240,10 +235,8 @@ namespace Reaqtor.IoT
 
             public bool Contains(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 lock (_edits)
                 {
@@ -271,8 +264,7 @@ namespace Reaqtor.IoT
 
             public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
+                ArgumentNullException.ThrowIfNull(tableName);
 
                 return Core();
 
@@ -319,10 +311,8 @@ namespace Reaqtor.IoT
 
             public void Remove(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 UpdateCore(tableName, key, null);
             }
@@ -331,12 +321,9 @@ namespace Reaqtor.IoT
 
             public void Update(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 UpdateCore(tableName, key, value);
             }
@@ -347,7 +334,7 @@ namespace Reaqtor.IoT
                 {
                     if (!_edits.TryGetValue(tableName, out var table))
                     {
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
                     }
 
                     if (table.TryGetValue(key, out var existingValue))
@@ -456,7 +443,7 @@ namespace Reaqtor.IoT
         private sealed class Writer : IStateWriter
         {
             private readonly InMemoryKeyValueStore _store;
-            private readonly Dictionary<(string, string), MemoryStream> _edits = new();
+            private readonly Dictionary<(string, string), MemoryStream> _edits = [];
 
             public Writer(InMemoryKeyValueStore store) => _store = store;
 
@@ -519,7 +506,6 @@ namespace Reaqtor.IoT
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
-    [Serializable]
     public sealed class TableNotFoundException : Exception
     {
         internal TableNotFoundException(string tableName)
@@ -527,25 +513,9 @@ namespace Reaqtor.IoT
             TableName = tableName;
         }
 
-        private TableNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-        }
-
         public string TableName { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-
-            base.GetObjectData(info, context);
-        }
     }
 
-    [Serializable]
     public sealed class KeyNotFoundException : Exception
     {
         internal KeyNotFoundException(string tableName, string key)
@@ -554,25 +524,8 @@ namespace Reaqtor.IoT
             Key = key;
         }
 
-        private KeyNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-            Key = serializationInfo.GetString(nameof(Key));
-        }
-
         public string TableName { get; }
         public string Key { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-            info.AddValue(nameof(Key), Key);
-
-            base.GetObjectData(info, context);
-        }
     }
 #pragma warning restore CA1032
 #pragma warning restore IDE0079

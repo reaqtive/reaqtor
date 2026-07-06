@@ -20,7 +20,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, new object()).Wait());
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, new object()).Wait());
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, new object()).Wait());
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, new object()).Wait());
         }
 
         [TestMethod]
@@ -178,7 +178,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, new object()).Wait());
         }
 
         [TestMethod]
@@ -220,7 +220,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, new object()).Wait());
         }
 
         [TestMethod]
@@ -263,7 +263,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, new object()).Wait());
         }
 
         [TestMethod]
@@ -307,7 +307,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, new object()).Wait());
         }
 
         [TestMethod]
@@ -352,7 +352,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, new object()).Wait());
         }
 
         [TestMethod]
@@ -398,7 +398,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, new object()).Wait());
         }
 
         [TestMethod]
@@ -445,7 +445,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, new object()).Wait());
         }
 
         [TestMethod]
@@ -493,7 +493,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, new object()).Wait());
         }
 
         [TestMethod]
@@ -542,7 +542,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, new object()).Wait());
         }
 
         [TestMethod]
@@ -592,7 +592,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new object()).Wait());
         }
 
         [TestMethod]

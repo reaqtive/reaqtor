@@ -33,8 +33,8 @@ namespace System.Linq.Expressions
         /// </summary>
         public static readonly StringBuilderPool StringBuilderPool = StringBuilderPool.Create(Environment.ProcessorCount, 1024, 8 * 1024);
 
-        private static readonly Dictionary<int, string> s_expressionTypeToString = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToDictionary(e => (int)e, e => e.ToString());
-        private static readonly Dictionary<int, string> s_gotoExpressionKindToString = Enum.GetValues(typeof(GotoExpressionKind)).Cast<GotoExpressionKind>().ToDictionary(e => (int)e, e => e.ToString());
+        private static readonly Dictionary<int, string> s_expressionTypeToString = Enum.GetValues<ExpressionType>().ToDictionary(e => (int)e, e => e.ToString());
+        private static readonly Dictionary<int, string> s_gotoExpressionKindToString = Enum.GetValues<GotoExpressionKind>().ToDictionary(e => (int)e, e => e.ToString());
 
         private readonly StringBuilder _sb;
 

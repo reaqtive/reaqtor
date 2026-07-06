@@ -26,39 +26,62 @@ namespace Tests.System.Linq.CompilerServices
         public void BottomUpRewriter_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => new BottomUpRewriter<ITree<Bar>, Bar, ITree<Foo>, BarWildcards>(sourceNodeComparer: null), ex => Assert.AreEqual("sourceNodeComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpRewriter<ITree<Bar>, Bar, ITree<Foo>, BarWildcards>(sourceNodeComparer: null));
+            Assert.AreEqual("sourceNodeComparer", ex.ParamName);
 
             var burs = new BottomUpRewriter<ITree<Bar>, Bar, ITree<Foo>, BarWildcards>();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ITree<Bar> b) => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1));
+            Assert.AreEqual("convert", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ITree<Bar> b) => null, -1));
+            Assert.AreEqual("cost", ex3.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), (ITree<Bar> b) => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add((ITree<Bar> b) => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ITree<Bar> b) => null, (ITree<Bar> b) => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), b => true, 1));
+            Assert.AreEqual("convert", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(b => null, default(Expression<Func<ITree<Bar>, bool>>), 1));
+            Assert.AreEqual("predicate", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Leaves.Add(b => null, (ITree<Bar> b) => true, -1));
+            Assert.AreEqual("cost", ex6.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(pattern: null, () => null, 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(() => null, goal: null, 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add(() => null, () => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(pattern: null, () => null, 1));
+            Assert.AreEqual("pattern", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(() => null, goal: null, 1));
+            Assert.AreEqual("goal", ex8.ParamName);
+            var ex9 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add(() => null, () => null, -1));
+            Assert.AreEqual("cost", ex9.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1) => f1, 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((b1) => b1, goal: null, 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1) => b1, (f1) => f1, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1) => f1, 1));
+            Assert.AreEqual("pattern", ex10.ParamName);
+            var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((b1) => b1, goal: null, 1));
+            Assert.AreEqual("goal", ex11.ParamName);
+            var ex12 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1) => b1, (f1) => f1, -1));
+            Assert.AreEqual("cost", ex12.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1, f2) => f1, 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((b1, b2) => b1, goal: null, 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1, b2) => b1, (f1, f2) => f1, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1, f2) => f1, 1));
+            Assert.AreEqual("pattern", ex13.ParamName);
+            var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((b1, b2) => b1, goal: null, 1));
+            Assert.AreEqual("goal", ex14.ParamName);
+            var ex15 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1, b2) => b1, (f1, f2) => f1, -1));
+            Assert.AreEqual("cost", ex15.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1, f2, f3) => f1, 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((b1, b2, b3) => b1, goal: null, 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1, b2, b3) => b1, (f1, f2, f3) => f1, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex16 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(pattern: null, (f1, f2, f3) => f1, 1));
+            Assert.AreEqual("pattern", ex16.ParamName);
+            var ex17 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((b1, b2, b3) => b1, goal: null, 1));
+            Assert.AreEqual("goal", ex17.ParamName);
+            var ex18 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1, b2, b3) => b1, (f1, f2, f3) => f1, -1));
+            Assert.AreEqual("cost", ex18.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex19 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1));
+            Assert.AreEqual("convert", ex19.ParamName);
+            var ex20 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(b => null, -1));
+            Assert.AreEqual("cost", ex20.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), (ITree<Bar> b) => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, (ITree<Bar> b) => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex21 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), b => true, 1));
+            Assert.AreEqual("convert", ex21.ParamName);
+            var ex22 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(b => null, default(Expression<Func<ITree<Bar>, bool>>), 1));
+            Assert.AreEqual("predicate", ex22.ParamName);
+            var ex23 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(b => null, b => true, -1));
+            Assert.AreEqual("cost", ex23.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var mb = new MyBurs();
@@ -75,19 +98,22 @@ namespace Tests.System.Linq.CompilerServices
             protected override void OnFallbackAdded(Fallback<ITree<Bar>, ITree<Foo>> fallback)
             {
                 Count++;
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.OnFallbackAdded(fallback: null), ex => Assert.AreEqual("fallback", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.OnFallbackAdded(fallback: null));
+                Assert.AreEqual("fallback", ex.ParamName);
             }
 
             protected override void OnLeafAdded(Leaf<ITree<Bar>, ITree<Foo>> leaf)
             {
                 Count++;
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.OnLeafAdded(leaf: null), ex => Assert.AreEqual("leaf", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.OnLeafAdded(leaf: null));
+                Assert.AreEqual("leaf", ex.ParamName);
             }
 
             protected override void OnRuleAdded(Rule<ITree<Bar>, ITree<Foo>> rule)
             {
                 Count++;
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.OnRuleAdded(rule: null), ex => Assert.AreEqual("rule", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.OnRuleAdded(rule: null));
+                Assert.AreEqual("rule", ex.ParamName);
             }
         }
 
@@ -208,7 +234,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var burs = new BottomUpRewriter<NumTree, Num, NumTree, NumWildcards>();
 
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rules.Add((a, b, c) => new BinaryNumTree(NumKind.Add, a, b), (a, b, c) => a, 1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rules.Add((a, b, c) => new BinaryNumTree(NumKind.Add, a, b), (a, b, c) => a, 1));
         }
 
         private static BottomUpRewriter<NumTree, Num, NumTree, NumWildcards> GetNumOptimizer()

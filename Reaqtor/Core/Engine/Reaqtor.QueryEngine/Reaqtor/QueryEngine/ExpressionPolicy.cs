@@ -16,14 +16,7 @@ namespace Reaqtor.QueryEngine
     /// </summary>
     public class ExpressionPolicy : IExpressionPolicy
     {
-        private ICompiledDelegateCache _delegateCache;
-        private ICache<Expression> _inMemoryCache;
-        private IConstantHoister _constantHoister;
         private bool? _outlineCompilation;
-        private IReflectionProvider _reflectionProvider;
-        private IExpressionFactory _expressionFactory;
-        private IMemoizer _liftMemoizer;
-        private IMemoizer _reduceMemoizer;
 
         /// <summary>
         /// Internal constructor, this is only used for <see cref="ConfigurationOptions" />.
@@ -35,8 +28,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public ICompiledDelegateCache DelegateCache
         {
-            get => _delegateCache ?? DefaultExpressionPolicy.Instance.DelegateCache;
-            set => _delegateCache = value;
+            get => field ?? DefaultExpressionPolicy.Instance.DelegateCache;
+            set;
         }
 
         /// <summary>
@@ -44,8 +37,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public ICache<Expression> InMemoryCache
         {
-            get => _inMemoryCache ?? DefaultExpressionPolicy.Instance.InMemoryCache;
-            set => _inMemoryCache = value;
+            get => field ?? DefaultExpressionPolicy.Instance.InMemoryCache;
+            set;
         }
 
         /// <summary>
@@ -53,8 +46,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public IConstantHoister ConstantHoister
         {
-            get => _constantHoister ?? DefaultExpressionPolicy.Instance.ConstantHoister;
-            set => _constantHoister = value;
+            get => field ?? DefaultExpressionPolicy.Instance.ConstantHoister;
+            set;
         }
 
         /// <summary>
@@ -73,8 +66,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public IReflectionProvider ReflectionProvider
         {
-            get => _reflectionProvider ?? DefaultExpressionPolicy.Instance.ReflectionProvider;
-            set => _reflectionProvider = value;
+            get => field ?? DefaultExpressionPolicy.Instance.ReflectionProvider;
+            set;
         }
 
         /// <summary>
@@ -83,8 +76,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public IExpressionFactory ExpressionFactory
         {
-            get => _expressionFactory ?? DefaultExpressionPolicy.Instance.ExpressionFactory;
-            set => _expressionFactory = value;
+            get => field ?? DefaultExpressionPolicy.Instance.ExpressionFactory;
+            set;
         }
 
         /// <summary>
@@ -93,8 +86,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public IMemoizer LiftMemoizer
         {
-            get => _liftMemoizer ?? DefaultExpressionPolicy.Instance.LiftMemoizer;
-            set => _liftMemoizer = value;
+            get => field ?? DefaultExpressionPolicy.Instance.LiftMemoizer;
+            set;
         }
 
         /// <summary>
@@ -103,8 +96,8 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public IMemoizer ReduceMemoizer
         {
-            get => _reduceMemoizer ?? DefaultExpressionPolicy.Instance.ReduceMemoizer;
-            set => _reduceMemoizer = value;
+            get => field ?? DefaultExpressionPolicy.Instance.ReduceMemoizer;
+            set;
         }
     }
 }

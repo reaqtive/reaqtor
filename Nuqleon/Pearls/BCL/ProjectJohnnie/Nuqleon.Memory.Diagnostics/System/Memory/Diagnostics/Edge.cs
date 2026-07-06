@@ -41,8 +41,7 @@ namespace System.Memory.Diagnostics
         /// <returns>A new edge instance.</returns>
         public static Edge<T> Create<T>(T origin, Access access)
         {
-            if (access == null)
-                throw new ArgumentNullException(nameof(access));
+            ArgumentNullException.ThrowIfNull(access);
 
             return new Edge<T>(origin, access);
         }

@@ -85,7 +85,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                     p
                                 )
                             ),
-                            Array.Empty<QueryTree>()
+                            []
                         )
                     );
                 }
@@ -108,7 +108,7 @@ namespace System.Linq.CompilerServices.Optimizers
                             p1,
                             p2
                         ),
-                        new[] { srcWhere.Predicate, predicate }
+                        [srcWhere.Predicate, predicate]
                     )
                 );
             }
@@ -147,7 +147,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                     p
                                 )
                             ),
-                            Array.Empty<QueryTree>()
+                            []
                         )
                     );
                 }
@@ -167,7 +167,7 @@ namespace System.Linq.CompilerServices.Optimizers
                             p1,
                             p2
                         ),
-                        new[] { srcSelect.Selector, selector }
+                        [srcSelect.Selector, selector]
                     )
                 );
             }
@@ -209,7 +209,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                     Math.Min(c1, c2)
                                 )
                             ),
-                            Array.Empty<QueryTree>()
+                            []
                         )
                     );
                 }
@@ -225,7 +225,7 @@ namespace System.Linq.CompilerServices.Optimizers
                             p1,
                             p2
                         ),
-                        new[] { srcTake.Count, count }
+                        [srcTake.Count, count]
                     )
                 );
             }

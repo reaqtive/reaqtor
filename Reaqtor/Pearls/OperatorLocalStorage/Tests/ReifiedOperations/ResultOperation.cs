@@ -38,30 +38,24 @@ namespace Tests.ReifiedOperations
 
         public static SelectResultOperation<TValue, TResult, TNewResult> Select<TValue, TResult, TNewResult>(IResultOperation<TValue, TResult> operation, Expression<Func<TResult, TNewResult>> selector)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new SelectResultOperation<TValue, TResult, TNewResult>(operation, selector);
         }
 
         public static BindResultOperation<TValue, TResult, TReified> Bind<TValue, TResult, TReified>(IReifiedResultOperation<TValue, TResult, TReified> operation, Expression<Func<TReified, IOperation<TResult>>> selector)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new BindResultOperation<TValue, TResult, TReified>(operation, selector);
         }
 
         public static ApplyOperation<TValue, TResult> Apply<TValue, TResult>(IResultOperation<TValue, TResult> operation, Expression<Func<TResult, IOperation<TValue>>> selector)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new ApplyOperation<TValue, TResult>(operation, selector);
         }

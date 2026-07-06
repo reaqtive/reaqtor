@@ -20,7 +20,6 @@ using Reaqtive.Subjects;
 using Reaqtor;
 using Reaqtor.Expressions.Core;
 using Reaqtor.QueryEngine;
-using Reaqtor.QueryEngine.Events;
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;
@@ -41,19 +40,19 @@ namespace Tests.Reaqtor.QueryEngine
 #pragma warning restore IDE0079 // Remove unnecessary suppression
 
         [ClassCleanup]
-        public static new void ClassCleanup()
+        public static void ClassTeardown()
         {
             PhysicalTimeEngineTest.ClassCleanup();
         }
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.Setup();
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             base.Cleanup();
         }
@@ -71,13 +70,13 @@ namespace Tests.Reaqtor.QueryEngine
             var kvs = new InMemoryKeyValueStore();
             var ser = SerializationPolicy.Default;
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
         }
 
         [TestMethod]
@@ -93,19 +92,17 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineObservable<string, T>(uri, obs, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite(obs)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
 
             ctx.UndefineObservable(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
         }
 
         [TestMethod]
         public async Task DefineUndefineObservableAsync()
         {
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = GetQueryEngineReactiveService(qe);
@@ -117,11 +114,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite((Expression<Func<string, IReactiveQbservable<T>>>)(id => MockObservable.CreateObservable<T>(id).AsQbservable()))));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
 
             await asyncCtx.UndefineObservableAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -137,19 +134,17 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineObserver<string, T>(uri, obv, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, Rewrite(obv)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
 
             ctx.UndefineObserver(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
         }
 
         [TestMethod]
         public async Task DefineUndefineObserverAsync()
         {
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = GetQueryEngineReactiveService(qe);
@@ -161,11 +156,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, (Expression<Func<string, IObserver<T>>>)(id => MockObserver.CreateObserver<T>(id))));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
 
             await asyncCtx.UndefineObserverAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -181,19 +176,17 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineStreamFactory<int, int>(uri, sf, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
 
             ctx.UndefineStreamFactory(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
         }
 
         [TestMethod]
         public async Task DefineUndefineStreamFactoryAsync()
         {
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = qe.ReactiveService;
@@ -205,11 +198,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
 
             await asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -228,7 +221,7 @@ namespace Tests.Reaqtor.QueryEngine
             var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = src.Subscribe(obv, uri, null);
 
-            Assert.ThrowsException<EntityAlreadyExistsException>(() =>
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() =>
             {
                 // Subscription with uri already exists
                 src.Subscribe(obv, uri, null);
@@ -246,7 +239,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub.Dispose();
 
@@ -254,7 +247,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             o1.OnNext(2); // ignored
 
-            Assert.ThrowsException<EntityNotFoundException>(() =>
+            Assert.ThrowsExactly<EntityNotFoundException>(() =>
             {
                 // Subscription with uri doesn't exist
                 sub.Dispose();
@@ -263,7 +256,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Lazy evaluation - doesn't throw until Dispose is called
             sub = ctx.GetSubscription(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() =>
+            Assert.ThrowsExactly<EntityNotFoundException>(() =>
             {
                 // Subscription with uri doesn't exist
                 sub.Dispose();
@@ -273,7 +266,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub = src.Subscribe(obv, uri, null);
 
@@ -292,15 +285,13 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1, 4, 5 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
         }
 
         [TestMethod]
         public async Task SubscriptionLifecycleAsync()
         {
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = new TupletizingClientContext(qe.ServiceProvider);
@@ -314,7 +305,7 @@ namespace Tests.Reaqtor.QueryEngine
             var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(async () =>
             {
                 // Subscription with uri already exists
                 await src.SubscribeAsync(obv, uri, null);
@@ -332,7 +323,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             await sub.DisposeAsync(CancellationToken.None);
 
@@ -340,7 +331,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             o1.OnNext(2); // ignored
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
             {
                 // Subscription with uri doesn't exist
                 await sub.DisposeAsync(CancellationToken.None);
@@ -349,7 +340,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Lazy evaluation - doesn't throw until Dispose is called
             sub = ctx.GetSubscription(uri);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
             {
                 // Subscription with uri doesn't exist
                 await sub.DisposeAsync(CancellationToken.None);
@@ -359,7 +350,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
 
@@ -378,7 +369,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1, 4, 5 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
         }
 
         [TestMethod]
@@ -444,7 +435,7 @@ namespace Tests.Reaqtor.QueryEngine
             srcs.OnNext(0);
 
             var result = GetObserver<int>("result");
-            AssertResult(result, 1, Assert.AreEqual);
+            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
             Assert.IsFalse(result.Completed);
             Assert.IsFalse(result.Error);
 
@@ -453,7 +444,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(result.Error);
 
             srcs.OnNext(1);
-            AssertResult(result, 1, Assert.AreEqual);
+            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
         }
 
         [TestMethod]
@@ -534,9 +525,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             AssertResult(v1, 10, (i, v) => Assert.AreEqual(i * i, v));
@@ -829,7 +818,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
         }
 
         [TestMethod]
@@ -873,7 +862,7 @@ namespace Tests.Reaqtor.QueryEngine
                 in2s.OnNext(98); // ignored
                 in3s.OnNext(99);
 
-                AssertResultSequence(out1, new int[] { 97, 99 });
+                AssertResultSequence(out1, [97, 99]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -954,13 +943,13 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsTrue(keys.Contains(subUri) && keys.Contains(sub2Uri));
 
                 var vals = qe.ReactiveService.Subscriptions.Values.ToList();
-                vals = vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://")).ToList();
+                vals = [.. vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://"))];
 
                 Assert.AreEqual(state, vals.Single(v => v.Uri == subUri).State);
                 Assert.AreEqual(state2, vals.Single(v => v.Uri == sub2Uri).State);
 
                 var subs = qe.ReactiveService.Subscriptions.ToList();
-                subs = subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://")).ToList();
+                subs = [.. subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://"))];
 
                 Assert.AreEqual(state, subs.Single(s => s.Value.Uri == subUri).Value.State);
                 Assert.AreEqual(state2, subs.Single(s => s.Value.Uri == sub2Uri).Value.State);
@@ -1099,9 +1088,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1114,9 +1101,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
@@ -1134,9 +1119,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1153,16 +1136,14 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
 
                 Recover(qe2, state);
 
-                Assert.ThrowsException<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
+                Assert.ThrowsExactly<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
             }
         }
 
@@ -1171,9 +1152,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1186,9 +1165,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1200,20 +1177,16 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
 
                 Recover(qe3, new InMemoryStateStore("foo"));
 
-                await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() =>
+                await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() =>
                     ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
-#if NET6_0
                         .AsTask()
-#endif
                 );
             }
         }
@@ -1223,9 +1196,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1238,9 +1209,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1256,9 +1225,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1276,9 +1243,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1293,9 +1258,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1311,9 +1274,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1337,9 +1298,7 @@ namespace Tests.Reaqtor.QueryEngine
             var deleteCreate_delete_id = new Uri("test://sub4");
             var deleteCreate_deleteCreate_id = new Uri("test://sub5");
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1381,9 +1340,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1411,9 +1368,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 _ = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1434,9 +1389,7 @@ namespace Tests.Reaqtor.QueryEngine
                 // First create an engine persist a subscription creation in the state store
                 var kvs1 = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe1 = CreateQueryEngine(kvs1))
                 {
                     var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1455,9 +1408,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs2 = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe2 = CreateQueryEngine(kvs2))
                 {
                     var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1472,29 +1423,23 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Now create engine with first state store (the one that has sub) and second kvs (also has sub)
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe3 = CreateQueryEngine(kvs2))
                 {
-                    AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
-                    {
-                        var flattened = ex.Flatten();
+                    var ex = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                    var flattened = ex.Flatten();
 
-                        if (flattened.InnerException is not EntityAlreadyExistsException)
-                            Assert.Fail();
-                    });
+                    if (flattened.InnerException is not EntityAlreadyExistsException)
+                        Assert.Fail();
                 }
 
                 // Do it again but handle the exception
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe4 = CreateQueryEngine(kvs2))
                 {
                     var handled = false;
-                    qe4.EntityReplayFailed += (object sender, ReactiveEntityReplayFailedEventArgs e) =>
+                    qe4.EntityReplayFailed += (sender, e) =>
                     {
                         if (e.Uri == testId)
                         {
@@ -1516,9 +1461,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe1 = CreateQueryEngine(kvs))
                 {
                     var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1530,9 +1473,7 @@ namespace Tests.Reaqtor.QueryEngine
                     await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
                 }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe2 = CreateQueryEngine(kvs))
                 {
                     var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1545,29 +1486,23 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Unhandled
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe3 = CreateQueryEngine(kvs))
                 {
-                    AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
-                    {
-                        var flattened = ex.Flatten();
+                    var ex2 = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                    var flattened = ex2.Flatten();
 
-                        if (flattened.InnerException.Message != "Create, Create")
-                            Assert.Fail();
-                    });
+                    if (flattened.InnerException.Message != "Create, Create")
+                        Assert.Fail();
                 }
 
                 // Handled
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe4 = CreateQueryEngine(kvs))
                 {
                     var handled = false;
-                    qe4.EntityReplayFailed += (object sender, ReactiveEntityReplayFailedEventArgs e) =>
+                    qe4.EntityReplayFailed += (sender, e) =>
                     {
                         if (e.Uri == testId)
                         {
@@ -1593,9 +1528,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1615,9 +1548,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
@@ -1633,9 +1564,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe = CreateQueryEngine(kvs))
             {
                 var ctx = new TupletizingClientContext(qe.ServiceProvider);
@@ -1650,13 +1579,10 @@ namespace Tests.Reaqtor.QueryEngine
                 void fail(object sender, ReifiedOperation<string, byte[]> operation) { throw ex; }
 
                 kvs.StartingOperation += fail;
-                await AssertEx.ThrowsExceptionAsync<MyException>(() =>
+                var e = await Assert.ThrowsExactlyAsync<MyException>(() =>
                     test.DisposeAsync(CancellationToken.None)
-#if NET6_0
-                        .AsTask()
-#endif
-                    ,
-                    e => Assert.AreSame(ex, e));
+                        .AsTask());
+                Assert.AreSame(ex, e);
 
                 kvs.StartingOperation -= fail;
                 await test.DisposeAsync(CancellationToken.None);
@@ -1693,11 +1619,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 o1.Take(2).Subscribe(v1, new Uri("s:/s1"), null);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1705,12 +1631,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(-1),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1724,11 +1650,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe2, chkpt1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
                 obs2.OnNext(42, 17);
@@ -1739,12 +1665,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(17),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1758,21 +1684,21 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe3, chkpt2);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
-                });
+                ]);
 
                 var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
                 obs3.OnNext(43, 25);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1780,14 +1706,14 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
                     ReliableEvent.AcknowledgeRange(25),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1801,11 +1727,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe4, chkpt3);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1813,11 +1739,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1831,11 +1757,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe5, chkpt4);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
             }
         }
 
@@ -1867,11 +1793,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 o1.AwaitDispose(l1).Take(2).Subscribe(v1, new Uri("s:/s1"), null);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1879,12 +1805,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(-1),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1898,11 +1824,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe2, chkpt1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
                 obs2.OnNext(42, 17);
@@ -1913,12 +1839,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(17),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1932,22 +1858,22 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe3, chkpt2);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
-                });
+                ]);
 
                 var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
                 obs3.OnNext(43, 25);
                 LockManager.Wait(l1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1955,14 +1881,14 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
                     ReliableEvent.AcknowledgeRange(25),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1976,11 +1902,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe4, chkpt3);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1988,11 +1914,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -2006,11 +1932,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe5, chkpt4);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
             }
         }
 
@@ -2073,16 +1999,16 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [TestMethod]
-        public void CheckpointingQueryEngine_Unload()
+        public async Task CheckpointingQueryEngine_Unload()
         {
             using var qe = CreateQueryEngine();
 
-            qe.UnloadAsync().Wait();
+            await qe.UnloadAsync();
 
-            Assert.ThrowsException<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
-            Assert.ThrowsException<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
-            Assert.ThrowsExceptionAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
-            Assert.ThrowsExceptionAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
+            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
+            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
+            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
+            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
         }
 
         [TestMethod]
@@ -2233,15 +2159,11 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out p));
@@ -2251,7 +2173,7 @@ namespace Tests.Reaqtor.QueryEngine
         public async Task Artifact_Creation()
         {
             var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer(new[] { trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse }))
+            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
             {
                 var kvs = new InMemoryKeyValueStore();
                 var qe = CreateQueryEngine(kvs);
@@ -2322,7 +2244,7 @@ namespace Tests.Reaqtor.QueryEngine
         public async Task Artifact_Deletion()
         {
             var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer(new[] { trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse }))
+            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
             {
                 var kvs = new InMemoryKeyValueStore();
                 var qe = CreateQueryEngine(kvs);
@@ -2485,9 +2407,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine(kvs);
 
             var ctx = new TupletizingClientContext(qe.ServiceProvider);
@@ -2509,14 +2429,14 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(ctx.Streams[new Uri("custom:stream")].Expression, syncCtx.Streams[new Uri("custom:stream")].Expression);
 
             // Not implemented yet
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
 
             var l = syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList();
             CollectionAssert.AreEquivalent(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList());
@@ -2535,14 +2455,14 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 state = Checkpoint(qe);
 
-                artifacts = new List<Uri>[]
-                {
-                    qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Observables.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Observers.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Streams.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key).ToList(),
-                };
+                artifacts =
+                [
+                    [.. qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
+                ];
 
                 Crash();
             }
@@ -2553,11 +2473,11 @@ namespace Tests.Reaqtor.QueryEngine
 
             var recoveredArtifacts = new List<Uri>[]
             {
-                newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Observables.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Observers.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Streams.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key).ToList(),
+                [.. newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
             };
 
             for (var i = 0; i < artifacts.Length; i++)
@@ -2628,7 +2548,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         private class SimpleSubject : IMultiSubject
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
 
             private object _singleton;
 
@@ -2689,8 +2609,8 @@ namespace Tests.Reaqtor.QueryEngine
 
         private static class ReliableObservableManager
         {
-            public static readonly Dictionary<string, List<ReliableEvent>> Actions = new();
-            public static readonly Dictionary<string, object> Observers = new();
+            public static readonly Dictionary<string, List<ReliableEvent>> Actions = [];
+            public static readonly Dictionary<string, object> Observers = [];
 
             public static IReliableObserver<T> GetObserver<T>(string s)
             {
@@ -2787,7 +2707,7 @@ namespace Tests.Reaqtor.QueryEngine
             public MyReliableObservable(string s)
             {
                 _s = s;
-                _actions = new List<ReliableEvent>();
+                _actions = [];
 
                 ReliableObservableManager.Actions.Add(s, _actions);
             }

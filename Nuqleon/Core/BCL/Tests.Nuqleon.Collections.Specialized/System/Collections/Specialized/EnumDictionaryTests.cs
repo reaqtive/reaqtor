@@ -8,8 +8,6 @@
 //   PS - 10/17/2014 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,10 +15,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 
-#if !NET6_0
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 namespace Tests.System.Collections.Specialized
 {
@@ -273,7 +269,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -283,7 +279,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -293,7 +289,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -303,7 +299,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -313,7 +309,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "bitArray");
+                Assert.AreEqual("bitArray", e.ParamName);
             }
         }
 
@@ -789,30 +785,6 @@ namespace Tests.System.Collections.Specialized
             Z = ushort.MaxValue,
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EnumSizeResolutionException_Serialization()
-        {
-            var ex = new EnumSizeResolutionException(EnumSizeResolutionError.UnderlyingTypeIsNotIntOrSmaller);
-            var formatter = new BinaryFormatter();
-            var stream = new MemoryStream();
-            formatter.Serialize(stream, ex);
-            stream.Seek(0, SeekOrigin.Begin);
-            var exRoundTripped = (EnumSizeResolutionException)formatter.Deserialize(stream);
-
-            Assert.AreEqual(exRoundTripped.ErrorCode, EnumSizeResolutionError.UnderlyingTypeIsNotIntOrSmaller);
-
-            try
-            {
-                ex.GetObjectData(info: null, context: default);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException e)
-            {
-                Assert.AreEqual("info", e.ParamName);
-            }
-        }
-#endif
 
         [TestMethod]
         public void EnumDictionary_ModificationDuringEnumeration()

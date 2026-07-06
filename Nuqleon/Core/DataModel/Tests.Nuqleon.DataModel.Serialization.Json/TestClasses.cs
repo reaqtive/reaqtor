@@ -158,8 +158,8 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 TypeDateTimeOffset = DateTime.Now,
                 TypeTimeSpan = new TimeSpan(1, 2, 3, 4, 5),
                 TypeGuid = Guid.NewGuid(),
-                TypeIEnumerableBool = new[] { true, false, true },
-                TypeArrayBool = new[] { false, true, false },
+                TypeIEnumerableBool = [true, false, true],
+                TypeArrayBool = [false, true, false],
                 TypeEnumInt = EnumInt.EnumValue1,
                 TypeNullableEnumInt = EnumInt.EnumValue2,
             };
@@ -346,9 +346,9 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         {
             return new CollectionsClass
             {
-                TypeHash = new HashSet<string> { "Goodbye", ",", "world!" },
+                TypeHash = ["Goodbye", ",", "world!"],
                 TypeList =
-                               new List<string> { "It", "was", "a", "pleasure", "to", "be", "here." },
+                               ["It", "was", "a", "pleasure", "to", "be", "here."],
                 TypeDictionary =
                                new Dictionary<string, RecursiveClass>
                                    {

@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Linq.Expressions;
+using System.Threading;
 
 using Reaqtor.Metadata;
 using Reaqtor.QueryEngine.Metrics;
@@ -21,7 +22,7 @@ namespace Reaqtor.QueryEngine
     internal abstract class RuntimeEntity<TEntity> : ReactiveEntity, IDisposable, IReactiveProcessResource
         where TEntity : IDisposable
     {
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
         private bool _started;
         private bool _disposed;
@@ -80,10 +81,7 @@ namespace Reaqtor.QueryEngine
 
         public void Start(TEntity instance, params object[] args)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
+            ArgumentNullException.ThrowIfNull(instance);
 
             if (StartImpl(instance, args))
             {

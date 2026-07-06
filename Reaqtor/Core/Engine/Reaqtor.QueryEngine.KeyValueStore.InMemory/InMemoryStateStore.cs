@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Thread-safe in memory state store which holds key-value pair item sorted by categories
     /// and track items removal.
     /// </summary>
-    [Serializable]
     public sealed class InMemoryStateStore
     {
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore;
@@ -40,8 +39,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>Store instance loaded from the stream.</returns>
         public static InMemoryStateStore Load(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = XDocument.Load(stream);
             return Load(doc);
@@ -54,8 +52,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>Store instance loaded from the file.</returns>
         public static InMemoryStateStore Load(string file)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            ArgumentNullException.ThrowIfNull(file);
 
             var doc = XDocument.Load(file);
             return Load(doc);
@@ -94,8 +91,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="file">File to save the store to.</param>
         public void Save(string file)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            ArgumentNullException.ThrowIfNull(file);
 
             var doc = Save();
             doc.Save(file);
@@ -107,8 +103,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="file">Stream to save the store to.</param>
         public void Save(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = Save();
             doc.Save(stream);
@@ -133,13 +128,13 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                     entries.Add(entry);
                 }
 
-                var category = new XElement("Category", new object[] { catNameAttr }.Concat(entries).ToArray());
+                var category = new XElement("Category", [catNameAttr, .. entries]);
                 categories.Add(category);
             }
 
             var doc = new XDocument(
                 new XElement("Store",
-                    new object[] { idAttr }.Concat(categories).ToArray()
+                    [idAttr, .. categories]
                 )
             );
             return doc;
@@ -156,7 +151,9 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>The categories.</returns>
         public IEnumerable<string> GetCategories()
         {
+#pragma warning disable IDE0305 // Collection initialization can be simplified. (Deliberate: with a collection expression the method body becomes property-shaped and trips CA1024; ToArray keeps the snapshot-copy intent explicit.)
             return _internalStore.Keys.ToArray();
+#pragma warning restore IDE0305
         }
 
         /// <summary>
@@ -175,7 +172,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
             else
             {
-                return Enumerable.Empty<string>();
+                return [];
             }
         }
 
@@ -234,7 +231,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             {
                 removed = values.TryRemove(key, out _);
             }
-            var removedKeys = _removedItems.GetOrAdd(category, c => new ConcurrentBag<string>());
+            var removedKeys = _removedItems.GetOrAdd(category, c => []);
             removedKeys.Add(key);
             return removed;
         }
@@ -265,8 +262,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="update">The store containing the updated values</param>
         public void Update(InMemoryStateStore update)
         {
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(update);
 
             foreach (var category in update._removedItems.Keys)
             {
@@ -303,7 +299,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         public void Clear()
         {
             // we do it in 2 passes to clear the content of each categories.
-            string[] categories = _internalStore.Keys.ToArray();
+            string[] categories = [.. _internalStore.Keys];
             foreach (var category in categories)
             {
                 if (_internalStore.TryGetValue(category, out var items))
@@ -313,12 +309,13 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
             _internalStore.Clear();
 
-            categories = _removedItems.Keys.ToArray();
+            categories = [.. _removedItems.Keys];
             foreach (var category in categories)
             {
                 if (_removedItems.TryGetValue(category, out var items))
                 {
-                    while (items.TryTake(out _)) { };
+                    while (items.TryTake(out _)) { }
+                    ;
                 }
             }
             _removedItems.Clear();
@@ -353,11 +350,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                         foreach (var chunk in kv2.Value.Buffer(40))
                         {
                             var bytes = BitConverter.ToString(chunk)
-#if NET6_0 || NETSTANDARD2_1
                                 .Replace("-", " ", StringComparison.Ordinal)
-#else
-                                .Replace("-", " ")
-#endif
                                 ;
 
                             var text = chunk.Select(b => (char)b).Aggregate(new StringBuilder(), (sbi, c) => char.IsControl(c) ? sbi.Append('?') : sbi.Append(c), sbi => sbi.ToString());

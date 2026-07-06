@@ -26,8 +26,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Result of visit.</returns>
         public virtual TResult Visit(Expression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return node.NodeType switch
             {
@@ -78,8 +77,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Copy of the expression tree node.</returns>
         public override Expression VisitObject(ObjectExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var res = default(IDictionary<string, Expression>);
 
@@ -138,8 +136,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Copy of the expression tree node.</returns>
         public override Expression VisitArray(ArrayExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var elements = default(Expression[]);
 
@@ -183,8 +180,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Copy of the expression tree node.</returns>
         public override Expression VisitConstant(ConstantExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return node;
         }

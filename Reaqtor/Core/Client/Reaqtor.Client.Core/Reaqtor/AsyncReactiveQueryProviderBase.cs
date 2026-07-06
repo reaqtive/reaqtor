@@ -94,12 +94,12 @@ namespace Reaqtor
 
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync(IAsyncReactiveQubscriptionFactory factory, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, Array.Empty<Expression>(), subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [], subscriptionUri, state, token);
         }
 
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync<TArgs>(IAsyncReactiveQubscriptionFactory<TArgs> factory, TArgs argument, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [Expression.Constant(argument, typeof(TArgs))], subscriptionUri, state, token);
         }
 
         internal async Task<IAsyncReactiveQubscription> CreateSubscriptionAsync(IAsyncReactiveExpressible factory, Expression[] arguments, Uri subscriptionUri, object state, CancellationToken token)
@@ -149,12 +149,12 @@ namespace Reaqtor
 
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput> factory, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, Array.Empty<Expression>(), streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [], streamUri, state, token);
         }
 
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TArgs, TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs> factory, TArgs argument, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [Expression.Constant(argument, typeof(TArgs))], streamUri, state, token);
         }
 
         internal async Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TInput, TOutput>(IAsyncReactiveExpressible factory, Expression[] arguments, Uri streamUri, object state, CancellationToken token)
@@ -216,8 +216,7 @@ namespace Reaqtor
         /// <returns>Observable represented by the given expression.</returns>
         public IAsyncReactiveQbservable<T> CreateQbservable<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -236,8 +235,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArgs, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArgs, TResult>(Expression<Func<TArgs, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IAsyncReactiveQbservable<TResult>>(arg =>
             {
@@ -261,8 +259,7 @@ namespace Reaqtor
         /// <returns>Observer represented by the given expression.</returns>
         public IAsyncReactiveQbserver<T> CreateQbserver<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -281,8 +278,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArgs, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArgs, TResult>(Expression<Func<TArgs, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IAsyncReactiveQbserver<TResult>>(arg =>
             {
@@ -307,8 +303,7 @@ namespace Reaqtor
         /// <returns>Subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -328,8 +323,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -352,8 +346,7 @@ namespace Reaqtor
         /// <returns>Subject represented by the given expression.</returns>
         public IAsyncReactiveQubject<TInput, TOutput> CreateQubject<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -374,8 +367,7 @@ namespace Reaqtor
         /// <returns>Subscription represented by the given expression.</returns>
         public IAsyncReactiveQubscription CreateQubscription(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -396,8 +388,7 @@ namespace Reaqtor
         /// <returns>Subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory CreateQubscriptionFactory(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -415,8 +406,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArgs> CreateQubscriptionFactory<TArgs>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {

@@ -10,6 +10,7 @@
 
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 
 namespace System.Runtime.CompilerServices
 {
@@ -21,9 +22,8 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// The lock to protect against double-initialization of the assembly builder.
         /// </summary>
-        private static readonly object s_lock = new();
+        private static readonly Lock s_lock = new();
 
-#if NET6_0
         //
         // NB: Deals with the following exception:
         //
@@ -36,7 +36,6 @@ namespace System.Runtime.CompilerServices
         /// <remarks>
         /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
         /// </remarks>
-        private static ModuleBuilder s_mod;
 
         /// <summary>
         /// Gets the module builder used to emit dynamically generated closure types.
@@ -45,52 +44,21 @@ namespace System.Runtime.CompilerServices
         {
             get
             {
-                if (s_mod == null)
+                if (field == null)
                 {
                     lock (s_lock)
                     {
-                        if (s_mod == null)
+                        if (field == null)
                         {
                             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
-                            s_mod = asm.DefineDynamicModule("RuntimeTypes");
+                            field = asm.DefineDynamicModule("RuntimeTypes");
                         }
                     }
                 }
 
-                return s_mod;
+                return field;
             }
         }
-#else
-        /// <summary>
-        /// The assembly builder used to emit dynamically generated types.
-        /// </summary>
-        /// <remarks>
-        /// The instance of the assembly builder is lazily created via the <see cref="Assembly"/> property.
-        /// </remarks>
-        private static AssemblyBuilder s_asm;
-
-        /// <summary>
-        /// Gets the assembly builder used to emit dynamically generated types.
-        /// </summary>
-        public static AssemblyBuilder Assembly
-        {
-            get
-            {
-                if (s_asm == null)
-                {
-                    lock (s_lock)
-                    {
-                        if (s_asm == null)
-                        {
-                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
-                        }
-                    }
-                }
-
-                return s_asm;
-            }
-        }
-#endif
 
         /// <summary>
         /// Creates a new thunk type (and related dispatcher and inner delegate types) for the specified delegate type.

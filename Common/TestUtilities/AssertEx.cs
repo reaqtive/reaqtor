@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting
 {
-    public static class AssertEx
+    public static partial class AssertEx
     {
         public static void AreSequenceEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual)
         {
@@ -35,51 +36,6 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
             }
         }
 
-        public static void ThrowsException<T>(Action action, Action<T> assert)
-            where T : Exception
-        {
-            var hasThrown = false;
-
-            try
-            {
-                action();
-            }
-            catch (T ex)
-            {
-                if (typeof(T) != ex.GetType())
-                    Assert.Fail();
-
-                hasThrown = true;
-                assert(ex);
-            }
-
-            Assert.IsTrue(hasThrown);
-        }
-
-        public static void ThrowsException<T>(Func<object> action, Action<T> assert)
-            where T : Exception
-        {
-            ThrowsException(() => { _ = action(); }, assert);
-        }
-
-        public static async Task ThrowsExceptionAsync<T>(Func<Task> action, Action<T> assert)
-            where T : Exception
-        {
-            try
-            {
-                await action();
-            }
-            catch (T ex)
-            {
-                if (typeof(T) != ex.GetType())
-                    Assert.Fail();
-
-                assert(ex);
-                return;
-            }
-
-            Assert.Fail();
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
@@ -87,22 +43,23 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
     {
         private readonly int _repeatCount;
 
-        public FlakyTestMethodAttribute(int repeatCount) => _repeatCount = repeatCount;
+        public FlakyTestMethodAttribute(int repeatCount, [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+            : base(callerFilePath, callerLineNumber) => _repeatCount = repeatCount;
 
-        public override TestResult[] Execute(ITestMethod testMethod)
+        public override async Task<TestResult[]> ExecuteAsync(ITestMethod testMethod)
         {
             var res = new List<TestResult>();
 
             for (int i = 0; i < _repeatCount; i++)
             {
-                foreach (var x in base.Execute(testMethod))
+                foreach (var x in await base.ExecuteAsync(testMethod).ConfigureAwait(false))
                 {
                     x.DisplayName = testMethod.TestMethodName + " - Iteration " + (i + 1);
                     res.Add(x);
                 }
             }
 
-            return res.ToArray();
+            return [.. res];
         }
     }
 

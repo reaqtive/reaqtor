@@ -20,8 +20,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>A task representing the eventual completion of the commit.</returns>
         public static Task CommitAsync(this ITransaction transaction)
         {
-            if (transaction == null)
-                throw new ArgumentNullException(nameof(transaction));
+            ArgumentNullException.ThrowIfNull(transaction);
 
             return transaction.CommitAsync(CancellationToken.None);
         }

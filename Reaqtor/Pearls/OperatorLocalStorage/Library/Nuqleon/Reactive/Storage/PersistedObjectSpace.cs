@@ -70,8 +70,7 @@ namespace Reaqtive.Storage
         /// <exception cref="KeyNotFoundException">A persisted object with identifier <paramref name="id"/> could not be found.</exception>
         public void Delete(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             if (!_items.Remove(id))
                 throw new KeyNotFoundException();
@@ -84,8 +83,7 @@ namespace Reaqtive.Storage
         /// <exception cref="ArgumentNullException"><paramref name="reader"/> is <c>null.</c></exception>
         public void Load(IStateReader reader)
         {
-            if (reader == null)
-                throw new ArgumentNullException(nameof(reader));
+            ArgumentNullException.ThrowIfNull(reader);
 
             _items.Load(reader);
         }
@@ -97,8 +95,7 @@ namespace Reaqtive.Storage
         /// <exception cref="ArgumentNullException"><paramref name="writer"/> is <c>null.</c></exception>
         public void Save(IStateWriter writer)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             _items.Save(writer);
         }

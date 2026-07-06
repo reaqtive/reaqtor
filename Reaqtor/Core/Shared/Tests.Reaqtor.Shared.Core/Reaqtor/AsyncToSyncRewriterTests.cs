@@ -42,7 +42,7 @@ namespace Tests.Reaqtor
         {
             var rewriter = new AsyncToSyncRewriter(new Dictionary<Type, Type>());
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => rewriter.Rewrite(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<,,>).MakeGenericType(AsyncObservableType, AsyncObserverType, AsyncSubscriptionType), Constants.SubscribeUri),
@@ -52,7 +52,7 @@ namespace Tests.Reaqtor
                 )
             );
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => rewriter.Rewrite(
                     Expression.Parameter(typeof(int), Constants.SubscribeUri)
                 )
@@ -66,7 +66,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeAsyncDelegateType, Constants.SubscribeUri),
                     Expression.New(
-                        SubscribeAsyncTupleType.GetConstructor(new[] { AsyncObservableType, AsyncObserverType }),
+                        SubscribeAsyncTupleType.GetConstructor([AsyncObservableType, AsyncObserverType]),
                         Expression.Parameter(AsyncObservableType, "bing://xs"),
                         Expression.Parameter(AsyncObserverType, "bing://observer")
                     )
@@ -74,7 +74,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeSyncDelegateType, Constants.SubscribeUri),
                     Expression.New(
-                        SubscribeSyncTupleType.GetConstructor(new[] { SyncObservableType, SyncObserverType }),
+                        SubscribeSyncTupleType.GetConstructor([SyncObservableType, SyncObserverType]),
                         Expression.Parameter(SyncObservableType, "bing://xs"),
                         Expression.Parameter(SyncObserverType, "bing://observer")
                     )
@@ -89,7 +89,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeAsyncDelegateType, "rx://observable/subscribe"),
                     Expression.New(
-                        SubscribeAsyncTupleType.GetConstructor(new[] { AsyncObservableType, AsyncObserverType }),
+                        SubscribeAsyncTupleType.GetConstructor([AsyncObservableType, AsyncObserverType]),
                         Expression.Invoke(
                             Expression.Parameter(typeof(Func<,,>).MakeGenericType(AsyncObservableType, typeof(Expression<Action<int>>), AsyncObservableType), "rx://do"),
                             Expression.Parameter(AsyncObservableType, "bing://xs"),
@@ -111,7 +111,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeSyncDelegateType, "rx://observable/subscribe"),
                     Expression.New(
-                        SubscribeSyncTupleType.GetConstructor(new[] { SyncObservableType, SyncObserverType }),
+                        SubscribeSyncTupleType.GetConstructor([SyncObservableType, SyncObserverType]),
                         Expression.Invoke(
                             Expression.Parameter(typeof(Func<,,>).MakeGenericType(SyncObservableType, typeof(Expression<Action<int>>), SyncObservableType), "rx://do"),
                             Expression.Parameter(SyncObservableType, "bing://xs"),
@@ -139,7 +139,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeAsyncDelegateType, "rx://observable/subscribe"),
                     Expression.New(
-                        SubscribeAsyncTupleType.GetConstructor(new[] { AsyncObservableType, AsyncObserverType }),
+                        SubscribeAsyncTupleType.GetConstructor([AsyncObservableType, AsyncObserverType]),
                         Expression.Invoke(
                             Expression.Parameter(typeof(Func<,,>).MakeGenericType(AsyncObservableType, typeof(Expression<Action<int>>), AsyncObservableType), "rx://do"),
                             Expression.Parameter(AsyncObservableType, "bing://xs"),
@@ -163,7 +163,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(SubscribeSyncDelegateType, "rx://observable/subscribe"),
                     Expression.New(
-                        SubscribeSyncTupleType.GetConstructor(new[] { SyncObservableType, SyncObserverType }),
+                        SubscribeSyncTupleType.GetConstructor([SyncObservableType, SyncObserverType]),
                         Expression.Invoke(
                             Expression.Parameter(typeof(Func<,,>).MakeGenericType(SyncObservableType, typeof(Expression<Action<int>>), SyncObservableType), "rx://do"),
                             Expression.Parameter(SyncObservableType, "bing://xs"),

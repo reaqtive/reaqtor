@@ -14,8 +14,8 @@ namespace Tests
 
         static Data()
         {
-            Types = new[]
-            {
+            Types =
+            [
                 typeof(bool),      //  0
                 typeof(byte),      //  1
                 typeof(sbyte),     //  2
@@ -34,7 +34,7 @@ namespace Tests
                 typeof(TimeSpan),  // 15
                 typeof(Guid),      // 16
                 typeof(Version),   // 17
-            };
+            ];
 
             var dt1 = new DateTime(1983, 2, 11);
             var dt2 = new DateTime(2016, 10, 7);

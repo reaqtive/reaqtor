@@ -8,8 +8,6 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Linq.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,12 +27,12 @@ namespace Tests.System.Linq.CompilerServices
                 )
             );
 
-            var ltre = new LabeledTree<int>(new Label<int>(tree, new List<Match> { new Match(1) }), new LabeledTree<int>[] {
-                new LabeledTree<int>(new Label<int>(tree.Children[0], new List<Match> { new Match(2) }), Array.Empty<LabeledTree<int>>()),
-                new LabeledTree<int>(new Label<int>(tree.Children[1], new List<Match> { new Match(3) }), new LabeledTree<int>[] {
-                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], new List<Match> { new Match(4) }), Array.Empty<LabeledTree<int>>())
-                }),
-            });
+            var ltre = new LabeledTree<int>(new Label<int>(tree, [new Match(1)]), [
+                new LabeledTree<int>(new Label<int>(tree.Children[0], [new Match(2)]), []),
+                new LabeledTree<int>(new Label<int>(tree.Children[1], [new Match(3)]), [
+                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], [new Match(4)]), [])
+                ]),
+            ]);
 
             Assert.AreEqual("[1 (0$)] 42([2 (0$)] 19(), [3 (0$)] 23([4 (0$)] 7()))", ltre.ToString());
             Assert.AreEqual(@"[1 (0$)] 42(

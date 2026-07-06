@@ -41,16 +41,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var etr = new ExpressionEntityTypeRecordizer();
 
             var e1 = (Expression<Func<F>>)(() => new F(new Grmbl()));
-            var e2 = (Expression<Func<F, Grmbl>>)((F f) => f.GrmblProperty);
-            var e3 = (Expression<Func<F, Grmbl>>)((F f) => f.GrmblMethod());
-            var e4 = (Expression<Func<F, Grmbl>>)((F f) => f.grmblMember);
-            var e5 = (Expression<Func<F, Grmbl>>)((F f) => f[0]);
+            var e2 = (Expression<Func<F, Grmbl>>)(f => f.GrmblProperty);
+            var e3 = (Expression<Func<F, Grmbl>>)(f => f.GrmblMethod());
+            var e4 = (Expression<Func<F, Grmbl>>)(f => f.grmblMember);
+            var e5 = (Expression<Func<F, Grmbl>>)(f => f[0]);
 
             foreach (var s in new ExpressionEntityTypeSubstitutor[] { eta, etr })
             {
                 foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
                 {
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -63,16 +64,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var etr = new ExpressionEntityTypeRecordizer();
 
             var e1 = (Expression<Func<KT>>)(() => new KT(new Grmbl()));
-            var e2 = (Expression<Func<KT, Grmbl>>)((KT kt) => kt.GrmblProperty);
-            var e3 = (Expression<Func<KT, Grmbl>>)((KT kt) => kt.GrmblMethod());
-            var e4 = (Expression<Func<KT, Grmbl>>)((KT kt) => kt.grmblMember);
-            var e5 = (Expression<Func<KT, Grmbl>>)((KT kt) => kt[0]);
+            var e2 = (Expression<Func<KT, Grmbl>>)(kt => kt.GrmblProperty);
+            var e3 = (Expression<Func<KT, Grmbl>>)(kt => kt.GrmblMethod());
+            var e4 = (Expression<Func<KT, Grmbl>>)(kt => kt.grmblMember);
+            var e5 = (Expression<Func<KT, Grmbl>>)(kt => kt[0]);
 
             foreach (var s in new ExpressionEntityTypeSubstitutor[] { eta, etr })
             {
                 foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
                 {
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -85,10 +87,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var etr = new ExpressionEntityTypeRecordizer();
 
             var e1 = (Expression<Func<F>>)(() => new F(new KT()));
-            var e2 = (Expression<Func<F, KT>>)((F f) => f.KTProperty);
-            var e3 = (Expression<Func<F, KT>>)((F f) => f.KTMethod());
-            var e4 = (Expression<Func<F, KT>>)((F f) => f.ktMember);
-            var e5 = (Expression<Func<F, KT>>)((F f) => f[0.0]);
+            var e2 = (Expression<Func<F, KT>>)(f => f.KTProperty);
+            var e3 = (Expression<Func<F, KT>>)(f => f.KTMethod());
+            var e4 = (Expression<Func<F, KT>>)(f => f.ktMember);
+            var e5 = (Expression<Func<F, KT>>)(f => f[0.0]);
 
             foreach (var s in new ExpressionEntityTypeSubstitutor[] { eta, etr })
             {
@@ -125,14 +127,15 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var etr = new ExpressionEntityTypeRecordizer();
 
             var e1 = (Expression<Func<KT>>)(() => new KT(new KT(new Grmbl())));
-            var e2 = (Expression<Func<KT, Grmbl>>)((KT kt) => kt._kt._grmbl);
+            var e2 = (Expression<Func<KT, Grmbl>>)(kt => kt._kt._grmbl);
 
             foreach (var s in new ExpressionEntityTypeSubstitutor[] { eta, etr })
             {
                 foreach (var e in new Expression[] { e1, e2 })
                 {
                     // rewrite unsuccessful
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -181,42 +184,46 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             public void Test()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.Apply(expression: null));
+                Assert.AreEqual("expression", ex.ParamName);
 
                 var prop = (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.Now);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, typeof(int), typeof(int), new[] { typeof(int) }), ex => Assert.AreEqual("originalProperty", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, typeof(int), new[] { typeof(int) }), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, typeof(int), propertyType: null, new[] { typeof(int) }), ex => Assert.AreEqual("propertyType", ex.ParamName));
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, typeof(int), typeof(int), [typeof(int)]));
+                Assert.AreEqual("originalProperty", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, typeof(int), [typeof(int)]));
+                Assert.AreEqual("declaringType", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, typeof(int), propertyType: null, [typeof(int)]));
+                Assert.AreEqual("propertyType", ex4.ParamName);
 
                 var anon1 = new { a = 1 };
                 var anon2 = new { a = 1, b = 2 };
                 var atyp1 = (StructuralDataType)DataType.FromType(anon1.GetType());
                 var atyp2 = (StructuralDataType)DataType.FromType(anon2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralAnonymous(anon1, atyp1, atyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralAnonymous(anon1, atyp1, atyp2));
 
                 var tupl1 = new Tuple<int>(1);
                 var tupl2 = new Tuple<int, int>(1, 2);
                 var ttyp1 = (StructuralDataType)DataType.FromType(tupl1.GetType());
                 var ttyp2 = (StructuralDataType)DataType.FromType(tupl2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralTuple(tupl1, ttyp1, ttyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralTuple(tupl1, ttyp1, ttyp2));
 
-                var rcrt1 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)) }, valueEquality: true);
-                var rcrt2 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(int)) }, valueEquality: true);
+                var rcrt1 = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("a", typeof(int))], valueEquality: true);
+                var rcrt2 = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(int))], valueEquality: true);
                 var rtyp1 = (StructuralDataType)DataType.FromType(rcrt1);
                 var rtyp2 = (StructuralDataType)DataType.FromType(rcrt2);
                 var rcrd1 = Activator.CreateInstance(rcrt1);
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralRecord(rcrd1, rtyp1, rtyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralRecord(rcrd1, rtyp1, rtyp2));
 
                 var func1 = new Func<int>(() => 1);
                 var func2 = new Func<int, int>(x => x);
                 var ftyp1 = (FunctionDataType)DataType.FromType(func1.GetType());
                 var ftyp2 = (FunctionDataType)DataType.FromType(func2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantFunction(func1, ftyp1, ftyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantFunction(func1, ftyp1, ftyp2));
             }
 
             protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)

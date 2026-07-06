@@ -117,8 +117,7 @@ namespace System.Reflection
         /// <param name="options">Options to control which reflection methods get cached.</param>
         public CachingDefaultReflectionProvider(IMemoizer memoizer, ReflectionCachingOptions options)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
+            ArgumentNullException.ThrowIfNull(memoizer);
 
             if ((options & ReflectionCachingOptions.CreationGenericObjects) != 0)
             {

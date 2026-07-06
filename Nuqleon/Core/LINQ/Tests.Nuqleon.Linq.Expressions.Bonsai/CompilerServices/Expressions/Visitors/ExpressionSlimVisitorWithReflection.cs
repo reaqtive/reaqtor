@@ -32,8 +32,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             public void Do()
             {
-                Assert.ThrowsException<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int).ToTypeSlim(), expressions: null));
-                Assert.ThrowsException<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int).ToTypeSlim()));
+                Assert.ThrowsExactly<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int).ToTypeSlim(), expressions: null));
+                Assert.ThrowsExactly<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int).ToTypeSlim()));
             }
         }
 
@@ -50,7 +50,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var blk1 =
                 Expression.Block(
-                    new[] { p1 },
+                    [p1],
                     p1
                 );
 
@@ -61,14 +61,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var blk3 =
                 Expression.Block(
-                    new[] { p1 },
+                    [p1],
                     p1,
                     Expression.Constant(true)
                 );
 
             var blk4 =
                 Expression.Block(
-                    new[] { p1, p2 },
+                    [p1, p2],
                     p1,
                     p2
                 );
@@ -91,7 +91,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 (Expression<Func<int, string>>)(x => new string('x', x)),
                 (Expression<Func<object, bool>>)(o => o is string),
                 (from x in new[] { 2, 3, 5 }.AsQueryable() where x > 0 let y = x * x where y > 0 select x + y).Expression,
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
                 blk1,
                 blk2,
                 blk3,

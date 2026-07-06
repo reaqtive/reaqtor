@@ -11,9 +11,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if NETFRAMEWORK
-using System.IO;
-#endif
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Bonsai;
@@ -400,7 +397,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
 
             RoundtripAndAssert(e.Body);
         }
@@ -411,7 +408,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var p = Expression.Parameter(typeof(int?));
             var c = Expression.Coalesce(p, Expression.Constant(0L));
 
-            var e = Expression.Lambda<Func<int?, long>>(c, new[] { p });
+            var e = Expression.Lambda<Func<int?, long>>(c, [p]);
 
             RoundtripAndAssertNull(e.Body);
         }
@@ -848,10 +845,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         public void TypeSlimDerivationVisitor_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             RoundtripAndAssert(f1.Body);
@@ -925,11 +922,11 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -956,10 +953,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -971,10 +968,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -986,10 +983,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1066,7 +1063,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             public ThisQux(int x)
             {
                 X = x;
-                Foos = new List<int>();
+                Foos = [];
                 Bar = new ThisBar();
             }
 
@@ -1168,7 +1165,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p
                     );
                 RoundtripAndAssert(e);
@@ -1178,7 +1175,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         Expression.Constant("42"),
                         p
                     );
@@ -1189,7 +1186,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p,
                         Expression.Constant("42")
                     );
@@ -1207,12 +1204,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             {
                 var e = new BlockExpressionSlim(variables: null, new[] { Expression.Constant(42).ToExpressionSlim() }.ToReadOnly(), typeof(string).ToTypeSlim());
-                Assert.AreSame(Derive(e).ToType(), typeof(string));
+                Assert.AreSame(typeof(string), Derive(e).ToType());
             }
 
             {
                 var e = new BlockExpressionSlim(variables: null, new[] { Expression.Constant(42).ToExpressionSlim() }.ToReadOnly(), type: null);
-                Assert.AreSame(Derive(e).ToType(), typeof(int));
+                Assert.AreSame(typeof(int), Derive(e).ToType());
             }
         }
 
@@ -1244,7 +1241,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             {
                 var e = new TryExpressionSlim(type: null, Expression.Constant(42).ToExpressionSlim(), Expression.Constant("42").ToExpressionSlim(), Expression.Constant("42").ToExpressionSlim(), Array.Empty<CatchBlockSlim>().ToReadOnly());
-                Assert.AreSame(Derive(e).ToType(), typeof(int));
+                Assert.AreSame(typeof(int), Derive(e).ToType());
             }
         }
 
@@ -1300,30 +1297,6 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(f.Body);
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void TypeSlimDerivationVisitor_E2E_Jacquard()
-        {
-            Expression<Func<IQueryable<string>, IQueryable<string>>> f = urlsToSearch =>
-                from url in urlsToSearch
-                let client = new global::System.Net.WebClient
-                {
-                    Headers =
-                    {
-                        { "user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" }
-                    }
-                }
-                let data = client.OpenRead(url)
-                let reader = new StreamReader(data)
-                let s = reader.ReadToEnd()
-                where s.Substring(0, 64).Dump(url)
-                where data.Close()
-                where reader.Close()
-                select s;
-
-            RoundtripAndAssert(f);
-        }
-#endif
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_GenericParameterBindings()
@@ -1336,12 +1309,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -1386,7 +1359,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
         private sealed class ManOrBoyVisitor : ExpressionVisitor
         {
-            public readonly List<KeyValuePair<Expression, TypeSlim>> Entries = new();
+            public readonly List<KeyValuePair<Expression, TypeSlim>> Entries = [];
 
             public override Expression Visit(Expression node)
             {
@@ -1499,22 +1472,22 @@ namespace Tests.System.Linq.Expressions.Bonsai
     {
         public void Test()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeConditional(node: null, test: null, ifTrue: null, ifFalse: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeConstant(node: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeDefault(node: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeElementInit(node: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeIndex(node: null, @object: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeInvocation(node: null, expression: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeListInit(node: null, newExpression: null, initializers: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMember(node: null, expression: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberAssignment(node: null, expression: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberInit(node: null, newExpression: null, bindings: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberListBinding(node: null, initializers: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberMemberBinding(node: null, bindings: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMethodCall(node: null, @object: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeNew(node: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeNewArray(node: null, expressions: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeTypeBinary(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeConditional(node: null, test: null, ifTrue: null, ifFalse: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeConstant(node: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeDefault(node: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeElementInit(node: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeIndex(node: null, @object: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeInvocation(node: null, expression: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeListInit(node: null, newExpression: null, initializers: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMember(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberAssignment(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberInit(node: null, newExpression: null, bindings: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberListBinding(node: null, initializers: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberMemberBinding(node: null, bindings: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMethodCall(node: null, @object: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeNew(node: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeNewArray(node: null, expressions: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeTypeBinary(node: null, expression: null));
         }
     }
 

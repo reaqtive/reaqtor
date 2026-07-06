@@ -33,12 +33,10 @@ namespace Reaqtor.QueryEngine
 #endif
 
         private bool? _dumpRecoveryStateBlobs;
-        private string _dumpRecoveryStatePath;
         private int? _checkpointDegreeOfParallelism;
         private int? _recoveryDegreeOfParallelism;
         private bool? _templatizeExpressions;
         private int? _templatizeRecoveredEntitiesLimit;
-        private string _templatizeRecoveredEntitiesRegex;
         private bool? _garbageCollectionEnabled;
         private bool? _garbageCollectionSweepEnabled;
         private int? _garbageCollectionSweepBudgetPerCheckpoint;
@@ -65,9 +63,9 @@ namespace Reaqtor.QueryEngine
         {
             get
             {
-                if (_dumpRecoveryStatePath != null)
+                if (field != null)
                 {
-                    return _dumpRecoveryStatePath;
+                    return field;
                 }
                 else
                 {
@@ -78,7 +76,7 @@ namespace Reaqtor.QueryEngine
 #endif
                 }
             }
-            set => _dumpRecoveryStatePath = value;
+            set;
         }
 
         /// <summary>
@@ -218,9 +216,9 @@ namespace Reaqtor.QueryEngine
         {
             get
             {
-                if (_templatizeRecoveredEntitiesRegex != null)
+                if (field != null)
                 {
-                    return _templatizeRecoveredEntitiesRegex;
+                    return field;
                 }
                 else
                 {
@@ -231,7 +229,7 @@ namespace Reaqtor.QueryEngine
 #endif
                 }
             }
-            set => _templatizeRecoveredEntitiesRegex = value;
+            set;
         }
 
 #if DEPRECATED // NB: This was removed in favor of specifying a serialization policy in the constructor.
@@ -373,7 +371,7 @@ namespace Reaqtor.QueryEngine
         public void Clear()
         {
             _dumpRecoveryStateBlobs = null;
-            _dumpRecoveryStatePath = null;
+            DumpRecoveryStatePath = null;
             _checkpointDegreeOfParallelism = null;
             _recoveryDegreeOfParallelism = null;
             _templatizeExpressions = null;

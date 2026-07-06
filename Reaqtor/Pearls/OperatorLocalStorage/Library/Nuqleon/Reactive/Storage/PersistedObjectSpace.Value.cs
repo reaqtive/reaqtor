@@ -31,8 +31,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
         public IPersistedValue<T> CreateValue<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var value = new Value(this);
             _items.Add(id, value);
@@ -50,8 +49,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidCastException">A persisted object with identifier <paramref name="id"/> was found but is incompatible with the requested persisted value type.</exception>
         public IPersistedValue<T> GetValue<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return CreateValueCore<T>(id, (Value)_items[id]);
         }

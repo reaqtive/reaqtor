@@ -16,11 +16,16 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void ReliableSentinels_Disposed_Throws()
         {
-            AssertEx.ThrowsException<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnNext(0, 0L), ex => Assert.AreEqual("this", ex.ObjectName));
-            AssertEx.ThrowsException<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnError(new Exception()), ex => Assert.AreEqual("this", ex.ObjectName));
-            AssertEx.ThrowsException<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnCompleted(), ex => Assert.AreEqual("this", ex.ObjectName));
-            AssertEx.ThrowsException<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnStarted(), ex => Assert.AreEqual("this", ex.ObjectName));
-            AssertEx.ThrowsException<ObjectDisposedException>(() => _ = ReliableSentinels<int>.Disposed.ResubscribeUri, ex => Assert.AreEqual("this", ex.ObjectName));
+            var ex = Assert.ThrowsExactly<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnNext(0, 0L));
+            Assert.AreEqual("this", ex.ObjectName);
+            var ex2 = Assert.ThrowsExactly<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnError(new Exception()));
+            Assert.AreEqual("this", ex2.ObjectName);
+            var ex3 = Assert.ThrowsExactly<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnCompleted());
+            Assert.AreEqual("this", ex3.ObjectName);
+            var ex4 = Assert.ThrowsExactly<ObjectDisposedException>(() => ReliableSentinels<int>.Disposed.OnStarted());
+            Assert.AreEqual("this", ex4.ObjectName);
+            var ex5 = Assert.ThrowsExactly<ObjectDisposedException>(() => _ = ReliableSentinels<int>.Disposed.ResubscribeUri);
+            Assert.AreEqual("this", ex5.ObjectName);
         }
     }
 }

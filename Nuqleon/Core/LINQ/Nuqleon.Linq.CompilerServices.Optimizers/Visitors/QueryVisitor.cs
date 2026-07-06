@@ -233,8 +233,7 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>Collection of visited input elements.</returns>
         protected ReadOnlyCollection<QueryTree> Visit(ReadOnlyCollection<QueryTree> nodes)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
+            ArgumentNullException.ThrowIfNull(nodes);
 
             var res = default(QueryTree[]);
 

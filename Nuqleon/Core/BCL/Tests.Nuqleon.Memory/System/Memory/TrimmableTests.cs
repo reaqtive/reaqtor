@@ -22,8 +22,8 @@ namespace Tests
         [TestMethod]
         public void Trimmable_Create_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Trimmable.Create<int>(trim: null));
-            Assert.ThrowsException<ArgumentNullException>(() => Trimmable.Create<int>(_ => 0).Trim(shouldTrim: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(trim: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(_ => 0).Trim(shouldTrim: null));
         }
 
         [TestMethod]

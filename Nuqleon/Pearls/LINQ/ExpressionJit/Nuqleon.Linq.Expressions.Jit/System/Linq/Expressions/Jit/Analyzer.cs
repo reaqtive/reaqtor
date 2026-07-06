@@ -64,7 +64,7 @@ namespace System.Linq.Expressions.Jit
             /// <remarks>
             /// The expression nodes that introduce a scope don't share a common base type, hence the use of System.Object for the key.
             /// </remarks>
-            internal readonly Dictionary<object, Scope> Analysis = new();
+            internal readonly Dictionary<object, Scope> Analysis = [];
 
             /// <summary>
             /// Stack containing the nested scopes. The top of the stack contains the closest scope to the node currently being visted.
@@ -95,7 +95,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 if (_methodTable != null)
                 {
-                    var topScope = new Scope(node: null, parent: null, variables: new[] { _methodTable });
+                    var topScope = new Scope(node: null, parent: null, variables: [_methodTable]);
                     _environment.Push(topScope);
                 }
             }
@@ -206,7 +206,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 if (!Analysis.TryGetValue(node, out _))
                 {
-                    var scope = new Scope(node, NearestEnclosingScope, node.Variable == null ? Array.Empty<ParameterExpression>() : new[] { node.Variable });
+                    var scope = new Scope(node, NearestEnclosingScope, node.Variable == null ? Array.Empty<ParameterExpression>() : [node.Variable]);
 
                     _environment.Push(scope);
 

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -29,7 +30,7 @@ namespace Reaqtive.Operators
 
         private sealed class _ : StatefulOperator<Sample<TSource, TSample>, TSource>
         {
-            private readonly object _syncLock = new();
+            private readonly Lock _syncLock = new();
 
             /// <summary>
             /// We will push source notifications only if the sampled value has changed since the last sampling
@@ -87,7 +88,7 @@ namespace Reaqtive.Operators
                 _sourceSubscription = Params._source.Subscribe(new SourceObserver(this));
                 var samplerSubscription = Params._sampler.Subscribe(new SamplerObserver(this));
 
-                return new[] { _sourceSubscription, samplerSubscription };
+                return [_sourceSubscription, samplerSubscription];
             }
 
             private void OnSample()

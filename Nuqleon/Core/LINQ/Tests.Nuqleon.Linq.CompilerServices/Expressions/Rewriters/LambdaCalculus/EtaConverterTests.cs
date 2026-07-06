@@ -22,7 +22,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void EtaConverter_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => EtaConverter.Convert(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => EtaConverter.Convert(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]

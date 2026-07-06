@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/BCL/">
+    <Project Path="../Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/JSON/">
+    <Project Path="../Core/JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/deps/LINQ/">
+    <Project Path="../Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/BCL/">
+    <Project Path="BCL/ProjectJohnnie/Nuqleon.Memory.Diagnostics/Nuqleon.Memory.Diagnostics.csproj" />
+  </Folder>
+  <Folder Name="/src/LINQ/">
+    <Project Path="LINQ/ExpressionJit/ExpressionJit/Nuqleon.Linq.Expressions.Jit.Playground.csproj" />
+    <Project Path="LINQ/ExpressionJit/Nuqleon.Linq.Expressions.Jit/Nuqleon.Linq.Expressions.Jit.csproj" />
+    <Project Path="LINQ/PartialExpressionEvaluator/Library/Nuqleon.Pearls.PartialExpressionTreeEvaluator.csproj" />
+    <Project Path="LINQ/PartialExpressionEvaluator/PartialTreeEvaluator/Nuqleon.Pearls.PartialExpressionTreeEvaluator.Playground.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/BCL/">
+    <Project Path="BCL/ProjectJohnnie/Tests.Nuqleon.Memory.Diagnostics/Tests.Nuqleon.Memory.Diagnostics.csproj" />
+  </Folder>
+  <Folder Name="/test/LINQ/">
+    <Project Path="LINQ/ExpressionJit/Tests.Nuqleon.Linq.Expressions.Jit/Tests.Nuqleon.Linq.Expressions.Jit.csproj" />
+    <Project Path="LINQ/PartialExpressionEvaluator/Test/Tests.Nuqleon.Pearls.PartialExpressionTreeEvaluator.csproj" />
+  </Folder>
+</Solution>

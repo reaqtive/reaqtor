@@ -348,8 +348,8 @@ namespace System.Linq.Expressions
                 {
                     if (allVariables == null)
                     {
-                        allVariables = new HashSet<ParameterExpression>();
-                        variableList = new List<ParameterExpression>();
+                        allVariables = [];
+                        variableList = [];
                     }
 
                     foreach (var variable in variables)

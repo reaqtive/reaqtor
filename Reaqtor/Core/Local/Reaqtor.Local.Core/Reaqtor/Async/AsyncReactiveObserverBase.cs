@@ -56,8 +56,7 @@ namespace Reaqtor
         /// <remarks>If observer calls are not awaited in a sequential manner, the processing order of events in the observer is undefined.</remarks>
         public Task OnErrorAsync(Exception error, CancellationToken token = default)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             return OnErrorAsyncCore(error, token);
         }

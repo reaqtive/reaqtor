@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -34,7 +35,7 @@ namespace Reaqtive.Operators
             private const string MAXINNERSUBCOUNTSETTING = "rx://operators/bind/settings/maxConcurrentInnerSubscriptionCount";
             private int _maxInnerCount;
 
-            private readonly object _lock = new();
+            private readonly Lock _lock = new();
             private bool _isStopped;
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _sourceSubscription;
@@ -55,10 +56,12 @@ namespace Reaqtive.Operators
             {
                 _isStopped = false;
 
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: a collection expression binds to the ISubscription[] constructor via an empty array allocation, tripping CA1825; the parameterless constructor avoids it.)
                 _innerSubscriptions = new CompositeSubscription();
+#pragma warning restore IDE0028
                 _sourceSubscription = Params._source.Subscribe(this);
 
-                return new ISubscription[] { _sourceSubscription, _innerSubscriptions };
+                return [_sourceSubscription, _innerSubscriptions];
             }
 
             public override void SetContext(IOperatorContext context)

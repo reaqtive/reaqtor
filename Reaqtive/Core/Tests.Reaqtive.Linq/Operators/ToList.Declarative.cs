@@ -35,7 +35,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<IList<int>>(250, l => l.SequenceEqual(Array.Empty<int>())),
+                    OnNext<IList<int>>(250, l => l.SequenceEqual([])),
                     OnCompleted<IList<int>>(250)
                 );
 
@@ -63,7 +63,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<IList<int>>(250, l => l.SequenceEqual(new[] { 42, 43, 44, 45 })),
+                    OnNext<IList<int>>(250, l => l.SequenceEqual([42, 43, 44, 45])),
                     OnCompleted<IList<int>>(250)
                 );
 

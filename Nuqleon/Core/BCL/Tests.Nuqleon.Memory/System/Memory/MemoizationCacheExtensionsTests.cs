@@ -23,21 +23,21 @@ namespace Tests
         [TestMethod]
         public void MemoizationCacheExtensions_AsTrimmable_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByMetrics(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByMetrics(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
         }
 
         [TestMethod]
         public void MemoizationCacheExtensions_ToTrimmable_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
         }
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
@@ -82,11 +82,11 @@ namespace Tests
         {
             var c = new MyCache<int, int>(false);
 
-            Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(c));
-            Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
-            Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
-            Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
-            Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(c));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
         }
 
         private sealed class MyCache<T, R> : IMemoizationCache<T, R>, IServiceProvider

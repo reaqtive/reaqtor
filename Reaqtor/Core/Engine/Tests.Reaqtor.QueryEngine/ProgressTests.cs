@@ -22,10 +22,10 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Catch<int>(default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Catch<int, Exception>(default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Catch<int, Exception>(default, _ => false));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Catch<int, Exception>(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Catch<int>(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Catch<int, Exception>(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Catch<int, Exception>(default, _ => false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Catch<int, Exception>(p, default));
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(25, res);
 
             b = true;
-            Assert.ThrowsException<InvalidOperationException>(() => p.Report(4));
+            Assert.ThrowsExactly<InvalidOperationException>(() => p.Report(4));
 
             b = false;
             p.Report(2);
@@ -86,7 +86,7 @@ namespace Tests.Reaqtor.QueryEngine
             p.Report(4);
             Assert.AreEqual(25, res);
 
-            Assert.ThrowsException<DivideByZeroException>(() => p.Report(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => p.Report(0));
 
             b = true;
             p.Report(0);
@@ -100,7 +100,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void Progress_Create_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Create<int>(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Create<int>(default));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var p = Progress.Create<int>(x => { throw ex; });
 
-            Assert.ThrowsException<DivideByZeroException>(() => p.Report(1));
+            Assert.ThrowsExactly<DivideByZeroException>(() => p.Report(1));
         }
 
         #endregion
@@ -136,9 +136,9 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.DistinctUntilChanged(default(IProgress<int>)));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.DistinctUntilChanged(default, EqualityComparer<int>.Default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.DistinctUntilChanged(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.DistinctUntilChanged(default(IProgress<int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.DistinctUntilChanged(default, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.DistinctUntilChanged(p, default));
         }
 
         [TestMethod]
@@ -208,9 +208,9 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Monotonic(default(IProgress<int>)));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Monotonic(default, Comparer<int>.Default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Monotonic(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Monotonic(default(IProgress<int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Monotonic(default, Comparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Monotonic(p, default));
         }
 
         [TestMethod]
@@ -277,9 +277,9 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Range<int>(default, 0, 100));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Range<int>(default, 0, 100, Comparer<int>.Default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Range<int>(p, 0, 100, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Range<int>(default, 0, 100));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Range<int>(default, 0, 100, Comparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Range<int>(p, 0, 100, default));
         }
 
         [TestMethod]
@@ -353,8 +353,8 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Select<int, int>(default, x => x));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Select<int, int>(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Select<int, int>(default, x => x));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Select<int, int>(p, default));
         }
 
         [TestMethod]
@@ -376,7 +376,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = Progress.Create<int>(x => { }).Select((int x) => 100 / x);
 
-            Assert.ThrowsException<DivideByZeroException>(() => p.Report(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => p.Report(0));
         }
 
         #endregion
@@ -388,12 +388,12 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Split<int, int, int>(default, (x, y) => x + 1));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Split<int, int, int>(p, default));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Split<int>(default, 1, xs => xs.Sum()));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Progress.Split<int>(p, 0, xs => xs.Sum()));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Progress.Split<int>(p, -1, xs => xs.Sum()));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Split<int>(p, 1, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Split<int, int, int>(default, (x, y) => x + 1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Split<int, int, int>(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Split<int>(default, 1, xs => xs.Sum()));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Progress.Split<int>(p, 0, xs => xs.Sum()));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Progress.Split<int>(p, -1, xs => xs.Sum()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Split<int>(p, 1, default));
         }
 
         [TestMethod]
@@ -466,15 +466,15 @@ namespace Tests.Reaqtor.QueryEngine
             var f = new Func<int, int, int>((x, y) => x + y);
             var w = new int[2];
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(default, f, f, f, f, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, default, f, f, f, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, default, f, f, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, default, f, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, f, default, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, f, f, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(default, f, f, f, f, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, default, f, f, f, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, default, f, f, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, default, f, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, f, default, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight<int, int>(p, f, f, f, f, default));
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight(default, w));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.SplitWeight(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight(default, w));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.SplitWeight(p, default));
         }
 
         [TestMethod]
@@ -536,12 +536,12 @@ namespace Tests.Reaqtor.QueryEngine
             var t = TimeSpan.FromSeconds(1);
             var s = new Stopwatch().ToStopwatch();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Throttle<int>(default, t));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Progress.Throttle<int>(p, -t));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Throttle<int>(default, t));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Progress.Throttle<int>(p, -t));
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Throttle<int>(default, t, s));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Progress.Throttle<int>(p, -t, s));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Throttle<int>(p, t, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Throttle<int>(default, t, s));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Progress.Throttle<int>(p, -t, s));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Throttle<int>(p, t, default));
         }
 
         [TestMethod]
@@ -666,8 +666,8 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.ToPercentageIncrement(default, 123));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Progress.ToPercentageIncrement(p, -1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.ToPercentageIncrement(default, 123));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Progress.ToPercentageIncrement(p, -1));
         }
 
         [TestMethod]
@@ -716,8 +716,8 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var p = new Progress<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Where<int>(default, x => true));
-            Assert.ThrowsException<ArgumentNullException>(() => Progress.Where<int>(p, default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Where<int>(default, x => true));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Progress.Where<int>(p, default));
         }
 
         [TestMethod]
@@ -747,7 +747,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void ToStopwatch_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => StopwatchExtensions.ToStopwatch(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StopwatchExtensions.ToStopwatch(null));
         }
 
         [TestMethod]

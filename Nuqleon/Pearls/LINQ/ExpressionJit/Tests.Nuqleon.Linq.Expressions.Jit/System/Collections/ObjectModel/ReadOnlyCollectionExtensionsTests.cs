@@ -14,7 +14,7 @@ namespace System.Collections.ObjectModel
         [TestMethod]
         public void AddFirst()
         {
-            var xs = new ReadOnlyCollection<int>(new[] { 3, 5, 7 });
+            var xs = new ReadOnlyCollection<int>([3, 5, 7]);
             var res = xs.AddFirst(2);
             Assert.AreEqual(4, res.Count);
             Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(res));

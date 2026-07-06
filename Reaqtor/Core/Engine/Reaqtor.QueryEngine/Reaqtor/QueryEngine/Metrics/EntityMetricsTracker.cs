@@ -32,10 +32,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="metric">The metric.</param>
         internal static void BeginMetric(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (ShouldTrack)
             {
@@ -50,10 +47,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="metric">The metric.</param>
         internal static void EndMetric(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (ShouldTrack)
             {
@@ -69,10 +63,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <returns>A measurement object that should be disposed to end the measurement.</returns>
         internal static MetricMeasurement Measure(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             return new MetricMeasurement(entity, metric);
         }
@@ -85,14 +76,8 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="elapsed">The time span.</param>
         internal static void SetMetric(this IReactiveResource entity, EntityMetric metric, TimeSpan elapsed)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-            if (elapsed < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(elapsed));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
+            ArgumentOutOfRangeException.ThrowIfLessThan(elapsed, TimeSpan.Zero);
 
             if (ShouldTrack)
             {
@@ -107,10 +92,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <returns>The set of metrics that have been collected for that entity.</returns>
         public static IReadOnlyDictionary<EntityMetric, TimeSpan> GetMetrics(this IReactiveResource entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             return Impl.Instance.GetMetrics(entity);
         }
@@ -120,10 +102,10 @@ namespace Reaqtor.QueryEngine.Metrics
             private const long EmptyMetric = long.MinValue;
 
             private static readonly Stopwatch s_timer = Stopwatch.StartNew();
-            private static readonly int s_metricCount = Enum.GetValues(typeof(EntityMetric)).Cast<int>().Max() + 1;
-            private static readonly long[] s_emptyMetrics = Enumerable.Repeat(EmptyMetric, s_metricCount).ToArray();
+            private static readonly int s_metricCount = Enum.GetValues<EntityMetric>().Cast<int>().Max() + 1;
+            private static readonly long[] s_emptyMetrics = [.. Enumerable.Repeat(EmptyMetric, s_metricCount)];
 
-            private readonly ConditionalWeakTable<IReactiveResource, long[]> _metrics = new();
+            private readonly ConditionalWeakTable<IReactiveResource, long[]> _metrics = [];
 
             private Impl() { }
 

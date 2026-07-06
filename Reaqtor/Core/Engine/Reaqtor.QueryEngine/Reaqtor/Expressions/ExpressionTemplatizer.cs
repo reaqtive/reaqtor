@@ -27,10 +27,7 @@ namespace Reaqtor.Expressions
         /// <returns>The expression template.</returns>
         public static ExpressionTemplate Templatize(this Expression expression)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
+            ArgumentNullException.ThrowIfNull(expression);
 
             ICollection<ParameterExpression> globals = ExpressionHelpers.FindFreeVariables(expression);
 

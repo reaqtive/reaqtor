@@ -212,7 +212,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 reader.ReadHeader();
 
-                AssertEx.ThrowsException<ArgumentException>(() => reader.Load(ReactiveEntityKind.None), ex => Assert.AreEqual("kind", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentException>(() => reader.Load(ReactiveEntityKind.None));
+                Assert.AreEqual("kind", ex.ParamName);
             }
         }
 
@@ -358,7 +359,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 reader.ReadHeader();
 
-                Assert.ThrowsException<InvalidOperationException>(() => reader.Load(ReactiveEntityKind.Observable));
+                Assert.ThrowsExactly<InvalidOperationException>(() => reader.Load(ReactiveEntityKind.Observable));
             }
         }
 

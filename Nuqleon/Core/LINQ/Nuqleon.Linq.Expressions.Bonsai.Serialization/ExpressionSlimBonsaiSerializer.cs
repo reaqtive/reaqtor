@@ -96,8 +96,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         /// <returns>Slim expression represented by the given Bonsai.</returns>
         public ExpressionSlim Deserialize(Json.Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             Json.Expression expr;
 

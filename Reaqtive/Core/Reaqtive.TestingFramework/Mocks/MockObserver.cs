@@ -33,6 +33,6 @@ namespace Reaqtive.TestingFramework.Mocks
             Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnCompleted<T>()));
         }
 
-        public IList<Recorded<Notification<T>>> Messages { get; } = new List<Recorded<Notification<T>>>();
+        public IList<Recorded<Notification<T>>> Messages { get; } = [];
     }
 }

@@ -101,7 +101,7 @@ namespace Reaqtor.QueryEngine.Mocks
                 _onDispose = onDispose;
             }
 
-            public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+            public IEnumerable<ISubscription> Inputs => [];
 
             protected IOperatorContext Context { get; private set; }
 
@@ -256,7 +256,7 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             private readonly AutoResetEvent _onSubscribe = new(false);
 
-            private readonly object _subjectGate = new();
+            private readonly Lock _subjectGate = new();
             private object _subject;
             private object _contextSwitchedSubject;
             private ISubscription _contextSwitchedSubscription;

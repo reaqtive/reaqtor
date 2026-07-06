@@ -16,11 +16,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageInt32(source);
         }
@@ -32,7 +30,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32> selector)
         {
             //
@@ -152,11 +149,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageInt64(source);
         }
@@ -168,7 +163,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64> selector)
         {
             //
@@ -288,11 +282,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Average(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageSingle(source);
         }
@@ -304,7 +296,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Single> selector)
         {
             //
@@ -424,11 +415,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageDouble(source);
         }
@@ -440,7 +429,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Double> selector)
         {
             //
@@ -560,11 +548,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Average(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageDecimal(source);
         }
@@ -576,7 +562,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal> selector)
         {
             //
@@ -696,11 +681,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableInt32(source);
         }
@@ -712,7 +695,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32?> selector)
         {
             //
@@ -836,11 +818,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableInt64(source);
         }
@@ -852,7 +832,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64?> selector)
         {
             //
@@ -976,11 +955,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Average(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableSingle(source);
         }
@@ -992,7 +969,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Single?> selector)
         {
             //
@@ -1116,11 +1092,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableDouble(source);
         }
@@ -1132,7 +1106,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Double?> selector)
         {
             //
@@ -1256,11 +1229,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Average(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableDecimal(source);
         }
@@ -1272,7 +1243,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal?> selector)
         {
             //

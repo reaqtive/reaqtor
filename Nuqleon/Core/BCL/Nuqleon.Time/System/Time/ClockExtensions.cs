@@ -22,8 +22,7 @@ namespace System.Time
         /// <returns>A clock instance that asserts monotonicity of the specified clock.</returns>
         public static IClock AssertMonotonic(this IClock clock)
         {
-            if (clock == null)
-                throw new ArgumentNullException(nameof(clock));
+            ArgumentNullException.ThrowIfNull(clock);
 
             //
             // NB: Some optimizations could be made to coalesce various [Assert|Ensure]Monotonic applications.
@@ -38,8 +37,7 @@ namespace System.Time
         /// <returns>A clock instance that ensure monotonicity of the specified clock.</returns>
         public static IClock EnsureMonotonic(this IClock clock)
         {
-            if (clock == null)
-                throw new ArgumentNullException(nameof(clock));
+            ArgumentNullException.ThrowIfNull(clock);
 
             //
             // NB: Some optimizations could be made to coalesce various [Assert|Ensure]Monotonic applications.
@@ -51,7 +49,9 @@ namespace System.Time
         {
             private readonly bool _adjust;
             private readonly IClock _clock;
+#pragma warning disable IDE0032 // Use auto property. (Deliberate: PR #155 review rejected the auto-property rewrite; the explicit backing field is kept.)
             private long _lastValue;
+#pragma warning restore IDE0032
 
             public Monotonic(IClock clock, bool adjust)
             {

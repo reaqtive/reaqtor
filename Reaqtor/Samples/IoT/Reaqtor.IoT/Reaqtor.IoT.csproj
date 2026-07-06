@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <Description>Stand-alone sample of Reaqtor in an IoT edge context.</Description>
     <IsPackable>false</IsPackable>

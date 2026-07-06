@@ -64,7 +64,7 @@ namespace System.Linq.CompilerServices
         protected ScopedExpressionVisitor()
 #endif
         {
-            _symbolTable = new ScopedSymbolTable<ParameterExpression, TState>();
+            _symbolTable = [];
         }
 
         /// <summary>
@@ -87,8 +87,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the symbol was found; otherwise, false.</returns>
         protected bool TryLookup(ParameterExpression parameter, out TState state)
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            ArgumentNullException.ThrowIfNull(parameter);
 
             if (_symbolTable.TryLookup(parameter, out Indexed<Indexed<TState>> value))
             {
@@ -106,8 +105,7 @@ namespace System.Linq.CompilerServices
         /// <param name="parameters">Parameters of the declaration site.</param>
         protected override void Push(IEnumerable<ParameterExpression> parameters)
         {
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(parameters);
 
             PushCore(parameters.Select(p => new KeyValuePair<ParameterExpression, TState>(p, GetState(p))));
         }
@@ -118,8 +116,7 @@ namespace System.Linq.CompilerServices
         /// <param name="scope">New scope to push in the symbol table.</param>
         protected virtual void Push(IEnumerable<KeyValuePair<ParameterExpression, TState>> scope)
         {
-            if (scope == null)
-                throw new ArgumentNullException(nameof(scope));
+            ArgumentNullException.ThrowIfNull(scope);
 
             PushCore(scope);
         }

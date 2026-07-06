@@ -85,8 +85,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.IfThen(Expression.Constant(true), Expression.Constant(1));
 
             // Call
-            yield return Expression.Call(typeof(Math).GetMethod(nameof(Math.Abs), new[] { typeof(int) }), Expression.Constant(1));
-            yield return Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }), Expression.Constant(1), Expression.Constant(2));
+            yield return Expression.Call(typeof(Math).GetMethod(nameof(Math.Abs), [typeof(int)]), Expression.Constant(1));
+            yield return Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]), Expression.Constant(1), Expression.Constant(2));
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             yield return ((Expression<Func<Bar>>)(() => Activator.CreateInstance<Bar>()));
 #pragma warning restore IDE0004
@@ -95,7 +95,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
 
             // New
             yield return Expression.New(typeof(TimeSpan));
-            yield return Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), Expression.Constant(42L));
+            yield return Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), Expression.Constant(42L));
             yield return ((Expression<Func<object>>)(() => new { a = 1 })).Body;
             yield return ((Expression<Func<object>>)(() => new { a = 1L })).Body;
             yield return ((Expression<Func<object>>)(() => new { b = 1 })).Body;
@@ -126,7 +126,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.MakeMemberAccess(Expression.Constant(new Bar()), typeof(Bar).GetProperty(nameof(Bar.Qux)));
 
             // Index
-            yield return Expression.MakeIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(1) });
+            yield return Expression.MakeIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]);
 
             // Invocation
             yield return Expression.Invoke(Expression.Parameter(typeof(Func<int>)));
@@ -147,12 +147,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.Block(Expression.Empty(), Expression.Empty());
             yield return Expression.Block(px);
             yield return Expression.Block(px, py);
-            yield return Expression.Block(new[] { px }, Expression.Empty());
-            yield return Expression.Block(new[] { px }, px);
-            yield return Expression.Block(new[] { px }, py);
-            yield return Expression.Block(new[] { px, py }, px, py);
-            yield return Expression.Block(new[] { px, py }, py, px);
-            yield return Expression.Block(typeof(void), new[] { px }, px);
+            yield return Expression.Block([px], Expression.Empty());
+            yield return Expression.Block([px], px);
+            yield return Expression.Block([px], py);
+            yield return Expression.Block([px, py], px, py);
+            yield return Expression.Block([px, py], py, px);
+            yield return Expression.Block(typeof(void), [px], px);
 
             // Try
             yield return Expression.TryCatch(px, Expression.Catch(typeof(Exception), py));
@@ -257,14 +257,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
 
             yield return new Expression[]
             {
-                Expression.Block(new[] { px }, px),
-                Expression.Block(new[] { py }, py),
+                Expression.Block([px], px),
+                Expression.Block([py], py),
             };
 
             yield return new Expression[]
             {
-                Expression.Block(new[] { px }, px),
-                Expression.Block(typeof(int), new[] { px }, px),
+                Expression.Block([px], px),
+                Expression.Block(typeof(int), [px], px),
             };
 
             yield return new Expression[]
@@ -296,7 +296,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             public int Qux { get; set; }
 
             public Baz Baz { get; } = new Baz();
-            public List<int> Xs { get; } = new List<int>();
+            public List<int> Xs { get; } = [];
 
             public static bool EqualsInt32(int x, int y) => false;
         }

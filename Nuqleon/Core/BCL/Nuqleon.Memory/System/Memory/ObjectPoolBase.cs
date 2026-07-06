@@ -114,8 +114,7 @@ namespace System.Memory
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="size"/> is less than zero.</exception>
         protected ObjectPoolBase(int size)
         {
-            if (size < 1)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            ArgumentOutOfRangeException.ThrowIfLessThan(size, 1);
 
             _items = new Element[size - 1];
 
@@ -165,20 +164,17 @@ namespace System.Memory
             }
 
 #if DETECT_LEAKS
-            if (s_leakTrackers != null)
-            {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA2000 // Dispose objects before losing scope. (By design for tracker object. Gets manually disposed later.)
-                var tracker = new LeakTracker();
+            var tracker = new LeakTracker();
 #pragma warning restore CA2000
 #pragma warning restore IDE0079
-                s_leakTrackers.Add(inst, tracker);
+            s_leakTrackers.Add(inst, tracker);
 
 #if TRACE_LEAKS
-                var frame = new StackTrace(false);
-                tracker._trace = frame;
+            var frame = new StackTrace(false);
+            tracker._trace = frame;
 #endif
-            }
 #endif
 
 #if ENABLE_LOGGING
@@ -314,12 +310,14 @@ namespace System.Memory
         /// </summary>
         partial void OnAllocating();
 
+#if ENABLE_LOGGING
         /// <summary>
         /// Handler for completion of allocate operations.
         /// </summary>
         /// <param name="obj">Object that was acquired due to the allocation.</param>
         /// <param name="isNew">Indicates that the object was obtained by performing an allocation.</param>
         partial void OnAllocated(T obj, bool isNew);
+#endif
 
         /// <summary>
         /// Handler for initiation of free operations.
@@ -327,11 +325,13 @@ namespace System.Memory
         /// <param name="obj">Object that is being freed.</param>
         partial void OnFreeing(T obj);
 
+#if ENABLE_LOGGING
         /// <summary>
         /// Handler for completion of free operations.
         /// </summary>
         /// <param name="wasReturned">Indicates whether the object was returned to the pool.</param>
         partial void OnFreed(bool wasReturned);
+#endif
 
         /// <summary>
         /// Validates that the object being freed is not null or unknown to the pool.
@@ -360,11 +360,6 @@ namespace System.Memory
         internal void ForgetTrackedObject(T old, T replacement = null)
         {
 #if DETECT_LEAKS
-            if (s_leakTrackers == null)
-            {
-                return;
-            }
-
             if (s_leakTrackers.TryGetValue(old, out LeakTracker tracker))
             {
                 tracker.Dispose();
@@ -445,12 +440,7 @@ namespace System.Memory
         /// tracker to become unreachable. When the leak tracker gets collected, its finalizer will run
         /// and log an error.
         /// </summary>
-        private static readonly ConditionalWeakTable<T, LeakTracker> s_leakTrackers =
-            //
-            // NB: We're seeing sporadic failures on Mono where TryAdd fails with 'Key already in the list'
-            //     which seems related to https://github.com/mono/mono/issues/8700.
-            //
-            Type.GetType("Mono.Runtime") == null ? new() : null;
+        private static readonly ConditionalWeakTable<T, LeakTracker> s_leakTrackers = [];
 
         /// <summary>
         /// Leak tracker used to detect orphaned pooled objects that weren't returned to their owning pool.
@@ -536,7 +526,7 @@ namespace System.Memory
         private int _createInstanceCount;
         private int _dropCount;
 
-        private readonly ConditionalWeakTable<T, History> _objectLogs = new();
+        private readonly ConditionalWeakTable<T, History> _objectLogs = [];
         private readonly ConcurrentDictionary<History, bool> _trackedObjs = new();
 
         partial void OnCreate() => _createData = TraceLog.Create(Operation.CreatePool);
@@ -768,13 +758,7 @@ namespace System.Memory
 
         private void Write(StringBuilder sb, string str)
         {
-            var parts =
-#if NET6_0 || NETSTANDARD2_1
-                str.Replace("\r\n", "\n", StringComparison.Ordinal)
-#else
-                str.Replace("\r\n", "\n")
-#endif
-                   .Split('\n');
+            var parts = str.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
 
             foreach (var part in parts)
             {

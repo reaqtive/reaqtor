@@ -44,8 +44,7 @@ namespace System.Reflection
         /// <returns>Result of the visit.</returns>
         public virtual TType Visit(TypeSlim type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.Kind switch
             {
@@ -186,8 +185,7 @@ namespace System.Reflection
         /// <returns>Result of visiting the types.</returns>
         public ReadOnlyCollection<TType> Visit(ReadOnlyCollection<TypeSlim> types)
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             var n = types.Count;
 
@@ -208,8 +206,7 @@ namespace System.Reflection
         /// <returns>Result of visiting the generic type arguments.</returns>
         public ReadOnlyCollection<TType> VisitGenericTypeArguments(GenericTypeSlim genericType)
         {
-            if (genericType == null)
-                throw new ArgumentNullException(nameof(genericType));
+            ArgumentNullException.ThrowIfNull(genericType);
 
             var n = genericType.GenericArgumentCount;
 
@@ -231,8 +228,7 @@ namespace System.Reflection
         public ReadOnlyCollection<TResult> VisitAndConvert<TResult>(ReadOnlyCollection<TypeSlim> types)
             where TResult : TType
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             var n = types.Count;
 

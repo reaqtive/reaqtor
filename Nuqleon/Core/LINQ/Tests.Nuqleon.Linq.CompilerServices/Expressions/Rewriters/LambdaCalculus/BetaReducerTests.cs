@@ -23,9 +23,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.Reduce(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.Reduce(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.ReduceEager(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None, throwOnCycle: false), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.Reduce(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.Reduce(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.ReduceEager(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None, throwOnCycle: false));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         [TestMethod]
@@ -233,7 +236,7 @@ namespace Tests.System.Linq.CompilerServices
             var x = Expression.Parameter(typeof(int));
             var f = Expression.Invoke(Expression.Lambda(Expression.Constant(1), x), e);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.DisallowDiscard));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.DisallowDiscard));
         }
 
         [TestMethod]
@@ -255,13 +258,13 @@ namespace Tests.System.Linq.CompilerServices
             var x = Expression.Parameter(typeof(int));
             var f = Expression.Invoke(Expression.Lambda(Expression.Add(x, x), x), e);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.ExactlyOnce));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.ExactlyOnce));
         }
 
         [TestMethod]
         public void BetaReducer_MathTest()
         {
-            var f = (Expression<Func<int, int, int>>)((x, y) => x * y + Enumerable.Range(0, x).Select(a => a + y).Sum());
+            var f = (Expression<Func<int, int, int>>)((x, y) => x * y + Enumerable.Range(0, x).Sum(a => a + y));
 
             var g = f.Compile();
 
@@ -323,7 +326,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_Eager2()
         {
-            var a = (Expression<D>)((D d) => d(d));
+            var a = (Expression<D>)(d => d(d));
             var b = Expression.Invoke(a, a);
 
             var r = BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: false);
@@ -335,10 +338,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_Eager3()
         {
-            var a = (Expression<D>)((D d) => d(d));
+            var a = (Expression<D>)(d => d(d));
             var b = Expression.Invoke(a, a);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: true));
         }
 
         [TestMethod]

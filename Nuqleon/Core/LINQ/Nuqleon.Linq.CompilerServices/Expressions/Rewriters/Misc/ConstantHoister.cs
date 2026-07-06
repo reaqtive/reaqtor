@@ -60,10 +60,10 @@ namespace System.Linq.CompilerServices
         /// <param name="exclusions">Exclusion list for constant sites that should be excluded from hoisting.</param>
         public ConstantHoister(bool useDefaultForNull, params LambdaExpression[] exclusions)
         {
-            exclusions ??= Array.Empty<LambdaExpression>();
+            exclusions ??= [];
 
             _useDefaultForNull = useDefaultForNull;
-            _holes = new Dictionary<MemberInfo, List<int>>();
+            _holes = [];
 
             foreach (var exclusion in exclusions)
             {
@@ -105,7 +105,7 @@ namespace System.Linq.CompilerServices
                             var c = (MemberExpression)exclusion.Body;
 
                             member = c.Member;
-                            holes = GetHolePositions(exclusion, new[] { c.Expression });
+                            holes = GetHolePositions(exclusion, [c.Expression]);
                         }
                         break;
                     default:
@@ -116,7 +116,7 @@ namespace System.Linq.CompilerServices
                 {
                     if (_holes.TryGetValue(member, out List<int> existing))
                     {
-                        holes = existing.Union(holes).ToList();
+                        holes = [.. existing.Union(holes)];
                     }
 
                     _holes[member] = holes;
@@ -149,8 +149,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static ConstantHoister Create(bool useDefaultForNull, params LambdaExpression[] exclusions)
         {
-            if (exclusions == null)
-                throw new ArgumentNullException(nameof(exclusions));
+            ArgumentNullException.ThrowIfNull(exclusions);
 
             return new ConstantHoister(useDefaultForNull, exclusions);
         }
@@ -163,8 +162,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
         public static ExpressionWithEnvironment Hoist(Expression expression, bool useDefaultForNull)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return (useDefaultForNull ? s_defaultWithDefaultNull : s_default).Hoist(expression);
         }
@@ -176,8 +174,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
         public ExpressionWithEnvironment Hoist(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var impl = new Impl(this);
             var res = impl.Visit(expression);
@@ -288,11 +285,11 @@ namespace System.Linq.CompilerServices
             {
                 _parent = parent;
                 _constants = new Dictionary<object, ParameterExpression>(TypeAwareComparer.Instance);
-                Environment = new List<Binding>();
+                Environment = [];
 
                 if (!_parent._useDefaultForNull)
                 {
-                    _nulls = new Dictionary<Type, ParameterExpression>();
+                    _nulls = [];
                 }
             }
 

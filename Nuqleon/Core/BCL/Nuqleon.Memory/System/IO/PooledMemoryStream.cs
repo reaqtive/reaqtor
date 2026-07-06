@@ -117,8 +117,7 @@ namespace System.IO
         /// <param name="processBuffer">Delegate to process the buffer. Once the delegate invocation returns, the buffer should no longer be accessed.</param>
         public void GetBufferAndFree(Action<byte[]> processBuffer)
         {
-            if (processBuffer == null)
-                throw new ArgumentNullException(nameof(processBuffer));
+            ArgumentNullException.ThrowIfNull(processBuffer);
 
             processBuffer(base.GetBuffer());
             Free();

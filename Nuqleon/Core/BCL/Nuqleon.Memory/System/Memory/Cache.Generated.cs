@@ -14,7 +14,6 @@ namespace System.Memory
     /// <typeparam name="TCached1">Type of the first cacheable component of the cached type.</typeparam>
     /// <typeparam name="TCached2">Type of the second cacheable component of the cached type.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "By design to support arbitrary breakdowns of types for caching.")]
     public abstract class Cache<T, TCached1, TCached2, TNonCached> : ICache<T>
     {
         private readonly ICache<TCached1> _innerCache1;
@@ -35,15 +34,9 @@ namespace System.Memory
         /// <param name="innerCache2">The second inner cache.</param>
         protected Cache(ICache<TCached1> innerCache1, ICache<TCached2> innerCache2)
         {
-            if (innerCache1 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache1));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache1);
 
-            if (innerCache2 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache2));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache2);
 
             _innerCache1 = innerCache1;
             _innerCache2 = innerCache2;
@@ -159,7 +152,6 @@ namespace System.Memory
     /// <typeparam name="TCached2">Type of the second cacheable component of the cached type.</typeparam>
     /// <typeparam name="TCached3">Type of the third cacheable component of the cached type.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "By design to support arbitrary breakdowns of types for caching.")]
     public abstract class Cache<T, TCached1, TCached2, TCached3, TNonCached> : ICache<T>
     {
         private readonly ICache<TCached1> _innerCache1;
@@ -182,20 +174,11 @@ namespace System.Memory
         /// <param name="innerCache3">The third inner cache.</param>
         protected Cache(ICache<TCached1> innerCache1, ICache<TCached2> innerCache2, ICache<TCached3> innerCache3)
         {
-            if (innerCache1 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache1));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache1);
 
-            if (innerCache2 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache2));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache2);
 
-            if (innerCache3 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache3));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache3);
 
             _innerCache1 = innerCache1;
             _innerCache2 = innerCache2;
@@ -331,7 +314,6 @@ namespace System.Memory
     /// <typeparam name="TCached3">Type of the third cacheable component of the cached type.</typeparam>
     /// <typeparam name="TCached4">Type of the fourth cacheable component of the cached type.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "By design to support arbitrary breakdowns of types for caching.")]
     public abstract class Cache<T, TCached1, TCached2, TCached3, TCached4, TNonCached> : ICache<T>
     {
         private readonly ICache<TCached1> _innerCache1;
@@ -356,25 +338,13 @@ namespace System.Memory
         /// <param name="innerCache4">The fourth inner cache.</param>
         protected Cache(ICache<TCached1> innerCache1, ICache<TCached2> innerCache2, ICache<TCached3> innerCache3, ICache<TCached4> innerCache4)
         {
-            if (innerCache1 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache1));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache1);
 
-            if (innerCache2 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache2));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache2);
 
-            if (innerCache3 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache3));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache3);
 
-            if (innerCache4 == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache4));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache4);
 
             _innerCache1 = innerCache1;
             _innerCache2 = innerCache2;

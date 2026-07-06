@@ -43,7 +43,7 @@ namespace Reaqtive
         /// <returns>Sequence of operator inputs.</returns>
         protected override IEnumerable<ISubscription> OnSubscribe()
         {
-            return new[] { (ISubscription)Output };
+            return [(ISubscription)Output];
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Reaqtive
             public _(IObserver<TResult> observer)
             {
                 _observer = observer;
-                _queue = new List<TResult>();
+                _queue = [];
                 _task = new YieldableItemProcessingTask(this);
                 _eventBuffer = new TResult[16];
             }
@@ -467,11 +467,8 @@ namespace Reaqtive
             {
                 lock (_queue)
                 {
-                    if (_childScheduler != null)
-                    {
-                        _childScheduler.Dispose();
-                        _childScheduler = null;
-                    }
+                    _childScheduler?.Dispose();
+                    _childScheduler = null;
 
                     _queue.Clear();
                 }

@@ -11,14 +11,9 @@
 using System;
 using System.Collections.Generic;
 
-#if NETFRAMEWORK
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel.TypeSystem;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 {
@@ -42,31 +37,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             Assert.AreSame(iex, ex3.InnerException);
             Assert.IsTrue(ex3.ToString().Contains("foo"));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)), ex => Assert.AreEqual("error", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)));
+            Assert.AreEqual("error", ex.ParamName);
 
-            var err = new DataTypeError(typeof(int), "bar", new[] { typeof(List<int>) });
+            var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
             var ex4 = new DataTypeException(err);
             Assert.AreSame(err, ex4.Error);
             Assert.IsTrue(ex4.ToString().Contains("bar"));
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void DataTypeException_Serialize()
-        {
-            var err = new DataTypeError(typeof(int), "bar", new[] { typeof(List<int>) });
-            var ex = new DataTypeException(err);
-
-            var ms = new MemoryStream();
-            new BinaryFormatter().Serialize(ms, ex);
-
-            ms.Position = 0;
-            var res = (DataTypeException)new BinaryFormatter().Deserialize(ms);
-
-            Assert.AreEqual(err.Message, res.Error.Message);
-            Assert.AreEqual(err.Type, res.Error.Type);
-            AssertEx.AreSequenceEqual(err.Stack, res.Error.Stack);
-        }
-#endif
     }
 }

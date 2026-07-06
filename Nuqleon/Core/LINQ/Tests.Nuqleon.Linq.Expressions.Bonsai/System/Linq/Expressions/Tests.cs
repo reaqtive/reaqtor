@@ -34,7 +34,7 @@ namespace Tests.System.Linq.Expressions
             var boolExpr1 = ExpressionSlim.Parameter(boolSlim);
             var boolExpr2 = ExpressionSlim.Parameter(boolSlim);
             var prop = SlimType.GetProperty("Foo", propertyType: null, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
-            var elementInits = new ElementInitSlim[] { new ElementInitSlim(addMethod: null, arguments: null) }.ToReadOnly();
+            var elementInits = new ElementInitSlim[] { new(addMethod: null, arguments: null) }.ToReadOnly();
             var method = SlimType.GetSimpleMethod("Foo", EmptyReadOnlyCollection<TypeSlim>.Instance, returnType: null);
 
             var b = ExpressionSlim.Add(intExpr1, intExpr2);
@@ -50,7 +50,7 @@ namespace Tests.System.Linq.Expressions
             Assert.AreNotSame(i, i.Update(intExpr2, new ExpressionSlim[] { intExpr2 }.ToReadOnly()));
             Assert.AreNotSame(i, i.Update(intExpr1, new ExpressionSlim[] { intExpr3 }.ToReadOnly()));
 
-            var inv = ExpressionSlim.Invoke(intExpr1, new[] { intExpr2 });
+            var inv = ExpressionSlim.Invoke(intExpr1, [intExpr2]);
             Assert.AreNotSame(inv, inv.Update(intExpr2, new ExpressionSlim[] { intExpr2 }.ToReadOnly()));
             Assert.AreNotSame(inv, inv.Update(intExpr1, new ExpressionSlim[] { intExpr3 }.ToReadOnly()));
 
@@ -113,10 +113,10 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_Call()
         {
             AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("ToUpper", Type.EmptyTypes)).ToExpressionSlim(), "Call(System.String System.String.ToUpper(), Constant(bar, System.String))");
-            AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1)).ToExpressionSlim(), "Call(System.String System.String.Substring(System.Int32), Constant(bar, System.String), Constant(1, System.Int32))");
+            AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1)).ToExpressionSlim(), "Call(System.String System.String.Substring(System.Int32), Constant(bar, System.String), Constant(1, System.Int32))");
 
             AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", Type.EmptyTypes)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine())");
-            AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", new[] { typeof(int) }), Expression.Constant(1)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine(System.Int32), Constant(1, System.Int32))");
+            AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", [typeof(int)]), Expression.Constant(1)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine(System.Int32), Constant(1, System.Int32))");
         }
 
         [TestMethod]
@@ -288,7 +288,7 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlim_ToString_Index()
         {
-            AssertToString(Expression.MakeIndex(Expression.New(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(0) }).ToExpressionSlim(), "Index(System.Collections.Generic.List`1<System.Int32>.Item[System.Int32], New(System.Collections.Generic.List`1<System.Int32>..ctor()), Constant(0, System.Int32))");
+            AssertToString(Expression.MakeIndex(Expression.New(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), [Expression.Constant(0)]).ToExpressionSlim(), "Index(System.Collections.Generic.List`1<System.Int32>.Item[System.Int32], New(System.Collections.Generic.List`1<System.Int32>..ctor()), Constant(0, System.Int32))");
         }
 
         [TestMethod]
@@ -309,7 +309,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_New()
         {
             AssertToString(Expression.New(typeof(TimeSpan)).ToExpressionSlim(), "New(System.TimeSpan)");
-            AssertToString(Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), Expression.Constant(42L)).ToExpressionSlim(), "New(System.TimeSpan..ctor(System.Int64), Constant(42, System.Int64))");
+            AssertToString(Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), Expression.Constant(42L)).ToExpressionSlim(), "New(System.TimeSpan..ctor(System.Int64), Constant(42, System.Int64))");
             AssertToString(Expression.New(typeof(ArrayList).GetConstructor(Type.EmptyTypes)).ToExpressionSlim(), "New(System.Collections.ArrayList..ctor())");
         }
 
@@ -352,7 +352,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_Block()
         {
             AssertToString(Expression.Block(Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Constant(42, System.Int32); Constant(1337, System.Int32))");
-            AssertToString(Expression.Block(new[] { Expression.Parameter(typeof(string), "x"), Expression.Parameter(typeof(string), "y") }, Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Parameter(System.String, x), Parameter(System.String, y); Constant(42, System.Int32); Constant(1337, System.Int32))");
+            AssertToString(Expression.Block([Expression.Parameter(typeof(string), "x"), Expression.Parameter(typeof(string), "y")], Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Parameter(System.String, x), Parameter(System.String, y); Constant(42, System.Int32); Constant(1337, System.Int32))");
         }
 
         [TestMethod]

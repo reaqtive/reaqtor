@@ -48,8 +48,7 @@ namespace Reaqtor
         /// <param name="metadataProxy">Metadata service proxy.</param>
         protected ReactiveClientContext(IReactiveExpressionServices expressionServices, ReactiveClientProxy clientProxy, ReactiveDefinitionProxy definitionProxy, ReactiveMetadataProxy metadataProxy)
         {
-            if (expressionServices == null)
-                throw new ArgumentNullException(nameof(expressionServices));
+            ArgumentNullException.ThrowIfNull(expressionServices);
 
             Client = clientProxy;
             Definition = definitionProxy;

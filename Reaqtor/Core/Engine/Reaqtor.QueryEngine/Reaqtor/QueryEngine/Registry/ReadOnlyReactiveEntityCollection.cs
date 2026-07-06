@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Reaqtor.QueryEngine
 {
@@ -68,7 +67,7 @@ namespace Reaqtor.QueryEngine
 
             Debug.Assert(false, "Potential performance hazard.");
 
-            return new ReadOnlyCollection<T>(source.ToList());
+            return new ReadOnlyCollection<T>([.. source]);
         }
 
         public ReadOnlyDictionary<TKey, TValue> Entries { get; }

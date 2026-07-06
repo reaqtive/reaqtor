@@ -2,7 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-// #define USE_VALUETUPLE // REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.
+// #define USE_VALUETUPLE // RESOLVED (2026-07, measured in Perf.Nuqleon.Memory): not desirable. The REVIEW hunch below was
+//                        // right on the money: ValueTuple.GetHashCode on a TRest-nested tuple (arity > 8) incorporates only
+//                        // the LAST 8 components, so memoized functions whose earlier arguments vary while later ones stay
+//                        // stable collapse the cache into a single hash bucket with O(n) lookups (measured 50-128x slower).
+//                        // With collision-free keys the two representations are equivalent (ValueTuple marginally faster);
+//                        // Tuplet hashes all components at every arity and has no such cliff. Keep Tuplet.
+//                        // (Original note: REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.)
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
@@ -44,14 +50,10 @@ for (var i = 1; i <= n; i++)
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(<#=genArgs#>), TResult>(a => function(<#=args#>), options, comparer: null);
@@ -100,19 +102,15 @@ for (var i = 1; i <= n; i++)
 }
 #>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options, <#=comparerPars#>)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 <#
 for (var i = 1; i <= n; i++)
 {
 #>
-            if (comparer<#=i#> == null)
-                throw new ArgumentNullException(nameof(comparer<#=i#>));
+            ArgumentNullException.ThrowIfNull(comparer<#=i#>);
 <#
 }
 #>
@@ -254,9 +252,6 @@ for (var i = 1; i <= n; i++)
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> MemoizeWeak<<#=genArgs#>, TResult>(this IWeakMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
 <#
 for (var i = 1; i <= n; i++)
@@ -267,10 +262,8 @@ for (var i = 1; i <= n; i++)
 }
 #>
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
 <#

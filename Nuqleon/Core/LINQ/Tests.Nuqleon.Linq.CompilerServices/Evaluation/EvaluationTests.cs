@@ -32,23 +32,23 @@ namespace Tests.System.Linq.CompilerServices
             var h = ConstantHoister.Create(useDefaultForNull: false);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null));
 
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c, outliningEnabled: false));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null, outliningEnabled: false));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c, outliningEnabled: false));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null, outliningEnabled: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c, outliningEnabled: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null, outliningEnabled: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c, outliningEnabled: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null, outliningEnabled: false));
 
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c, outliningEnabled: false, h));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null, outliningEnabled: false, h));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c, outliningEnabled: false, h));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null, outliningEnabled: false, h));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(LambdaExpression), c, outliningEnabled: false, h));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, cache: null, outliningEnabled: false, h));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(default(Expression<Action>), c, outliningEnabled: false, h));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, cache: null, outliningEnabled: false, h));
 
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, c, outliningEnabled: false, hoister: null));
-            Assert.ThrowsException<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, c, outliningEnabled: false, hoister: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(l, c, outliningEnabled: false, hoister: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => CachedLambdaCompiler.Compile(f, c, outliningEnabled: false, hoister: null));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -316,33 +316,13 @@ namespace Tests.System.Linq.CompilerServices
                 }
             }
 
-            if (Type.GetType("Mono.Runtime") == null)
-            {
-                Assert.AreEqual(24, added);
-            }
-            else
-            {
-                //
-                // NB: Delegate caching for arities > 16 does not work on Mono. We get fresh runtime-generated delegate
-                //     types every time we construct a new LambdaExpression of high arity.
-                //
-                //     We'll just check on upper and lower bounds for caching. In practice we've seen values of 45, but
-                //     it's flaky to rely on that exact number. (45 = 17 + 4 * 7 where the latter product illustrates
-                //     the lack of caching for higher arity delegates.)
-                //
-
-                Assert.IsTrue(added is >= N and < N * M);
-            }
+            Assert.AreEqual(24, added);
         }
 
         [TestMethod]
         public void CachedLambdaCompiler_TooManyConstantsForLCGTypes()
         {
-#if NET6_0
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
-#else
-            var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
-#endif
             var mod = asm.DefineDynamicModule("mod");
             var typ = mod.DefineType("qux", TypeAttributes.Class);
             var qux = typ.CreateType();
@@ -492,21 +472,21 @@ namespace Tests.System.Linq.CompilerServices
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f1 = xs => xs.Where(x => x > 1).Select(x => x * 2);
             var d1 = f1.Compile(cache, outliningEnabled: true);
-            var r1 = d1(new[] { 1, 2, 3, 4 });
+            var r1 = d1([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 4, 6, 8 }.SequenceEqual(r1));
             Assert.AreEqual(3, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f2 = xs => xs.Where(x => x > 0).Select(x => x * 3);
             var d2 = f2.Compile(cache, outliningEnabled: true);
-            var r2 = d2(new[] { 1, 2, 3, 4 });
+            var r2 = d2([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 3, 6, 9, 12 }.SequenceEqual(r2));
             Assert.AreEqual(3, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f3 = xs => xs.OrderBy(x => x * -1).Where(x => x > 2).Select(x => x * -2);
             var d3 = f3.Compile(cache, outliningEnabled: true);
-            var r3 = d3(new[] { 1, 2, 3, 4 });
+            var r3 = d3([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { -8, -6 }.SequenceEqual(r3));
             Assert.AreEqual(4, added);
@@ -552,21 +532,21 @@ namespace Tests.System.Linq.CompilerServices
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f1 = xs => xs.Where(x => x > 1).Select(x => x * 2);
             var d1 = f1.Compile(cache, outliningEnabled: false);
-            var r1 = d1(new[] { 1, 2, 3, 4 });
+            var r1 = d1([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 4, 6, 8 }.SequenceEqual(r1));
             Assert.AreEqual(1, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f2 = xs => xs.Where(x => x > 0).Select(x => x * 3);
             var d2 = f2.Compile(cache, outliningEnabled: false);
-            var r2 = d2(new[] { 1, 2, 3, 4 });
+            var r2 = d2([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 3, 6, 9, 12 }.SequenceEqual(r2));
             Assert.AreEqual(1, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f3 = xs => xs.OrderBy(x => x * -1).Where(x => x > 2).Select(x => x * -2);
             var d3 = f3.Compile(cache, outliningEnabled: false);
-            var r3 = d3(new[] { 1, 2, 3, 4 });
+            var r3 = d3([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { -8, -6 }.SequenceEqual(r3));
             Assert.AreEqual(2, added);
@@ -705,11 +685,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void LeastRecentlyUsedCompiledDelegateCache_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new LeastRecentlyUsedCompiledDelegateCache(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new LeastRecentlyUsedCompiledDelegateCache(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new LeastRecentlyUsedCompiledDelegateCache(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new LeastRecentlyUsedCompiledDelegateCache(-1));
 
             var lru = new LeastRecentlyUsedCompiledDelegateCache(4);
-            Assert.ThrowsException<ArgumentNullException>(() => lru.GetOrAdd(expression: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => lru.GetOrAdd(expression: null));
         }
 
         [TestMethod]
@@ -748,7 +728,7 @@ namespace Tests.System.Linq.CompilerServices
         public void SimpleCompiledDelegateCache_ArgumentChecking()
         {
             var cache = new SimpleCompiledDelegateCache();
-            Assert.ThrowsException<ArgumentNullException>(() => cache.GetOrAdd(expression: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => cache.GetOrAdd(expression: null));
         }
 
         [TestMethod]
@@ -787,7 +767,7 @@ namespace Tests.System.Linq.CompilerServices
         public void VoidCompiledDelegateCache_ArgumentChecking()
         {
             var cache = VoidCompiledDelegateCache.Instance;
-            Assert.ThrowsException<ArgumentNullException>(() => cache.GetOrAdd(expression: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => cache.GetOrAdd(expression: null));
         }
 
         [TestMethod]

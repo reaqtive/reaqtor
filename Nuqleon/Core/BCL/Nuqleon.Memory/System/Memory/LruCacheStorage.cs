@@ -43,14 +43,8 @@ namespace System.Memory
         /// <param name="comparer">The equality comparer used to compare cached objects.</param>
         public LruCacheStorage(int size, IEqualityComparer<T> comparer)
         {
-            if (size < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
-            if (comparer == null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(size);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             _size = size;
             _cache = new ConcurrentDictionary<T, Entry>(comparer);
@@ -73,10 +67,7 @@ namespace System.Memory
         {
             CheckDisposed();
 
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            ArgumentNullException.ThrowIfNull(value);
 
             var entry = default(Entry);
 
@@ -121,10 +112,7 @@ namespace System.Memory
         {
             CheckDisposed();
 
-            if (entry == null)
-            {
-                throw new ArgumentNullException(nameof(entry));
-            }
+            ArgumentNullException.ThrowIfNull(entry);
             if (entry.Value == null)
             {
                 throw new ArgumentException("Value contained in the entry cannot be null.", nameof(entry));
@@ -194,7 +182,7 @@ namespace System.Memory
         {
             private static readonly Stopwatch s_stopwatch = Stopwatch.StartNew();
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private int _count;
 
 #if DEBUG
@@ -255,10 +243,7 @@ namespace System.Memory
 
         private void CheckDisposed()
         {
-            if (Volatile.Read(ref _disposed) == 1)
-            {
-                throw new ObjectDisposedException("this");
-            }
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) == 1, this);
         }
     }
 }

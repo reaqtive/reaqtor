@@ -43,7 +43,7 @@ namespace Test
                     Expression.Constant("foo")
                 },
                 {
-                    Expression.MakeIndex(Expression.Constant(new List<int> { 2, 3, 4 }), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                    Expression.MakeIndex(Expression.Constant(new List<int> { 2, 3, 4 }), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]),
                     Expression.Constant(3)
                 },
                 {
@@ -213,12 +213,12 @@ namespace Test
                     E(() => new Dictionary<string, int> { { "bar", "bar".Length }, { "foo", 3 } })
                 },
                 {
-                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), new[] { Expression.Property(Expression.Constant("bar"), "Length") }),
-                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), new[] { Expression.Property(Expression.Constant("bar"), "Length") })
+                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), [Expression.Property(Expression.Constant("bar"), "Length")]),
+                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), [Expression.Property(Expression.Constant("bar"), "Length")])
                 },
                 {
-                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), new[] { Expression.Add(Expression.Constant(1), Expression.Constant(2)) }),
-                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(3) })
+                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), [Expression.Add(Expression.Constant(1), Expression.Constant(2))]),
+                    Expression.MakeIndex(Expression.Constant(xs), typeof(List<int>).GetProperty("Item"), [Expression.Constant(3)])
                 },
                 {
                     E(() => new Bar { X = { Y = "bar".Length } }),
@@ -285,11 +285,11 @@ namespace Test
                     (Expression<Func<string, int>>)(s => s.Length)
                 },
                 {
-                    E(() => Enumerable.Range(1, 3).Select(x => x).Sum()),
+                    E(() => Enumerable.Range(1, 3).Sum(x => x)),
                     Expression.Constant(6)
                 },
                 {
-                    E(() => Enumerable.Range(1, 3).Select(x => x.ToString()).Select(s => int.Parse(s)).Sum()),
+                    E(() => Enumerable.Range(1, 3).Select(x => x.ToString()).Sum(s => int.Parse(s))),
                     Expression.Constant(6)
                 }
             };
@@ -318,7 +318,7 @@ namespace Test
 
             foreach (var e in es)
             {
-                Assert.ThrowsException<NotSupportedException>(() => eval.Reduce(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => eval.Reduce(e));
             }
         }
 
@@ -349,7 +349,7 @@ namespace Test
             public Bar()
             {
                 X = new Foo();
-                Zs = new List<int>();
+                Zs = [];
             }
 
             public Foo X { get; set; }

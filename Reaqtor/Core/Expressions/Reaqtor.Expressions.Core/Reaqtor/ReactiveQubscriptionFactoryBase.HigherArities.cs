@@ -47,8 +47,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, state);
         }
@@ -63,8 +62,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, state);
         }
@@ -115,8 +113,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, state);
         }
@@ -132,8 +129,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, state);
         }
@@ -187,8 +183,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, state);
         }
@@ -205,8 +200,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, state);
         }
@@ -263,8 +257,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, state);
         }
@@ -282,8 +275,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, state);
         }
@@ -343,8 +335,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, state);
         }
@@ -363,8 +354,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, state);
         }
@@ -427,8 +417,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, state);
         }
@@ -448,8 +437,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, state);
         }
@@ -515,8 +503,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, state);
         }
@@ -537,8 +524,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, state);
         }
@@ -607,8 +593,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, state);
         }
@@ -630,8 +615,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, state);
         }
@@ -703,8 +687,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, state);
         }
@@ -727,8 +710,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, state);
         }
@@ -803,8 +785,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, state);
         }
@@ -828,8 +809,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, state);
         }
@@ -907,8 +887,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, state);
         }
@@ -933,8 +912,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, state);
         }
@@ -1015,8 +993,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, state);
         }
@@ -1042,8 +1019,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, state);
         }
@@ -1127,8 +1103,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, state);
         }
@@ -1155,8 +1130,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, state);
         }
@@ -1243,8 +1217,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, state);
         }
@@ -1272,8 +1245,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, state);
         }

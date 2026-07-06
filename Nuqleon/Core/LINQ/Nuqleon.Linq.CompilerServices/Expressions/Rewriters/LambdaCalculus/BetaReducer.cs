@@ -37,8 +37,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression after applying beta reductions.</returns>
         public static Expression Reduce(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ReduceCore(expression, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None);
         }
@@ -54,8 +53,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression after applying beta reductions.</returns>
         public static Expression Reduce(Expression expression, BetaReductionNodeTypes nodeTypes, BetaReductionRestrictions restrictions)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ReduceCore(expression, nodeTypes, restrictions);
         }
@@ -72,8 +70,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression after applying beta reductions.</returns>
         public static Expression ReduceEager(Expression expression, BetaReductionNodeTypes nodeTypes, BetaReductionRestrictions restrictions, bool throwOnCycle)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var history = new HashSet<Expression>(new ExpressionEqualityComparer());
 

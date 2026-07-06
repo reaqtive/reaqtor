@@ -25,9 +25,9 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void StateWriterExtensions_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null));
-            Assert.ThrowsException<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null, CancellationToken.None));
-            Assert.ThrowsException<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null, new Progress<int>()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null, CancellationToken.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StateWriterExtensions.CommitAsync(null, new Progress<int>()));
         }
 
         [TestMethod]

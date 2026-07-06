@@ -19,16 +19,16 @@ namespace Test.Reaqtive
         [TestMethod]
         public void CompositeSubscription_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new CompositeSubscription(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new CompositeSubscription(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new CompositeSubscription(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new CompositeSubscription(-1));
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CompositeSubscription(default(IEnumerable<ISubscription>)));
-            Assert.ThrowsException<ArgumentNullException>(() => new CompositeSubscription(default(ISubscription[])));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CompositeSubscription(default(IEnumerable<ISubscription>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CompositeSubscription(default(ISubscription[])));
 
             var cs = new CompositeSubscription();
 
-            Assert.ThrowsException<ArgumentNullException>(() => cs.Add(null));
-            Assert.ThrowsException<ArgumentNullException>(() => cs.Remove(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => cs.Add(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => cs.Remove(null));
         }
 
         [TestMethod]
@@ -154,7 +154,7 @@ namespace Test.Reaqtive
 
             var rand = new Random(1983);
 
-            ds1 = ds1.OrderBy(_ => rand.Next()).ToList();
+            ds1 = [.. ds1.OrderBy(_ => rand.Next())];
 
             var R = 2 * N / 3;
 

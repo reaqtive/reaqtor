@@ -21,14 +21,14 @@ using System.Text.RegularExpressions;
 
 namespace Rxcel
 {
-    internal sealed class Parser
+    internal sealed partial class Parser
     {
         private Token[] _tokens;
         private int _i;
 
         public ExcelExpression Parse(string expression)
         {
-            _tokens = Lex(expression).ToArray();
+            _tokens = [.. Lex(expression)];
             _i = 0;
 
             return Expr();
@@ -187,7 +187,7 @@ namespace Rxcel
                 }
             }
 
-            return args.ToArray();
+            return [.. args];
         }
 
         private static IEnumerable<Token> Lex(string s)
@@ -326,14 +326,15 @@ namespace Rxcel
             }
         }
 
+        [GeneratedRegex("([A-Z]+)([0-9]+)")]
+        private static partial Regex CellReferenceRegex();
+
         public static bool TryParseCell(string cell, out int row, out int col)
         {
             row = 0;
             col = 0;
 
-            var regEx = new Regex("([A-Z]+)([0-9]+)");
-
-            var m = regEx.Match(cell.ToUpper(CultureInfo.InvariantCulture));
+            var m = CellReferenceRegex().Match(cell.ToUpper(CultureInfo.InvariantCulture));
 
             if (!m.Success)
             {

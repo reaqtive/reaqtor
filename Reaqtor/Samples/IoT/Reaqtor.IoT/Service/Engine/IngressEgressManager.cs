@@ -30,7 +30,7 @@ namespace Reaqtor.IoT
 
     public sealed class IngressEgressManager
     {
-        private readonly Dictionary<string, object> _subjects = new();
+        private readonly Dictionary<string, object> _subjects = [];
 
         public ReliableSubject<T> CreateSubject<T>(string name)
         {
@@ -127,9 +127,9 @@ namespace Reaqtor.IoT
 
     public sealed class ReliableSubject<T> : IObservable<(long sequenceId, T item)>, IObserver<(long sequenceId, T item)>
     {
-        private readonly object _gate = new();
-        private readonly SortedDictionary<long, T> _values = new();
-        private readonly List<IObserver<(long sequenceId, T item)>> _observers = new();
+        private readonly Lock _gate = new();
+        private readonly SortedDictionary<long, T> _values = [];
+        private readonly List<IObserver<(long sequenceId, T item)>> _observers = [];
         private Exception _error;
         private bool _done;
 

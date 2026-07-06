@@ -53,7 +53,7 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
     internal sealed class UnaryStrTree : StrTree
     {
         public UnaryStrTree(StrKind kind, StrTree operand)
-            : base(kind, new[] { operand })
+            : base(kind, [operand])
         {
         }
 
@@ -87,7 +87,7 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
 
         protected override ITree<StrKind> UpdateCore(IEnumerable<ITree<StrKind>> children)
         {
-            return new ConcatStrTree(children.Cast<StrTree>().ToArray());
+            return new ConcatStrTree([.. children.Cast<StrTree>()]);
         }
     }
 

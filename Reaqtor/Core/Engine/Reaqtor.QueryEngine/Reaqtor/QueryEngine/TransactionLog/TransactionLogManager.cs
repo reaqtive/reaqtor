@@ -435,7 +435,7 @@ namespace Reaqtor.QueryEngine
             public ReplayTransactionLog(IList<ITransactionLog> logs, TransactionLogManager parent)
             {
                 _parent = parent;
-                _invalidReplaySequence = new Dictionary<string, List<ArtifactOperation>>();
+                _invalidReplaySequence = [];
 
                 _subjectFactories = Coalesce(parent._keyValueStore, logs, l => l.SubjectFactories);
                 _subscriptionFactories = Coalesce(parent._keyValueStore, logs, l => l.SubscriptionFactories);
@@ -540,7 +540,7 @@ namespace Reaqtor.QueryEngine
                 {
                     var prev = replayList[id];
                     replayList.Remove(id);
-                    failedReplays[id] = lst = new List<ArtifactOperation> { prev };
+                    failedReplays[id] = lst = [prev];
                 }
 
                 lst.Add(failingOperation);

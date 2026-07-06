@@ -20,42 +20,6 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ClosureTypeCompiler
         {
-#if !NET6_0
-            /// <summary>
-            /// The lock to protect against double-initialization of the module builder.
-            /// </summary>
-            private static readonly object s_lock = new();
-
-            /// <summary>
-            /// The module builder used to emit dynamically generated types.
-            /// </summary>
-            /// <remarks>
-            /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
-            /// </remarks>
-            private static ModuleBuilder s_mod;
-
-            /// <summary>
-            /// Gets the module builder used to emit dynamically generated closure types.
-            /// </summary>
-            private static ModuleBuilder Module
-            {
-                get
-                {
-                    if (s_mod == null)
-                    {
-                        lock (s_lock)
-                        {
-                            if (s_mod == null)
-                            {
-                                s_mod = Assembly.DefineDynamicModule("Closures");
-                            }
-                        }
-                    }
-
-                    return s_mod;
-                }
-            }
-#endif
 
             /// <summary>
             /// The type attributes to use for generated closure types.
@@ -70,17 +34,17 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The reflection object representing the constructor of ArgumentOutOfRangeException which takes a string parameter.
             /// </summary>
-            private static readonly ConstructorInfo s_argumentOutOfRangeCtor = typeof(ArgumentOutOfRangeException).GetConstructor(new[] { typeof(string) });
+            private static readonly ConstructorInfo s_argumentOutOfRangeCtor = typeof(ArgumentOutOfRangeException).GetConstructor([typeof(string)]);
 
             /// <summary>
             /// An array with a single element set to typeof(int), used for the Item indexer.
             /// </summary>
-            private static readonly Type[] s_TypeArray_Int32 = new[] { typeof(int) };
+            private static readonly Type[] s_TypeArray_Int32 = [typeof(int)];
 
             /// <summary>
             /// An array with two elements set to typeof(int) and typeof(object), used for the Item indexer.
             /// </summary>
-            private static readonly Type[] s_TypeArray_Int32Object = new[] { typeof(int), typeof(object) };
+            private static readonly Type[] s_TypeArray_Int32Object = [typeof(int), typeof(object)];
 
             /// <summary>
             /// Creates a new generic closure type with the specified arity.

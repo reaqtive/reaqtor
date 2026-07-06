@@ -23,8 +23,7 @@ namespace System
         /// <returns>Progress update provider with exception handling behavior applied.</returns>
         public static IProgress<T> Catch<T>(this IProgress<T> progress)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
+            ArgumentNullException.ThrowIfNull(progress);
 
             return CatchCore<T, Exception>(progress, _ => true);
         }
@@ -38,8 +37,7 @@ namespace System
         /// <returns>Progress update provider with exception handling behavior applied.</returns>
         public static IProgress<T> Catch<T, TException>(this IProgress<T> progress) where TException : Exception
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
+            ArgumentNullException.ThrowIfNull(progress);
 
             return CatchCore<T, TException>(progress, _ => true);
         }
@@ -54,10 +52,8 @@ namespace System
         /// <returns>Progress update provider with exception handling behavior applied.</returns>
         public static IProgress<T> Catch<T, TException>(this IProgress<T> progress, Func<TException, bool> handler) where TException : Exception
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(handler);
 
             return CatchCore<T, TException>(progress, handler);
         }
@@ -90,8 +86,7 @@ namespace System
         /// <returns>Progress update provider using the specified reporting action for its Report implementation.</returns>
         public static IProgress<T> Create<T>(Action<T> report)
         {
-            if (report == null)
-                throw new ArgumentNullException(nameof(report));
+            ArgumentNullException.ThrowIfNull(report);
 
             return new AnonymousProgress<T>(report);
         }
@@ -108,8 +103,7 @@ namespace System
         /// <returns>Progress update provider whose progress reports will be filtered for consecutive distinct progress values. If a newly reported progress value is different from the previous reported progress value, it will get propagated to the specified progress update provider.</returns>
         public static IProgress<T> DistinctUntilChanged<T>(this IProgress<T> progress)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
+            ArgumentNullException.ThrowIfNull(progress);
 
             return DistinctUntilChangedCore(progress, EqualityComparer<T>.Default);
         }
@@ -123,10 +117,8 @@ namespace System
         /// <returns>Progress update provider whose progress reports will be filtered for consecutive distinct progress values. If a newly reported progress value is different from the previous reported progress value, it will get propagated to the specified progress update provider.</returns>
         public static IProgress<T> DistinctUntilChanged<T>(this IProgress<T> progress, IEqualityComparer<T> comparer)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return DistinctUntilChangedCore(progress, comparer);
         }
@@ -167,8 +159,7 @@ namespace System
         /// <returns>Progress update provider whose progress reports will be filtered for monotonic increases. If a newly reported progress value is higher than the previous reported progress value, it will get propagated to the specified progress update provider.</returns>
         public static IProgress<T> Monotonic<T>(this IProgress<T> progress)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
+            ArgumentNullException.ThrowIfNull(progress);
 
             return MonotonicCore<T>(progress, Comparer<T>.Default);
         }
@@ -182,10 +173,8 @@ namespace System
         /// <returns>Progress update provider whose progress reports will be filtered for monotonic increases. If a newly reported progress value is higher than the previous reported progress value, it will get propagated to the specified progress update provider.</returns>
         public static IProgress<T> Monotonic<T>(this IProgress<T> progress, IComparer<T> comparer)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return MonotonicCore<T>(progress, comparer);
         }
@@ -228,8 +217,7 @@ namespace System
         /// <returns>Returns a progress update provider that will limit the range of progress values reported to the specified progress update provider.</returns>
         public static IProgress<T> Range<T>(this IProgress<T> progress, T minValue, T maxValue)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
+            ArgumentNullException.ThrowIfNull(progress);
 
             return RangeCore<T>(progress, minValue, maxValue, Comparer<T>.Default);
         }
@@ -245,10 +233,8 @@ namespace System
         /// <returns>Returns a progress update provider that will limit the range of progress values reported to the specified progress update provider.</returns>
         public static IProgress<T> Range<T>(this IProgress<T> progress, T minValue, T maxValue, IComparer<T> comparer)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return RangeCore<T>(progress, minValue, maxValue, comparer);
         }
@@ -278,10 +264,8 @@ namespace System
         /// <returns>Progress update provider whose reported progress values will be projected prior to propagating them to the specified progress update provider.</returns>
         public static IProgress<T> Select<T, TResult>(this IProgress<TResult> progress, Func<T, TResult> selector)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new AnonymousProgress<T>(x =>
             {
@@ -304,10 +288,8 @@ namespace System
         /// <returns>Tuple of two progress update providers whose latest progress values will get combined into progress values reported to the specified progress update provider.</returns>
         public static Tuple<IProgress<T1>, IProgress<T2>> Split<T, T1, T2>(this IProgress<T> progress, Func<T1, T2, T> combine)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (combine == null)
-                throw new ArgumentNullException(nameof(combine));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(combine);
 
             var gate = new object();
 
@@ -335,15 +317,12 @@ namespace System
         /// <returns>Array of progress update providers whose latest progress values will get combined into progress values reported to the specified progress update provider.</returns>
         public static IProgress<T>[] Split<T>(this IProgress<T> progress, int count, Func<T[], T> combine)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (combine == null)
-                throw new ArgumentNullException(nameof(combine));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+            ArgumentNullException.ThrowIfNull(combine);
 
             var values = new T[count];
-            return Enumerable.Range(0, count).Select(i => new AnonymousProgress<T>(x => { lock (values) { values[i] = x; progress.Report(combine(values)); } })).ToArray();
+            return [.. Enumerable.Range(0, count).Select(i => new AnonymousProgress<T>(x => { lock (values) { values[i] = x; progress.Report(combine(values)); } }))];
         }
 
         #endregion
@@ -364,21 +343,15 @@ namespace System
         /// <returns>Array of progress update providers that combine into progress value reports on the specified progress update provider according to the array of weights specified.</returns>
         public static IProgress<T>[] SplitWeight<T, TWeight>(this IProgress<T> progress, Func<T, T, T> addProgress, Func<TWeight, TWeight, TWeight> addWeight, Func<T, TWeight, T> multiply, Func<T, TWeight, T> divide, params TWeight[] weights)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (addProgress == null)
-                throw new ArgumentNullException(nameof(addProgress));
-            if (addWeight == null)
-                throw new ArgumentNullException(nameof(addWeight));
-            if (multiply == null)
-                throw new ArgumentNullException(nameof(multiply));
-            if (divide == null)
-                throw new ArgumentNullException(nameof(divide));
-            if (weights == null)
-                throw new ArgumentNullException(nameof(weights));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(addProgress);
+            ArgumentNullException.ThrowIfNull(addWeight);
+            ArgumentNullException.ThrowIfNull(multiply);
+            ArgumentNullException.ThrowIfNull(divide);
+            ArgumentNullException.ThrowIfNull(weights);
 
             if (weights.Length == 0)
-                return Array.Empty<IProgress<T>>();
+                return [];
 
             var totalWeight = weights.Aggregate(addWeight);
 
@@ -393,10 +366,8 @@ namespace System
         /// <returns>Array of progress update providers that combine into progress value reports on the specified progress update provider according to the array of weights specified.</returns>
         public static IProgress<int>[] SplitWeight(this IProgress<int> progress, params int[] weights)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (weights == null)
-                throw new ArgumentNullException(nameof(weights));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(weights);
 
             return progress.SplitWeight((x, y) => x + y, (x, y) => x + y, (x, y) => x * y, (x, y) => x / y, weights);
         }
@@ -414,10 +385,8 @@ namespace System
         /// <returns>Progress update provider throttling progress reports to the specified progress update provider.</returns>
         public static IProgress<T> Throttle<T>(this IProgress<T> progress, TimeSpan interval)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (interval < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(interval));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentOutOfRangeException.ThrowIfLessThan(interval, TimeSpan.Zero);
 
             return ThrottleCore<T>(progress, interval, new StopwatchImpl(new Stopwatch()));
         }
@@ -432,12 +401,9 @@ namespace System
         /// <returns>Progress update provider throttling progress reports to the specified progress update provider.</returns>
         public static IProgress<T> Throttle<T>(this IProgress<T> progress, TimeSpan interval, IStopwatch stopwatch)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (interval < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(interval));
-            if (stopwatch == null)
-                throw new ArgumentNullException(nameof(stopwatch));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentOutOfRangeException.ThrowIfLessThan(interval, TimeSpan.Zero);
+            ArgumentNullException.ThrowIfNull(stopwatch);
 
             return ThrottleCore<T>(progress, interval, stopwatch);
         }
@@ -474,10 +440,8 @@ namespace System
         /// <returns>Action to invoke for each increment of progress.</returns>
         public static Action ToPercentageIncrement(this IProgress<int> progress, int total)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (total < 0)
-                throw new ArgumentOutOfRangeException(nameof(total));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentOutOfRangeException.ThrowIfNegative(total);
 
             if (total > 0)
             {
@@ -516,10 +480,8 @@ namespace System
         /// <returns>Progress update provider appyling the filter prior to propagating the value to the specified progress update provider.</returns>
         public static IProgress<T> Where<T>(this IProgress<T> progress, Func<T, bool> predicate)
         {
-            if (progress == null)
-                throw new ArgumentNullException(nameof(progress));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new AnonymousProgress<T>(x =>
             {

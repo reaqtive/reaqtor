@@ -67,8 +67,7 @@ namespace System.Linq.CompilerServices
         protected sealed override TExpression VisitBlock(BlockExpression node)
 #endif
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             Push(node.Variables);
 
@@ -86,8 +85,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the block expression.</returns>
         protected virtual TExpression VisitBlockCore(BlockExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var v = VisitAndConvert<ParameterExpression, TParameterExpression>(node.Variables);
             var e = Visit(node.Expressions);
@@ -106,12 +104,11 @@ namespace System.Linq.CompilerServices
         protected sealed override TCatchBlock VisitCatchBlock(CatchBlock node)
 #endif
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (node.Variable != null)
             {
-                Push(new[] { node.Variable });
+                Push([node.Variable]);
             }
 
             var res = VisitCatchBlockCore(node);
@@ -131,8 +128,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the catch block.</returns>
         protected virtual TCatchBlock VisitCatchBlockCore(CatchBlock node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var v = VisitAndConvert<TParameterExpression>(node.Variable);
             var b = Visit(node.Body);
@@ -159,8 +155,7 @@ namespace System.Linq.CompilerServices
         protected sealed override TExpression VisitLambda<T>(Expression<T> node)
 #endif
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             Push(node.Parameters);
 
@@ -192,8 +187,7 @@ namespace System.Linq.CompilerServices
         protected virtual TExpression VisitLambdaCore<T>(Expression<T> node)
 #endif
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             var b = Visit(node.Body);
             var p = VisitAndConvert<ParameterExpression, TParameterExpression>(node.Parameters);

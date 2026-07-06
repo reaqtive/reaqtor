@@ -398,10 +398,7 @@ namespace System.Linq.Expressions
                     }
                 }
 
-                if (res != null)
-                {
-                    res[i] = newArgument;
-                }
+                res?[i] = newArgument;
             }
 
             return res != null ? new ReadOnlyCollection<Expression>(res) : arguments;

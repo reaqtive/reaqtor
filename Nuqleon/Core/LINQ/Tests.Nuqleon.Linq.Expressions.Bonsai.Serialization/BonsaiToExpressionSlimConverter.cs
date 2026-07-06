@@ -30,21 +30,21 @@ namespace Tests
         public void BonsaiToExpressionSlimConverter_VisitConstant()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.String("foo")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.String("foo")));
         }
 
         [TestMethod]
         public void BonsaiToExpressionSlimConverter_VisitObject()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Object(new Dictionary<string, Json.Expression>())));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Object(new Dictionary<string, Json.Expression>())));
         }
 
         [TestMethod]
         public void BonsaiToExpressionSlimConverter_Visit_EmptyArray()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Array(Array.Empty<Json.Expression>())));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Array([])));
         }
 
         [TestMethod]
@@ -137,7 +137,7 @@ namespace Tests
                 Expression.Convert(p1, typeof(int)),
                 Expression.Default(typeof(int)),
                 //Expression.ElementInit(m1, p1, p2),
-                Expression.MakeIndex(p6, prop1, Array.Empty<Expression>()),
+                Expression.MakeIndex(p6, prop1, []),
                 Expression.Invoke(Expression.Lambda(p1, p1), p1),
                 Expression.MakeMemberAccess(p6, prop1),
                 //Expression.MemberBind(prop1, new MemberBinding[0]),
@@ -168,180 +168,180 @@ namespace Tests
 
             protected override ExpressionSlim VisitArrayIndexExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitArrayIndexExpression(newNode);
             }
             protected override ExpressionSlim VisitBinaryComparisonExpression(Json.ArrayExpression node, ExpressionType nodeType)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitBinaryComparisonExpression(newNode, nodeType);
             }
 
             protected override ExpressionSlim VisitBinaryExpression(Json.ArrayExpression node, ExpressionType nodeType)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitBinaryExpression(newNode, nodeType);
             }
 
             protected override ExpressionSlim VisitCoalesceExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitCoalesceExpression(newNode);
             }
 
             protected override ExpressionSlim VisitConditionalExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitConditionalExpression(newNode);
             }
 
             protected override ExpressionSlim VisitConstantExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitConstantExpression(newNode);
             }
 
             protected override ExpressionSlim VisitConvertExpression(Json.ArrayExpression node, bool isChecked)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitConvertExpression(newNode, isChecked);
             }
 
             protected override ExpressionSlim VisitDefaultExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitDefaultExpression(newNode);
             }
 
             protected override ElementInitSlim VisitElementInit(Json.Expression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitElementInit(newNode);
             }
 
             protected override ExpressionSlim VisitIndexExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitIndexExpression(newNode);
             }
 
             protected override ExpressionSlim VisitInvocationExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitInvocationExpression(newNode);
             }
 
             protected override ExpressionSlim VisitLambdaExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitLambdaExpression(newNode);
             }
 
             protected override ExpressionSlim VisitMemberAccessExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMemberAccessExpression(newNode);
             }
 
             protected override MemberBindingSlim VisitMemberAssignment(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMemberAssignment(newNode);
             }
 
             protected override ExpressionSlim VisitMemberInitExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMemberInitExpression(newNode);
             }
 
             protected override MemberBindingSlim VisitMemberListBinding(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMemberListBinding(newNode);
             }
 
             protected override MemberBindingSlim VisitMemberMemberBinding(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMemberMemberBinding(newNode);
             }
 
             protected override ExpressionSlim VisitMethodCallExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMethodCallExpression(newNode);
             }
 
             protected override ExpressionSlim VisitMinusDollarExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMinusDollarExpression(newNode);
             }
 
             protected override ExpressionSlim VisitMinusExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitMinusExpression(newNode);
             }
 
             protected override ExpressionSlim VisitNewArrayBoundsExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitNewArrayBoundsExpression(newNode);
             }
 
             protected override ExpressionSlim VisitNewArrayInitExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitNewArrayInitExpression(newNode);
             }
 
             protected override ExpressionSlim VisitNewExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitNewExpression(newNode);
             }
 
             protected override ExpressionSlim VisitParameterExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitParameterExpression(newNode);
             }
 
             protected override ExpressionSlim VisitPlusDollarExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitPlusDollarExpression(newNode);
             }
 
             protected override ExpressionSlim VisitPlusExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitPlusExpression(newNode);
             }
 
             protected override ExpressionSlim VisitQuoteExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitQuoteExpression(newNode);
             }
 
             protected override ExpressionSlim VisitTypeAsExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitTypeAsExpression(newNode);
             }
 
             protected override ExpressionSlim VisitTypeIsExpression(Json.ArrayExpression node)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitTypeIsExpression(newNode);
             }
 
             protected override ExpressionSlim VisitUnaryExpression(Json.ArrayExpression node, ExpressionType nodeType)
             {
-                var newNode = Json.Expression.Array(Array.Empty<Json.Expression>());
+                var newNode = Json.Expression.Array([]);
                 return base.VisitUnaryExpression(newNode, nodeType);
             }
         }
@@ -393,7 +393,7 @@ namespace Tests
 
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
-                return base.VisitMemberBinding(Json.Expression.Array(Array.Empty<Json.Expression>()));
+                return base.VisitMemberBinding(Json.Expression.Array([]));
             }
         }
 
@@ -406,7 +406,7 @@ namespace Tests
 
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
-                return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.Number("0") }));
+                return base.VisitMemberBinding(Json.Expression.Array([Json.Expression.Number("0")]));
             }
         }
 
@@ -419,7 +419,7 @@ namespace Tests
 
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
-                return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.String("foo") }));
+                return base.VisitMemberBinding(Json.Expression.Array([Json.Expression.String("foo")]));
             }
         }
 
@@ -434,7 +434,7 @@ namespace Tests
             var prop1 = typeof(Tuple<int>).GetProperty("Item1");
 
             var exprs = new[] {
-                Expression.New(typeof(Tuple<int>).GetConstructors().Single(), new[] { p }, new MemberInfo[] { prop1 })
+                Expression.New(typeof(Tuple<int>).GetConstructors().Single(), [p], [prop1])
             };
 
             OneWayParseException(exprs, typeof(InvalidNewExpressionBonsaiDeserializer1).GetConstructors().Single());
@@ -487,8 +487,8 @@ namespace Tests
             {
                 var slim = slimifier.Visit(expr);
                 var json = serializer.Visit(slim);
-                var deserializer = (BonsaiToExpressionSlimConverter)deserializerCtor.Invoke(new object[] { state.ToJson() });
-                Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(json));
+                var deserializer = (BonsaiToExpressionSlimConverter)deserializerCtor.Invoke([state.ToJson()]);
+                Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(json));
             }
         }
     }

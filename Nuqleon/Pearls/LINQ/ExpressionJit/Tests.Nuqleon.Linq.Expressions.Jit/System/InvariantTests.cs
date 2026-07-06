@@ -14,13 +14,13 @@ namespace System
         [TestMethod]
         public void Assert()
         {
-            MsTest.Assert.ThrowsException<InvalidOperationException>(() => Invariant.Assert(false));
+            MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false));
         }
 
         [TestMethod]
         public void Unreachable()
         {
-            MsTest.Assert.ThrowsException<InvalidOperationException>(() => { throw Invariant.Unreachable; });
+            MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => { throw Invariant.Unreachable; });
         }
     }
 }

@@ -32,11 +32,9 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>An optimizer that chains the given optimizers sequentially.</returns>
         public static IOptimizer Then(this IOptimizer first, IOptimizer second)
         {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
+            ArgumentNullException.ThrowIfNull(first);
 
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
+            ArgumentNullException.ThrowIfNull(second);
 
             return new ThenOptimizer(first, second);
         }
@@ -50,11 +48,9 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>An optimizer that applies the given optimizer until a fixed point is found or retry limit is hit.</returns>
         public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle, int maxIterations)
         {
-            if (optimizer == null)
-                throw new ArgumentNullException(nameof(optimizer));
+            ArgumentNullException.ThrowIfNull(optimizer);
 
-            if (maxIterations < 0)
-                throw new ArgumentOutOfRangeException(nameof(maxIterations));
+            ArgumentOutOfRangeException.ThrowIfNegative(maxIterations);
 
             return new FixedPointOptimizer(optimizer, maxIterations, throwOnCycle);
         }
@@ -67,8 +63,7 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
         public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle)
         {
-            if (optimizer == null)
-                throw new ArgumentNullException(nameof(optimizer));
+            ArgumentNullException.ThrowIfNull(optimizer);
 
             return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle);
         }
@@ -80,8 +75,7 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
         public static IOptimizer FixedPoint(this IOptimizer optimizer)
         {
-            if (optimizer == null)
-                throw new ArgumentNullException(nameof(optimizer));
+            ArgumentNullException.ThrowIfNull(optimizer);
 
             return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle: true);
         }

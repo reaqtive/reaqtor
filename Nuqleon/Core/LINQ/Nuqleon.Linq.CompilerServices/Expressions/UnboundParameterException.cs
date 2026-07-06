@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Runtime.Serialization;
 
 namespace System.Linq.CompilerServices
 {
@@ -21,15 +20,8 @@ namespace System.Linq.CompilerServices
     /// Exception raised when an expression contains unbound parameters which prevent the expression to be processed.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "The standard object creation patterns don't apply.")]
-    [Serializable]
     public sealed partial class UnboundParameterException : Exception
     {
-        [NonSerialized]
-        private readonly Expression _expression;
-
-        [NonSerialized]
-        private readonly ReadOnlyCollection<ParameterExpression> _parameters;
-
         /// <summary>
         /// Creates a new unbound parameter exception for the specified expression and the unbound parameters.
         /// </summary>
@@ -42,36 +34,24 @@ namespace System.Linq.CompilerServices
             Debug.Assert(expression != null);
             Debug.Assert(parameters != null);
 
-            _expression = expression;
-            _parameters = parameters.ToReadOnly();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the UnboundParameterException class with serialized data.
-        /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        private UnboundParameterException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            Expression = expression;
+            Parameters = parameters.ToReadOnly();
         }
 
         /// <summary>
         /// Gets the expression which has unbound parameters.
         /// </summary>
-        public Expression Expression => _expression;
+        public Expression Expression { get; }
 
         /// <summary>
         /// Gets the unbound parameters in the expression.
         /// </summary>
-        public ReadOnlyCollection<ParameterExpression> Parameters => _parameters;
+        public ReadOnlyCollection<ParameterExpression> Parameters { get; }
 
         private static string CreateMessage(string message, Expression expression, IEnumerable<ParameterExpression> parameters)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var parametersString = string.Join("', '", parameters.Select(p => p.Name));
             var expressionString = expression.ToCSharpString();
@@ -85,8 +65,7 @@ namespace System.Linq.CompilerServices
         /// <param name="message">Exception message to use for signaling unbound parameters.</param>
         public static void ThrowIfOpen(Expression expression, string message)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var variables = FreeVariableScanner.Scan(expression);
 
@@ -94,16 +73,6 @@ namespace System.Linq.CompilerServices
             {
                 throw new UnboundParameterException(message, expression, variables);
             }
-        }
-
-        /// <summary>
-        /// Sets the System.Runtime.Serialization.SerializationInfo with information about the exception.
-        /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
         }
     }
 }

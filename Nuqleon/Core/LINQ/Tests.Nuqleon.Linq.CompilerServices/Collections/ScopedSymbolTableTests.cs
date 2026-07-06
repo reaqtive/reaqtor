@@ -23,7 +23,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ScopedSymbolTable_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null), ex => Assert.AreEqual("symbolComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null));
+            Assert.AreEqual("symbolComparer", ex.ParamName);
         }
 
         [TestMethod]
@@ -137,15 +138,15 @@ namespace Tests.System.Linq.CompilerServices
 
                                             var symbols = sst.SelectMany(ist => ist.Value, (o, i) => (Outer: o.Index, Inner: i.Index, Symbol: i.Value.Key, i.Value.Value)).ToArray();
 
-                                            Assert.IsTrue(symbols.SequenceEqual(new[]
-                                            {
+                                            Assert.IsTrue(symbols.SequenceEqual(
+                                            [
                                                 ( Outer : 1, Inner : 0, Symbol : "qux", Value : "baz" ),
                                                 ( Outer : 2, Inner : 0, Symbol : "foo", Value : "bar" ),
                                                 ( Outer : 2, Inner : 1, Symbol : "bar", Value : "qux" ),
                                                 ( Outer : 3, Inner : 0, Symbol : "bar", Value : "foo" ),
                                                 ( Outer : 3, Inner : 1, Symbol : "baz", Value : "qux" ),
                                                 ( Outer : -1, Inner : 0, Symbol : "glb", Value : "val" ),
-                                            }));
+                                            ]));
                                         }
                                     );
                                 }

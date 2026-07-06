@@ -23,8 +23,7 @@ namespace Reaqtor.ReificationFramework
         [KnownResource(ReificationConstants.Source.String)]
         public static IAsyncReactiveQbservable<T> GetSourceObservable<T>(this IReactiveProxy context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return context.GetObservable<T>(ReificationConstants.Source.Uri);
         }
@@ -42,8 +41,7 @@ namespace Reaqtor.ReificationFramework
         [KnownResource(ReificationConstants.ParameterizedSource.String)]
         public static Func<TParam, IAsyncReactiveQbservable<TResult>> GetParameterizedSourceObservable<TParam, TResult>(this IReactiveProxy context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return context.GetObservable<TParam, TResult>(ReificationConstants.ParameterizedSource.Uri);
         }
@@ -60,8 +58,7 @@ namespace Reaqtor.ReificationFramework
         [KnownResource(ReificationConstants.Sink.String)]
         public static IAsyncReactiveQbserver<T> GetSinkObserver<T>(this IReactiveProxy context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             return context.GetObserver<T>(ReificationConstants.Sink.Uri);
         }

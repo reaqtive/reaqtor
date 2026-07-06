@@ -220,7 +220,7 @@ namespace Nuqleon.Json.Serialization
 
                 foreach (string key in keys)
                 {
-                    object value = index.GetValue(o, new[] { key });
+                    object value = index.GetValue(o, [key]);
                     members.Add(key, Serialize(value, refs));
                 }
             }
@@ -313,7 +313,7 @@ namespace Nuqleon.Json.Serialization
                 foreach (var member in objectExpression.Members)
                 {
                     var memberName = member.Key;
-                    add.Invoke(res, new object[] { memberName, Deserialize(member.Value, valuesType) });
+                    add.Invoke(res, [memberName, Deserialize(member.Value, valuesType)]);
                 }
             }
             else if (typeof(IDictionary).IsAssignableFrom(type))
@@ -404,7 +404,7 @@ namespace Nuqleon.Json.Serialization
 
                 for (int i = 0, n = arrayExpression.ElementCount; i < n; i++)
                 {
-                    add.Invoke(list, new object[] { Deserialize(arrayExpression.GetElement(i), elementType) });
+                    add.Invoke(list, [Deserialize(arrayExpression.GetElement(i), elementType)]);
                 }
 
                 return list;

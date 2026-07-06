@@ -19,7 +19,7 @@ namespace Tests
         {
             for (var i = 0; i < Data.Types.Length; i++)
             {
-                AssertClosureType(Data.Types.Take(i).ToArray(), Data.Values);
+                AssertClosureType([.. Data.Types.Take(i)], Data.Values);
             }
         }
 
@@ -86,10 +86,10 @@ namespace Tests
             // Assert indexer exception behavior.
             //
             var n = types.Length;
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => r[-1]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => r[-1] = null);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => r[n]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => r[n] = null);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => r[-1]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => r[-1] = null);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => r[n]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => r[n] = null);
 
             //
             // Find fields according to the Item* naming pattern.
@@ -131,7 +131,7 @@ namespace Tests
                 //
                 // Assert cast behavior of indexer setter.
                 //
-                Assert.ThrowsException<InvalidCastException>(() => { r[i] = typeof(int); });
+                Assert.ThrowsExactly<InvalidCastException>(() => { r[i] = typeof(int); });
             }
         }
     }

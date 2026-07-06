@@ -17,10 +17,10 @@ namespace Reaqtor.Reliable
 {
     public abstract class ReliableMultiSubjectBase<T> : IReliableMultiSubject<T>
     {
-        private Subscription[] _subscriptions = Array.Empty<Subscription>();
-        private readonly object _subscriptionsLock = new();
+        private Subscription[] _subscriptions = [];
+        private readonly Lock _subscriptionsLock = new();
 
-        private List<T> _queue = new();
+        private List<T> _queue = [];
 
         private Exception _error;
         private bool _done;
@@ -61,20 +61,24 @@ namespace Reaqtor.Reliable
 
         public IReliableObserver<T> CreateObserver()
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the subject's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Interlocked.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.AbsoluteUri);
             }
+#pragma warning restore CA1513
 
             return new Observer(this);
         }
 
         public IReliableSubscription Subscribe(IReliableObserver<T> observer)
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the subject's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Interlocked.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.AbsoluteUri);
             }
+#pragma warning restore CA1513
 
             lock (_subscriptionsLock)
             {
@@ -241,7 +245,7 @@ namespace Reaqtor.Reliable
         {
             lock (_subscriptionsLock)
             {
-                _subscriptions = Array.Empty<Subscription>();
+                _subscriptions = [];
 
                 // TODO: Old subscriptions must be deleted from the QE *after* they are dropped from the EdgeOutput.
             }

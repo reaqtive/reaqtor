@@ -154,14 +154,6 @@ namespace System.Reflection
         /// <param name="machine">When this method returns, one of the <see cref="ImageFileMachine" /> values indicating the platform targeted by the module.</param>
         void GetPEKind(Module module, out PortableExecutableKinds peKind, out ImageFileMachine machine);
 
-#if NET472
-        /// <summary>
-        /// Returns an X509Certificate object corresponding to the certificate included in the Authenticode signature of the assembly which this module belongs to. If the assembly has not been Authenticode signed, null is returned.
-        /// </summary>
-        /// <param name="module">The module to get the signer certificate for.</param>
-        /// <returns>An X509Certificate object, or null if the assembly to which this module belongs has not been Authenticode signed.</returns>
-        System.Security.Cryptography.X509Certificates.X509Certificate GetSignerCertificate(Module module);
-#endif
 
         /// <summary>
         /// Returns the specified type, specifying whether to make a case-sensitive search of the module and whether to throw an exception if the type cannot be found.

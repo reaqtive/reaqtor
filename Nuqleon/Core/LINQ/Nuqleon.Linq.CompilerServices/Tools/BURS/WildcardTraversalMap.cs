@@ -16,7 +16,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly Dictionary<TSource, WildcardTraversal<TSource>> _map;
 
-        public WildcardTraversalMap() => _map = new Dictionary<TSource, WildcardTraversal<TSource>>();
+        public WildcardTraversalMap() => _map = [];
 
         public WildcardTraversal<TSource> this[TSource node]
         {

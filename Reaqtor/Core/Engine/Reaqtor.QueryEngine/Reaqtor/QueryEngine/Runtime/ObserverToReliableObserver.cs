@@ -51,14 +51,14 @@ namespace Reaqtor.QueryEngine
         {
             if (_asSubscription != null)
             {
-                return new[] { _asSubscription };
+                return [_asSubscription];
             }
             else if (_asOperator != null)
             {
                 return _asOperator.Inputs;
             }
 
-            return Array.Empty<ISubscription>();
+            return [];
         }
 
         public void SetContext(IOperatorContext context)

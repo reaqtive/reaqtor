@@ -21,7 +21,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void New_Instance_Throw1()
         {
-            var c = typeof(PureConstructors).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) });
+            var c = typeof(PureConstructors).GetConstructor([typeof(int), typeof(int), typeof(int)]);
 
             var ex = Expression.Parameter(typeof(Exception));
             var t = Expression.Throw(ex, typeof(int));
@@ -40,7 +40,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void New_Instance_Throw2()
         {
-            var c = typeof(PureConstructors).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) });
+            var c = typeof(PureConstructors).GetConstructor([typeof(int), typeof(int), typeof(int)]);
 
             var x = Expression.Parameter(typeof(int));
             var ex = Expression.Parameter(typeof(Exception));
@@ -60,7 +60,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void New_Instance_Eval1()
         {
-            var c = typeof(PureConstructors).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) });
+            var c = typeof(PureConstructors).GetConstructor([typeof(int), typeof(int), typeof(int)]);
 
             var e = Expression.New(c, Expression.Constant(7), Expression.Constant(8), Expression.Constant(15));
 
@@ -90,7 +90,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void New_Instance_NoEval1()
         {
-            var c = typeof(PureConstructors).GetConstructor(new[] { typeof(int) });
+            var c = typeof(PureConstructors).GetConstructor([typeof(int)]);
 
             var e = Expression.New(c, Expression.Constant(7));
 
@@ -123,7 +123,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             public override bool IsPure(MemberInfo member)
             {
-                return member == typeof(PureConstructors).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) })
+                return member == typeof(PureConstructors).GetConstructor([typeof(int), typeof(int), typeof(int)])
                     || member == typeof(TimeSpan);
             }
 

@@ -36,7 +36,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
     /// </summary>
     internal static class TypeSlimCarrierExtensions
     {
-        private static readonly ConditionalWeakTable<TypeSlim, Type> _originalTypes = new();
+        private static readonly ConditionalWeakTable<TypeSlim, Type> _originalTypes = [];
 
         /// <summary>
         /// Get a type carried by a slim type, if one exists.

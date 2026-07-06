@@ -16,7 +16,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void Throw_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Subscribable.Throw<int>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Throw<int>(null));
         }
     }
 }

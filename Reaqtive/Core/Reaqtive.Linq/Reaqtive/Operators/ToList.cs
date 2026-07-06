@@ -43,7 +43,7 @@ namespace Reaqtive.Operators
 
             protected override void OnStart()
             {
-                _values ??= new List<TSource>();
+                _values ??= [];
             }
 
             public override string Name => "rc:ToList";

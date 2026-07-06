@@ -480,8 +480,8 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         )
                     );
 
-                Assert.ThrowsException<InvalidOperationException>(() => comparer.Equals(fst, snd));
-                Assert.ThrowsException<InvalidOperationException>(() => comparer.GetHashCode(snd));
+                Assert.ThrowsExactly<InvalidOperationException>(() => comparer.Equals(fst, snd));
+                Assert.ThrowsExactly<InvalidOperationException>(() => comparer.GetHashCode(snd));
             }
 
             {
@@ -578,8 +578,8 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         )
                     );
 
-                Assert.ThrowsException<InvalidOperationException>(() => comparer.Equals(fst, snd));
-                Assert.ThrowsException<InvalidOperationException>(() => comparer.GetHashCode(snd));
+                Assert.ThrowsExactly<InvalidOperationException>(() => comparer.Equals(fst, snd));
+                Assert.ThrowsExactly<InvalidOperationException>(() => comparer.GetHashCode(snd));
             }
         }
 

@@ -10,7 +10,6 @@ namespace Reaqtor.ReificationFramework
     /// <summary>
     /// Operation applied to a query engine.
     /// </summary>
-    [Serializable]
     public class QueryEngineOperation
     {
         /// <summary>

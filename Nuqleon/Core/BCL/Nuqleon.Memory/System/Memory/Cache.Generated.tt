@@ -40,7 +40,6 @@ for (var j = 1; j <= i; ++j)
 }
 #>
     /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "By design to support arbitrary breakdowns of types for caching.")]
     public abstract class Cache<T, <#=targs#>, TNonCached> : ICache<T>
     {
 <#
@@ -77,10 +76,7 @@ for (var j = 1; j <= i; ++j)
 for (var j = 1; j <= i; ++j)
 {
 #>
-            if (innerCache<#=j#> == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache<#=j#>));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache<#=j#>);
 <#
 if (j < i)
 {

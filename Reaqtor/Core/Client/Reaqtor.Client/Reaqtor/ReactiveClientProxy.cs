@@ -30,10 +30,8 @@ namespace Reaqtor
         public ReactiveClientProxy(IReactiveClientServiceProvider provider, IReactiveExpressionServices expressionServices)
             : base(new AsyncReactiveQueryProvider(provider, expressionServices))
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (expressionServices == null)
-                throw new ArgumentNullException(nameof(expressionServices));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(expressionServices);
 
             var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
             expressionServices.RegisterObject(this, thisParameter);

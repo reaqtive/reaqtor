@@ -27,8 +27,7 @@ namespace Reaqtor
         /// <returns>Wrapper around the specified observer, exposing the IReactiveObserver&lt;T&gt; interface.</returns>
         public static IReactiveObserver<T> ToObserver<T>(this IAsyncReactiveObserver<T> observer)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(observer);
 
             return new Observer<T>(observer);
         }

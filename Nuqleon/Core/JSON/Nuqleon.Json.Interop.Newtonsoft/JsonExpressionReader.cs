@@ -35,8 +35,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <param name="json">The JSON expression to read.</param>
         public JsonExpressionReader(Expression json)
         {
-            if (json == null)
-                throw new ArgumentNullException(nameof(json));
+            ArgumentNullException.ThrowIfNull(json);
 
             _tokens = new TokenStack();
             _tokens.Push(new Token { Expression = json });
@@ -49,8 +48,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <param name="pool">Resource pool to use for reuse of commonly allocated data structures.</param>
         public JsonExpressionReader(Expression json, JsonInteropResourcePool pool)
         {
-            if (json == null)
-                throw new ArgumentNullException(nameof(json));
+            ArgumentNullException.ThrowIfNull(json);
 
             _pool = pool ?? throw new ArgumentNullException(nameof(pool));
             _tokens = _pool.Pool.Allocate();
@@ -82,8 +80,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <returns>true if the next token was read successfully; false if there are no more tokens to read.</returns>
         public override bool Read()
         {
-            if (_tokens == null)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_tokens == null, this);
 
             if (!_tokens.TryPop(out Token token))
             {
@@ -124,11 +121,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
                         break;
                     case ExpressionType.Number:
                         var str = (string)((ConstantExpression)expr).Value;
-#if NET6_0 || NETSTANDARD2_1
                         if (str.Contains('.', StringComparison.Ordinal))
-#else
-                        if (str.IndexOf('.') >= 0)
-#endif
                         {
                             if (FloatParseHandling == FloatParseHandling.Double)
                             {

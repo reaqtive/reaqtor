@@ -37,8 +37,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A JSON property name to use when serializing the specified CLR field.</returns>
         public virtual string GetName(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
             return field.Name;
         }
@@ -53,8 +52,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A JSON property name to use when serializing the specified CLR property.</returns>
         public virtual string GetName(PropertyInfo property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
 
             return property.Name;
         }

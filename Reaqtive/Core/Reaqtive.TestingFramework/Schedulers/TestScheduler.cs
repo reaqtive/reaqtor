@@ -120,8 +120,7 @@ namespace Reaqtive.TestingFramework
         /// <exception cref="ArgumentNullException"><paramref name="messages"/> is null.</exception>
         public ITestableSubscribable<T> CreateHotObservable<T>(params Recorded<Notification<T>>[] messages)
         {
-            if (messages == null)
-                throw new ArgumentNullException(nameof(messages));
+            ArgumentNullException.ThrowIfNull(messages);
 
             return new HotSubscribable<T>(this, messages);
         }
@@ -135,8 +134,7 @@ namespace Reaqtive.TestingFramework
         /// <exception cref="ArgumentNullException"><paramref name="messages"/> is null.</exception>
         public ITestableSubscribable<T> CreateColdObservable<T>(params Recorded<Notification<T>>[] messages)
         {
-            if (messages == null)
-                throw new ArgumentNullException(nameof(messages));
+            ArgumentNullException.ThrowIfNull(messages);
 
             return new ColdSubscribable<T>(this, messages);
         }

@@ -37,8 +37,7 @@ namespace Reaqtor
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsync(Uri streamUri, object state = null, CancellationToken token = default)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, state, token);
         }
@@ -52,8 +51,7 @@ namespace Reaqtor
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubject<TInput, TOutput>> IAsyncReactiveSubjectFactory<TInput, TOutput>.CreateAsync(Uri streamUri, object state, CancellationToken token)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, state, token).ContinueWith(t => (IAsyncReactiveSubject<TInput, TOutput>)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }
@@ -102,8 +100,7 @@ namespace Reaqtor
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsync(Uri streamUri, TArgs argument, object state = null, CancellationToken token = default)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, argument, state, token);
         }
@@ -118,8 +115,7 @@ namespace Reaqtor
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubject<TInput, TOutput>> IAsyncReactiveSubjectFactory<TInput, TOutput, TArgs>.CreateAsync(Uri streamUri, TArgs argument, object state, CancellationToken token)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, argument, state, token).ContinueWith(t => (IAsyncReactiveSubject<TInput, TOutput>)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }

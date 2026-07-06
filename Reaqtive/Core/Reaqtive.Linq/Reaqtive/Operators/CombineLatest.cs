@@ -247,12 +247,6 @@ namespace Reaqtive.Operators
         /// </summary>
         private readonly int _index;
 
-        /// <summary>
-        /// The subscription of the source sequence with this observer. This field is set after
-        /// constructing the instance, using the <see cref="Subscription"/> property.
-        /// </summary>
-        private ISubscription _subscription;
-
         public CombineLatestObserver(ICombineLatest parent, int index)
         {
             _parent = parent;
@@ -264,13 +258,13 @@ namespace Reaqtive.Operators
         /// </summary>
         public ISubscription Subscription
         {
-            get => _subscription;
+            get;
 
             set
             {
-                Debug.Assert(_subscription == null, "Expecting that the subscription will only be set once.");
+                Debug.Assert(field == null, "Expecting that the subscription will only be set once.");
 
-                _subscription = value;
+                field = value;
             }
         }
 
@@ -303,7 +297,7 @@ namespace Reaqtive.Operators
         /// </summary>
         public void OnCompleted()
         {
-            _subscription.Dispose();
+            Subscription.Dispose();
             _parent.Done(_index);
         }
 

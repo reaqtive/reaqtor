@@ -56,11 +56,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose average of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence.<#=emptyRemark#></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<<#=to#>> Average(this ISubscribable<<#=tn#>> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Average<#=cn#>(source);
         }
@@ -72,7 +70,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence.<#=emptyRemark#></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<<#=to#>> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, <#=tn#>> selector)
         {
             //

@@ -35,7 +35,7 @@ namespace System
             //
             if (length == 1)
             {
-                return Array.Empty<T>();
+                return [];
             }
 
             var res = new T[length - 1];
@@ -61,7 +61,7 @@ namespace System
             //
             if (length == 0)
             {
-                return Array.Empty<R>();
+                return [];
             }
 
             var res = new R[length];

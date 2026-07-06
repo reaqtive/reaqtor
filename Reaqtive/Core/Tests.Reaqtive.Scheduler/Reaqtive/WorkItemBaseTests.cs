@@ -25,9 +25,9 @@ namespace Tests.Reaqtive.Scheduler
             var d = new Disposable();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents the signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new WorkItemBase<int>(default(IScheduler), a, 0, d));
-            Assert.ThrowsException<ArgumentNullException>(() => new WorkItemBase<int>(s, default(ISchedulerTask), 0, d));
-            Assert.ThrowsException<ArgumentNullException>(() => new WorkItemBase<int>(s, a, 0, default(IDisposable)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new WorkItemBase<int>(default(IScheduler), a, 0, d));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new WorkItemBase<int>(s, default(ISchedulerTask), 0, d));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new WorkItemBase<int>(s, a, 0, default(IDisposable)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

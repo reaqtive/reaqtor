@@ -21,10 +21,7 @@ namespace Reaqtive.TestingFramework
         /// <returns>Subscription.</returns>
         public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             ISubscription sub = source.Subscribe(res);
             new SubscriptionInitializeVisitor(sub).Initialize(context);
@@ -42,15 +39,9 @@ namespace Reaqtive.TestingFramework
         /// <returns>Subscription.</returns>
         public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context, IOperatorStateContainer container)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (container == null)
-            {
-                throw new ArgumentNullException(nameof(container));
-            }
+            ArgumentNullException.ThrowIfNull(container);
 
             ISubscription sub = source.Subscribe(res);
             new SubscriptionInitializeVisitor(sub).Initialize(context, container.CreateReader());
@@ -59,27 +50,18 @@ namespace Reaqtive.TestingFramework
 
         public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, params Recorded<SubscriptionAction>[] actions)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (actions == null)
-            {
-                throw new ArgumentNullException(nameof(actions));
-            }
+            ArgumentNullException.ThrowIfNull(actions);
 
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
             return new ApplySubscribable<T>(source, scheduler, actions);
         }
 
         public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, Recorded<SubscriptionAction> action)
         {
-            return Apply(source, scheduler, new[] { action });
+            return Apply(source, scheduler, [action]);
         }
     }
 }

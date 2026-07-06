@@ -8,8 +8,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
     public static class Sequenced
     {
-        private static long _current;
-
-        public static long Next => Interlocked.Increment(ref _current);
+        public static long Next => Interlocked.Increment(ref field);
     }
 }

@@ -64,23 +64,21 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             { typeof(Array), new HashSet<object> { Array.Empty<int>(), Array.Empty<string>(), new int[] { 1 }, new int[] { 1, 2, 3, 4, 5 } } }, // TODO: Add multi-dimensional arrays
 
-#if NET6_0
             { typeof(Index), new HashSet<object> { (Index)0, ^0, (Index)1, ^2 } },
             { typeof(Range), new HashSet<object> { .., 0.., ..0, 1.., ..1, ^1.., ..^1, 1..2, ^2..^1 } },
 
             { typeof(Half), new HashSet<object> { (Half)0.0, (Half)1.0, Half.PositiveInfinity } },
-#endif
         };
 
         [TestMethod]
         public void PureMemberCatalog_TestTheTests()
         {
-            Assert.ThrowsException<AssertFailedException>(() =>
+            Assert.ThrowsExactly<AssertFailedException>(() =>
             {
                 AssertNonGeneric(typeof(Guid).GetMethod(nameof(Guid.NewGuid)));
             });
 
-            Assert.ThrowsException<AssertFailedException>(() =>
+            Assert.ThrowsExactly<AssertFailedException>(() =>
             {
                 AssertNonGeneric(typeof(Environment).GetProperty(nameof(Environment.TickCount)));
             });
@@ -200,7 +198,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                 foreach (var values in valuess)
                 {
-                    var expected = Eval(method, values[0], values.Skip(1).ToArray());
+                    var expected = Eval(method, values[0], [.. values.Skip(1)]);
 
                     var instExpr = Expression.Constant(values[0], instanceType);
                     var argExprs = parameters.Zip(values.Skip(1), (p, v) => Expression.Constant(v, p.ParameterType)).ToArray();
@@ -247,7 +245,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             if (getMethod.IsStatic)
             {
-                var expected = Eval(property, instance: null, Array.Empty<object>());
+                var expected = Eval(property, instance: null, []);
 
                 var propertyExpr = Expression.Property(expression: null, property);
 
@@ -266,7 +264,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                     foreach (var instance in GetValues(instanceType))
                     {
-                        var expected = Eval(property, instance, Array.Empty<object>());
+                        var expected = Eval(property, instance, []);
 
                         var instanceExpr = Expression.Constant(instance, instanceType);
                         var propertyExpr = Expression.Property(instanceExpr, property);
@@ -288,7 +286,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             foreach (var values in valuess)
             {
-                var expected = Eval(property, values[0], values.Skip(1).ToArray());
+                var expected = Eval(property, values[0], [.. values.Skip(1)]);
 
                 var instExpr = Expression.Constant(values[0], instanceType);
                 var argExprs = parameters.Zip(values.Skip(1), (p, v) => Expression.Constant(v, p.ParameterType)).ToArray();
@@ -336,10 +334,6 @@ namespace Tests.System.Linq.Expressions.Optimizers
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), property.PropertyType);
             }
-            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
-            {
-                return Expression.Throw(Expression.Constant(ex), property.PropertyType);
-            }
 
             return Expected(property.PropertyType, obj);
         }
@@ -356,10 +350,6 @@ namespace Tests.System.Linq.Expressions.Optimizers
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), method.ReturnType);
             }
-            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
-            {
-                return Expression.Throw(Expression.Constant(ex), method.ReturnType);
-            }
 
             return Expected(method.ReturnType, obj);
         }
@@ -375,10 +365,6 @@ namespace Tests.System.Linq.Expressions.Optimizers
             catch (TargetInvocationException tie)
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), constructor.DeclaringType);
-            }
-            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
-            {
-                return Expression.Throw(Expression.Constant(ex), constructor.DeclaringType);
             }
 
             return Expected(constructor.DeclaringType, obj);
@@ -403,7 +389,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                     var arrays = Enumerable.Range(0, 16).Select(n => Repeat(elements).Take(n).OrderBy(_ => random.Next()).ToArray());
 
-                    var res = arrays.Select(a => castArray.Invoke(obj: null, new[] { a })).ToArray();
+                    var res = arrays.Select(a => castArray.Invoke(obj: null, [a])).ToArray();
 
                     return res;
                 }
@@ -414,13 +400,13 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private static IEnumerable<object[]> GetValues(params Type[] types)
         {
-            var res = (IEnumerable<IEnumerable<object>>)new[] { Array.Empty<object>() };
+            var res = (IEnumerable<IEnumerable<object>>)[[]];
 
             foreach (var type in types)
             {
                 var values = GetValues(type);
 
-                res = res.SelectMany(prev => values.Select(next => prev.Concat(new[] { next })));
+                res = res.SelectMany(prev => values.Select(next => prev.Concat([next])));
             }
 
             return Sample(res).Select(values => values.ToArray());
@@ -451,7 +437,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private static readonly MethodInfo s_castArray = ((MethodInfo)ReflectionHelpers.InfoOf(() => CastArray<object>(null))).GetGenericMethodDefinition();
 
-        private static T[] CastArray<T>(object[] array) => array.Cast<T>().ToArray();
+        private static T[] CastArray<T>(object[] array) => [.. array.Cast<T>()];
 
         private static IEnumerable<T> Sample<T>(IEnumerable<T> values)
         {

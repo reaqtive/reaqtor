@@ -602,19 +602,11 @@ namespace System.Linq.Expressions
 
         private struct Hasher
         {
-#if NET6_0 || NETSTANDARD3_1
             private HashCode _hashCode;
 
             public void Add(int h) => _hashCode.Add(h);
 
             public int ToHashCode() => _hashCode.ToHashCode();
-#else
-            private int _hashCode;
-
-            public void Add(int h) => _hashCode = _hashCode * 31 + h;
-
-            public readonly int ToHashCode() => _hashCode;
-#endif
 
             public void Add<T>(T obj)
             {

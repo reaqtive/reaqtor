@@ -24,10 +24,10 @@ namespace Tests
             var m = Memoizer.Create(MemoizationCacheFactory.Unbounded);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(default(Func<int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(default(Func<int>)));
 
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(default(IMemoizer), () => 42));
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(m, default(Func<int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(default(IMemoizer), () => 42));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize(m, default(Func<int>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -74,11 +74,11 @@ namespace Tests
             Assert.AreEqual(0, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(2, n);
             Assert.AreEqual(0, res.Cache.Count);
         }
@@ -94,11 +94,11 @@ namespace Tests
             Assert.AreEqual(0, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(1, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(1, res.Cache.Count);
 
@@ -107,7 +107,7 @@ namespace Tests
             Assert.AreEqual(1, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(2, n);
             Assert.AreEqual(1, res.Cache.Count);
         }
@@ -153,11 +153,11 @@ namespace Tests
             Assert.AreEqual(0, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(2, n);
             Assert.AreEqual(0, res.Cache.Count);
         }
@@ -171,11 +171,11 @@ namespace Tests
             Assert.AreEqual(0, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(1, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(1, n);
             Assert.AreEqual(1, res.Cache.Count);
 
@@ -184,7 +184,7 @@ namespace Tests
             Assert.AreEqual(1, n);
             Assert.AreEqual(0, res.Cache.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => res.Delegate());
+            Assert.ThrowsExactly<InvalidOperationException>(() => res.Delegate());
             Assert.AreEqual(2, n);
             Assert.AreEqual(1, res.Cache.Count);
         }
@@ -196,11 +196,13 @@ namespace Tests
             var a = new A(() => { });
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(default(IMemoizer), a, MemoizationOptions.None));
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(mem, default(A), MemoizationOptions.None));
+#pragma warning disable IDE0350 // Use implicitly typed lambda. (Deliberate: PR #155 review wants the explicit (ref int x) parameter type kept.)
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(default(IMemoizer), a, MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(mem, default(A), MemoizationOptions.None));
 
-            Assert.ThrowsException<ArgumentException>(() => FunctionMemoizationExtensions.Memoize<int>(mem, 42, MemoizationOptions.None));
-            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.Memoize<R>(mem, (ref int x) => { }, MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentException>(() => FunctionMemoizationExtensions.Memoize<int>(mem, 42, MemoizationOptions.None));
+            Assert.ThrowsExactly<NotSupportedException>(() => FunctionMemoizationExtensions.Memoize<R>(mem, (ref int x) => { }, MemoizationOptions.None));
+#pragma warning restore IDE0350 // Use implicitly typed lambda
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -287,11 +289,13 @@ namespace Tests
             var a = new A(() => { });
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(default(IWeakMemoizer), a, MemoizationOptions.None));
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(mem, default(A), MemoizationOptions.None));
+#pragma warning disable IDE0350 // Use implicitly typed lambda. (Deliberate: PR #155 review wants the explicit (ref string x) parameter type kept.)
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(default(IWeakMemoizer), a, MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(mem, default(A), MemoizationOptions.None));
 
-            Assert.ThrowsException<ArgumentException>(() => FunctionMemoizationExtensions.MemoizeWeak<int>(mem, 42, MemoizationOptions.None));
-            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.MemoizeWeak<Q>(mem, (ref string x) => { }, MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentException>(() => FunctionMemoizationExtensions.MemoizeWeak<int>(mem, 42, MemoizationOptions.None));
+            Assert.ThrowsExactly<NotSupportedException>(() => FunctionMemoizationExtensions.MemoizeWeak<Q>(mem, (ref string x) => { }, MemoizationOptions.None));
+#pragma warning restore IDE0350 // Use implicitly typed lambda
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -461,7 +465,7 @@ namespace Tests
             var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
             var f = new Func<int, string, bool>((x, s) => { n++; return s.Length == x; });
 
-            Assert.ThrowsException<ArgumentNullException>(() => mem.MemoizeWeak(f, MemoizationOptions.None, memoizer: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mem.MemoizeWeak(f, MemoizationOptions.None, memoizer: null));
         }
 
         [TestMethod]

@@ -5,14 +5,22 @@
 using System.Collections;
 using System.Collections.Generic;
 
+//
+// NB: Unlike System.ValueTuple - whose GetHashCode incorporates only the LAST 8 components once
+//     the tuple nests through TRest (arity > 8) - Tuplet computes its hash over ALL components at
+//     every arity. That makes it collision-robust as a dictionary/memoization key regardless of
+//     which argument positions vary (ValueTuple keys collapse into a single hash bucket when only
+//     the leading components differ; measured 50-128x slower in Perf.Nuqleon.Memory). This
+//     property, not raw hashing speed, is why these types exist and why they should not be
+//     replaced with ValueTuple.
+//
+
 namespace System
 {
     /// <summary>
     /// Represents a 1-tuple value.
     /// </summary>
     /// <typeparam name="T1">Type of the tuple's first component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1> : ITuplet, IEquatable<Tuplet<T1>>, IComparable, IComparable<Tuplet<T1>>, IStructuralEquatable, IStructuralComparable
     {
@@ -179,8 +187,6 @@ namespace System
     /// </summary>
     /// <typeparam name="T1">Type of the tuple's first component.</typeparam>
     /// <typeparam name="T2">Type of the tuple's second component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2> : ITuplet, IEquatable<Tuplet<T1, T2>>, IComparable, IComparable<Tuplet<T1, T2>>, IStructuralEquatable, IStructuralComparable
     {
@@ -378,8 +384,6 @@ namespace System
     /// <typeparam name="T1">Type of the tuple's first component.</typeparam>
     /// <typeparam name="T2">Type of the tuple's second component.</typeparam>
     /// <typeparam name="T3">Type of the tuple's third component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3> : ITuplet, IEquatable<Tuplet<T1, T2, T3>>, IComparable, IComparable<Tuplet<T1, T2, T3>>, IStructuralEquatable, IStructuralComparable
     {
@@ -603,8 +607,6 @@ namespace System
     /// <typeparam name="T2">Type of the tuple's second component.</typeparam>
     /// <typeparam name="T3">Type of the tuple's third component.</typeparam>
     /// <typeparam name="T4">Type of the tuple's fourth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4>>, IStructuralEquatable, IStructuralComparable
     {
@@ -854,8 +856,6 @@ namespace System
     /// <typeparam name="T3">Type of the tuple's third component.</typeparam>
     /// <typeparam name="T4">Type of the tuple's fourth component.</typeparam>
     /// <typeparam name="T5">Type of the tuple's fifth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5>>, IStructuralEquatable, IStructuralComparable
     {
@@ -1131,8 +1131,6 @@ namespace System
     /// <typeparam name="T4">Type of the tuple's fourth component.</typeparam>
     /// <typeparam name="T5">Type of the tuple's fifth component.</typeparam>
     /// <typeparam name="T6">Type of the tuple's sixth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6>>, IStructuralEquatable, IStructuralComparable
     {
@@ -1434,8 +1432,6 @@ namespace System
     /// <typeparam name="T5">Type of the tuple's fifth component.</typeparam>
     /// <typeparam name="T6">Type of the tuple's sixth component.</typeparam>
     /// <typeparam name="T7">Type of the tuple's seventh component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7>>, IStructuralEquatable, IStructuralComparable
     {
@@ -1763,8 +1759,6 @@ namespace System
     /// <typeparam name="T6">Type of the tuple's sixth component.</typeparam>
     /// <typeparam name="T7">Type of the tuple's seventh component.</typeparam>
     /// <typeparam name="T8">Type of the tuple's eighth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8>>, IStructuralEquatable, IStructuralComparable
     {
@@ -2118,8 +2112,6 @@ namespace System
     /// <typeparam name="T7">Type of the tuple's seventh component.</typeparam>
     /// <typeparam name="T8">Type of the tuple's eighth component.</typeparam>
     /// <typeparam name="T9">Type of the tuple's ninth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9>>, IStructuralEquatable, IStructuralComparable
     {
@@ -2499,8 +2491,6 @@ namespace System
     /// <typeparam name="T8">Type of the tuple's eighth component.</typeparam>
     /// <typeparam name="T9">Type of the tuple's ninth component.</typeparam>
     /// <typeparam name="T10">Type of the tuple's tenth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>, IStructuralEquatable, IStructuralComparable
     {
@@ -2906,8 +2896,6 @@ namespace System
     /// <typeparam name="T9">Type of the tuple's ninth component.</typeparam>
     /// <typeparam name="T10">Type of the tuple's tenth component.</typeparam>
     /// <typeparam name="T11">Type of the tuple's eleventh component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>, IStructuralEquatable, IStructuralComparable
     {
@@ -3339,8 +3327,6 @@ namespace System
     /// <typeparam name="T10">Type of the tuple's tenth component.</typeparam>
     /// <typeparam name="T11">Type of the tuple's eleventh component.</typeparam>
     /// <typeparam name="T12">Type of the tuple's twelfth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>, IStructuralEquatable, IStructuralComparable
     {
@@ -3798,8 +3784,6 @@ namespace System
     /// <typeparam name="T11">Type of the tuple's eleventh component.</typeparam>
     /// <typeparam name="T12">Type of the tuple's twelfth component.</typeparam>
     /// <typeparam name="T13">Type of the tuple's thirteenth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>>, IStructuralEquatable, IStructuralComparable
     {
@@ -4283,8 +4267,6 @@ namespace System
     /// <typeparam name="T12">Type of the tuple's twelfth component.</typeparam>
     /// <typeparam name="T13">Type of the tuple's thirteenth component.</typeparam>
     /// <typeparam name="T14">Type of the tuple's fourteenth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>, IStructuralEquatable, IStructuralComparable
     {
@@ -4794,8 +4776,6 @@ namespace System
     /// <typeparam name="T13">Type of the tuple's thirteenth component.</typeparam>
     /// <typeparam name="T14">Type of the tuple's fourteenth component.</typeparam>
     /// <typeparam name="T15">Type of the tuple's fifteenth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>>, IStructuralEquatable, IStructuralComparable
     {
@@ -5331,8 +5311,6 @@ namespace System
     /// <typeparam name="T14">Type of the tuple's fourteenth component.</typeparam>
     /// <typeparam name="T15">Type of the tuple's fifteenth component.</typeparam>
     /// <typeparam name="T16">Type of the tuple's sixteenth component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>>, IStructuralEquatable, IStructuralComparable
     {

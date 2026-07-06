@@ -87,7 +87,6 @@ for (var j = 0; j < i; j++)
 }
 #>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "The point is to bundle a set of arbitrary types.")]
     public struct Deconstructed<<#=tparams#>, TNonCached> : IEquatable<Deconstructed<<#=tparams#>, TNonCached>>
     {
         /// <summary>

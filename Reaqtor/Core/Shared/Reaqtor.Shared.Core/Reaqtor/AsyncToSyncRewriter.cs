@@ -132,7 +132,7 @@ namespace Reaqtor
                         var resolvedType = ResolveType(innerType);
                         if (innerType != resolvedType)
                         {
-                            var res = typeof(Func<,>).MakeGenericType(new[] { argType, resolvedType });
+                            var res = typeof(Func<,>).MakeGenericType([argType, resolvedType]);
                             return res;
                         }
                     }
@@ -169,7 +169,7 @@ namespace Reaqtor
                     if (decl.IsGenericType && s_resolvable.TryGetValue(decl.GetGenericTypeDefinition(), out var names) && names.Contains(originalMethod.Name))
                     {
                         var newName = originalMethod.Name;
-                        newName = newName.Substring(0, newName.LastIndexOf("Async", StringComparison.Ordinal));
+                        newName = newName[..newName.LastIndexOf("Async", StringComparison.Ordinal)];
 
                         var newMethod = declaringType.GetMethods().SingleOrDefault(m => m.Name == newName);
 

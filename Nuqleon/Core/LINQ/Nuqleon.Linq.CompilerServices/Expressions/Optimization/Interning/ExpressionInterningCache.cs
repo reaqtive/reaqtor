@@ -68,10 +68,7 @@ namespace System.Linq.Expressions
         /// </remarks>
         public Expression GetOrAdd(Expression expression)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
+            ArgumentNullException.ThrowIfNull(expression);
 
             var tree = _converter.Visit(expression);
             tree = Prune(tree);

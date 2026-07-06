@@ -42,9 +42,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => Expression.Constant(1).Intern(cache: null), ex => Assert.AreEqual(ex.ParamName, "cache"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((Expression)null).Intern(new ExpressionInterningCache()), ex => Assert.AreEqual(ex.ParamName, "expression"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionInterningCache().GetOrAdd(expression: null), ex => Assert.AreEqual(ex.ParamName, "expression"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => Expression.Constant(1).Intern(cache: null));
+            Assert.AreEqual("cache", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ((Expression)null).Intern(new ExpressionInterningCache()));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionInterningCache().GetOrAdd(expression: null));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         #endregion
@@ -55,9 +58,9 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_CacheCount()
         {
             var cache = new ExpressionInterningCache();
-            Assert.AreEqual(cache.Count, 0);
+            Assert.AreEqual(0, cache.Count);
             Expression.Constant(1).Intern(cache);
-            Assert.AreEqual(cache.Count, 1);
+            Assert.AreEqual(1, cache.Count);
         }
 
         #endregion
@@ -493,7 +496,7 @@ namespace Tests.System.Linq.CompilerServices
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
             CloneAndAssert(e);
         }
 
@@ -884,9 +887,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_Call_Static2()
         {
-            var e1 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(true));
-            var e2 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(false));
-            var e3 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(true));
+            var e1 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(true));
+            var e2 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(false));
+            var e3 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(true));
 
             var i1 = Intern(e1);
             var i2 = Intern(e2);
@@ -922,9 +925,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var c = Expression.Constant("bar");
 
-            var e1 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1));
-            var e2 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(2));
-            var e3 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1));
+            var e1 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1));
+            var e2 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(2));
+            var e3 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1));
 
             var i1 = Intern(e1);
             var i2 = Intern(e2);
@@ -1019,12 +1022,12 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
             CloneAndAssert(f1);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             CloneAndAssert(f2);
@@ -1156,11 +1159,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1197,10 +1200,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1212,10 +1215,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -1227,10 +1230,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1314,7 +1317,7 @@ namespace Tests.System.Linq.CompilerServices
             public Qux(int x)
             {
                 X = x;
-                Foos = new List<int>();
+                Foos = [];
                 Bar = new Bar2();
             }
 
@@ -1703,11 +1706,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var e =
@@ -1812,6 +1814,7 @@ namespace Tests.System.Linq.CompilerServices
             var xs = new[] { 2, 3, 5 }.AsQueryable();
 
 #pragma warning disable IDE0075 // Simplify conditional expression (in expression tree to test different types of expressions)
+#pragma warning disable MSTEST0055 // Return value should not be ignored. (These are where-clause predicates in expression-tree test data; nothing is discarded.)
             var ys = from x in xs
                      where x > 42 && !(-x < 17)
                      where x.ToString().StartsWith("a")
@@ -1837,6 +1840,7 @@ namespace Tests.System.Linq.CompilerServices
                      where new string('*', 31).Contains("**")
                      where new Foo { Bar = { Baz = { 37, 41 }, Qux = 43 } }.Bar.Baz.Sum() > 47
                      select ~(y * y);
+#pragma warning restore MSTEST0055
 #pragma warning restore IDE0075 // Simplify conditional expression
 
             var e1 = ys.Expression;
@@ -1867,12 +1871,12 @@ namespace Tests.System.Linq.CompilerServices
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -2062,7 +2066,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             public WithMemberList()
             {
-                Inner = new List<int>();
+                Inner = [];
             }
 
             public List<int> Inner

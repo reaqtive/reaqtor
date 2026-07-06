@@ -78,7 +78,7 @@ namespace Tests
 
             foreach (var s in ss)
             {
-                Assert.ThrowsException<FormatException>(() => Helpers.ParseInt32(s));
+                Assert.ThrowsExactly<FormatException>(() => Helpers.ParseInt32(s));
             }
         }
     }

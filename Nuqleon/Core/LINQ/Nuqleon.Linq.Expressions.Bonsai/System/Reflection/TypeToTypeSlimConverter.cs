@@ -109,8 +109,8 @@ namespace System.Reflection
         /// </summary>
         public TypeToTypeSlimConverter()
         {
-            _typeCache = new Dictionary<Type, TypeSlim>();
-            _assemblies = new Dictionary<Assembly, AssemblySlim>();
+            _typeCache = [];
+            _assemblies = [];
             _genericParameterContext = new Stack<IDictionary<Type, TypeSlim>>();
         }
 
@@ -136,10 +136,7 @@ namespace System.Reflection
         /// <returns>Slim representation of the CLR type.</returns>
         public override TypeSlim Visit(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_typeCache.TryGetValue(type, out TypeSlim res))
             {
@@ -348,10 +345,8 @@ namespace System.Reflection
         /// <param name="typeSlim">The slim type.</param>
         public void MapType(Type type, TypeSlim typeSlim)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(typeSlim);
 
             if (_typeCache.TryGetValue(type, out TypeSlim res))
             {

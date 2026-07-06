@@ -20,7 +20,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var res = 0;
 
-            Control.ForEach(new[] { 1, 2, 3 }, (x, ct) =>
+            Control.ForEach([1, 2, 3], (x, ct) =>
             {
                 res += x;
             }, CancellationToken.None);
@@ -31,7 +31,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 res = 0;
 
-                Control.ForEach(new[] { 1, 2, 3 }, (x, ct) =>
+                Control.ForEach([1, 2, 3], (x, ct) =>
                 {
                     res += x;
                 }, b, CancellationToken.None);
@@ -82,7 +82,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var a = new Action(() =>
             {
-                getCall(new[] { 1, 2, 3 }, cts.Token, (x, ct) =>
+                getCall([1, 2, 3], cts.Token, (x, ct) =>
                 {
                     res += x;
 
@@ -97,7 +97,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             if (expectThrow)
             {
-                Assert.ThrowsException<OperationCanceledException>(a);
+                Assert.ThrowsExactly<OperationCanceledException>(a);
             }
             else
             {

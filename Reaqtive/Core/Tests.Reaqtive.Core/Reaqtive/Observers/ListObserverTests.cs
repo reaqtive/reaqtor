@@ -20,12 +20,12 @@ namespace Test.Reaqtive
         [TestMethod]
         public void ListObserver_ArgumentChecking()
         {
-            //Assert.ThrowsException<ArgumentNullException>(() => new ListObserver<int>(default(IObserver<int>[])));
+            //Assert.ThrowsExactly<ArgumentNullException>(() => new ListObserver<int>(default(IObserver<int>[])));
 
             var lo = new ListObserver<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => lo.Add(default));
-            Assert.ThrowsException<ArgumentNullException>(() => lo.Remove(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => lo.Add(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => lo.Remove(default));
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace Test.Reaqtive
 
             var l1l = ListObserver<int>.Create(l1);
 
-            Assert.ThrowsException<InvalidOperationException>(() => l1l.Remove(Observer.Create<int>(_ => { }, _ => { }, () => { })));
+            Assert.ThrowsExactly<InvalidOperationException>(() => l1l.Remove(Observer.Create<int>(_ => { }, _ => { }, () => { })));
 
             var l2 = l1l.Remove(o1);
 
@@ -145,7 +145,7 @@ namespace Test.Reaqtive
             {
                 Do(() =>
                 {
-                    _instance = Activator.CreateInstance(s_listObserver.Value, new object[] { observers });
+                    _instance = Activator.CreateInstance(s_listObserver.Value, [observers]);
                 });
             }
 
@@ -163,7 +163,7 @@ namespace Test.Reaqtive
             {
                 return Do(() =>
                 {
-                    return (IObserver<T>)s_add.Value.Invoke(_instance, new object[] { observer });
+                    return (IObserver<T>)s_add.Value.Invoke(_instance, [observer]);
                 });
             }
 
@@ -171,7 +171,7 @@ namespace Test.Reaqtive
             {
                 return Do(() =>
                 {
-                    return (IObserver<T>)s_remove.Value.Invoke(_instance, new object[] { observer });
+                    return (IObserver<T>)s_remove.Value.Invoke(_instance, [observer]);
                 });
             }
 

@@ -28,10 +28,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var x = Expression.Parameter(typeof(int), "x");
             var xs = Expression.Parameter(typeof(int[]), "xs");
             var sb = Expression.Parameter(typeof(StrongBox<int>), "sb");
-            var m = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), new[] { typeof(int).MakeByRefType() });
+            var m = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), [typeof(int).MakeByRefType()]);
 
             var xs0 = Expression.ArrayAccess(xs, Expression.Constant(0));
-            var val = Expression.Field(sb, nameof(StrongBox<int>.Value));
+            var val = Expression.Field(sb, nameof(StrongBox<>.Value));
 
             var e =
                 Expression.Block(
@@ -52,7 +52,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private sealed class MyVisitor : LvalExpressionVisitor
         {
-            public readonly List<Expression> Lvals = new();
+            public readonly List<Expression> Lvals = [];
 
             protected override Expression VisitLval(Expression node)
             {

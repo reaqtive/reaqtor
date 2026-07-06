@@ -20,7 +20,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     public class InMemoryKeyValueStore : IKeyValueStore
     {
         private ImmutableSortedDictionary<string, Sequenced<byte[]>> _dictionary = ImmutableSortedDictionary.Create<string, Sequenced<byte[]>>();
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1003 // Non-default EventArgs parameter.
@@ -56,8 +56,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>A new key/value store loaded from the stream.</returns>
         public static InMemoryKeyValueStore Load(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = XDocument.Load(stream);
             return Load(doc);
@@ -93,8 +92,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="stream">The stream to save to.</param>
         public void Save(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = Save();
             doc.Save(stream);
@@ -114,7 +112,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
                 var doc = new XDocument(
                     new XElement("Store",
-                        entries.ToArray()
+                        [.. entries]
                     )
                 );
 
@@ -134,7 +132,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             {
                 _parent = parent;
                 _snapshot = _parent._dictionary;
-                _operations = new List<Tuple<ReifiedOperation<string, byte[]>, OperationResult<string, byte[]>>>();
+                _operations = [];
             }
 
             public byte[] this[string tableName, string key]
@@ -269,11 +267,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                     new ProjectingEnumerator<KeyValuePair<string, byte[]>, KeyValuePair<string, byte[]>>(
                         (IEnumerator<KeyValuePair<string, byte[]>>)res.Result,
                         kvp => new KeyValuePair<string, byte[]>(
-#if NET6_0 || NETSTANDARD2_1
                             kvp.Key[len..],
-#else
-                            kvp.Key.Substring(len),
-#endif
                             kvp.Value
                         )
                     );

@@ -27,10 +27,14 @@ namespace System.Linq.Expressions
         {
             var visitor = new ExpressionSlimVisitor();
             Assert.IsNull(visitor.Visit((ExpressionSlim)null));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit(nodes: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.VisitAndConvert<ExpressionSlim>(nodes: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(nodes: null, elementVisitor: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(new List<ExpressionSlim>().AsReadOnly(), elementVisitor: null), ex => Assert.AreEqual("elementVisitor", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit(nodes: null));
+            Assert.AreEqual("nodes", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.VisitAndConvert<ExpressionSlim>(nodes: null));
+            Assert.AreEqual("nodes", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(nodes: null, elementVisitor: null));
+            Assert.AreEqual("nodes", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(new List<ExpressionSlim>().AsReadOnly(), elementVisitor: null));
+            Assert.AreEqual("elementVisitor", ex4.ParamName);
         }
 
         [TestMethod]
@@ -40,7 +44,7 @@ namespace System.Linq.Expressions
             var slimifier = new ExpressionToExpressionSlimConverter();
             var expression = Expression.Constant(0);
             var slim = slimifier.Visit(expression) as ConstantExpressionSlim;
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.VisitAndConvert<ConstantExpressionSlim>(slim));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.VisitAndConvert<ConstantExpressionSlim>(slim));
         }
 
         private sealed class A : ExpressionSlimVisitor
@@ -212,7 +216,7 @@ namespace System.Linq.Expressions
         {
             var visitor = new ExpressionSlimVisitor();
             var slimifier = new ExpressionToExpressionSlimConverter();
-            var expression = Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), new[] { Expression.Constant(0) });
+            var expression = Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), [Expression.Constant(0)]);
             var slim = slimifier.Visit(expression);
             Assert.AreSame(slim, visitor.Visit(slim));
         }
@@ -230,7 +234,7 @@ namespace System.Linq.Expressions
             var res = visitor.Visit(slim);
 
             var value = res.ToExpression().Evaluate<List<int>>();
-            Assert.IsTrue(value.SequenceEqual(new[] { 42 }));
+            Assert.IsTrue(value.SequenceEqual([42]));
         }
 
         [TestMethod]
@@ -326,7 +330,7 @@ namespace System.Linq.Expressions
             var nopVisitor = new ExpressionSlimVisitor();
 
             var p = Expression.Variable(typeof(int), "p");
-            var expr = Expression.Block(new[] { p }, Expression.Constant(41));
+            var expr = Expression.Block([p], Expression.Constant(41));
             var slim = slimifier.Visit(expr);
             Assert.AreEqual(slim, nopVisitor.Visit(slim));
 
@@ -584,7 +588,7 @@ namespace System.Linq.Expressions
                 Expression.Loop(
                     Expression.Block(
                         typeof(int),
-                        new[] { counter },
+                        [counter],
                         Expression.AddAssign(counter, Expression.Constant(2)),
                         Expression.Condition(
                             Expression.GreaterThanOrEqual(
@@ -781,7 +785,7 @@ namespace System.Linq.Expressions
         {
             public MyFoo()
             {
-                List = new List<int>();
+                List = [];
                 Bar = new MyBar();
             }
 
@@ -813,7 +817,7 @@ namespace System.Linq.Expressions
                 Expression.Condition(Expression.Equal(Expression.Constant(1), Expression.Constant(1)), Expression.Constant(2), Expression.Constant(3)).ToExpressionSlim(),
                 Expression.Constant(1).ToExpressionSlim(),
                 Expression.Default(typeof(int)).ToExpressionSlim(),
-                Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), new[] { Expression.Constant(0) }).ToExpressionSlim(),
+                Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), [Expression.Constant(0)]).ToExpressionSlim(),
                 Expression.Invoke(Expression.Constant(new Func<int>(() => 42))).ToExpressionSlim(),
                 Expression.Lambda<Func<int>>(Expression.Constant(1)).ToExpressionSlim(),
                 Expression.Property(Expression.Constant("bar"), "Length").ToExpressionSlim(),
@@ -851,7 +855,7 @@ namespace System.Linq.Expressions
         {
             var v = new SimpleVisitor();
 
-            Assert.ThrowsException<NotSupportedException>(() => v.Visit(new FakeNode()));
+            Assert.ThrowsExactly<NotSupportedException>(() => v.Visit(new FakeNode()));
         }
 
         private sealed class SimpleVisitor : ExpressionSlimVisitor<ExpressionType>
@@ -913,37 +917,37 @@ namespace System.Linq.Expressions
         {
             public void Run()
             {
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitBinary(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitBlock(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlock(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitConditional(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitConstant(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitDefault(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitElementInit(node: null));
-                Assert.ThrowsException<NotImplementedException>(() => base.VisitExtension(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitGoto(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitIndex(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitInvocation(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLabel(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLabelTarget(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLambda(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitListInit(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLoop(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMember(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberAssignment(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberInit(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberListBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberMemberBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMethodCall(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitNew(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitNewArray(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitParameter(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitSwitch(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitSwitchCase(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitTry(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitTypeBinary(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitUnary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBinary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBlock(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitCatchBlock(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitConditional(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitConstant(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitDefault(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitElementInit(node: null));
+                Assert.ThrowsExactly<NotImplementedException>(() => base.VisitExtension(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitGoto(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitIndex(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitInvocation(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLabel(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLabelTarget(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambda(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitListInit(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLoop(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMember(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberAssignment(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberInit(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberListBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberMemberBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMethodCall(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitNew(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitNewArray(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitParameter(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitSwitch(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitSwitchCase(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitTry(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitTypeBinary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitUnary(node: null));
             }
 
             protected override int MakeBinary(BinaryExpressionSlim node, int left, int conversion, int right) => throw new NotImplementedException();
@@ -1046,7 +1050,7 @@ namespace System.Linq.Expressions
 
                 var res = VisitAndConvert<ExpressionSlim, Derived>(xs);
 
-                Assert.IsTrue(res.Select(x => (int)x.Value).SequenceEqual(new[] { 1, 2 }));
+                Assert.IsTrue(res.Select(x => (int)x.Value).SequenceEqual([1, 2]));
             }
 
             protected internal override Base VisitBinary(BinaryExpressionSlim node) => throw new NotImplementedException();

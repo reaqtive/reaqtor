@@ -24,7 +24,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void SymbolTable_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null), ex => Assert.AreEqual("symbolComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null));
+            Assert.AreEqual("symbolComparer", ex.ParamName);
         }
 
         [TestMethod]
@@ -38,7 +39,7 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsNull(st.Parent);
 
-            Assert.ThrowsException<InvalidOperationException>(() => st.Add("bar", "qux"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => st.Add("bar", "qux"));
 
             Assert.IsTrue(st.TryGetValue("bar", out Indexed<string> foo));
             Assert.AreEqual("foo", foo.Value);
@@ -51,10 +52,10 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsFalse(st.TryGetValue("foo", out Indexed<string> unk));
 
-            Assert.IsTrue(st.ToArray().SequenceEqual(new[] {
+            Assert.IsTrue(st.ToArray().SequenceEqual([
                 new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("bar", "foo"), 0),
                 new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("baz", "qux"), 1)
-            }));
+            ]));
 
             Assert.IsNotNull(((IEnumerable)st).GetEnumerator());
 

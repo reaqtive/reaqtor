@@ -128,8 +128,8 @@ namespace Reaqtor.QueryEngine
 
         private sealed class TupleTypeEnumerator
         {
-            private static readonly Type[] _tupleTypes = new[]
-            {
+            private static readonly Type[] _tupleTypes =
+            [
                 typeof(Tuple<>),
                 typeof(Tuple<,>),
                 typeof(Tuple<,,>),
@@ -138,7 +138,7 @@ namespace Reaqtor.QueryEngine
                 typeof(Tuple<,,,,,>),
                 typeof(Tuple<,,,,,,>),
                 typeof(Tuple<,,,,,,,>),
-            };
+            ];
 
             public static bool TryEnumerate(Type type, out Type[] innerTypes)
             {

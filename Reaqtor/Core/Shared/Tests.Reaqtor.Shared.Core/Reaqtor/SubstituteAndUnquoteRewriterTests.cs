@@ -37,7 +37,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
             var inner = Expression.Constant(42);
             var identity = Expression.Invoke(Expression.Parameter(typeof(Func<int, long>), Constants.IdentityFunctionUri), inner);
 
-            Assert.ThrowsException<InvalidOperationException>(() => rewriter.Apply(identity));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rewriter.Apply(identity));
         }
 
         [TestMethod]

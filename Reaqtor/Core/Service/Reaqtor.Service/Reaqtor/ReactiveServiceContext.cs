@@ -50,8 +50,7 @@ namespace Reaqtor
         /// <param name="metadata">Metadata service object.</param>
         protected ReactiveServiceContext(IReactiveExpressionServices expressionServices, ReactiveClient client, ReactiveDefinition definition, ReactiveMetadata metadata)
         {
-            if (expressionServices == null)
-                throw new ArgumentNullException(nameof(expressionServices));
+            ArgumentNullException.ThrowIfNull(expressionServices);
 
             Client = client ?? throw new ArgumentNullException(nameof(client));
             Definition = definition ?? throw new ArgumentNullException(nameof(definition));

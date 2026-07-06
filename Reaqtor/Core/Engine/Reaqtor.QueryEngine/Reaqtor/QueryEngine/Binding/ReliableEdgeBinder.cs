@@ -38,7 +38,7 @@ namespace Reaqtor.QueryEngine
                 if (_resolver.TryResolveReliable(uri, out var service))
                 {
                     var method = _getReliableObserverMethod.MakeGenericMethod(elementType);
-                    var observer = method.Invoke(null, new object[] { service, uri });
+                    var observer = method.Invoke(null, [service, uri]);
 
                     result = Expression.Constant(observer, typeof(IReliableObserver<>).MakeGenericType(elementType));
                 }

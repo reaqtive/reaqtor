@@ -182,11 +182,11 @@ namespace Tests
             {
                 var edits = s.SaveSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -199,7 +199,7 @@ namespace Tests
             // Assert the new space does not contain the value.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
 
             //
             // Load the space from the store.
@@ -237,11 +237,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -270,11 +270,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -312,11 +312,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -333,11 +333,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -366,11 +366,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -387,10 +387,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -419,11 +419,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -445,10 +445,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -477,11 +477,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -511,10 +511,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -540,11 +540,11 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
@@ -558,18 +558,18 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/index", "bar"),
                     (StateWriterOperationKind.Delete, "state/item/bar/data", "value"),
-                });
+                ]);
             }
 
             //
             // Assert the value is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
         });
     }
 }

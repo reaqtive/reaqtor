@@ -10,9 +10,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
-#if !DEBUG && !NET6_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
-using System.Runtime.CompilerServices;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -132,10 +129,10 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             var serializer = new DataTypeBinarySerializer();
             var stream = new MemoryStream();
-            Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize(type: null, stream, value: null));
-            Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize(typeof(int), stream: null, value: null));
-            Assert.ThrowsException<ArgumentNullException>(() => serializer.Deserialize(type: null, stream));
-            Assert.ThrowsException<ArgumentNullException>(() => serializer.Deserialize(typeof(int), stream: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => serializer.Serialize(type: null, stream, value: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => serializer.Serialize(typeof(int), stream: null, value: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => serializer.Deserialize(type: null, stream));
+            Assert.ThrowsExactly<ArgumentNullException>(() => serializer.Deserialize(typeof(int), stream: null));
         }
 
         [TestMethod]
@@ -143,10 +140,10 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             var serializer = new DataTypeBinarySerializer();
             var stream = new MemoryStream();
-            Assert.ThrowsException<NotSupportedException>(() => serializer.Serialize(typeof(NonDataModelType), stream, value: null));
-            Assert.ThrowsException<NotSupportedException>(() => serializer.Serialize(typeof(Func<int>), stream, value: null));
-            Assert.ThrowsException<NotSupportedException>(() => serializer.Deserialize(typeof(NonDataModelType), stream));
-            Assert.ThrowsException<NotSupportedException>(() => serializer.Deserialize(typeof(Func<int>), stream));
+            Assert.ThrowsExactly<NotSupportedException>(() => serializer.Serialize(typeof(NonDataModelType), stream, value: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => serializer.Serialize(typeof(Func<int>), stream, value: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => serializer.Deserialize(typeof(NonDataModelType), stream));
+            Assert.ThrowsExactly<NotSupportedException>(() => serializer.Deserialize(typeof(Func<int>), stream));
         }
 
         private class NonDataModelType { }
@@ -156,12 +153,12 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             var inner = new DataModelSerializerFactoryTestCase.InnerCycleType();
             var outer = new DataModelSerializerFactoryTestCase.OuterCycleType { Inner = inner };
-            inner.OuterArray = new[] { outer };
+            inner.OuterArray = [outer];
 
             var factory = new DataTypeBinarySerializer();
             using (var stream = new MemoryStream())
             {
-                Assert.ThrowsException<InvalidOperationException>(() => factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, outer));
+                Assert.ThrowsExactly<InvalidOperationException>(() => factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, outer));
             }
 
             inner.OuterArray = null;
@@ -169,7 +166,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
             using (var stream = new MemoryStream())
             {
-                Assert.ThrowsException<InvalidOperationException>(() => factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, outer));
+                Assert.ThrowsExactly<InvalidOperationException>(() => factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, outer));
             }
         }
 
@@ -228,7 +225,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         public void DataModelSerializerFactory_AdditiveSchema_Entity()
         {
             var factory = new DataTypeBinarySerializer();
-            var super = new SimpleDataType { Foo = 42, Bar = "baz", Qux = new[] { 1, 2, 3 } };
+            var super = new SimpleDataType { Foo = 42, Bar = "baz", Qux = [1, 2, 3] };
 
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
 
@@ -319,55 +316,6 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             Run(tests);
         }
 
-#if !DEBUG && !NET6_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
-        [TestMethod]
-        public void DataModelSerializerFactory_GarbageCollectibleSerializerWithCycles()
-        {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
-            var stream = new MemoryStream();
-
-            {
-                Do1(stream);
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-
-            Assert.AreEqual(1, Volatile.Read(ref MySerializer.Finalized));
-
-            stream.Position = 0;
-
-            {
-                Do2(stream);
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-
-            Assert.AreEqual(2, Volatile.Read(ref MySerializer.Finalized));
-
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do1(MemoryStream stream)
-            {
-                var factory = new MySerializer();
-                factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, null);
-            }
-
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do2(MemoryStream stream)
-            {
-                var factory = new MySerializer();
-                factory.Deserialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream);
-            }
-        }
-#endif
 
         public class Geocoordinate
         {
@@ -479,7 +427,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                 holder.MemoryStream.Position = 0;
 
                 var rt = factory.Deserialize(test.OutputType, holder.MemoryStream);
-                Assert.IsTrue(test.Comparer.Equals(test.Value, rt), "Expected: {0} Actual: {1}", test.Value, rt);
+                Assert.IsTrue(test.Comparer.Equals(test.Value, rt), $"Expected: {test.Value} Actual: {rt}");
             }
         }
 
@@ -499,7 +447,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                 {
                     holder.MemoryStream.Position = 0;
                     var rt = factory.Deserialize(otherIsotope.Type, holder.MemoryStream);
-                    Assert.IsTrue(comparer.Equals(otherIsotope.Value, rt), "Expected: {0} Actual: {1}", otherIsotope.Value, otherIsotope);
+                    Assert.IsTrue(comparer.Equals(otherIsotope.Value, rt), $"Expected: {otherIsotope.Value} Actual: {otherIsotope}");
                 }
             }
         }

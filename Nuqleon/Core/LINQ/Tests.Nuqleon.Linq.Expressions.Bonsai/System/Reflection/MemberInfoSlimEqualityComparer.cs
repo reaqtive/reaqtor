@@ -27,9 +27,9 @@ namespace Tests.System.Reflection
         public void MemberInfoSlimEqualityComparer_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new MemberInfoSlimEqualityComparer(default(TypeSlimEqualityComparer)));
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new MemberInfoSlimEqualityComparer(default(Func<MemberInfoSlimEqualityComparator>)));
-            Assert.ThrowsException<ArgumentException>(() => _ = new MemberInfoSlimEqualityComparer(() => default(MemberInfoSlimEqualityComparator)).GetComparator());
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MemberInfoSlimEqualityComparer(default(TypeSlimEqualityComparer)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MemberInfoSlimEqualityComparer(default(Func<MemberInfoSlimEqualityComparator>)));
+            Assert.ThrowsExactly<ArgumentException>(() => _ = new MemberInfoSlimEqualityComparer(() => default(MemberInfoSlimEqualityComparator)).GetComparator());
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -381,8 +381,8 @@ namespace Tests.System.Reflection
                 var m1 = new NotSupportedMemberInfoSlim(t);
                 var m2 = new NotSupportedMemberInfoSlim(t);
 
-                Assert.ThrowsException<NotSupportedException>(() => eq.GetHashCode(m1));
-                Assert.ThrowsException<NotSupportedException>(() => eq.Equals(m1, m2));
+                Assert.ThrowsExactly<NotSupportedException>(() => eq.GetHashCode(m1));
+                Assert.ThrowsExactly<NotSupportedException>(() => eq.Equals(m1, m2));
             }
         }
 
@@ -403,8 +403,8 @@ namespace Tests.System.Reflection
                 var m1 = new NotSupportedMemberInfoSlim(t);
                 var m2 = new NotSupportedMemberInfoSlim(t);
 
-                Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(m1));
-                Assert.ThrowsException<NotImplementedException>(() => eq.Equals(m1, m2));
+                Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(m1));
+                Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(m1, m2));
             }
         }
 

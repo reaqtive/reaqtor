@@ -29,7 +29,7 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// List of observers subscribed to the subject.
         /// </summary>
-        private readonly List<IObserver<T>> _observers = new();
+        private readonly List<IObserver<T>> _observers = [];
 
         /// <summary>
         /// Identifier of te subject.

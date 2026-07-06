@@ -32,9 +32,6 @@ namespace System.Linq.Expressions
         private readonly Dictionary<LabelTargetSlim, LabelTarget> _labels;
         private readonly IExpressionFactory _factory;
 
-        private Func<MethodInfoSlim, MethodInfo> _makeMethod;
-        private Func<TypeSlim, Type> _makeType;
-
         #endregion
 
         #region Constructors
@@ -65,8 +62,8 @@ namespace System.Linq.Expressions
         {
             TypeSpace = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _variables = new Dictionary<ParameterExpressionSlim, ParameterExpression>();
-            _labels = new Dictionary<LabelTargetSlim, LabelTarget>();
+            _variables = [];
+            _labels = [];
         }
 
         #endregion
@@ -78,9 +75,9 @@ namespace System.Linq.Expressions
         /// </summary>
         protected InvertedTypeSpace TypeSpace { get; }
 
-        private Func<MethodInfoSlim, MethodInfo> MakeMethodCachedDelegate => _makeMethod ??= MakeMethod;
+        private Func<MethodInfoSlim, MethodInfo> MakeMethodCachedDelegate => field ??= MakeMethod;
 
-        private Func<TypeSlim, Type> MakeTypeCachedDelegate => _makeType ??= MakeType;
+        private Func<TypeSlim, Type> MakeTypeCachedDelegate => field ??= MakeType;
 
         #endregion
 

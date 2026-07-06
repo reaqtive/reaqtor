@@ -22,15 +22,15 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
         [TestMethod]
         public void OptimizerCombinators_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => Optimizer.Then(first: null, Optimizer.Nop()), AssertParameterName("first"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => Optimizer.Nop().Then(second: null), AssertParameterName("second"));
+            AssertParameterName("first")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Then(first: null, Optimizer.Nop())));
+            AssertParameterName("second")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Nop().Then(second: null)));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null), AssertParameterName("optimizer"));
+            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null)));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true), AssertParameterName("optimizer"));
+            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true)));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true, maxIterations: 0), AssertParameterName("optimizer"));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => Optimizer.Nop().FixedPoint(throwOnCycle: true, maxIterations: -1), AssertParameterName("maxIterations"));
+            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true, maxIterations: 0)));
+            AssertParameterName("maxIterations")(Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Optimizer.Nop().FixedPoint(throwOnCycle: true, maxIterations: -1)));
         }
 
         [TestMethod]
@@ -100,7 +100,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 {
 
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true)
                             .Optimize(start));
@@ -168,7 +168,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 {
 
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true)
                             .Optimize(start));
@@ -200,7 +200,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
 
                 {
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true, maxIterations: 3)
                             .Optimize(start));
@@ -230,7 +230,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
 
         private static Action<ArgumentException> AssertParameterName(string paramName)
         {
-            return (ArgumentException ex) => { Assert.AreEqual(paramName, ex.ParamName); };
+            return ex => { Assert.AreEqual(paramName, ex.ParamName); };
         }
     }
 }

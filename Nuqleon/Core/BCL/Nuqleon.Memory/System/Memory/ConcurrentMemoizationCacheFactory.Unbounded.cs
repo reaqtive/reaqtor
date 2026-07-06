@@ -27,8 +27,7 @@ namespace System.Memory
             /// <returns>An empty memoization cache instance.</returns>
             public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options, IEqualityComparer<T> comparer)
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 if ((options & MemoizationOptions.CacheException) > MemoizationOptions.None)
                 {

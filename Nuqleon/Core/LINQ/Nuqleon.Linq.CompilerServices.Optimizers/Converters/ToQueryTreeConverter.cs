@@ -103,8 +103,7 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>The query tree as a monad member.</returns>
         protected static MonadMember ConvertToMonadMember(Type monadElementType, QueryTree queryTree)
         {
-            if (queryTree == null)
-                throw new ArgumentNullException(nameof(queryTree));
+            ArgumentNullException.ThrowIfNull(queryTree);
 
             return queryTree.QueryNodeType is QueryNodeType.MonadAbstraction or QueryNodeType.Operator
                 ? (MonadMember)queryTree

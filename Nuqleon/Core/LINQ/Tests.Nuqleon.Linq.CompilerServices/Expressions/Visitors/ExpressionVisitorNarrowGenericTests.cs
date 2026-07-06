@@ -43,24 +43,23 @@ namespace Tests.System.Linq.CompilerServices
                     Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                     ExpressionType.Add,
                     typeof(ExpressionEqualityComparerTests),
-                    new[]
-                    {
+                    [
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    }
+                    ]
                 );
 
-                Assert.ThrowsException<NotSupportedException>(() => VisitBlock(block));
-                Assert.ThrowsException<NotSupportedException>(() => VisitDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
-                Assert.ThrowsException<NotSupportedException>(() => VisitDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2))));
-                Assert.ThrowsException<NotSupportedException>(() => VisitExtension(new MyExt()));
-                Assert.ThrowsException<NotSupportedException>(() => VisitGoto(Expression.Return(Expression.Label(""))));
-                Assert.ThrowsException<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), new Expression[] { Expression.Constant(1) })));
-                Assert.ThrowsException<NotSupportedException>(() => VisitLabel(Expression.Label(Expression.Label(""))));
-                Assert.ThrowsException<NotSupportedException>(() => VisitLoop(Expression.Loop(block)));
-                Assert.ThrowsException<NotSupportedException>(() => VisitRuntimeVariables(Expression.RuntimeVariables()));
-                Assert.ThrowsException<NotSupportedException>(() => VisitSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1)))));
-                Assert.ThrowsException<NotSupportedException>(() => VisitTry(Expression.TryFinally(block, block)));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitBlock(block));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2))));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitExtension(new MyExt()));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitGoto(Expression.Return(Expression.Label(""))));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)])));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitLabel(Expression.Label(Expression.Label(""))));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitLoop(Expression.Loop(block)));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitRuntimeVariables(Expression.RuntimeVariables()));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1)))));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitTry(Expression.TryFinally(block, block)));
             }
 
             protected override string VisitBinary(BinaryExpression node) => throw new NotImplementedException();
@@ -104,27 +103,26 @@ namespace Tests.System.Linq.CompilerServices
                     Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                     ExpressionType.Add,
                     typeof(ExpressionEqualityComparerTests),
-                    new[]
-                    {
+                    [
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    }
+                    ]
                 );
 
-                Assert.ThrowsException<NotSupportedException>(() => MakeBlock(block, variables: null, expressions: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
-                Assert.ThrowsException<NotSupportedException>(() => MakeDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2)), arguments: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeGoto(Expression.Return(Expression.Label("")), target: null, value: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), new Expression[] { Expression.Constant(1) }), @object: null, arguments: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeLabel(Expression.Label(Expression.Label("")), target: null, defaultValue: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeLoop(Expression.Loop(block), body: null, breakLabel: null, continueLabel: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeRuntimeVariables(Expression.RuntimeVariables(), variables: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1))), switchValue: null, defaultBody: null, cases: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeTry(Expression.TryFinally(block, block), body: null, @finally: null, fault: null, handlers: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeBlock(block, variables: null, expressions: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2)), arguments: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeGoto(Expression.Return(Expression.Label("")), target: null, value: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]), @object: null, arguments: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeLabel(Expression.Label(Expression.Label("")), target: null, defaultValue: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeLoop(Expression.Loop(block), body: null, breakLabel: null, continueLabel: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeRuntimeVariables(Expression.RuntimeVariables(), variables: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1))), switchValue: null, defaultBody: null, cases: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeTry(Expression.TryFinally(block, block), body: null, @finally: null, fault: null, handlers: null));
 
-                Assert.ThrowsException<NotSupportedException>(() => MakeCatchBlock(Expression.MakeCatchBlock(typeof(Exception), Expression.Parameter(typeof(Exception)), block, filter: null), variable: null, body: null, filter: null));
-                Assert.ThrowsException<NotSupportedException>(() => MakeLabelTarget(Expression.Label("")));
-                Assert.ThrowsException<NotSupportedException>(() => MakeSwitchCase(Expression.SwitchCase(block, Expression.Constant(1)), body: null, testValues: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeCatchBlock(Expression.MakeCatchBlock(typeof(Exception), Expression.Parameter(typeof(Exception)), block, filter: null), variable: null, body: null, filter: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeLabelTarget(Expression.Label("")));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitchCase(Expression.SwitchCase(block, Expression.Constant(1)), body: null, testValues: null));
             }
 
             protected override Expression MakeBinary(BinaryExpression node, Expression left, LambdaExpression conversion, Expression right) => throw new NotImplementedException();

@@ -24,8 +24,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression tree with compiler-generated names substituted for prettier names.</returns>
         public static Expression Prettify(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Impl().Visit(expression);
             res = AlphaRenamer.EliminateNameConflicts(res);

@@ -21,13 +21,13 @@ Reaqtor is available under the [MIT open source license](https://opensource.org/
 
 ## Building
 
-To build Reaqtor, you will need to install the [.NET SDK](https://dotnet.microsoft.com/download) ([version 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) or later). Clone this repo, and in the root folder run this command:
+To build Reaqtor, you will need the [.NET SDK](https://dotnet.microsoft.com/download) ([version 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) or later). Clone this repo, and in the root folder run this command:
 
 ```
-dotnet build All.sln
+dotnet build All.slnx
 ```
 
-Alternatively, if you use Visual Studio 2019, then as long as you have enabled the .NET SDK and .NET 5 runtimes in the Visual Studio installer, you can open that same `All.sln` file in Visual Studio and build it in the usual way.
+Alternatively, you can open `All.slnx` in Visual Studio 2022 (17.13 or later) or JetBrains Rider (2024.3 or later) — versions that support the XML-based `.slnx` solution format — and build it in the usual way.
 
 ### Running Example Notebooks
 

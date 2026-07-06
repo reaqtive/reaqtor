@@ -52,8 +52,7 @@ namespace Reaqtive
         /// <returns>Handle to the newly created subscription.</returns>
         public ISubscription Subscribe(IObserver<T> observer)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(observer);
 
             return SubscribeCore(observer);
         }

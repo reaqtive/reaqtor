@@ -43,7 +43,7 @@ namespace Reaqtor.Expressions
         /// different sequence types used in subscription expressions. Many data structures exist that are linear
         /// in the same way. The only drawback is that this is a global cache.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, ConcurrentDictionary<ArgTypes, Creator>> s_creators = new();
+        private static readonly ConditionalWeakTable<Type, ConcurrentDictionary<ArgTypes, Creator>> s_creators = [];
 
         /// <summary>
         /// Creates a new quoted expression representation.
@@ -62,7 +62,7 @@ namespace Reaqtor.Expressions
                 return value;
             }
 
-            return CreateInstance<T, R>(value, expression, args ?? Array.Empty<object>());
+            return CreateInstance<T, R>(value, expression, args ?? []);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Reaqtor.Expressions
 
             var expr = Expression.Invoke(Expression.Lambda(expression, parameters), arguments);
 
-            return CreateInstance<T, R>(value, expr, args ?? Array.Empty<object>());
+            return CreateInstance<T, R>(value, expr, args ?? []);
         }
 
         /// <summary>

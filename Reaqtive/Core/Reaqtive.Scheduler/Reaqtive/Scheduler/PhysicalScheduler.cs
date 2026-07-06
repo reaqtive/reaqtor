@@ -74,8 +74,7 @@ namespace Reaqtive.Scheduler
         /// <returns>A scheduler.</returns>
         public static PhysicalScheduler Create(int numberOfWorkers, ThreadPriority priority = ThreadPriority.Normal)
         {
-            if (numberOfWorkers <= 0)
-                throw new ArgumentOutOfRangeException(nameof(numberOfWorkers));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfWorkers);
 
             return new PhysicalScheduler(numberOfWorkers, priority);
         }

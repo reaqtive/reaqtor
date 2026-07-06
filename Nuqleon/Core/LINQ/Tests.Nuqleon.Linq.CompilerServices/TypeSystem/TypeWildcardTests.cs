@@ -32,7 +32,7 @@ namespace Tests.System.Linq.CompilerServices
                 var ctor = t.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Single();
                 Assert.IsNotNull(ctor);
 
-                var obj = ctor.Invoke(new object[] { false });
+                var obj = ctor.Invoke([false]);
                 Assert.IsNotNull(obj);
             }
         }

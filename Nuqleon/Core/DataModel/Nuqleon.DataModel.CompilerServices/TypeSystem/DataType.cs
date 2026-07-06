@@ -70,8 +70,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>Data model type isomorphic to the given CLR type.</returns>
         public static DataType FromType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return FromTypeImpl(type, allowCycles: false);
         }
@@ -84,8 +83,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>Data model type isomorphic to the given CLR type.</returns>
         public static DataType FromType(Type type, bool allowCycles)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return FromTypeImpl(type, allowCycles);
         }
@@ -104,8 +102,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the conversion succeeded; otherwise, false.</returns>
         public static bool TryFromType(Type type, out DataType result)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return TryFromTypeImpl(type, allowCycles: false, out result);
         }
@@ -119,8 +116,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the conversion succeeded; otherwise, false.</returns>
         public static bool TryFromType(Type type, bool allowCycles, out DataType result)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return TryFromTypeImpl(type, allowCycles, out result);
         }
@@ -139,8 +135,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <exception cref="AggregateException">Aggregate exception with DataTypeException inner exception objects to describe violations against the data model type system.</exception>
         public static void Check(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             CheckImpl(type, allowCycles: false);
         }
@@ -154,8 +149,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <exception cref="AggregateException">Aggregate exception with DataTypeException inner exception objects to describe violations against the data model type system.</exception>
         public static void Check(Type type, bool allowCycles)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             CheckImpl(type, allowCycles);
         }
@@ -179,8 +173,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the given CLR type passes data model type checking; otherwise, false.</returns>
         public static bool TryCheck(Type type, out ReadOnlyCollection<DataTypeError> errors)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return TryCheckImpl(type, allowCycles: false, out errors);
         }
@@ -195,8 +188,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the given CLR type passes data model type checking; otherwise, false.</returns>
         public static bool TryCheck(Type type, bool allowCycles, out ReadOnlyCollection<DataTypeError> errors)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return TryCheckImpl(type, allowCycles, out errors);
         }
@@ -214,8 +206,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the given CLR type represents a user-defined structural entity data type; otherwise, false.</returns>
         public static bool IsStructuralEntityDataType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var props = type.GetProperties();
 
@@ -230,8 +221,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>true if the given CLR type represents a user-defined entity enumeration data type; otherwise, false.</returns>
         public static bool IsEntityEnumDataType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var enumType = default(Type);
 
@@ -306,7 +296,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
             public DataTypePrinter()
             {
-                _types = new Dictionary<DataType, string>();
+                _types = [];
                 _hasCycles = false;
             }
 
@@ -329,7 +319,7 @@ namespace Nuqleon.DataModel.TypeSystem
             private string PrintCycleRich(DataType type)
             {
                 _hasCycles = true;
-                _namedTypes = new Dictionary<DataType, NamedType>();
+                _namedTypes = [];
 
                 var res = Visit(type);
 
@@ -340,11 +330,7 @@ namespace Nuqleon.DataModel.TypeSystem
                 var sortedTypes =
                     _namedTypes.OrderBy(kv =>
                         int.Parse(
-#if NET6_0 || NETSTANDARD2_1
                             kv.Value.Name[TYPEPREFIX.Length..],
-#else
-                            kv.Value.Name.Substring(TYPEPREFIX.Length),
-#endif
                             CultureInfo.InvariantCulture
                         )
                     );

@@ -21,7 +21,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void MemberInfoExtensions_NonSupported()
         {
-            Assert.ThrowsException<NotSupportedException>(() => _ = new MyMemberInfo().ToCSharpString());
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = new MyMemberInfo().ToCSharpString());
         }
 
         private sealed class MyMemberInfo : MemberInfo

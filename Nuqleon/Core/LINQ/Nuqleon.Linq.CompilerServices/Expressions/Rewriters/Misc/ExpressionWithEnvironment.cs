@@ -21,7 +21,6 @@ namespace System.Linq.CompilerServices
     public sealed class ExpressionWithEnvironment : IExpressionWithEnvironment
     {
         private readonly IReadOnlyList<Binding> _bindings;
-        private IReadOnlyDictionary<ParameterExpression, object> _environment;
 
         /// <summary>
         /// Creates a new expression with an environment.
@@ -51,7 +50,7 @@ namespace System.Linq.CompilerServices
         {
             get
             {
-                if (_environment == null)
+                if (field == null)
                 {
                     var res = new Dictionary<ParameterExpression, object>(_bindings.Count);
 
@@ -60,10 +59,10 @@ namespace System.Linq.CompilerServices
                         res[kv.Parameter] = kv.Value.Evaluate();
                     }
 
-                    _environment = res;
+                    field = res;
                 }
 
-                return _environment;
+                return field;
             }
         }
 

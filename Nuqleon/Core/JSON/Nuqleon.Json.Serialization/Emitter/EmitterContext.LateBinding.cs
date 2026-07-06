@@ -90,7 +90,7 @@ namespace Nuqleon.Json.Serialization
                 //
 
                 _bind = Expression.Call(Expression.Constant(this), typeof(LateBoundSiteString).GetMethod(nameof(Bind)), _type, _builder, _value, _context);
-                _locals = new[] { _type };
+                _locals = [_type];
                 _getType = Expression.Assign(_type, Expression.Call(_value, typeof(object).GetMethod(nameof(GetType))));
 
                 //
@@ -147,7 +147,7 @@ namespace Nuqleon.Json.Serialization
                 Delegate emitAction;
                 try
                 {
-                    emitAction = (Delegate)s_build.MakeGenericMethod(type).Invoke(context._builderString, ArrayBuilder<object>.Empty);
+                    emitAction = (Delegate)s_build.MakeGenericMethod(type).Invoke(context._builderString, []);
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -163,7 +163,7 @@ namespace Nuqleon.Json.Serialization
                 // action. This call will be slow, but our goal is to speed up subsequent access.
                 //
 
-                emitAction.DynamicInvoke(new object[] { builder, value, context });
+                emitAction.DynamicInvoke([builder, value, context]);
 
                 //
                 // Next, update the expression representing the polymorphic inline cache to include a type test for the discovered
@@ -244,7 +244,7 @@ namespace Nuqleon.Json.Serialization
                 //
 
                 _bind = Expression.Call(Expression.Constant(this), typeof(LateBoundSiteWriter).GetMethod(nameof(Bind)), _type, _writer, _value, _context);
-                _locals = new[] { _type };
+                _locals = [_type];
                 _getType = Expression.Assign(_type, Expression.Call(_value, typeof(object).GetMethod(nameof(GetType))));
 
                 //
@@ -301,7 +301,7 @@ namespace Nuqleon.Json.Serialization
                 Delegate emitAction;
                 try
                 {
-                    emitAction = (Delegate)s_build.MakeGenericMethod(type).Invoke(context._builderWriter, ArrayBuilder<object>.Empty);
+                    emitAction = (Delegate)s_build.MakeGenericMethod(type).Invoke(context._builderWriter, []);
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -317,7 +317,7 @@ namespace Nuqleon.Json.Serialization
                 // action. This call will be slow, but our goal is to speed up subsequent access.
                 //
 
-                emitAction.DynamicInvoke(new object[] { writer, value, context });
+                emitAction.DynamicInvoke([writer, value, context]);
 
                 //
                 // Next, update the expression representing the polymorphic inline cache to include a type test for the discovered

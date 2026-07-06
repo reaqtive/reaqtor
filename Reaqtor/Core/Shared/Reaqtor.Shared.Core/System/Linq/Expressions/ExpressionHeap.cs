@@ -115,7 +115,7 @@ namespace System.Linq.Expressions
             else
             {
                 shared = value;
-                unshared = Bundle.Create(Array.Empty<object>());
+                unshared = Bundle.Create([]);
             }
 
             // Must be Expression<Delegate> to avoid the automatic creation of

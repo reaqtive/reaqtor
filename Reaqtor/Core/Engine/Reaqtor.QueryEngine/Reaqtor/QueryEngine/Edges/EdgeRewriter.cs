@@ -113,7 +113,7 @@ namespace Reaqtor.QueryEngine
             {
                 _uriPrefix = uriPrefix;
                 _binder = new FullBinder(registry);
-                _edges = new List<EdgeDescription>();
+                _edges = [];
             }
 
             public IEnumerable<EdgeDescription> Edges => _edges;

@@ -40,30 +40,15 @@ namespace Reaqtive.TestingFramework
             long disposed,
             IOperatorStateContainer recovery = null)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
+            ArgumentNullException.ThrowIfNull(context);
 
-            if (create == null)
-            {
-                throw new ArgumentNullException(nameof(create));
-            }
+            ArgumentNullException.ThrowIfNull(create);
 
-            if (created > subscribed)
-            {
-                throw new ArgumentOutOfRangeException(nameof(created));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(created, subscribed);
 
-            if (subscribed > disposed)
-            {
-                throw new ArgumentOutOfRangeException(nameof(subscribed));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(subscribed, disposed);
 
             var source = default(ISubscribable<T>);
             var subscription = default(ISubscription);
@@ -114,10 +99,7 @@ namespace Reaqtive.TestingFramework
             long disposed,
             IOperatorStateContainer recovery = null)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
             return scheduler.Start(scheduler.CreateContext(), create, created, subscribed, disposed, recovery);
         }
@@ -135,10 +117,7 @@ namespace Reaqtive.TestingFramework
         /// </returns>
         public static ITestableObserver<T> Start<T>(this TestScheduler scheduler, Func<ISubscribable<T>> create)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
             return scheduler.Start(scheduler.CreateContext(), create, ReactiveTest.Created, ReactiveTest.Subscribed, ReactiveTest.Disposed);
         }
@@ -157,10 +136,7 @@ namespace Reaqtive.TestingFramework
         /// </returns>
         public static ITestableObserver<T> Start<T>(this TestScheduler scheduler, Func<ISubscribable<T>> create, long disposed)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
             return scheduler.Start(scheduler.CreateContext(), create, ReactiveTest.Created, ReactiveTest.Subscribed, disposed);
         }
@@ -173,15 +149,9 @@ namespace Reaqtive.TestingFramework
         /// <param name="action">Action to be executed.</param>
         public static void ScheduleRelative(this TestScheduler scheduler, long dueTime, Action action)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+            ArgumentNullException.ThrowIfNull(action);
 
             scheduler.ScheduleRelative(action, dueTime, Invoke);
         }
@@ -194,15 +164,9 @@ namespace Reaqtive.TestingFramework
         /// <param name="action">Action to be executed.</param>
         public static void ScheduleAbsolute(this TestScheduler scheduler, long dueTime, Action action)
         {
-            if (scheduler == null)
-            {
-                throw new ArgumentNullException(nameof(scheduler));
-            }
+            ArgumentNullException.ThrowIfNull(scheduler);
 
-            if (action == null)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
+            ArgumentNullException.ThrowIfNull(action);
 
             scheduler.ScheduleAbsolute(action, dueTime, Invoke);
         }

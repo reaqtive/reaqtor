@@ -41,8 +41,7 @@ namespace System.Memory.Diagnostics
         /// <param name="fence">The fence predicate used to determine the boundaries of the partition.</param>
         public HeapPartition(string name, object[] roots, Func<object, bool> fence)
         {
-            if (roots == null)
-                throw new ArgumentNullException(nameof(roots));
+            ArgumentNullException.ThrowIfNull(roots);
 
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Roots = new ObjectSet(roots);

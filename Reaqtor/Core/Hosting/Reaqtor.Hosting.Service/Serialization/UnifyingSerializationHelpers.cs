@@ -118,7 +118,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 }
             }
 
-            return Array.Empty<KeyValuePair<TypeSlim, Type>>();
+            return [];
         }
 
         /// <summary>

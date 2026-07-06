@@ -24,7 +24,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void StripQuotes_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionHelpers.StripQuotes(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.StripQuotes(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]
@@ -59,14 +60,15 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Unquote_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionHelpers.Unquote(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.Unquote(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]
         public void Unquote_NoLambda()
         {
             var c = Expression.Constant(42);
-            Assert.ThrowsException<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
+            Assert.ThrowsExactly<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
         }
 
         [TestMethod]

@@ -24,7 +24,6 @@ namespace Tests.Reaqtor.QueryEngine
             Utils.CompleteIfNotNull(null, CancellationToken.None);
 
             // nothing has thrown
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -86,7 +85,7 @@ namespace Tests.Reaqtor.QueryEngine
         public void Utils_GetBase64Blob_Simple()
         {
             var bs = new byte[1024];
-            new Random().NextBytes(bs);
+            Random.Shared.NextBytes(bs);
 
             var ms = new MemoryStream(bs)
             {

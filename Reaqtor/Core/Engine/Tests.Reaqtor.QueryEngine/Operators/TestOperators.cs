@@ -55,7 +55,7 @@ namespace Reaqtor
             public s(StatefulTransitionObservable parent, IObserver<int> observer)
                 : base(parent, observer)
             {
-                _values = new List<int>();
+                _values = [];
             }
 
             public override string Name => "rc:MyStatefulOperator";
@@ -142,7 +142,7 @@ namespace Reaqtor
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                return new[] { Params._source.Subscribe(Output) };
+                return [Params._source.Subscribe(Output)];
             }
         }
 
@@ -154,7 +154,7 @@ namespace Reaqtor
             public s(StatefulTransitionOperator parent, IObserver<int> observer)
                 : base(parent, observer)
             {
-                _values = new List<int>();
+                _values = [];
             }
 
             public override string Name => "rc:MyStatefulOperator";

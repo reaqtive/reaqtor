@@ -552,7 +552,7 @@ namespace Test.Reaqtive.Scheduler
             scheduler.Schedule(task1Due, task1);
             scheduler.Schedule(task2Due, task2); // NB: This is non-deterministic.
 
-            Assert.AreEqual(1, WaitHandle.WaitAny(new[] { worked1, worked2 }));
+            Assert.AreEqual(1, WaitHandle.WaitAny([worked1, worked2]));
             worked1.WaitOne();
 
             // REVIEW: We don't really test the order the tasks executed in.
@@ -824,60 +824,54 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules a null task.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Scheduler_NullTask()
         {
-            _root.Schedule(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _root.Schedule(null));
         }
 
         /// <summary>
         /// Schedules a null task at due time.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Scheduler_DateTimeNullTask()
         {
-            _root.Schedule(DateTime.UtcNow, null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _root.Schedule(DateTime.UtcNow, null));
         }
 
         /// <summary>
         /// Schedules a null task at due time.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Scheduler_TimespanNullTask()
         {
-            _root.Schedule(TimeSpan.FromSeconds(1), null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _root.Schedule(TimeSpan.FromSeconds(1), null));
         }
 
         /// <summary>
         /// Creation of logical scheduler without physical one.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Scheduler_NullPhysicalScheduler()
         {
-            new LogicalScheduler(null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => new LogicalScheduler(null));
         }
 
         /// <summary>
         /// Creation of physical scheduler with negative number of workers.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Scheduler_PhysicalSchedulerWithNegativeWorkers()
         {
-            PhysicalScheduler.Create(-1);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => PhysicalScheduler.Create(-1));
         }
 
         /// <summary>
         /// Creation of physical scheduler with zero workers.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Scheduler_PhysicalSchedulerWithZeroWorkers()
         {
-            PhysicalScheduler.Create(0);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => PhysicalScheduler.Create(0));
         }
 
         /// <summary>

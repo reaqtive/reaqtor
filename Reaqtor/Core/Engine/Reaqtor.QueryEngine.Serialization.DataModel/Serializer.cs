@@ -46,8 +46,8 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Hash set of other binary serializable types.
         /// </summary>
-        private static readonly HashSet<Type> s_otherBinaryTypes = new()
-        {
+        private static readonly HashSet<Type> s_otherBinaryTypes =
+        [
             typeof(string),
             typeof(decimal),
             typeof(Guid),
@@ -56,7 +56,7 @@ namespace Reaqtor.QueryEngine
             typeof(DateTime),
             typeof(DateTimeOffset),
             typeof(Dictionary<string, object>),
-        };
+        ];
 
         //
         // NB: Note for StyleCop fanatics on the team. DO NOT FORMAT MY TABLES. I don't care for the "right style";
@@ -317,7 +317,7 @@ namespace Reaqtor.QueryEngine
                 var serializeMethod = useCoreMethod
                     ? s_serializeCore.MakeGenericMethod(type)
                     : s_serialize.MakeGenericMethod(type);
-                serializeMethod.Invoke(this, new[] { value, stream });
+                serializeMethod.Invoke(this, [value, stream]);
             }
         }
 
@@ -482,7 +482,7 @@ namespace Reaqtor.QueryEngine
             else
             {
                 var buffer = _buffer.Value;
-                stream.Read(buffer, 0, buffer.Length);
+                stream.ReadExactly(buffer, 0, buffer.Length);
 
                 var length = BitConverter.ToInt64(buffer, 0);
 
@@ -503,7 +503,7 @@ namespace Reaqtor.QueryEngine
                 var deserializeMethod = useCoreMethod
                     ? s_deserializeCore.MakeGenericMethod(type)
                     : s_deserialize.MakeGenericMethod(type);
-                return deserializeMethod.Invoke(this, new object[] { stream });
+                return deserializeMethod.Invoke(this, [stream]);
             }
         }
 
@@ -515,7 +515,7 @@ namespace Reaqtor.QueryEngine
             {
                 var buffer = new byte[size];
                 var arr = new T[1];
-                stream.Read(buffer, 0, size);
+                stream.ReadExactly(buffer, 0, size);
                 Buffer.BlockCopy(buffer, 0, arr, 0, size);
                 result = arr[0];
                 return true;
@@ -528,7 +528,7 @@ namespace Reaqtor.QueryEngine
                     if (len >= 0)
                     {
                         var buffer = new byte[len];
-                        stream.Read(buffer, 0, len);
+                        stream.ReadExactly(buffer, 0, len);
                         result = Encoding.UTF8.GetString(buffer, 0, len).To(default(T));
                     }
                     else
@@ -633,10 +633,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Serialization factory.</returns>
         protected override Func<object, JsonExpression> GetConstantSerializer(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             var serialize = default(Action<object, JsonWriter>);
 
@@ -646,7 +643,7 @@ namespace Reaqtor.QueryEngine
             }
             else
             {
-                var method = s_jsonSerializeTo.MakeGenericMethod(new[] { type });
+                var method = s_jsonSerializeTo.MakeGenericMethod([type]);
 
                 var objParam = Expression.Parameter(typeof(object));
                 var writerParam = Expression.Parameter(typeof(JsonWriter));
@@ -692,10 +689,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Deserialization function.</returns>
         protected override Func<JsonExpression, object> GetConstantDeserializer(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             var deserialize = default(Func<JsonReader, object>);
 
@@ -705,7 +699,7 @@ namespace Reaqtor.QueryEngine
             }
             else
             {
-                var method = s_jsonDeserializeFrom.MakeGenericMethod(new[] { type });
+                var method = s_jsonDeserializeFrom.MakeGenericMethod([type]);
 
                 var readerParam = Expression.Parameter(typeof(JsonReader));
 
@@ -801,7 +795,7 @@ namespace Reaqtor.QueryEngine
                     throw new InvalidOperationException("Attempted to restore a checkpoint of a subscribable sequence to an incompatible type.");
                 }
 
-                return Activator.CreateInstance(quoteType, new object[] { expr, _expressionPolicy });
+                return Activator.CreateInstance(quoteType, [expr, _expressionPolicy]);
             }
 
             public override object ConvertTo(object value, Type sourceType, Type targetType)

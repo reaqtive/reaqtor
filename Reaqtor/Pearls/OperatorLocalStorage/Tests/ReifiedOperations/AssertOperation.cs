@@ -50,102 +50,81 @@ namespace Tests.ReifiedOperations
 
         public static IAssertOperationFactory WithAssert(IAssert assert)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
+            ArgumentNullException.ThrowIfNull(assert);
 
             return new AssertOperationFactory(assert);
         }
 
         public static AreEqualAssertOperation<TValue, TResult> AreEqual<TValue, TResult>(IAssert assert, IResultOperation<TValue, TResult> operation, TResult expected)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new AreEqualAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static AreNotEqualAssertOperation<TValue, TResult> AreNotEqual<TValue, TResult>(IAssert assert, IResultOperation<TValue, TResult> operation, TResult expected)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new AreNotEqualAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static AreSameAssertOperation<TValue, TResult> AreSame<TValue, TResult>(IAssert assert, IResultOperation<TValue, TResult> operation, TResult expected) where TResult : class
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new AreSameAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static AreNotSameAssertOperation<TValue, TResult> AreNotSame<TValue, TResult>(IAssert assert, IResultOperation<TValue, TResult> operation, TResult expected) where TResult : class
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new AreNotSameAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static AreSequenceEqualAssertOperation<TValue, TResult> AreSequenceEqual<TValue, TResult>(IAssert assert, IResultOperation<TValue, IEnumerable<TResult>> operation, IEnumerable<TResult> expected)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(expected);
 
             return new AreSequenceEqualAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static AreNotSequenceEqualAssertOperation<TValue, TResult> AreNotSequenceEqual<TValue, TResult>(IAssert assert, IResultOperation<TValue, IEnumerable<TResult>> operation, IEnumerable<TResult> expected)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(expected);
 
             return new AreNotSequenceEqualAssertOperation<TValue, TResult>(assert, operation, expected);
         }
 
         public static IsFalseAssertOperation<TValue> IsFalse<TValue>(IAssert assert, IResultOperation<TValue, bool> operation)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new IsFalseAssertOperation<TValue>(assert, operation);
         }
 
         public static IsTrueAssertOperation<TValue> IsTrue<TValue>(IAssert assert, IResultOperation<TValue, bool> operation)
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new IsTrueAssertOperation<TValue>(assert, operation);
         }
 
         public static ThrowsExceptionAssertOperation<TValue, TException> ThrowsException<TValue, TException>(IAssert assert, IOperation<TValue> operation) where TException : Exception
         {
-            if (assert == null)
-                throw new ArgumentNullException(nameof(assert));
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(assert);
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new ThrowsExceptionAssertOperation<TValue, TException>(assert, operation);
         }

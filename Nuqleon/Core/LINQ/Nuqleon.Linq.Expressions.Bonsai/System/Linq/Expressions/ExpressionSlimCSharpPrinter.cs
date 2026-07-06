@@ -29,19 +29,17 @@ namespace System.Linq.Expressions.Bonsai
         private readonly Dictionary<ParameterExpressionSlim, string> _globalAliases;
         private int _globalAliasesMax = 0;
 
-        private readonly Dictionary<MemberInfoSlim, string> _memberAliases = new();
-
-        private static IDictionary<Type, Func<object, string>> s_numericConstantToString;
+        private readonly Dictionary<MemberInfoSlim, string> _memberAliases = [];
 
         public ExpressionSlimCSharpPrinter()
         {
             _environment = new Stack<IEnumerable<ParameterExpressionSlim>>();
-            _globals = new List<ParameterExpressionSlim>();
+            _globals = [];
 
             _aliases = new Stack<Dictionary<ParameterExpressionSlim, string>>();
             _aliasesMax = new Stack<int>();
 
-            _globalAliases = new Dictionary<ParameterExpressionSlim, string>();
+            _globalAliases = [];
             _aliases.Push(_globalAliases);
             _aliasesMax.Push(-1);
         }
@@ -240,7 +238,7 @@ namespace System.Linq.Expressions.Bonsai
         {
             get
             {
-                s_numericConstantToString ??= new Dictionary<Type, Func<object, string>>
+                field ??= new Dictionary<Type, Func<object, string>>
                     {
                         {
                             typeof(char), value =>
@@ -350,7 +348,7 @@ namespace System.Linq.Expressions.Bonsai
                         },
                     };
 
-                return s_numericConstantToString;
+                return field;
             }
         }
 
@@ -557,11 +555,7 @@ namespace System.Linq.Expressions.Bonsai
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
                     n = n[0..^2];
-#else
-                    n = n.Substring(0, n.Length - 2);
-#endif
                 }
             }
 
@@ -570,7 +564,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private IEnumerable<string> Visit(IEnumerable<ElementInitSlim> elements)
         {
-            return elements.Select(Visit).ToArray();
+            return [.. elements.Select(Visit)];
         }
 
         private string Visit(ElementInitSlim element)
@@ -635,11 +629,7 @@ namespace System.Linq.Expressions.Bonsai
                 {
                     if (n.EndsWith("()", StringComparison.Ordinal))
                     {
-#if NET6_0 || NETSTANDARD2_1
                         n = n[0..^2];
-#else
-                        n = n.Substring(0, n.Length - 2);
-#endif
                     }
                 }
             }
@@ -649,7 +639,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private IEnumerable<string> Visit(IEnumerable<MemberBindingSlim> bindings)
         {
-            return bindings.Select(Visit).ToArray();
+            return [.. bindings.Select(Visit)];
         }
 
         private string Visit(MemberBindingSlim binding)
@@ -913,11 +903,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private static string EscapeFormat(string s)
         {
-#if NET6_0 || NETSTANDARD2_1
             return s.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal);
-#else
-            return s.Replace("{", "{{").Replace("}", "}}");
-#endif
         }
 
         private static int GetPrecedence(ExpressionSlim expression)
@@ -1222,7 +1208,7 @@ namespace System.Linq.Expressions.Bonsai
 
             var methodName = GetMethodName(method);
 
-            return lhs + "." + methodName + JoinParen(new[] { Visit(left), Visit(right) });
+            return lhs + "." + methodName + JoinParen([Visit(left), Visit(right)]);
         }
 
         private string PrintMethodCall(MethodInfoSlim method, ExpressionSlim @object, IArgumentProviderSlim arguments)

@@ -25,9 +25,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Contains(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Contains(default));
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             pt.Add(m.GetParameters()[0]);
 
@@ -58,7 +58,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             pt.Add<int, string>(x => "".Substring(x, 0));
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
         }
@@ -70,7 +70,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             pt.Add<int, string>(x => new string('*', x));
 
-            var c = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var c = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
             Assert.IsTrue(pt.Contains(c.GetParameters()[1]));
         }
@@ -93,18 +93,12 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void ParameterTable_Add_LambdaExpression_Index2()
         {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                // NB: Quirk on Mono with indexer parameters.
-                return;
-            }
-
             var pt = new ParameterTable();
 
             var c = Expression.Parameter(typeof(int));
             var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
 
-            pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, new[] { c }), c));
+            pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, [c]), c));
 
             Assert.IsTrue(pt.Contains(p.GetIndexParameters()[0]));
         }
@@ -114,7 +108,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
         }
 
         [TestMethod]
@@ -122,7 +116,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
+            Assert.ThrowsExactly<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
         }
 
         [TestMethod]
@@ -130,7 +124,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
+            Assert.ThrowsExactly<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
         }
 
         [TestMethod]
@@ -139,9 +133,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var pt = new ParameterTable();
             var rpt = pt.ToReadOnly();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
         }
     }
 }

@@ -214,7 +214,7 @@ namespace Tests
         {
             var actual = Roundtrip(expected, serializer);
             var comparer = new ExpressionEqualityComparer(() => new SimpleComparator());
-            Assert.IsTrue(comparer.Equals(expected, actual), "Expected: {0}\nActual: {1}", expected.ToString(), actual.ToString());
+            Assert.IsTrue(comparer.Equals(expected, actual), $"Expected: {expected}\nActual: {actual}");
         }
 
         private static Expression Roundtrip(Expression expr, IExpressionSerializer serializer)

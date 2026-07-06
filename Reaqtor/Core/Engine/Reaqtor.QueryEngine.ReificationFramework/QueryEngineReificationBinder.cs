@@ -28,8 +28,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Bind(ServiceOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             var reactiveProxyBinder = new ReactiveServiceOperationBinder();
             var bound = reactiveProxyBinder.Visit(operation);
@@ -42,7 +41,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             var ctxParam = Expression.Parameter(typeof(IReactive), "ctx");
             return Expression.Lambda<Action<QueryEngineEnvironment>>(
                 Expression.Block(
-                    new[] { ctxParam },
+                    [ctxParam],
                     Expression.Assign(ctxParam, contextExpr),
                     Expression.Invoke(
                         bound,
@@ -55,8 +54,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Bind(QueryEngineOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {
@@ -69,8 +67,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Optimize(Expression<Action<QueryEngineEnvironment>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var envParam = expression.Parameters[0];
             var metadataParam = Expression.Parameter(typeof(IReactive), "mctx");
@@ -81,7 +78,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             {
                 expression = Expression.Lambda<Action<QueryEngineEnvironment>>(
                     Expression.Block(
-                        new[] { metadataParam, engineParam },
+                        [metadataParam, engineParam],
                         Expression.Assign(metadataParam, Expression.MakeMemberAccess(envParam, s_metadataCtx)),
                         Expression.Assign(engineParam, Expression.MakeMemberAccess(envParam, s_engineCtx)),
                         optimized.Body
@@ -102,7 +99,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
         private class OptimizerBase : ScopedExpressionVisitor<List<OptimizedPair>>
         {
             private readonly Stack<IEnumerable<ParameterExpression>> _environment = new();
-            private readonly HashSet<ParameterExpression> _descoped = new();
+            private readonly HashSet<ParameterExpression> _descoped = [];
 
             protected override Expression VisitBlockCore(BlockExpression node)
             {
@@ -112,7 +109,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 var descopingVars = descoping.Select(op => op.Variable);
                 var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
 
-                if (descoping.Any())
+                if (descoping.Count > 0)
                 {
                     return Expression.Block(
                         result.Type,
@@ -143,7 +140,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                     blockExprs[i] = Expression.Assign(op.Variable, op.Expression);
                 }
 
-                if (descoping.Any())
+                if (descoping.Count > 0)
                 {
                     return Expression.Lambda<T>(
                         Expression.Block(
@@ -173,7 +170,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
             protected override List<OptimizedPair> GetState(ParameterExpression parameter)
             {
-                return new List<OptimizedPair>();
+                return [];
             }
 
             protected bool TryAdd(Expression expression, out ParameterExpression parameter)
@@ -222,7 +219,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                     return list;
                 }
 
-                return Enumerable.Empty<OptimizedPair>();
+                return [];
             }
         }
 
@@ -261,8 +258,8 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 _metadataParam = metadataParam;
                 _engineParam = engineParam;
 
-                _metadataReplacements = new List<ParameterExpression>();
-                _engineReplacements = new List<ParameterExpression>();
+                _metadataReplacements = [];
+                _engineReplacements = [];
             }
 
             protected override Expression VisitBinary(BinaryExpression node)
@@ -295,7 +292,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 {
                     return Expression.Block(
                         result.Type,
-                        result.Variables.Except(new[] { _metadataParam, _engineParam }),
+                        result.Variables.Except([_metadataParam, _engineParam]),
                         result.Expressions
                     );
                 }

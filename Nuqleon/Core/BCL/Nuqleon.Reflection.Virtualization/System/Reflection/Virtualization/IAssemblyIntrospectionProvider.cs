@@ -14,9 +14,6 @@ using System.Globalization;
 using System.IO;
 using System.Security;
 
-#if NET472
-using System.Security.Policy;
-#endif
 
 namespace System.Reflection
 {
@@ -26,14 +23,6 @@ namespace System.Reflection
     [GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
     public interface IAssemblyIntrospectionProvider
     {
-#if !NET6_0
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        string GetCodeBase(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
@@ -49,23 +38,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         MethodInfo GetEntryPoint(Assembly assembly);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        string GetEscapedCodeBase(Assembly assembly);
-#endif
 
-#if NET472
-        /// <summary>
-        /// Gets the evidence for the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get evidence for.</param>
-        /// <returns>The evidence for the specified <paramref name="assembly"/>.</returns>
-        Evidence GetEvidence(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the display name of the assembly.
@@ -74,14 +47,6 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         string GetFullName(Assembly assembly);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        bool GetGlobalAssemblyCache(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -125,14 +90,6 @@ namespace System.Reflection
         /// <returns>The module that contains the manifest for the assembly.</returns>
         Module GetManifestModule(Assembly assembly);
 
-#if NET472
-        /// <summary>
-        /// Gets the grant set of the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the grant set for.</param>
-        /// <returns>The grant set of the specified <paramref name="assembly"/>.</returns>
-        PermissionSet GetPermissionSet(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets a <see cref="bool" /> value indicating whether specified <paramref name="assembly"/> was loaded into the reflection-only context.

@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/BCL/">
+    <Project Path="../BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/JSON/">
+    <Project Path="../JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/deps/LINQ/">
+    <Project Path="../LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="../LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="../LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Nuqleon.DataModel.CompilerServices/Nuqleon.DataModel.CompilerServices.csproj" />
+    <Project Path="Nuqleon.DataModel.Serialization.Binary/Nuqleon.DataModel.Serialization.Binary.csproj" />
+    <Project Path="Nuqleon.DataModel.Serialization.Json/Nuqleon.DataModel.Serialization.Json.csproj" />
+    <Project Path="Nuqleon.DataModel/Nuqleon.DataModel.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Nuqleon.DataModel.CompilerServices/Tests.Nuqleon.DataModel.CompilerServices.csproj" />
+    <Project Path="Tests.Nuqleon.DataModel.Serialization.Binary/Tests.Nuqleon.DataModel.Serialization.Binary.csproj" />
+    <Project Path="Tests.Nuqleon.DataModel.Serialization.Json/Tests.Nuqleon.DataModel.Serialization.Json.csproj" />
+    <Project Path="Tests.Nuqleon.DataModel/Tests.Nuqleon.DataModel.csproj" />
+  </Folder>
+</Solution>

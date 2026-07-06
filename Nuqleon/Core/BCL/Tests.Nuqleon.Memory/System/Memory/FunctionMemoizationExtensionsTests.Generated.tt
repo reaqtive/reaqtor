@@ -32,8 +32,8 @@ for (var i = 2; i <= 17; i++)
     var types = string.Join(", ", Enumerable.Repeat("int", i));
     var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
 #>
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(default(IMemoizer), <#=pars#> => 0));
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(m, default(Func<<#=types#>>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(default(IMemoizer), <#=pars#> => 0));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(m, default(Func<<#=types#>>)));
 <#
 }
 #>
@@ -129,7 +129,7 @@ for (var i = 3; i <= 17; i++)
 
         var args = string.Join(", ", vals.Select((v, k) => k == j ? defs[k] : v));
 #>
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(<#=args#>));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(<#=args#>));
 <#
     }
 }
@@ -214,8 +214,8 @@ for (var i = 1; i <= 17; i++)
     var types = string.Join(", ", Enumerable.Repeat("string", i));
     var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
 #>
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(default(IWeakMemoizer), <#=pars#> => ""));
-            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(m, default(Func<<#=types#>>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(default(IWeakMemoizer), <#=pars#> => ""));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(m, default(Func<<#=types#>>)));
 <#
 }
 #>
@@ -440,14 +440,10 @@ for (var i = 0; i <= 33; i++)
 #>
         private static void CollectAndCheckFinalizeCount(int count)
         {
-            // NB: This has shown to be flaky on Mono.
-            if (Type.GetType("Mono.Runtime") == null)
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-                Assert.AreEqual(count, Obj.FinalizeCount);
-            }
+            Assert.AreEqual(count, Obj.FinalizeCount);
         }
     }
 

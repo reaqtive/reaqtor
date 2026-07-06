@@ -22,13 +22,13 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Throw1()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var x = Expression.Parameter(typeof(int));
             var ex = Expression.Parameter(typeof(Exception));
             var t = Expression.Throw(ex, typeof(PureIndexers));
 
-            var e = Expression.MakeIndex(t, i, new Expression[] { x, Expression.Constant(1), Expression.Constant(2) });
+            var e = Expression.MakeIndex(t, i, [x, Expression.Constant(1), Expression.Constant(2)]);
 
             var r = Expression.Throw(ex, typeof(long));
 
@@ -42,14 +42,14 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Throw2()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
             var x = Expression.Parameter(typeof(int));
             var ex = Expression.Parameter(typeof(Exception));
             var t = Expression.Throw(ex, typeof(int));
 
-            var e = Expression.MakeIndex(o, i, new Expression[] { x, Expression.Constant(1), t });
+            var e = Expression.MakeIndex(o, i, [x, Expression.Constant(1), t]);
 
             var r = Expression.Throw(ex, typeof(long));
 
@@ -63,10 +63,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Eval()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
-            var e = Expression.MakeIndex(o, i, new Expression[] { Expression.Constant(7), Expression.Constant(8), Expression.Constant(15) });
+            var e = Expression.MakeIndex(o, i, [Expression.Constant(7), Expression.Constant(8), Expression.Constant(15)]);
 
             var r = Expression.Constant(42L, typeof(long));
 
@@ -80,10 +80,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_NoEval()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
-            var e = Expression.MakeIndex(o, i, new Expression[] { Expression.Constant(7) });
+            var e = Expression.MakeIndex(o, i, [Expression.Constant(7)]);
 
             var r = e;
 
@@ -100,11 +100,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
-                    new Expression[]
-                    {
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
+                    [
                         Expression.Constant(1)
-                    }
+                    ]
                 );
 
             AssertThrows(e, typeof(NullReferenceException));
@@ -116,11 +115,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
-                    new Expression[]
-                    {
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
+                    [
                         Expression.Parameter(typeof(int))
-                    }
+                    ]
                 );
 
             AssertThrows(e, typeof(NullReferenceException));
@@ -132,11 +130,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
-                    new Expression[]
-                    {
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
+                    [
                         F
-                    }
+                    ]
                 );
 
             AssertOptimized(e, e);
@@ -204,7 +201,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             public override bool IsPure(MemberInfo member)
             {
-                return member == typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+                return member == typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
             }
         }
 

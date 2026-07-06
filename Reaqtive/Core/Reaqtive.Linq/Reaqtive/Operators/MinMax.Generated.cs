@@ -15,11 +15,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Min(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinInt32(source);
         }
@@ -31,7 +29,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32> selector)
         {
             //
@@ -147,11 +144,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Min(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinInt64(source);
         }
@@ -163,7 +158,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64> selector)
         {
             //
@@ -279,11 +273,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Min(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinSingle(source);
         }
@@ -295,7 +287,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Single> selector)
         {
             //
@@ -417,11 +408,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Min(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinDouble(source);
         }
@@ -433,7 +422,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Double> selector)
         {
             //
@@ -555,11 +543,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Min(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinDecimal(source);
         }
@@ -571,7 +557,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal> selector)
         {
             //
@@ -687,11 +672,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Min(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableInt32(source);
         }
@@ -703,7 +686,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32?> selector)
         {
             //
@@ -800,11 +782,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Min(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableInt64(source);
         }
@@ -816,7 +796,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64?> selector)
         {
             //
@@ -913,11 +892,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Min(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableSingle(source);
         }
@@ -929,7 +906,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Single?> selector)
         {
             //
@@ -1032,11 +1008,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Min(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableDouble(source);
         }
@@ -1048,7 +1022,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Double?> selector)
         {
             //
@@ -1151,11 +1124,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose smallest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Min(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableDecimal(source);
         }
@@ -1167,7 +1138,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose smallest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Min<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal?> selector)
         {
             //
@@ -1264,11 +1234,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Max(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxInt32(source);
         }
@@ -1280,7 +1248,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32> selector)
         {
             //
@@ -1396,11 +1363,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Max(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxInt64(source);
         }
@@ -1412,7 +1377,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64> selector)
         {
             //
@@ -1528,11 +1492,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Max(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxSingle(source);
         }
@@ -1544,7 +1506,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Single> selector)
         {
             //
@@ -1666,11 +1627,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Max(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxDouble(source);
         }
@@ -1682,7 +1641,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Double> selector)
         {
             //
@@ -1804,11 +1762,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Max(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxDecimal(source);
         }
@@ -1820,7 +1776,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal> selector)
         {
             //
@@ -1936,11 +1891,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Max(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableInt32(source);
         }
@@ -1952,7 +1905,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32?> selector)
         {
             //
@@ -2049,11 +2001,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Max(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableInt64(source);
         }
@@ -2065,7 +2015,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64?> selector)
         {
             //
@@ -2162,11 +2111,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Max(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableSingle(source);
         }
@@ -2178,7 +2125,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Single?> selector)
         {
             //
@@ -2281,11 +2227,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Max(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableDouble(source);
         }
@@ -2297,7 +2241,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Double?> selector)
         {
             //
@@ -2400,11 +2343,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose largest element to obtain.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Max(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableDecimal(source);
         }
@@ -2416,7 +2357,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose largest value of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Max<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal?> selector)
         {
             //

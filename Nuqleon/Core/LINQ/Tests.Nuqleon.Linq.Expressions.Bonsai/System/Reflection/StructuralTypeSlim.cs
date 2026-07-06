@@ -23,7 +23,8 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void StructuralTypeSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlim.Structural(properties: null, hasValueEqualitySemantics: false, StructuralTypeSlimKind.Record), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Structural(properties: null, hasValueEqualitySemantics: false, StructuralTypeSlimKind.Record));
+            Assert.AreEqual("properties", ex.ParamName);
         }
     }
 }

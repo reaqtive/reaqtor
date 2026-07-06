@@ -23,8 +23,7 @@ namespace System.Memory
         /// <returns>An object implementing the trimmable interface using the specified <paramref name="trim"/> function.</returns>
         public static ITrimmable<T> Create<T>(Func<Func<T, bool>, int> trim)
         {
-            if (trim == null)
-                throw new ArgumentNullException(nameof(trim));
+            ArgumentNullException.ThrowIfNull(trim);
 
             return new Impl<T>(trim);
         }
@@ -37,8 +36,7 @@ namespace System.Memory
 
             public int Trim(Func<T, bool> shouldTrim)
             {
-                if (shouldTrim == null)
-                    throw new ArgumentNullException(nameof(shouldTrim));
+                ArgumentNullException.ThrowIfNull(shouldTrim);
 
                 return _trim(shouldTrim);
             }

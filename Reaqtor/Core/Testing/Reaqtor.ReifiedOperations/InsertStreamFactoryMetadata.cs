@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class InsertStreamFactoryMetadata : InsertMetadataOperation
     {
         public InsertStreamFactoryMetadata(Uri streamFactoryUri)

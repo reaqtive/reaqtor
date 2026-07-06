@@ -105,7 +105,7 @@ namespace Nuqleon.Json.Serialization
             //
             var body =
                 Expression.Block(
-                    new[] { chr },
+                    [chr],
                     trieEval,
                     Expression.Label(ret, ExpressionUtils.ConstantFalse)
                 );
@@ -157,7 +157,7 @@ namespace Nuqleon.Json.Serialization
             //
             var body =
                 Expression.Block(
-                    new[] { chr },
+                    [chr],
                     trieEval,
                     Expression.Label(ret, ExpressionUtils.ConstantFalse)
                 );

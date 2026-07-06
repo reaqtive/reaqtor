@@ -30,7 +30,7 @@ namespace Tests
             var uvs = new UnboundVariableScanner();
 
             var p = Expression.Parameter(typeof(int));
-            var e = Expression.Block(new[] { p }, p);
+            var e = Expression.Block([p], p);
 
             uvs.Visit(e);
 
@@ -59,7 +59,7 @@ namespace Tests
 
             uvs.Visit(p);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Tests
 
             uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace Tests
 
             uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Tests
 
             uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace Tests
 
             uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
 
         [TestMethod]
@@ -123,11 +123,11 @@ namespace Tests
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(int));
             var z = Expression.Parameter(typeof(Exception));
-            var e = Expression.Lambda(Expression.Block(new[] { x }, Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(z, Expression.Add(x, y))), p), y);
+            var e = Expression.Lambda(Expression.Block([x], Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(z, Expression.Add(x, y))), p), y);
 
             uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals(new[] { p }));
+            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
         }
     }
 }

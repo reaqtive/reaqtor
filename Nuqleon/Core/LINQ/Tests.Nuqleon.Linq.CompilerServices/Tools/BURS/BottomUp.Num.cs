@@ -56,7 +56,7 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
     internal sealed class BinaryNumTree : NumTree
     {
         public BinaryNumTree(NumKind kind, NumTree left, NumTree right)
-            : base(kind, new[] { left, right })
+            : base(kind, [left, right])
         {
         }
 
@@ -79,7 +79,7 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
     internal sealed class UnaryNumTree : NumTree
     {
         public UnaryNumTree(NumKind kind, NumTree operand)
-            : base(kind, new[] { operand })
+            : base(kind, [operand])
         {
         }
 

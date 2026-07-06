@@ -86,8 +86,7 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate to execute the lambda expression.</returns>
         public Delegate GetOrAdd(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             //
             // PERF: We short-circuit a few commonly hit paths over here to avoid running too much code under the
@@ -137,14 +136,8 @@ namespace System.Linq.Expressions
 
             lock (_cache)
             {
-#if NET6_0 || NETSTANDARD3_1
                 if (_cache.TryAdd(key, cacheEntry)) // PERF: expensive comparer (2)
                 {
-#else
-                if (!_cache.ContainsKey(key)) // PERF: expensive comparer (2)
-                {
-                    _cache[key] = cacheEntry; // PERF: expensive comparer (3)
-#endif
 
                     OnAdded(expression, cacheEntry.Delegate);
 

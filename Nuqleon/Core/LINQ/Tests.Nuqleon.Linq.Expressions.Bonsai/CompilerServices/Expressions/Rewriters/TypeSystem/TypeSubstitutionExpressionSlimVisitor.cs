@@ -27,9 +27,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         [TestMethod]
         public void TypeSubstitutionExpressionSlimVisitor_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(TypeSlimSubstitutor)), ex => Assert.AreEqual("typeSubstitutor", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(IDictionary<TypeSlim, TypeSlim>)), ex => Assert.AreEqual("typeMap", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(TypeSlimSubstitutor)));
+            Assert.AreEqual("typeSubstitutor", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(IDictionary<TypeSlim, TypeSlim>)));
+            Assert.AreEqual("typeMap", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null));
+            Assert.AreEqual("expression", ex3.ParamName);
 
             new MySubst().Do();
         }
@@ -56,30 +59,43 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
                 var ctor = typeof(MySubst).ToTypeSlim().GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts), ex => Assert.AreEqual("originalConstructor", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts));
+                Assert.AreEqual("originalConstructor", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts));
+                Assert.AreEqual("declaringType", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null));
+                Assert.AreEqual("parameters", ex3.ParamName);
 
                 var prop = typeof(string).ToTypeSlim().GetProperty("Length", typeof(int).ToTypeSlim(), EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts), ex => Assert.AreEqual("originalProperty", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts));
+                Assert.AreEqual("originalProperty", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts));
+                Assert.AreEqual("declaringType", ex5.ParamName);
                 //AssertEx.Throws<ArgumentNullException>(() => base.ResolveProperty(prop, t, propertyType: null, ts), ex => Assert.AreEqual("propertyType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null), ex => Assert.AreEqual("indexerParameters", ex.ParamName));
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null));
+                Assert.AreEqual("indexerParameters", ex6.ParamName);
 
                 var fld = typeof(string).ToTypeSlim().GetField("Empty", typeof(string).ToTypeSlim());
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t), ex => Assert.AreEqual("originalField", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t));
+                Assert.AreEqual("originalField", ex7.ParamName);
+                var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t));
+                Assert.AreEqual("declaringType", ex8.ParamName);
                 //AssertEx.Throws<ArgumentNullException>(() => base.ResolveField(fld, t, fieldType: null), ex => Assert.AreEqual("fieldType", ex.ParamName));
 
                 var mtd = typeof(string).ToTypeSlim().GetSimpleMethod("ToUpper", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(string).ToTypeSlim());
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t), ex => Assert.AreEqual("originalMethod", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t), ex => Assert.AreEqual("genericArguments", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t), ex => Assert.AreEqual("parameters", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null), ex => Assert.AreEqual("returnType", ex.ParamName));
+                var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t));
+                Assert.AreEqual("originalMethod", ex9.ParamName);
+                var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t));
+                Assert.AreEqual("declaringType", ex10.ParamName);
+                var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t));
+                Assert.AreEqual("genericArguments", ex11.ParamName);
+                var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t));
+                Assert.AreEqual("parameters", ex12.ParamName);
+                var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null));
+                Assert.AreEqual("returnType", ex13.ParamName);
             }
         }
 
@@ -173,14 +189,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 var pInt = Expression.Parameter(typeof(int));
                 var pFloat = Expression.Parameter(typeof(float));
                 var pLong = Expression.Parameter(typeof(long));
-                var expA = Expression.Block(new[] { pInt }, pInt);
-                var expB = Expression.Block(new[] { pFloat }, pFloat);
+                var expA = Expression.Block([pInt], pInt);
+                var expB = Expression.Block([pFloat], pFloat);
                 var expBslim = expB.ToExpressionSlim();
 
                 var res1 = subst.Apply(expA.ToExpressionSlim());
                 var res2 = subst.Apply(expBslim);
 
-                ReduceAndAssertEqual(res1, Expression.Block(new[] { pLong }, pLong));
+                ReduceAndAssertEqual(res1, Expression.Block([pLong], pLong));
                 Assert.AreSame(expBslim, res2);
             }
         }
@@ -317,14 +333,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), new[] { Expression.Constant(1) });
-            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), new[] { Expression.Constant(1.0) });
+            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), [Expression.Constant(1)]);
+            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), [Expression.Constant(1.0)]);
             var expBslim = expB.ToExpressionSlim();
 
             var res1 = subst.Apply(expA.ToExpressionSlim());
             var res2 = subst.Apply(expBslim);
 
-            ReduceAndAssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), new[] { Expression.Constant(1L) }));
+            ReduceAndAssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), [Expression.Constant(1L)]));
             Assert.AreSame(expBslim, res2);
         }
 
@@ -333,9 +349,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = Expression.MakeIndex(Expression.Parameter(typeof(TestBar)), typeof(TestBar).GetProperty("Item"), new[] { Expression.Constant(1) });
+            var exp = Expression.MakeIndex(Expression.Parameter(typeof(TestBar)), typeof(TestBar).GetProperty("Item"), [Expression.Constant(1)]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -466,7 +482,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = Expression.Property(Expression.Parameter(typeof(string)), "Length");
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -497,13 +513,13 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.x);
-            var exp2 = (Expression<Func<TestBar, int>>)((TestBar b) => b.Wrong2);
-            var exp3 = (Expression<Func<TestBar, int>>)((TestBar b) => b.Wrong3);
+            var exp1 = (Expression<Func<TestBaz, int>>)(b => b.x);
+            var exp2 = (Expression<Func<TestBar, int>>)(b => b.Wrong2);
+            var exp3 = (Expression<Func<TestBar, int>>)(b => b.Wrong3);
 
-            Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp3.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<ArgumentException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<ArgumentException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp3.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -511,9 +527,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.Y);
+            var exp = (Expression<Func<TestBaz, int>>)(b => b.Y);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -607,11 +623,11 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.Z(5));
-            var exp2 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.A<bool>(5));
+            var exp1 = (Expression<Func<TestBaz, int>>)(b => b.Z(5));
+            var exp2 = (Expression<Func<TestBaz, int>>)(b => b.A<bool>(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -676,7 +692,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = (Expression<Func<TestBaz>>)(() => new TestBaz(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -957,15 +973,15 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             var pers = typeof(Person);
             var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
 
-            var check1 = new TypeErasureChecker(new[] { typeof(Person) });
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(query));
+            var check1 = new TypeErasureChecker([typeof(Person)]);
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));
 
 
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("Name", typeof(string)),
                 new KeyValuePair<string, Type>("Age", typeof(int)),
-            });
+            ]);
 
             var subst1 = new TypeSubstitutionExpressionVisitor(new Dictionary<Type, Type>
             {
@@ -976,15 +992,15 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             check1.Visit(res1);
 
-            var check2 = new TypeErasureChecker(new[] { anon });
-            Assert.ThrowsException<InvalidOperationException>(() => check2.Visit(res1));
+            var check2 = new TypeErasureChecker([anon]);
+            Assert.ThrowsExactly<InvalidOperationException>(() => check2.Visit(res1));
 
 
             var f = ((LambdaExpression)res1).Compile();
 
             var cast = ((MethodInfo)ReflectionHelpers.InfoOf(() => Enumerable.Cast<int>(null))).GetGenericMethodDefinition().MakeGenericMethod(anon);
-            var peopleObj = new[] { Activator.CreateInstance(anon, new object[] { "Bart", 10 }), Activator.CreateInstance(anon, new object[] { "Lisa", 8 }), Activator.CreateInstance(anon, new object[] { "Bart", 21 }) };
-            var peopleAnon = cast.Invoke(obj: null, new object[] { peopleObj });
+            var peopleObj = new[] { Activator.CreateInstance(anon, ["Bart", 10]), Activator.CreateInstance(anon, ["Lisa", 8]), Activator.CreateInstance(anon, ["Bart", 21]) };
+            var peopleAnon = cast.Invoke(obj: null, [peopleObj]);
             var qres = (IEnumerable<string>)f.DynamicInvoke(peopleAnon);
             Assert.IsTrue(new[] { "BART is 21" }.SequenceEqual(qres));
 
@@ -997,7 +1013,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             check2.Visit(res2);
 
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(res2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(res2));
 
             var eq = new ExpressionEqualityComparer();
 
@@ -1067,7 +1083,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var subst = new MyTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -1077,7 +1093,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var subst = new NotQuiteForgivingTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()));
         }
 
         private sealed class NotQuiteForgivingTypeSubstitutionExpressionVisitor : MyTypeSubstitutionExpressionVisitor
@@ -1159,7 +1175,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 { typeof(int), typeof(long) }
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f));
         }
 
         [TestMethod]

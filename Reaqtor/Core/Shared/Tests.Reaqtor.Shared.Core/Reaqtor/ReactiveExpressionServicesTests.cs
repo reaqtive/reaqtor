@@ -20,13 +20,13 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
             var expression = default(Expression);
             var uri = default(Uri);
             var expressionServices = new ReactiveExpressionServices(typeof(ITestClient));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.RegisterObject(null, Expression.Default(typeof(int))));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.RegisterObject("foo", null));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.TryGetObject(null, out expression));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.Normalize(null));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.GetNamedExpression(null, new Uri("eg:/foo")));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.GetNamedExpression(typeof(int), null));
-            Assert.ThrowsException<ArgumentNullException>(() => expressionServices.TryGetName(null, out uri));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.RegisterObject(null, Expression.Default(typeof(int))));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.RegisterObject("foo", null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.TryGetObject(null, out expression));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.Normalize(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.GetNamedExpression(null, new Uri("eg:/foo")));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.GetNamedExpression(typeof(int), null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => expressionServices.TryGetName(null, out uri));
         }
 
         private interface ITestClient

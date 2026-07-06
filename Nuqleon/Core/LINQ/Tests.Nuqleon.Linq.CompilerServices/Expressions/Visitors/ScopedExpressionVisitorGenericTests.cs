@@ -86,7 +86,7 @@ namespace Tests.System.Linq.CompilerServices
             var exprs = new Expression[]
             {
                 Expression.Lambda(Expression.Lambda(add, p1), p0),
-                Expression.Block(new[] { p0 }, Expression.Block(new[] { p1 }, add)),
+                Expression.Block([p0], Expression.Block([p1], add)),
                 Expression.TryCatch(d, Expression.Catch(p0, Expression.TryCatch(d, Expression.Catch(p1, add)))),
             };
 
@@ -105,7 +105,7 @@ namespace Tests.System.Linq.CompilerServices
             var expr = Expression.Lambda(add, p0);
 
             var a1 = new GlobalScopeAsserter();
-            Assert.ThrowsException<UnboundVariableException>(() => a1.Visit(expr));
+            Assert.ThrowsExactly<UnboundVariableException>(() => a1.Visit(expr));
 
             var a2 = new GlobalScopeAsserter();
             a2.GlobalScope.Add(g, g);
@@ -211,20 +211,31 @@ namespace Tests.System.Linq.CompilerServices
             public void Do()
             {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitBlock(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitBlockCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlock(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlockCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBlock(node: null));
+                Assert.AreEqual("node", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBlockCore(node: null));
+                Assert.AreEqual("node", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitCatchBlock(node: null));
+                Assert.AreEqual("node", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitCatchBlockCore(node: null));
+                Assert.AreEqual("node", ex4.ParamName);
 #if USE_SLIM
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambda(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambdaCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambda(node: null));
+                Assert.AreEqual("node", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambdaCore(node: null));
+                Assert.AreEqual("node", ex6.ParamName);
 #else
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambda<Action>(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambdaCore<Action>(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambda<Action>(node: null));
+                Assert.AreEqual("node", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambdaCore<Action>(node: null));
+                Assert.AreEqual("node", ex6.ParamName);
 #endif
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Push(default(IEnumerable<ParameterExpression>)), ex => Assert.AreEqual("parameters", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Push(default(IEnumerable<KeyValuePair<ParameterExpression, ParameterExpression>>)), ex => Assert.AreEqual("scope", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => { base.TryLookup(parameter: null, out _); }, ex => Assert.AreEqual("parameter", ex.ParamName));
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => base.Push(default(IEnumerable<ParameterExpression>)));
+                Assert.AreEqual("parameters", ex7.ParamName);
+                var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => base.Push(default(IEnumerable<KeyValuePair<ParameterExpression, ParameterExpression>>)));
+                Assert.AreEqual("scope", ex8.ParamName);
+                var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => { base.TryLookup(parameter: null, out _); });
+                Assert.AreEqual("parameter", ex9.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
             }
 
@@ -296,7 +307,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void PushGlobal(ParameterExpression global)
             {
-                Push(new[] { new KeyValuePair<ParameterExpression, ParameterExpression>(global, global) });
+                Push([new KeyValuePair<ParameterExpression, ParameterExpression>(global, global)]);
             }
 
 #if USE_SLIM

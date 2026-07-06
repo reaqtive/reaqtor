@@ -30,9 +30,9 @@ namespace System.Linq.CompilerServices
         {
             return enumerable switch
             {
-                null => Array.Empty<T>(),
+                null => [],
                 T[] array => array,
-                _ => enumerable.ToArray(),
+                _ => [.. enumerable],
             };
         }
 
@@ -50,7 +50,7 @@ namespace System.Linq.CompilerServices
             {
                 null => Array.Empty<T>(),
                 ICollection<T> collection => collection,
-                _ => enumerable.ToList(),
+                _ => [.. enumerable],
             };
         }
 
@@ -84,7 +84,7 @@ namespace System.Linq.CompilerServices
                         }
                     }
                 default:
-                    return new TrueReadOnlyCollection<T>(enumerable.ToArray());
+                    return new TrueReadOnlyCollection<T>([.. enumerable]);
             }
         }
 
@@ -95,7 +95,7 @@ namespace System.Linq.CompilerServices
         /// <param name="source">Sequence to convert to a list.</param>
         /// <returns>The source sequence object if it implements IList&lt;T&gt;, otherwise a copy of the source sequence into a list.</returns>
         /// <remarks>Notice this method does not guarantee that a copy of the source sequence will be made; therefore, aliasing can occur and the ownership of the source sequence needs to be approved for transfer.</remarks>
-        internal static IList<T> ToIListUnsafe<T>(this IEnumerable<T> source) => source is IList<T> list ? list : new List<T>(source);
+        internal static IList<T> ToIListUnsafe<T>(this IEnumerable<T> source) => source is IList<T> list ? list : [.. source];
 
         /// <summary>
         /// Converts the specified sequence to an IReadOnlyList&lt;T&gt;.
@@ -104,7 +104,7 @@ namespace System.Linq.CompilerServices
         /// <param name="source">Sequence to convert to a list.</param>
         /// <returns>The source sequence object if it implements IReadOnlyList&lt;T&gt;, otherwise a copy of the source sequence into a list.</returns>
         /// <remarks>Notice this method does not guarantee that a copy of the source sequence will be made; therefore, aliasing can occur and the ownership of the source sequence needs to be approved for transfer.</remarks>
-        internal static IReadOnlyList<T> ToIReadOnlyListUnsafe<T>(this IEnumerable<T> source) => source is IReadOnlyList<T> list ? list : new List<T>(source);
+        internal static IReadOnlyList<T> ToIReadOnlyListUnsafe<T>(this IEnumerable<T> source) => source is IReadOnlyList<T> list ? list : [.. source];
 
         /// <summary>
         /// Converts the specified sequence to a ReadOnlyCollection&lt;T&gt;.
@@ -122,7 +122,7 @@ namespace System.Linq.CompilerServices
 
             if (source is not IList<T> list)
             {
-                list = new List<T>(source);
+                list = [.. source];
             }
 
             return list.Count == 0 ? EmptyReadOnlyCollection<T>.Instance : new ReadOnlyCollection<T>(list);

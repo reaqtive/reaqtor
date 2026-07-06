@@ -592,7 +592,7 @@ namespace Reaqtor.IoT
                 var readings = iemgr.CreateSubject<SensorReading>("bart://sensors/home/livingroom/temperature/readings");
                 var settings = iemgr.CreateSubject<double?>("bart://sensors/home/livingroom/temperature/settings");
 
-                var rand = new Random();
+                var rand = Random.Shared;
 
                 //
                 // Speed and granularity of simulation.

@@ -24,7 +24,7 @@ namespace System.Runtime.CompilerServices
         /// <remarks>
         /// Access to this dictionary should be synchronized using a lock on the collection itself.
         /// </remarks>
-        private readonly Dictionary<Type, Type> _dynamicThunks = new();
+        private readonly Dictionary<Type, Type> _dynamicThunks = [];
 
         /// <summary>
         /// Gets the thunk type for the specified delegate type. If the delegate type is

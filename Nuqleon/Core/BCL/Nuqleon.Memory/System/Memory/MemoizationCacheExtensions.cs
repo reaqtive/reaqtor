@@ -26,8 +26,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, null.</returns>
         public static ITrimmable<KeyValuePair<T, TResult>> AsTrimmableByArgumentAndResult<T, TResult>(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return cache.GetService<ITrimmable<KeyValuePair<T, TResult>>>();
         }
@@ -41,8 +40,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, null.</returns>
         public static ITrimmable<KeyValuePair<T, TResult>> AsTrimmableByArgumentAndResult<T, TResult>(this IMemoizationCache<T, TResult> cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return cache.GetService<ITrimmable<KeyValuePair<T, TResult>>>();
         }
@@ -56,8 +54,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, null.</returns>
         public static ITrimmable<KeyValuePair<T, IValueOrError<TResult>>> AsTrimmableByArgumentAndResultOrError<T, TResult>(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return cache.GetService<ITrimmable<KeyValuePair<T, IValueOrError<TResult>>>>();
         }
@@ -71,8 +68,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, null.</returns>
         public static ITrimmable<KeyValuePair<T, IValueOrError<TResult>>> AsTrimmableByArgumentAndResultOrError<T, TResult>(this IMemoizationCache<T, TResult> cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return cache.GetService<ITrimmable<KeyValuePair<T, IValueOrError<TResult>>>>();
         }
@@ -84,8 +80,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, null.</returns>
         public static ITrimmable<IMemoizationCacheEntryMetrics> AsTrimmableByMetrics(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return cache.GetService<ITrimmable<IMemoizationCacheEntryMetrics>>();
         }
@@ -99,8 +94,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, an exception is thrown.</returns>
         public static ITrimmable<KeyValuePair<T, TResult>> ToTrimmableByArgumentAndResult<T, TResult>(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return NotNull(cache.GetService<ITrimmable<KeyValuePair<T, TResult>>>());
         }
@@ -114,8 +108,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, an exception is thrown.</returns>
         public static ITrimmable<KeyValuePair<T, TResult>> ToTrimmableByArgumentAndResult<T, TResult>(this IMemoizationCache<T, TResult> cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return NotNull(cache.GetService<ITrimmable<KeyValuePair<T, TResult>>>());
         }
@@ -129,8 +122,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, an exception is thrown.</returns>
         public static ITrimmable<KeyValuePair<T, IValueOrError<TResult>>> ToTrimmableByArgumentAndResultOrError<T, TResult>(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return NotNull(cache.GetService<ITrimmable<KeyValuePair<T, IValueOrError<TResult>>>>());
         }
@@ -144,8 +136,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, an exception is thrown.</returns>
         public static ITrimmable<KeyValuePair<T, IValueOrError<TResult>>> ToTrimmableByArgumentAndResultOrError<T, TResult>(this IMemoizationCache<T, TResult> cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return NotNull(cache.GetService<ITrimmable<KeyValuePair<T, IValueOrError<TResult>>>>());
         }
@@ -157,8 +148,7 @@ namespace System.Memory
         /// <returns>A trimmable view on the specified memoization <paramref name="cache"/> if the cache supports trimming; otherwise, an exception is thrown.</returns>
         public static ITrimmable<IMemoizationCacheEntryMetrics> ToTrimmableByMetrics(this IMemoizationCache cache)
         {
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(cache);
 
             return NotNull(cache.GetService<ITrimmable<IMemoizationCacheEntryMetrics>>());
         }

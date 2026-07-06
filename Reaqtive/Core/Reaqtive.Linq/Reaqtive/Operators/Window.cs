@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 
 using Reaqtive.Scheduler;
 using Reaqtive.Tasks;
@@ -82,7 +83,7 @@ namespace Reaqtive.Operators
         protected abstract class OneSink<TParam> : Sink<TParam>
             where TParam : Window<TSource>
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private IObserver<TSource> _currentWindow;
             private Uri _currentWindowUri;
 
@@ -248,7 +249,7 @@ namespace Reaqtive.Operators
             private const string MAXWINDOWCOUNTSETTING = "rx://operators/window/settings/maxWindowCount";
             private int _maxWindowCount;
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private readonly Queue<Entry> _currentWindows = new();
 
             public ManySink(TParam parent, IObserver<ISubscribable<TSource>> observer)

@@ -23,7 +23,7 @@ namespace System.Runtime.CompilerServices
         /// <remarks>
         /// Access to this dictionary should be synchronized using a lock on the collection itself.
         /// </remarks>
-        private static readonly Dictionary<int, Type> s_dynamicClosures = new();
+        private static readonly Dictionary<int, Type> s_dynamicClosures = [];
 
         /// <summary>
         /// Gets a closure type with storage locations of the specified types. These storage

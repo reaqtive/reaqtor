@@ -31,7 +31,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
 
             var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(expr));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
 
             var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(expr));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
 
             var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(expr));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
 
             var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(expr));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
         }
 
         [TestMethod]

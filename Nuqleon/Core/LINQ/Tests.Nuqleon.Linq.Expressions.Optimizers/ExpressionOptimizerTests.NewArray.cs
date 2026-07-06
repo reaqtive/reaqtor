@@ -88,7 +88,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Call(
-                    typeof(Convert).GetMethod(nameof(Convert.ToBase64String), new[] { typeof(byte[]) }),
+                    typeof(Convert).GetMethod(nameof(Convert.ToBase64String), [typeof(byte[])]),
                     Expression.NewArrayInit(
                         typeof(byte),
                         Expression.Constant((byte)1, typeof(byte)),

@@ -38,10 +38,9 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR field.</returns>
         public virtual IEnumerable<string> GetNames(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
-            return new[] { field.Name };
+            return [field.Name];
         }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
@@ -54,10 +53,9 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR property.</returns>
         public virtual IEnumerable<string> GetNames(PropertyInfo property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
 
-            return new[] { property.Name };
+            return [property.Name];
         }
 
 #pragma warning restore CA1716

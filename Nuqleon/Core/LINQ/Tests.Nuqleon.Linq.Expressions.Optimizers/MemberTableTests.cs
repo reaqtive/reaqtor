@@ -24,9 +24,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(LambdaExpression)));
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(MemberTable)));
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(MemberInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(LambdaExpression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberTable)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberInfo)));
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_UnaryNegation", new[] { typeof(decimal) });
+            var method = typeof(decimal).GetMethod("op_UnaryNegation", [typeof(decimal)]);
 
             mt.Add((decimal a) => -a);
 
@@ -46,7 +46,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_Addition", new[] { typeof(decimal), typeof(decimal) });
+            var method = typeof(decimal).GetMethod("op_Addition", [typeof(decimal), typeof(decimal)]);
 
             mt.Add((decimal a, decimal b) => a + b);
 
@@ -58,7 +58,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(FieldInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(FieldInfo)));
         }
 
         [TestMethod]
@@ -150,11 +150,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(PropertyInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(PropertyInfo)));
 
             var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
 
-            Assert.ThrowsException<ArgumentException>(() => mt.Add(property));
+            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(property));
         }
 
         [TestMethod]
@@ -246,7 +246,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(MethodInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MethodInfo)));
         }
 
         [TestMethod]
@@ -271,7 +271,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(int).GetMethod(nameof(int.Parse), new[] { typeof(string) });
+            var method = typeof(int).GetMethod(nameof(int.Parse), [typeof(string)]);
 
             mt.Add(method);
 
@@ -288,11 +288,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Add(default(ConstructorInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(ConstructorInfo)));
 
             var ctor = typeof(StaticCtor).GetConstructor(BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
 
-            Assert.ThrowsException<ArgumentException>(() => mt.Add(ctor));
+            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(ctor));
         }
 
         [TestMethod]
@@ -300,7 +300,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var ctor = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
             mt.Add((MemberInfo)ctor);
 
@@ -317,7 +317,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentException>(() => mt.Add(typeof(Console).GetEvent(nameof(Console.CancelKeyPress))));
+            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(typeof(Console).GetEvent(nameof(Console.CancelKeyPress))));
         }
 
         [TestMethod]
@@ -325,7 +325,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => mt.Contains(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Contains(default));
         }
 
         [TestMethod]
@@ -336,12 +336,12 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
             var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
-            var ctor = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => rmt.Add((MemberInfo)field));
-            Assert.ThrowsException<InvalidOperationException>(() => rmt.Add(field));
-            Assert.ThrowsException<InvalidOperationException>(() => rmt.Add(property));
-            Assert.ThrowsException<InvalidOperationException>(() => rmt.Add(ctor));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add((MemberInfo)field));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(field));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(property));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(ctor));
         }
 
         private static void AssertHasMember(MemberTable mt, MemberInfo member)

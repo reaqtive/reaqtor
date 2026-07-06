@@ -23,7 +23,7 @@ namespace Tests
         [TestMethod]
         public void InternCache_Create_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => InternCache.CreateInternCache<string>(cacheFactory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => InternCache.CreateInternCache<string>(cacheFactory: null));
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Tests
 
             cache.Dispose();
 
-            Assert.ThrowsException<ObjectDisposedException>(() => cache.Intern("bar".ToUpper()));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => cache.Intern("bar".ToUpper()));
         }
 
         [TestMethod]
@@ -100,8 +100,8 @@ namespace Tests
         public void InternCache_CreateWeak_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => InternCache.CreateWeakInternCache<string>(default(IMemoizationCacheFactory), Copy));
-            Assert.ThrowsException<ArgumentNullException>(() => InternCache.CreateWeakInternCache<string>(MemoizationCacheFactory.Unbounded, default(Func<string, string>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => InternCache.CreateWeakInternCache<string>(default(IMemoizationCacheFactory), Copy));
+            Assert.ThrowsExactly<ArgumentNullException>(() => InternCache.CreateWeakInternCache<string>(MemoizationCacheFactory.Unbounded, default(Func<string, string>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -110,7 +110,7 @@ namespace Tests
         {
             var cache = InternCache.CreateWeakInternCache<string>(MemoizationCacheFactory.Unbounded, s => s);
 
-            Assert.ThrowsException<InvalidOperationException>(() => cache.Intern("foo"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => cache.Intern("foo"));
         }
 
         [TestMethod]
@@ -163,7 +163,7 @@ namespace Tests
 
             cache.Dispose();
 
-            Assert.ThrowsException<ObjectDisposedException>(() => cache.Intern("bar".ToUpper()));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => cache.Intern("bar".ToUpper()));
         }
 
         [TestMethod]
@@ -207,7 +207,7 @@ namespace Tests
         {
             var cache = InternCache.CreateWeakInternCache<string>(MemoizationCacheFactory.Nop, Copy);
 
-            Assert.ThrowsException<NotSupportedException>(() => cache.Trim());
+            Assert.ThrowsExactly<NotSupportedException>(() => cache.Trim());
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

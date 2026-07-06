@@ -25,11 +25,14 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void GenericMethodInfoSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetGenericMethod(type: null, methodDefinition: null, arguments: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetGenericMethod(methodDefinition: null, arguments: null), ex => Assert.AreEqual("methodDefinition", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetGenericMethod(type: null, methodDefinition: null, arguments: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericMethod(methodDefinition: null, arguments: null));
+            Assert.AreEqual("methodDefinition", ex2.ParamName);
 
             var def = SlimType.GetGenericDefinitionMethod("Foo", new List<TypeSlim> { SlimType }.AsReadOnly(), EmptyReadOnlyCollection<TypeSlim>.Instance, returnType: null);
-            AssertEx.ThrowsException<ArgumentNullException>(() => def.DeclaringType.GetGenericMethod(def, arguments: null), ex => Assert.AreEqual("arguments", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => def.DeclaringType.GetGenericMethod(def, arguments: null));
+            Assert.AreEqual("arguments", ex3.ParamName);
         }
     }
 }

@@ -48,8 +48,7 @@ namespace Reaqtor
         /// <param name="error">Error to report on the subject.</param>
         public void OnError(Exception error)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             OnErrorCore(error);
         }
@@ -98,10 +97,8 @@ namespace Reaqtor
         /// <returns>A subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
         public IReactiveSubscription Subscribe(IReactiveObserver<TOutput> observer, Uri subscriptionUri, object state = null)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(observer);
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return SubscribeCore(observer, subscriptionUri, state);
         }

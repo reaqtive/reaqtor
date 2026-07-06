@@ -34,7 +34,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             var eta = new ExpressionEntityTypeAnonymizer();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => eta.Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eta.Apply(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]
@@ -49,13 +50,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 (Expression<Func<Qux>>)(() => new Qux()),
                 (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
                 (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
-                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new Foo { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
-                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new Qux(1) { Foo = "bar" } })),
+                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
+                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
                 (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
                 (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
                 (Expression<Action>)(() => FooIt<Qux>()),
                 (Expression<Func<Qux[]>>)(() => new Qux[1]),
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(1), new Qux { Baz = 1 } }),
+                (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
                 (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
                 (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
@@ -90,17 +91,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(e));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(e));
             }
         }
 
         [TestMethod]
         public void ExpressionEntityTypeAnonymizer_Constants_Simple()
         {
-            var recType = RuntimeCompiler.CreateRecordType(new[] {
+            var recType = RuntimeCompiler.CreateRecordType([
                 new KeyValuePair<string, Type>("a", typeof(int)),
                 new KeyValuePair<string, Type>("b", typeof(Qux))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var rec = Activator.CreateInstance(recType);
             recType.GetProperty("a").SetValue(rec, 42);
@@ -112,14 +113,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 new Qux(1),
                 new Qux(1) { Foo = "bar" },
                 new Qux[1],
-                new Qux[] { new Qux(1), new Qux(2) },
-                new List<Qux> { new Qux(1), new Qux(2) },
+                new Qux[] { new(1), new(2) },
+                new List<Qux> { new(1), new(2) },
                 new Func<int, int>(x => x),
                 42,
                 "bar",
                 (Expression<Func<Qux, Qux>>)(x => x),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(123) }),
+                (Expression<Func<Qux[]>>)(() => new Qux[] { new(123) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
                 new Tuple<Qux, int>(new Qux(), 42),
                 new { a = 1, b = new Qux(42), c = "bar" },
@@ -149,7 +150,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy1()
         {
-            var c = Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42 } } } });
+            var c = Expression.Constant(new A { B = new B { Cs = [new C { D = 42 }] } });
 
             var eta = new ExpressionEntityTypeAnonymizer();
 
@@ -172,16 +173,16 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                                                                          from c in b.Cs
                                                                          let d = c.D
                                                                          where d > 0
-                                                                         let e = new A { B = new B { Cs = new C[] { c, new C { D = d + 1 } } } }
+                                                                         let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1 } } } }
                                                                          select 7 * e.B.Cs.Sum(y => y.D);
 
             var g = f.Compile();
 
-            var res = g(new[] {
-                new A { B = new B { Cs = new C[] { new C { D = 23 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = -1 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = 87 } } } },
-            });
+            var res = g([
+                new A { B = new B { Cs = [new C { D = 23 }] } },
+                new A { B = new B { Cs = [new C { D = -1 }] } },
+                new A { B = new B { Cs = [new C { D = 87 }] } },
+            ]);
 
             var eta = new ExpressionEntityTypeAnonymizer();
 
@@ -215,7 +216,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             inp[1] = am1;
             inp[2] = a87;
 
-            var output = (IEnumerable<int>)h.Compile().DynamicInvoke(new object[] { inp });
+            var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
 
             Assert.IsTrue(res.SequenceEqual(output));
         }
@@ -278,7 +279,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
             }
         }
 
@@ -320,10 +321,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             public void Test()
             {
-                Assert.ThrowsException<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
-                Assert.ThrowsException<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
-                Assert.ThrowsException<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
-                Assert.ThrowsException<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
+                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
+                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
+                Assert.ThrowsExactly<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
+                Assert.ThrowsExactly<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
             }
 
             private class MyDataType : DataType
@@ -428,7 +429,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public D()
             {
                 E = new E();
-                Ys = new List<int>();
+                Ys = [];
             }
 
             public int X { get; set; }

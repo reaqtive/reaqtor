@@ -13,7 +13,6 @@ namespace Reaqtive
     public struct StateChangedManager
     {
         private bool _lastCheckpointNoSuccess;
-        private bool _stateChanged;
         private bool _savedOnce;
 
         /// <summary>
@@ -28,8 +27,8 @@ namespace Reaqtive
             // of the operator. The remaining flags will signify that the
             // operator is dirty if the `StateChanged` property was set
             // explicitly to true, or the last checkpoint did not succeed.
-            readonly get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
-            set => _stateChanged = value;
+            readonly get => !_savedOnce || field || _lastCheckpointNoSuccess;
+            set;
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Reaqtive
         {
             _savedOnce = true;
             _lastCheckpointNoSuccess = true;
-            _stateChanged = false;
+            StateChanged = false;
         }
 
         /// <summary>

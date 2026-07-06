@@ -34,10 +34,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element representing the result of the aggregation. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<TSource> Aggregate<TSource>(this ISubscribable<TSource> source, Func<TSource, TSource, TSource> aggregate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (aggregate == null)
-                throw new ArgumentNullException(nameof(aggregate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(aggregate);
 
             return new Aggregate<TSource>(source, aggregate);
         }
@@ -53,10 +51,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element representing the result of the aggregation.</returns>
         public static ISubscribable<TResult> Aggregate<TSource, TResult>(this ISubscribable<TSource> source, TResult seed, Func<TResult, TSource, TResult> accumulate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (accumulate == null)
-                throw new ArgumentNullException(nameof(accumulate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(accumulate);
 
             return new Aggregate<TSource, TResult>(source, seed, accumulate);
         }
@@ -93,10 +89,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with value <c>true</c> if all elements in the source sequence match the predicate; otherwise a single element with value <c>false</c>. If the source sequence is empty, an element with value <c>true</c> is returned.</returns>
         public static ISubscribable<bool> All<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new All<TSource>(source, predicate);
         }
@@ -128,10 +122,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with value <c>true</c> if any element in the source sequence matches the predicate; otherwise a single element with value <c>false</c>. If the source sequence is empty, an element with value <c>false</c> is returned.</returns>
         public static ISubscribable<bool> Any<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new Any<TSource>(source, predicate);
         }
@@ -148,8 +140,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with an integer value representing the number of elements in the sequence. If the source sequence is empty, an element with value 0 is returned.</returns>
         public static ISubscribable<int> Count<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Count<TSource>(source);
         }
@@ -199,8 +190,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with an integer value representing the number of elements in the sequence. If the source sequence is empty, an element with value 0 is returned.</returns>
         public static ISubscribable<long> LongCount<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new LongCount<TSource>(source);
         }
@@ -233,10 +223,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the rolling aggregate to the source sequence. If the source sequence is empty, an empty sequence is returned.</returns>
         public static ISubscribable<TSource> Scan<TSource>(this ISubscribable<TSource> source, Func<TSource, TSource, TSource> aggregate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (aggregate == null)
-                throw new ArgumentNullException(nameof(aggregate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(aggregate);
 
             return new Scan<TSource>(source, aggregate);
         }
@@ -252,10 +240,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the rolling aggregate to the source sequence. If the source sequence is empty, an empty sequence is returned.</returns>
         public static ISubscribable<TResult> Scan<TSource, TResult>(this ISubscribable<TSource> source, TResult seed, Func<TResult, TSource, TResult> accumulate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (accumulate == null)
-                throw new ArgumentNullException(nameof(accumulate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(accumulate);
 
             return new Scan<TSource, TResult>(source, seed, accumulate);
         }
@@ -272,8 +258,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<TSource> Max<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Max<TSource>(source, Comparer<TSource>.Default);
         }
@@ -287,10 +272,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<TSource> Max<TSource>(this ISubscribable<TSource> source, IComparer<TSource> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new Max<TSource>(source, comparer);
         }
@@ -307,8 +290,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<TSource> Min<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Min<TSource>(source, Comparer<TSource>.Default);
         }
@@ -322,10 +304,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<TSource> Min<TSource>(this ISubscribable<TSource> source, IComparer<TSource> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new Min<TSource>(source, comparer);
         }
@@ -342,8 +322,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with a list containing all of the elements in the sequence. If the source sequence is empty, an empty list is returned.</returns>
         public static ISubscribable<IList<TSource>> ToList<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new ToList<TSource>(source);
         }
@@ -407,8 +386,7 @@ namespace Reaqtive
         /// <returns>An observable sequence that propagates the specified error.</returns>
         public static ISubscribable<TResult> Throw<TResult>(Exception error)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             return new Throw<TResult>(error);
         }
@@ -429,8 +407,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements of the source sequences produced by the specified higher-order sequence.</returns>
         public static ISubscribable<TSource> Merge<TSource>(this ISubscribable<ISubscribable<TSource>> sources)
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
+            ArgumentNullException.ThrowIfNull(sources);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -447,10 +424,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements of the specified source sequences.</returns>
         public static ISubscribable<TSource> Merge<TSource>(this ISubscribable<TSource> first, ISubscribable<TSource> second)
         {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (second == null)
-                throw new ArgumentNullException(nameof(second));
+            ArgumentNullException.ThrowIfNull(first);
+            ArgumentNullException.ThrowIfNull(second);
 
             return new Merge<TSource>(first, second);
         }
@@ -463,8 +438,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements of the specified source sequences.</returns>
         public static ISubscribable<TSource> Merge<TSource>(params ISubscribable<TSource>[] sources)
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
+            ArgumentNullException.ThrowIfNull(sources);
 
             return new Merge<TSource>(sources);
         }
@@ -481,8 +455,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements of the latest sequence produced by the specified higher-order sequence.</returns>
         public static ISubscribable<TSource> Switch<TSource>(this ISubscribable<ISubscribable<TSource>> sources)
         {
-            if (sources == null)
-                throw new ArgumentNullException(nameof(sources));
+            ArgumentNullException.ThrowIfNull(sources);
 
             return new Switch<TSource>(sources);
         }
@@ -504,10 +477,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source's notifications after they've been fed to the observer.</returns>
         public static ISubscribable<TSource> Do<TSource>(this ISubscribable<TSource> source, IObserver<TSource> observer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return new Do<TSource, TSource>(source, x => x, observer);
         }
@@ -570,14 +541,10 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source's notifications after they've been observed by the specified actions.</returns>
         public static ISubscribable<TSource> Do<TSource>(this ISubscribable<TSource> source, Action<TSource> onNext, Action<Exception> onError, Action onCompleted)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (onNext == null)
-                throw new ArgumentNullException(nameof(onNext));
-            if (onError == null)
-                throw new ArgumentNullException(nameof(onError));
-            if (onCompleted == null)
-                throw new ArgumentNullException(nameof(onCompleted));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(onNext);
+            ArgumentNullException.ThrowIfNull(onError);
+            ArgumentNullException.ThrowIfNull(onCompleted);
 
             return Do(source, Observer.Create<TSource>(onNext, onError, onCompleted));
         }
@@ -593,12 +560,9 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source's notifications after they've been projected and fed to the observer.</returns>
         public static ISubscribable<TSource> Do<TSource, TNotification>(this ISubscribable<TSource> source, Func<TSource, TNotification> selector, IObserver<TNotification> observer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(selector);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return new Do<TSource, TNotification>(source, selector, observer);
         }
@@ -616,10 +580,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the notification of the source sequence and invoking the specified action upon the sequence's termination.</returns>
         public static ISubscribable<TSource> Finally<TSource>(this ISubscribable<TSource> source, Action action)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(action);
 
             return new Finally<TSource>(source, action);
         }
@@ -640,8 +602,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing all elements from the source sequence, or a default item.</returns>
         public static ISubscribable<TSource> DefaultIfEmpty<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new DefaultIfEmpty<TSource>(source);
         }
@@ -655,8 +616,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing all elements from the source sequence, or a default item.</returns>
         public static ISubscribable<TSource> DefaultIfEmpty<TSource>(this ISubscribable<TSource> source, TSource defaultValue)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new DefaultIfEmpty<TSource>(source, defaultValue);
         }
@@ -672,8 +632,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
         public static ISubscribable<TSource> Distinct<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Distinct<TSource, TSource>(source, x => x, EqualityComparer<TSource>.Default);
         }
@@ -714,12 +673,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
         public static ISubscribable<TSource> Distinct<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new Distinct<TSource, TKey>(source, keySelector, comparer);
         }
@@ -735,8 +691,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source sequence's elements provided the current element is different from the immediately preceding element.</returns>
         public static ISubscribable<TSource> DistinctUntilChanged<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -786,12 +741,9 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source sequence's elements provided the current element is different from the immediately preceding element.</returns>
         public static ISubscribable<TSource> DistinctUntilChanged<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new DistinctUntilChanged<TSource, TKey>(source, keySelector, comparer);
         }
@@ -810,10 +762,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements of the source sequence obtained from sampling using the specified sampling sequence.</returns>
         public static ISubscribable<TSource> Sample<TSource, TSample>(this ISubscribable<TSource> source, ISubscribable<TSample> sampler)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (sampler == null)
-                throw new ArgumentNullException(nameof(sampler));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(sampler);
 
             return new Sample<TSource, TSample>(source, sampler);
         }
@@ -832,15 +782,9 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source sequence's elements after the triggering sequence produces an element.</returns>
         public static ISubscribable<TSource> SkipUntil<TSource, TOther>(this ISubscribable<TSource> source, ISubscribable<TOther> triggeringSource)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (triggeringSource == null)
-            {
-                throw new ArgumentNullException(nameof(triggeringSource));
-            }
+            ArgumentNullException.ThrowIfNull(triggeringSource);
 
             return new SkipUntil<TSource, TOther>(source, triggeringSource);
         }
@@ -859,15 +803,9 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source sequence's elements until the triggering sequence produces an element.</returns>
         public static ISubscribable<TSource> TakeUntil<TSource, TOther>(this ISubscribable<TSource> source, ISubscribable<TOther> triggeringSource)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (triggeringSource == null)
-            {
-                throw new ArgumentNullException(nameof(triggeringSource));
-            }
+            ArgumentNullException.ThrowIfNull(triggeringSource);
 
             return new TakeUntil<TSource, TOther>(source, triggeringSource);
         }
@@ -886,10 +824,8 @@ namespace Reaqtive
         /// <returns>Observable sequence with the throttled elements from the source sequence.</returns>
         public static ISubscribable<TSource> Throttle<TSource, TThrottle>(this ISubscribable<TSource> source, Func<TSource, ISubscribable<TThrottle>> throttleSelector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (throttleSelector == null)
-                throw new ArgumentNullException(nameof(throttleSelector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(throttleSelector);
 
             return new Throttle<TSource, TThrottle>(source, throttleSelector);
         }
@@ -910,8 +846,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating elements from the source sequence subscription(s).</returns>
         public static ISubscribable<TSource> Retry<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Retry<TSource>(source);
         }
@@ -925,10 +860,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating elements from the source sequence subscription(s).</returns>
         public static ISubscribable<TSource> Retry<TSource>(this ISubscribable<TSource> source, int retryCount)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (retryCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(retryCount));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegative(retryCount);
 
             return new Retry<TSource>(source, retryCount);
         }
@@ -946,10 +879,8 @@ namespace Reaqtive
         /// <returns>Observable sequence producing the specified values, followed by the elements of the source sequence.</returns>
         public static ISubscribable<TSource> StartWith<TSource>(this ISubscribable<TSource> source, params TSource[] values)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(values);
 
             return new StartWith<TSource>(source, values);
         }
@@ -971,8 +902,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains the specified element or not.</returns>
         public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Contains<TSource>(source, element, EqualityComparer<TSource>.Default);
         }
@@ -987,10 +917,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains the specified element or not.</returns>
         public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element, IEqualityComparer<TSource> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new Contains<TSource>(source, element, comparer);
         }
@@ -1008,10 +936,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the element at specified index.</returns>
         public static ISubscribable<TSource> ElementAt<TSource>(this ISubscribable<TSource> source, int index)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new ElementAt<TSource>(source, index, throwIfNotFound: true);
         }
@@ -1029,10 +955,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the element at specified index.</returns>
         public static ISubscribable<TSource> ElementAtOrDefault<TSource>(this ISubscribable<TSource> source, int index)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new ElementAt<TSource>(source, index, throwIfNotFound: false);
         }
@@ -1049,8 +973,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the first element of the source sequence.</returns>
         public static ISubscribable<TSource> FirstAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new FirstAsync<TSource>(source, predicate: null, throwOnEmpty: true);
         }
@@ -1064,10 +987,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the first element of the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> FirstAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new FirstAsync<TSource>(source, predicate, throwOnEmpty: true);
         }
@@ -1084,8 +1005,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the first element of the source sequence.</returns>
         public static ISubscribable<TSource> FirstOrDefaultAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new FirstAsync<TSource>(source, predicate: null, throwOnEmpty: false);
         }
@@ -1099,10 +1019,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the first element of the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> FirstOrDefaultAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new FirstAsync<TSource>(source, predicate, throwOnEmpty: false);
         }
@@ -1121,10 +1039,8 @@ namespace Reaqtive
         /// <returns>Observable sequence of groups, which are observable sequences themselves.</returns>
         public static ISubscribable<IGroupedSubscribable<TKey, TSource>> GroupBy<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
 
             return new GroupBy<TSource, TKey>(source, keySelector, EqualityComparer<TKey>.Default);
         }
@@ -1140,12 +1056,9 @@ namespace Reaqtive
         /// <returns>Observable sequence of groups, which are observable sequences themselves.</returns>
         public static ISubscribable<IGroupedSubscribable<TKey, TSource>> GroupBy<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new GroupBy<TSource, TKey>(source, keySelector, comparer);
         }
@@ -1162,12 +1075,9 @@ namespace Reaqtive
         /// <returns>Observable sequence of groups, which are observable sequences themselves.</returns>
         public static ISubscribable<IGroupedSubscribable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
-            if (elementSelector == null)
-                throw new ArgumentNullException(nameof(elementSelector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
+            ArgumentNullException.ThrowIfNull(elementSelector);
 
             return new GroupBy<TSource, TKey, TElement>(source, keySelector, elementSelector, EqualityComparer<TKey>.Default);
         }
@@ -1185,14 +1095,10 @@ namespace Reaqtive
         /// <returns>Observable sequence of groups, which are observable sequences themselves.</returns>
         public static ISubscribable<IGroupedSubscribable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (keySelector == null)
-                throw new ArgumentNullException(nameof(keySelector));
-            if (elementSelector == null)
-                throw new ArgumentNullException(nameof(elementSelector));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(keySelector);
+            ArgumentNullException.ThrowIfNull(elementSelector);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new GroupBy<TSource, TKey, TElement>(source, keySelector, elementSelector, comparer);
         }
@@ -1209,8 +1115,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating only an OnCompleted or an OnError notification.</returns>
         public static ISubscribable<TSource> IgnoreElements<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new IgnoreElements<TSource>(source);
         }
@@ -1227,8 +1132,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
         public static ISubscribable<TSource> LastAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new LastAsync<TSource>(source, predicate: null, throwOnEmpty: true);
         }
@@ -1242,10 +1146,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> LastAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new LastAsync<TSource>(source, predicate, throwOnEmpty: true);
         }
@@ -1262,8 +1164,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
         public static ISubscribable<TSource> LastOrDefaultAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new LastAsync<TSource>(source, predicate: null, throwOnEmpty: false);
         }
@@ -1277,10 +1178,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> LastOrDefaultAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new LastAsync<TSource>(source, predicate, throwOnEmpty: false);
         }
@@ -1299,10 +1198,8 @@ namespace Reaqtive
         /// <returns>Observable sequence with the projected elements from the source sequence using the specified selector function.</returns>
         public static ISubscribable<TResult> Select<TSource, TResult>(this ISubscribable<TSource> source, Func<TSource, TResult> selector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new Select<TSource, TResult>(source, selector);
         }
@@ -1321,10 +1218,8 @@ namespace Reaqtive
         /// <returns>Observable sequence with the projected elements from the source sequence using the specified selector function.</returns>
         public static ISubscribable<TResult> Select<TSource, TResult>(this ISubscribable<TSource> source, Func<TSource, int, TResult> selector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new SelectIndexed<TSource, TResult>(source, selector);
         }
@@ -1361,12 +1256,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements obtained from applying the result selector to pairs of outer and inner sequence elements.</returns>
         public static ISubscribable<TResult> SelectMany<TSource, TCollection, TResult>(this ISubscribable<TSource> source, Func<TSource, ISubscribable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (collectionSelector == null)
-                throw new ArgumentNullException(nameof(collectionSelector));
-            if (resultSelector == null)
-                throw new ArgumentNullException(nameof(resultSelector));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(collectionSelector);
+            ArgumentNullException.ThrowIfNull(resultSelector);
 
             return new SelectMany<TSource, TCollection, TResult>(source, collectionSelector, resultSelector);
         }
@@ -1384,10 +1276,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single Boolean value indicating whether the two sequences are equal in length and have pairwise equality of elements.</returns>
         public static ISubscribable<bool> SequenceEqual<TSource>(this ISubscribable<TSource> left, ISubscribable<TSource> right)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
 
             return new SequenceEqual<TSource>(left, right, EqualityComparer<TSource>.Default);
         }
@@ -1402,12 +1292,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single Boolean value indicating whether the two sequences are equal in length and have pairwise equality of elements.</returns>
         public static ISubscribable<bool> SequenceEqual<TSource>(this ISubscribable<TSource> left, ISubscribable<TSource> right, IEqualityComparer<TSource> comparer)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(left);
+            ArgumentNullException.ThrowIfNull(right);
+            ArgumentNullException.ThrowIfNull(comparer);
 
             return new SequenceEqual<TSource>(left, right, comparer);
         }
@@ -1424,8 +1311,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the only element in the source sequence.</returns>
         public static ISubscribable<TSource> SingleAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SingleAsync<TSource>(source, predicate: null, throwOnEmpty: true);
         }
@@ -1439,10 +1325,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the only element in the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> SingleAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new SingleAsync<TSource>(source, predicate, throwOnEmpty: true);
         }
@@ -1459,8 +1343,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the only element in the source sequence.</returns>
         public static ISubscribable<TSource> SingleOrDefaultAsync<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SingleAsync<TSource>(source, predicate: null, throwOnEmpty: false);
         }
@@ -1474,10 +1357,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the only element in the source sequence that matches the specified predicate.</returns>
         public static ISubscribable<TSource> SingleOrDefaultAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new SingleAsync<TSource>(source, predicate, throwOnEmpty: false);
         }
@@ -1495,10 +1376,8 @@ namespace Reaqtive
         /// <returns>Observable sequence skipping the specified number of elements from the start of the source sequence.</returns>
         public static ISubscribable<TSource> Skip<TSource>(this ISubscribable<TSource> source, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return new Skip<TSource>(source, count);
         }
@@ -1516,10 +1395,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the source sequence's elements starting from the first element matching the predicate.</returns>
         public static ISubscribable<TSource> SkipWhile<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new SkipWhile<TSource>(source, predicate);
         }
@@ -1533,10 +1410,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the source sequence's elements starting from the first element matching the predicate.</returns>
         public static ISubscribable<TSource> SkipWhile<TSource>(this ISubscribable<TSource> source, Func<TSource, int, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new SkipWhileIndexed<TSource>(source, predicate);
         }
@@ -1554,10 +1429,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the specified number of elements from the start of the source sequence.</returns>
         public static ISubscribable<TSource> Take<TSource>(this ISubscribable<TSource> source, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             if (count == 0)
             {
@@ -1580,10 +1453,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the source sequence's elements until the predicate doesn't match an element.</returns>
         public static ISubscribable<TSource> TakeWhile<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new TakeWhile<TSource>(source, predicate);
         }
@@ -1597,10 +1468,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the source sequence's elements until the predicate doesn't match an element.</returns>
         public static ISubscribable<TSource> TakeWhile<TSource>(this ISubscribable<TSource> source, Func<TSource, int, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new TakeWhileIndexed<TSource>(source, predicate);
         }
@@ -1618,10 +1487,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements from the source sequence that match the predicate.</returns>
         public static ISubscribable<TSource> Where<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new Where<TSource>(source, predicate);
         }
@@ -1639,10 +1506,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing the elements from the source sequence that match the predicate.</returns>
         public static ISubscribable<TSource> Where<TSource>(this ISubscribable<TSource> source, Func<TSource, int, bool> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return new WhereIndexed<TSource>(source, predicate);
         }
@@ -1664,10 +1529,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing buffers of the specified duration over the source sequence.</returns>
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
 
             return new BufferDuration<TSource>(source, duration);
         }
@@ -1682,12 +1545,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing buffers of the specified duration over the source sequence.</returns>
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (shift <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(shift));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(shift, TimeSpan.FromTicks(0));
 
             return new BufferDurationShift<TSource>(source, duration, shift);
         }
@@ -1701,10 +1561,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing buffers of the specified length over the source sequence.</returns>
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new BufferCount<TSource>(source, count);
         }
@@ -1719,12 +1577,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing buffers of the specified length over the source sequence.</returns>
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, int count, int skip)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (skip <= 0)
-                throw new ArgumentOutOfRangeException(nameof(skip));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(skip);
 
             return new BufferCountSkip<TSource>(source, count, skip);
         }
@@ -1740,12 +1595,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing buffers over the source sequence.</returns>
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new BufferDurationCount<TSource>(source, duration, count);
         }
@@ -1763,8 +1615,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the source sequence's notifications after it has been subscribed to at the specified due time.</returns>
         public static ISubscribable<TSource> DelaySubscription<TSource>(this ISubscribable<TSource> source, DateTimeOffset dueTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new DelaySubscription<TSource>(source, dueTime);
         }
@@ -1779,10 +1630,8 @@ namespace Reaqtive
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the due time is less than zero.</exception>
         public static ISubscribable<TSource> DelaySubscription<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (dueTime < TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.FromTicks(0));
 
             return new DelaySubscription<TSource>(source, dueTime);
         }
@@ -1819,10 +1668,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the elements of the source sequence after the specified relative due time.</returns>
         public static ISubscribable<TSource> Skip<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (dueTime < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1843,8 +1690,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the elements of the source sequence after the specified absolute start time.</returns>
         public static ISubscribable<TSource> SkipUntil<TSource>(this ISubscribable<TSource> source, DateTimeOffset startTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1865,10 +1711,8 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the elements of the source sequence for the specified relative due time.</returns>
         public static ISubscribable<TSource> Take<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (dueTime < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1889,8 +1733,7 @@ namespace Reaqtive
         /// <returns>Observable sequence propagating the elements of the source sequence until the specified absolute end time.</returns>
         public static ISubscribable<TSource> TakeUntil<TSource>(this ISubscribable<TSource> source, DateTimeOffset endTime)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1911,10 +1754,8 @@ namespace Reaqtive
         /// <returns>Observable sequence with the throttled elements from the source sequence.</returns>
         public static ISubscribable<TSource> Throttle<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1945,8 +1786,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the period is less than zero.</exception>
         public static ISubscribable<long> Timer(TimeSpan dueTime, TimeSpan period)
         {
-            if (period < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(period));
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             return new Timer(dueTime, period);
         }
@@ -1970,8 +1810,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the period is less than zero.</exception>
         public static ISubscribable<long> Timer(DateTimeOffset dueTime, TimeSpan period)
         {
-            if (period < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(period));
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             return new Timer(dueTime, period);
         }
@@ -1989,10 +1828,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing windows of the specified duration over the source sequence.</returns>
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
 
             return new WindowDuration<TSource>(source, duration);
         }
@@ -2007,12 +1844,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing windows of the specified duration over the source sequence.</returns>
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (shift <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(shift));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(shift, TimeSpan.FromTicks(0));
 
             return new WindowDurationShift<TSource>(source, duration, shift);
         }
@@ -2026,10 +1860,8 @@ namespace Reaqtive
         /// <returns>Observable sequence containing windows of the specified length over the source sequence.</returns>
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new WindowCount<TSource>(source, count);
         }
@@ -2044,12 +1876,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing windows of the specified length over the source sequence.</returns>
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, int count, int skip)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (skip <= 0)
-                throw new ArgumentOutOfRangeException(nameof(skip));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(skip);
 
             return new WindowCountSkip<TSource>(source, count, skip);
         }
@@ -2065,12 +1894,9 @@ namespace Reaqtive
         /// <returns>Observable sequence containing windows over the source sequence.</returns>
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration, int count)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentNullException.ThrowIfNull(source);
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new WindowDurationCount<TSource>(source, duration, count);
         }

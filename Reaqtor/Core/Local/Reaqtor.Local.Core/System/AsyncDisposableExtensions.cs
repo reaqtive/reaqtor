@@ -18,20 +18,6 @@ namespace System
     /// </summary>
     public static class AsyncDisposableExtensions
     {
-#if !NET6_0 && !NETSTANDARD2_1
-        /// <summary>
-        /// Disposes the resource asynchronously.
-        /// </summary>
-        /// <param name="disposable">Object to dispose.</param>
-        /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public static Task DisposeAsync(this IAsyncDisposable disposable)
-        {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
-
-            return disposable.DisposeAsync(CancellationToken.None);
-        }
-#else
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
@@ -40,14 +26,12 @@ namespace System
         /// <returns>Task representing the eventual completion of the disposal request.</returns>
         public static ValueTask DisposeAsync(this IAsyncDisposable disposable, CancellationToken token)
         {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
+            ArgumentNullException.ThrowIfNull(disposable);
 
             _ = token; // NB: By design for compat.
 
             return disposable.DisposeAsync();
         }
-#endif
 
         /// <summary>
         /// Converts an IAsyncDisposable to a standard IDisposable.
@@ -56,8 +40,7 @@ namespace System
         /// <returns>Wrapper around the specified disposable, exposing the standard IDisposable interface.</returns>
         public static IDisposable AsDisposable(this IAsyncDisposable disposable)
         {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
+            ArgumentNullException.ThrowIfNull(disposable);
 
             return new Disposable(disposable);
         }
@@ -74,9 +57,7 @@ namespace System
                 // No idempotency enforcement. Left to the underlying IAsyncDisposable implementation.
                 //
                 _disposable.DisposeAsync(CancellationToken.None)
-#if NET6_0 || NETSTANDARD2_1
                     .AsTask()
-#endif
                     .Wait();
             }
         }

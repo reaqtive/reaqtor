@@ -629,19 +629,14 @@ namespace Nuqleon.Json.Interop.Newtonsoft
 
         private void CheckDisposed()
         {
-            if (_tokens == null)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_tokens == null, this);
         }
 
         private static string EnsureDecimalPlace(string text)
         {
             // NB: This helper is modified from Newtonsoft JSON.
 
-#if NET6_0 || NETSTANDARD2_1
             if (text.Contains('.', StringComparison.Ordinal) || text.Contains('E', StringComparison.Ordinal) || text.Contains('e', StringComparison.Ordinal))
-#else
-            if (text.IndexOf('.') >= 0 || text.IndexOf('E') >= 0 || text.IndexOf('e') >= 0)
-#endif
             {
                 return text;
             }

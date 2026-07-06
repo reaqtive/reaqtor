@@ -22,11 +22,8 @@ namespace Reaqtive.TestingFramework
 
         protected void TestCleanup()
         {
-            if (Scheduler != null)
-            {
-                Scheduler.Dispose();
-                Scheduler = null;
-            }
+            Scheduler?.Dispose();
+            Scheduler = null;
         }
 
 #pragma warning disable CA1062 // Validate arguments of public methods. (Trusting test code to call Run with non-null delegate.)

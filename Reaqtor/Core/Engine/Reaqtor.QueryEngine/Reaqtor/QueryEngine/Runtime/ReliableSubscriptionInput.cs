@@ -130,7 +130,7 @@ namespace Reaqtor.QueryEngine
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
                 _subscription = Params._source.Subscribe(this);
-                return new ISubscription[] { _subscription };
+                return [_subscription];
             }
 
             protected override void OnStart()
@@ -235,7 +235,7 @@ namespace Reaqtor.QueryEngine
                 var baseSubscription = base.OnSubscribe();
                 _subscription = Params._source.Subscribe(this);
 
-                return baseSubscription.Concat(new ISubscription[] { _subscription });
+                return baseSubscription.Concat([_subscription]);
             }
 
             protected override void OnStart()

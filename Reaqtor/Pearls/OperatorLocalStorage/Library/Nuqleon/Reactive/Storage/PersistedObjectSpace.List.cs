@@ -32,8 +32,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
         public IPersistedList<T> CreateList<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var list = new List(this);
             _items.Add(id, list);
@@ -51,8 +50,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidCastException">A persisted object with identifier <paramref name="id"/> was found but is incompatible with the requested persisted list type.</exception>
         public IPersistedList<T> GetList<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return CreateListCore<T>(id, (List)_items[id]);
         }
@@ -502,7 +500,7 @@ namespace Reaqtive.Storage
                 }
                 else
                 {
-                    return new List<T>();
+                    return [];
                 }
             }
 
@@ -758,7 +756,7 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// Set containing the indexes of the elements in the list that have been edited.
                 /// </summary>
-                public readonly HashSet<int> Edits = new();
+                public readonly HashSet<int> Edits = [];
 
                 /// <summary>
                 /// The element count of the list. This value is <c>null</c> when the element count hasn't changed (due to calls to Add or Remove).

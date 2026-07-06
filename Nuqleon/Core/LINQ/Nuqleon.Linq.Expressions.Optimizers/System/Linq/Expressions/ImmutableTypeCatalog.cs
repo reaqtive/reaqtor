@@ -166,13 +166,9 @@ namespace System.Linq.Expressions
 
                 // NB: ValueTuple types are mutable.
 
-#if NET6_0
                 typeof(Half),
-#endif
-#if NET6_0 || NETSTANDARD2_1
                 typeof(Index),
                 typeof(Range),
-#endif
             }.ToReadOnly();
 
             /// <summary>

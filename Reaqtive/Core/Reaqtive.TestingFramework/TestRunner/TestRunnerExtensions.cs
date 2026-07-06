@@ -10,8 +10,7 @@ namespace Reaqtive.TestingFramework.TestRunner
     {
         public static void Run(this TestAssemblyRunner runner)
         {
-            if (runner == null)
-                throw new ArgumentNullException(nameof(runner));
+            ArgumentNullException.ThrowIfNull(runner);
 
             runner.Run(1);
         }

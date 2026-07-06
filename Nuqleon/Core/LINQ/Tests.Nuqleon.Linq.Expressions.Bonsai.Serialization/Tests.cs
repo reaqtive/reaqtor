@@ -21,6 +21,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -637,7 +638,7 @@ namespace Tests
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
             var r = (Expression<Func<string, int>>)Roundtrip(e);
 
             var ef = e.Compile();
@@ -799,11 +800,11 @@ namespace Tests
                 Expression.Block(e1, e1, e1),
                 Expression.Block(e2),
                 Expression.Block(typeof(void), e2),
-                Expression.Block(new[] { v1 }, e1),
-                Expression.Block(new[] { v1 }, v1),
-                Expression.Block(new[] { v1, v3 }, e1, e2, e3),
-                Expression.Block(new[] { v1, v2, v3 }, e1, e2, e3),
-                Expression.Block(typeof(void), new[] { v1, v2, v3 }, e1, e2, e3),
+                Expression.Block([v1], e1),
+                Expression.Block([v1], v1),
+                Expression.Block([v1, v3], e1, e2, e3),
+                Expression.Block([v1, v2, v3], e1, e2, e3),
+                Expression.Block(typeof(void), [v1, v2, v3], e1, e2, e3),
             };
 
             foreach (var a in bs)
@@ -1124,7 +1125,7 @@ namespace Tests
             Assert.IsNotNull(r);
 
             var f = r.Compile();
-            Assert.AreEqual(20 * 21 / 2, f.DynamicInvoke(Enumerable.Range(1, 20).Cast<object>().ToArray()));
+            Assert.AreEqual(20 * 21 / 2, f.DynamicInvoke([.. Enumerable.Range(1, 20).Cast<object>()]));
         }
 
         #endregion
@@ -1565,9 +1566,9 @@ namespace Tests
 
             var switchCases2 = new[]
             {
-                Expression.SwitchCase(Expression.Default(typeof(string)), new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) }),
+                Expression.SwitchCase(Expression.Default(typeof(string)), [Expression.Constant(1), Expression.Constant(2), Expression.Constant(3)]),
                 Expression.SwitchCase(Expression.Default(typeof(string)), Expression.Constant(4)),
-                Expression.SwitchCase(Expression.Default(typeof(string)), new[] { Expression.Constant(5), Expression.Constant(6), Expression.Constant(7) }),
+                Expression.SwitchCase(Expression.Default(typeof(string)), [Expression.Constant(5), Expression.Constant(6), Expression.Constant(7)]),
             };
 
             var bs = new[] {
@@ -1684,10 +1685,10 @@ namespace Tests
         public void Bonsai_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             var e1 = ((Expression<Func<Instancy, int>>)Roundtrip(f1)).Compile();
@@ -1704,15 +1705,15 @@ namespace Tests
         public void Bonsai_V08_IndexedProperty_ThrowsNotSupported()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(f1, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(f1, V08));
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(f2, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(f2, V08));
         }
 
         private static class Staticy
@@ -1809,11 +1810,11 @@ namespace Tests
         [TestMethod]
         public void Bonsai_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1928,10 +1929,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1947,10 +1948,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -1966,10 +1967,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1999,16 +2000,16 @@ namespace Tests
         [TestMethod]
         public void Bonsai_V08_RecordType_ThrowsNotSupported()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
             var m = Expression.MemberInit(Expression.New(rec), Expression.Bind(bar, Expression.Constant(42)));
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(m, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(m, V08));
         }
 
         #endregion
@@ -2314,7 +2315,7 @@ namespace Tests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_BinaryOperation_Checked()
         {
             var op = CSharpDynamic.Binder.BinaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Add, typeof(object), new[]
@@ -2330,7 +2331,7 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            var overflow = f.Compile()();
+            Assert.ThrowsExactly<OverflowException>(() => _ = f.Compile()());
         }
 
         [TestMethod]
@@ -2618,7 +2619,7 @@ namespace Tests
             Assert.AreEqual(-bigOne, f.Compile()());
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_UnaryOperation_Checked()
         {
             var op = CSharpDynamic.Binder.UnaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(object), new[]
@@ -2632,7 +2633,7 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            var overflow = f.Compile()();
+            Assert.ThrowsExactly<OverflowException>(() => _ = f.Compile()());
         }*/
 
         #endregion
@@ -2716,7 +2717,7 @@ namespace Tests
             Assert.AreEqual(42, q.X);
             Assert.AreEqual("Hello", q.Baz);
             Assert.AreEqual(24, q.Bar.Zuz);
-            Assert.IsTrue(q.Foos.SequenceEqual(new[] { 1, 2, 3 }));
+            Assert.IsTrue(q.Foos.SequenceEqual([1, 2, 3]));
 
             var f08 = (Expression<Func<Qux>>)Roundtrip(e, V08);
 
@@ -2724,7 +2725,7 @@ namespace Tests
             Assert.AreEqual(42, q08.X);
             Assert.AreEqual("Hello", q08.Baz);
             Assert.AreEqual(24, q08.Bar.Zuz);
-            Assert.IsTrue(q08.Foos.SequenceEqual(new[] { 1, 2, 3 }));
+            Assert.IsTrue(q08.Foos.SequenceEqual([1, 2, 3]));
         }
 
         [TestMethod]
@@ -2762,7 +2763,7 @@ namespace Tests
             public Qux(int x)
             {
                 X = x;
-                Foos = new List<int>();
+                Foos = [];
                 Bar = new Bar();
             }
 
@@ -3007,37 +3008,6 @@ namespace Tests
             Assert.AreEqual(f.Body.ToString(), e08.ToString());
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void Bonsai_E2E_Jacquard()
-        {
-            Expression<Func<IQueryable<string>, IQueryable<string>>> f = urlsToSearch =>
-                from url in urlsToSearch
-                let client = new System.Net.WebClient
-                {
-                    Headers =
-                    {
-                        { "user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" }
-                    }
-                }
-                let data = client.OpenRead(url)
-                let reader = new System.IO.StreamReader(data)
-                let s = reader.ReadToEnd()
-                where s.Substring(0, 64).Dump(url)
-                where data.Close()
-                where reader.Close()
-                select s;
-
-            var e = (Expression<Func<IQueryable<string>, IQueryable<string>>>)Roundtrip(f);
-
-            static ExpressionEqualityComparator factory() => new Comparator(new StructuralTypeEqualityComparator());
-            Assert.IsTrue(new ExpressionEqualityComparer(factory).Equals(f, e));
-
-            var e08 = (Expression<Func<IQueryable<string>, IQueryable<string>>>)Roundtrip(f, V08);
-
-            Assert.IsTrue(new ExpressionEqualityComparer(factory).Equals(f, e08));
-        }
-#endif
 
         [TestMethod]
         public void Bonsai_E2E_GenericParameterBindings()
@@ -3058,12 +3028,12 @@ namespace Tests
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -3111,19 +3081,18 @@ namespace Tests
             var loopPrev1Assign = Expression.Assign(prev1, fib);
 
             Expression<Action<long>> printFibExp = s => Console.WriteLine(s);
-            var loopPrint = Expression.Invoke(printFibExp, new[] { fib });
+            var loopPrint = Expression.Invoke(printFibExp, [fib]);
 
             var loop = Expression.Loop(
                 Expression.Block(
-                    new Expression[]
-                    {
+                    [
                         loopCondition,
                         loopInc,
                         loopFibAssign,
                         loopPrev2Assign,
                         loopPrev1Assign,
                         loopPrint
-                    }),
+                    ]),
                 loopBreakTarget);
 
             var returnFib = Expression.Return(endTarget, fib, typeof(long));
@@ -3131,16 +3100,14 @@ namespace Tests
             var end = Expression.Label(endTarget, fib);
 
             var block = Expression.Block(
-                new ParameterExpression[]
-                {
+                [
                     i,
                     fib,
                     prev1,
                     prev2
 
-                },
-                new Expression[]
-                {
+                ],
+                [
                     baseCase,
                     assign,
                     assignFib,
@@ -3150,9 +3117,9 @@ namespace Tests
                     loop,
                     returnFib,
                     end
-                });
+                ]);
 
-            var f = (Expression<Func<int, long>>)Expression.Lambda(block, new[] { n });
+            var f = (Expression<Func<int, long>>)Expression.Lambda(block, [n]);
             var e = (Expression<Func<int, long>>)Roundtrip(f);
 
             var fc = f.Compile();
@@ -3596,7 +3563,7 @@ namespace Tests
         private static void AssertInvalid(string bonsai)
         {
             var serializer = new SimpleExpressionSerializer();
-            Assert.ThrowsException<BonsaiParseException>(() => serializer.Deserialize(bonsai));
+            Assert.ThrowsExactly<BonsaiParseException>(() => serializer.Deserialize(bonsai));
         }
 
         #endregion
@@ -3697,7 +3664,7 @@ namespace Tests
         private sealed class SimpleExpressionSerializer : BonsaiExpressionSerializer
         {
             private static readonly ObjectSerializer s_objectSerializer = new();
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
 
             public SimpleExpressionSerializer() { }
 
@@ -3705,8 +3672,8 @@ namespace Tests
 
             public SimpleExpressionSerializer(Version version, IMemoizer memoizer) : base(version, memoizer, memoizer) { }
 
-            public Dictionary<Type, int> GetConstantSerializerHitCount { get; } = new Dictionary<Type, int>();
-            public Dictionary<Type, int> GetConstantDeserializerHitCount { get; } = new Dictionary<Type, int>();
+            public Dictionary<Type, int> GetConstantSerializerHitCount { get; } = [];
+            public Dictionary<Type, int> GetConstantDeserializerHitCount { get; } = [];
 
             protected override Func<object, Json.Expression> GetConstantSerializer(Type type)
             {

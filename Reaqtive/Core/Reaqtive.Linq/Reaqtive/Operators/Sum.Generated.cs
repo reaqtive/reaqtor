@@ -15,11 +15,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Sum(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumInt32(source);
         }
@@ -31,7 +29,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32> selector)
         {
             return source.Select(selector).Sum();
@@ -135,11 +132,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Sum(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumInt64(source);
         }
@@ -151,7 +146,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64> selector)
         {
             return source.Select(selector).Sum();
@@ -255,11 +249,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Sum(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumSingle(source);
         }
@@ -271,7 +263,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Single> selector)
         {
             return source.Select(selector).Sum();
@@ -364,11 +355,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Sum(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumDouble(source);
         }
@@ -380,7 +369,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Double> selector)
         {
             return source.Select(selector).Sum();
@@ -473,11 +461,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Sum(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumDecimal(source);
         }
@@ -489,7 +475,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal> selector)
         {
             return source.Select(selector).Sum();
@@ -593,11 +578,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Sum(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableInt32(source);
         }
@@ -609,7 +592,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int32?> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Int32?> selector)
         {
             return source.Select(selector).Sum();
@@ -716,11 +698,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Sum(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableInt64(source);
         }
@@ -732,7 +712,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Int64?> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Int64?> selector)
         {
             return source.Select(selector).Sum();
@@ -839,11 +818,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Sum(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableSingle(source);
         }
@@ -855,7 +832,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Single?> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Single?> selector)
         {
             return source.Select(selector).Sum();
@@ -951,11 +927,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Sum(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableDouble(source);
         }
@@ -967,7 +941,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Double?> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Double?> selector)
         {
             return source.Select(selector).Sum();
@@ -1063,11 +1036,9 @@ namespace Reaqtive
         /// </summary>
         /// <param name="source">Source sequence whose sum of elements to obtain.</param>
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Sum(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableDecimal(source);
         }
@@ -1079,7 +1050,6 @@ namespace Reaqtive
         /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
         /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
         /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
         public static ISubscribable<Decimal?> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, Decimal?> selector)
         {
             return source.Select(selector).Sum();

@@ -64,7 +64,7 @@ namespace System.Linq.CompilerServices.Optimizers
                             var newBody =
                                 DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                     Expression.Lambda(Expression.Lambda(updated, selector1.Parameters[0])),
-                                    Array.Empty<QueryTree>()
+                                    []
                                 );
                             return
                                 op.QueryExpressionFactory.Select(
@@ -96,7 +96,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                         select1.Source,
                                         DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                             Expression.Lambda(Expression.Lambda(c, selector1.Parameters[0])),
-                                            Array.Empty<QueryTree>()
+                                            []
                                         )
                                     );
 
@@ -107,7 +107,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                         child,
                                         DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                             Expression.Lambda(Expression.Lambda(f, newParam)),
-                                            Array.Empty<QueryTree>()
+                                            []
                                         )
                                     );
                             }
@@ -189,7 +189,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
             private abstract class MemberChainVisitor : ExpressionVisitor
             {
-                private readonly List<MemberExpression> _memberChain = new();
+                private readonly List<MemberExpression> _memberChain = [];
 
                 protected sealed override Expression VisitMember(MemberExpression node)
                 {
@@ -223,8 +223,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                 public MemberChainAndNewExpressionLeafVisitor(NewExpression root)
                 {
-                    if (root == null)
-                        throw new ArgumentNullException(nameof(root));
+                    ArgumentNullException.ThrowIfNull(root);
 
                     if (root.Members == null)
                         throw new ArgumentException("Argument must be an anonymous type initializer.", nameof(root));
@@ -456,8 +455,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                 public AnonymousTypeFlattener(NewExpression expression)
                 {
-                    if (expression == null)
-                        throw new ArgumentNullException(nameof(expression));
+                    ArgumentNullException.ThrowIfNull(expression);
 
                     if (expression.Members == null)
                         throw new ArgumentException("Argument must be an anonymous type initializer.", nameof(expression));
@@ -466,8 +464,8 @@ namespace System.Linq.CompilerServices.Optimizers
                     _mapper = new Dictionary<IEnumerable<MemberInfo>, MemberInfo[]>(ExpressionChainComparer.Instance);
                 }
 
-                private static readonly string[] s_tupleItems = new string[]
-                {
+                private static readonly string[] s_tupleItems =
+                [
                     "Item1",
                     "Item2",
                     "Item3",
@@ -476,12 +474,12 @@ namespace System.Linq.CompilerServices.Optimizers
                     "Item6",
                     "Item7",
                     "Rest",
-                };
+                ];
 
                 public bool TryConstruct(out NewExpression rewritten)
                 {
                     var results = new List<MapEntry>();
-                    if (TryConstruct(_expression, new List<MemberInfo>(), results))
+                    if (TryConstruct(_expression, [], results))
                     {
                         rewritten = (NewExpression)ExpressionTupletizer.Pack(results.Select(x => x.ConstructorArgument));
 
@@ -544,7 +542,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                             results.Add(new MapEntry
                             {
-                                MemberChain = prefix.ToArray(),
+                                MemberChain = [.. prefix],
                                 Type = parameters[i].ParameterType,
                                 Name = builder.ToString(),
                                 ConstructorArgument = arg,

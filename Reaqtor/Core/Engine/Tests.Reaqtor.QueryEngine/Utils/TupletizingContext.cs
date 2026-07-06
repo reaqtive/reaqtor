@@ -144,7 +144,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Type[] args = exprType.GetGenericArguments();
 
-                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, new object[] { bindingExpr, _innerService });
+                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, [bindingExpr, _innerService]);
             }
 
             public void DeleteStream(Uri streamUri)

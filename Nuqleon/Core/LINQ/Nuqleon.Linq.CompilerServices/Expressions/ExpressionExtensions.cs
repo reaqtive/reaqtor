@@ -28,8 +28,7 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return EvalImpl(expression, cache: null);
         }
@@ -43,8 +42,7 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static TResult Evaluate<TResult>(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return EvalImpl<TResult>(expression, cache: null);
         }
@@ -57,8 +55,7 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static object Evaluate(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return EvalImpl<object>(expression, cache: null);
         }
@@ -73,10 +70,8 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static TResult Evaluate<TResult>(this Expression expression, ICompiledDelegateCache cache)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return EvalImpl<TResult>(expression, cache);
         }
@@ -91,10 +86,8 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression, ICompiledDelegateCache cache)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return EvalImpl(expression, cache);
         }
@@ -108,10 +101,8 @@ namespace System.Linq.Expressions
         /// <returns>Result of evaluating the expression tree.</returns>
         public static object Evaluate(this Expression expression, ICompiledDelegateCache cache)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return EvalImpl<object>(expression, cache);
         }
@@ -129,8 +120,7 @@ namespace System.Linq.Expressions
         /// <returns>Funclet to evaluate the expression tree.</returns>
         public static Expression<Func<TResult>> Funcletize<TResult>(this Expression<Func<TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return FuncletizeImpl(expression);
         }
@@ -144,8 +134,7 @@ namespace System.Linq.Expressions
         /// <returns>Funclet to evaluate the expression tree.</returns>
         public static Expression<Func<TResult>> Funcletize<TResult>(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return FuncletizeImpl<TResult>(expression);
         }
@@ -158,8 +147,7 @@ namespace System.Linq.Expressions
         /// <returns>Funclet to evaluate the expression tree.</returns>
         public static Expression<Func<object>> Funcletize(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return FuncletizeImpl<object>(expression);
         }
@@ -175,8 +163,7 @@ namespace System.Linq.Expressions
         /// <returns>ITree representation of the expression tree.</returns>
         public static ExpressionTree ToExpressionTree(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var visitor = new ExpressionTreeConversion();
             return visitor.Visit(expression);
@@ -189,8 +176,7 @@ namespace System.Linq.Expressions
         /// <returns>ITree representation of the element initializer.</returns>
         public static ElementInitExpressionTree ToExpressionTree(this ElementInit elementInitializer)
         {
-            if (elementInitializer == null)
-                throw new ArgumentNullException(nameof(elementInitializer));
+            ArgumentNullException.ThrowIfNull(elementInitializer);
 
             var visitor = new ExpressionTreeConversion();
             return visitor.Visit(elementInitializer);
@@ -203,8 +189,7 @@ namespace System.Linq.Expressions
         /// <returns>ITree representation of the member binding.</returns>
         public static MemberBindingExpressionTree ToExpressionTree(this MemberBinding memberBinding)
         {
-            if (memberBinding == null)
-                throw new ArgumentNullException(nameof(memberBinding));
+            ArgumentNullException.ThrowIfNull(memberBinding);
 
             var visitor = new ExpressionTreeConversion();
             return visitor.Visit(memberBinding);
@@ -222,8 +207,7 @@ namespace System.Linq.Expressions
         /// <returns>String representation of the specified expression tree using C# syntax.</returns>
         public static string ToCSharpString(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false).Code;
         }
@@ -237,8 +221,7 @@ namespace System.Linq.Expressions
         /// <returns>String representation of the specified expression tree using C# syntax.</returns>
         public static string ToCSharpString(this Expression expression, bool allowCompilerGeneratedNames)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ToCSharpStringImpl(expression, allowCompilerGeneratedNames).Code;
         }
@@ -250,8 +233,7 @@ namespace System.Linq.Expressions
         /// <returns>C# representation of the specified expression tree.</returns>
         public static CSharpExpression ToCSharp(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false);
         }
@@ -264,8 +246,7 @@ namespace System.Linq.Expressions
         /// <returns>C# representation of the specified expression tree.</returns>
         public static CSharpExpression ToCSharp(this Expression expression, bool allowCompilerGeneratedNames)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return ToCSharpStringImpl(expression, allowCompilerGeneratedNames);
         }

@@ -45,7 +45,7 @@ namespace System.Linq.CompilerServices
         internal IEnumerable<WildcardBinding<T>> RecurseOnWildcards<T>(ITree<T> tree)
         {
             if (_paths == null)
-                return Enumerable.Empty<WildcardBinding<T>>();
+                return [];
 
             return _paths.Select(traversal => new WildcardBinding<T>(traversal.Wildcard, traversal.Get<T>(tree)));
         }

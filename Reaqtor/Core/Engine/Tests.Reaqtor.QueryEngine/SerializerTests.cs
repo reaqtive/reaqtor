@@ -28,8 +28,10 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void Serializer_Arguments()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new Serializer(null, new Version()), ex => Assert.AreEqual("expressionPolicy", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new Serializer(DefaultExpressionPolicy.Instance, null), ex => Assert.AreEqual("version", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new Serializer(null, new Version()));
+            Assert.AreEqual("expressionPolicy", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new Serializer(DefaultExpressionPolicy.Instance, null));
+            Assert.AreEqual("version", ex2.ParamName);
         }
 
         [TestMethod]

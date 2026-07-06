@@ -87,12 +87,9 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite(Expression expression, Expression success, Expression failure)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (success == null)
-                throw new ArgumentNullException(nameof(success));
-            if (failure == null)
-                throw new ArgumentNullException(nameof(failure));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(success);
+            ArgumentNullException.ThrowIfNull(failure);
 
             return base.RewriteCore(expression, new SuccessErrorContinuationPair { SuccessContinuation = success, ErrorContinuation = failure });
         }
@@ -128,12 +125,9 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite(Expression<Action> expression, Expression<Action> success, Expression<Action<Exception>> failure)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (success == null)
-                throw new ArgumentNullException(nameof(success));
-            if (failure == null)
-                throw new ArgumentNullException(nameof(failure));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(success);
+            ArgumentNullException.ThrowIfNull(failure);
 
             return base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = success, ErrorContinuation = failure });
         }
@@ -170,12 +164,9 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression Rewrite<TResult>(Expression<Func<TResult>> expression, Expression<Action<TResult>> success, Expression<Action<Exception>> failure)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (success == null)
-                throw new ArgumentNullException(nameof(success));
-            if (failure == null)
-                throw new ArgumentNullException(nameof(failure));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(success);
+            ArgumentNullException.ThrowIfNull(failure);
 
             return base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = success, ErrorContinuation = failure });
         }
@@ -213,8 +204,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public LambdaExpression Rewrite(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.Type == typeof(void))
             {
@@ -257,24 +247,23 @@ namespace System.Linq.CompilerServices
         /// </example>
         public LambdaExpression Rewrite(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.Body.Type == typeof(void))
             {
                 var s = Expression.Parameter(typeof(Action), "success");
                 var e = Expression.Parameter(typeof(Action<Exception>), "failure");
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { s.Type, e.Type }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), s.Type, e.Type]);
                 var b = base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = s, ErrorContinuation = e });
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { s, e }).ToArray());
+                return Expression.Lambda(f, b, [.. expression.Parameters, s, e]);
             }
             else
             {
                 var s = Expression.Parameter(typeof(Action<>).MakeGenericType(expression.Body.Type), "success");
                 var e = Expression.Parameter(typeof(Action<Exception>), "failure");
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { s.Type, e.Type }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), s.Type, e.Type]);
                 var b = base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = s, ErrorContinuation = e });
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { s, e }).ToArray());
+                return Expression.Lambda(f, b, [.. expression.Parameters, s, e]);
             }
         }
 
@@ -307,8 +296,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<Action, Action<Exception>>> Rewrite(Expression<Action> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -342,8 +330,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T, Action, Action<Exception>>> Rewrite<T>(Expression<Action<T>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -378,8 +365,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, Action, Action<Exception>>> Rewrite<T1, T2>(Expression<Action<T1, T2>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -415,8 +401,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, T3, Action, Action<Exception>>> Rewrite<T1, T2, T3>(Expression<Action<T1, T2, T3>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -454,8 +439,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<Action<TResult>, Action<Exception>>> Rewrite<TResult>(Expression<Func<TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action<TResult>), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -490,8 +474,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T, Action<TResult>, Action<Exception>>> Rewrite<T, TResult>(Expression<Func<T, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action<TResult>), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -527,8 +510,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, Action<TResult>, Action<Exception>>> Rewrite<T1, T2, TResult>(Expression<Func<T1, T2, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action<TResult>), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -565,8 +547,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public Expression<Action<T1, T2, T3, Action<TResult>, Action<Exception>>> Rewrite<T1, T2, T3, TResult>(Expression<Func<T1, T2, T3, TResult>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var s = Expression.Parameter(typeof(Action<TResult>), "success");
             var e = Expression.Parameter(typeof(Action<Exception>), "failure");
@@ -589,7 +570,7 @@ namespace System.Linq.CompilerServices
 
             return method.ReturnType == typeof(void)
                 ? new[] { typeof(Action), typeof(Action<Exception>) }
-                : new[] { typeof(Action<>).MakeGenericType(method.ReturnType), typeof(Action<Exception>) };
+                : [typeof(Action<>).MakeGenericType(method.ReturnType), typeof(Action<Exception>)];
         }
 
         /// <summary>
@@ -605,7 +586,7 @@ namespace System.Linq.CompilerServices
             Debug.Assert(method != null);
             Debug.Assert(continuation != null);
 
-            return Expression.Call(instance, method, arguments.Concat(new[] { continuation.SuccessContinuation, continuation.ErrorContinuation }));
+            return Expression.Call(instance, method, arguments.Concat([continuation.SuccessContinuation, continuation.ErrorContinuation]));
         }
 
         /// <summary>

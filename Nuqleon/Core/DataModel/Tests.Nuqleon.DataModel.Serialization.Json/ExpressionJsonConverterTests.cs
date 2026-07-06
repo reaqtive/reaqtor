@@ -131,8 +131,8 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 using var stream = new MemoryStream();
                 using var reader = new StreamReader(stream);
 
-                var serialize = _genericSerialize.MakeGenericMethod(new[] { type });
-                serialize.Invoke(DataSerializer, new[] { obj, stream });
+                var serialize = _genericSerialize.MakeGenericMethod([type]);
+                serialize.Invoke(DataSerializer, [obj, stream]);
 
                 stream.Position = 0;
 
@@ -149,14 +149,14 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 using var stream = new MemoryStream();
                 using var writer = new StreamWriter(stream);
 
-                var deserialize = _genericDeserialize.MakeGenericMethod(new[] { type });
+                var deserialize = _genericDeserialize.MakeGenericMethod([type]);
 
                 writer.Write(obj.ToString());
                 writer.Flush();
 
                 stream.Position = 0;
 
-                return deserialize.Invoke(DataSerializer, new[] { stream });
+                return deserialize.Invoke(DataSerializer, [stream]);
             }
 
             private class DataModelInvertedTypeSpace : InvertedTypeSpace

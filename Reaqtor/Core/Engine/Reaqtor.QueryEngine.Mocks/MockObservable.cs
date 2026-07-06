@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using Reaqtive;
 
@@ -14,7 +15,7 @@ namespace Reaqtor.QueryEngine.Mocks
     /// </summary>
     public static class MockObservable
     {
-        private static readonly Dictionary<string, object> _observables = new();
+        private static readonly Dictionary<string, object> _observables = [];
 
         /// <summary>
         /// Gets or creates an observable with the specified identifier.
@@ -58,20 +59,20 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             lock (_observables)
             {
-                if (!_observables.ContainsKey(id))
+                if (!_observables.TryGetValue(id, out var observable))
                 {
                     return null;
                 }
 
-                return (MockObservable<T>)_observables[id];
+                return (MockObservable<T>)observable;
             }
         }
     }
 
     public class MockObservable<T> : IObservable<T>, ISubscribable<T>, IObserver<T>
     {
-        private readonly List<Subscription> _subscriptions = new();
-        private readonly object _lock = new();
+        private readonly List<Subscription> _subscriptions = [];
+        private readonly Lock _lock = new();
 
         public MockObservable(string id) => Id = id;
 
@@ -112,7 +113,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnCompleted());
@@ -124,7 +125,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnError(error));
@@ -136,7 +137,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnNext(value));

@@ -15,8 +15,8 @@ namespace Tests.Reaqtor.QueryEngine
 
     public static class TestableEntityFactory
     {
-        private static readonly Dictionary<string, object> Observers = new();
-        private static readonly Dictionary<string, object> Subscribables = new();
+        private static readonly Dictionary<string, object> Observers = [];
+        private static readonly Dictionary<string, object> Subscribables = [];
 
         public static TestScheduler Scheduler { get; set; }
 

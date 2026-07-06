@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/BCL/">
+    <Project Path="../../../Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../../Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/LINQ/">
+    <Project Path="../../../Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="ExpressionJit/Nuqleon.Linq.Expressions.Jit.Playground.csproj" />
+    <Project Path="Nuqleon.Linq.Expressions.Jit/Nuqleon.Linq.Expressions.Jit.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Nuqleon.Linq.Expressions.Jit/Tests.Nuqleon.Linq.Expressions.Jit.csproj" />
+  </Folder>
+</Solution>

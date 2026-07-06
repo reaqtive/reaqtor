@@ -22,8 +22,10 @@ namespace Tests.Reaqtor.QueryEngine
         public void InvertedLookupReactiveEntityCollection_ArgumentChecks()
         {
             var inner = new ReactiveEntityCollection<string, string>(StringComparer.Ordinal);
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(default(IReactiveEntityCollection<string, string>), StringComparer.Ordinal), ex => Assert.AreEqual("collection", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(inner, null), ex => Assert.AreEqual("valueComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(default(IReactiveEntityCollection<string, string>), StringComparer.Ordinal));
+            Assert.AreEqual("collection", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(inner, null));
+            Assert.AreEqual("valueComparer", ex2.ParamName);
         }
 
         [TestMethod]
@@ -54,15 +56,15 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(collection.TryGetKey(2, out key));
             Assert.AreEqual("bar", key);
 
-            Assert.IsTrue(collection.RemovedKeys.SequenceEqual(new[] { "foo" }));
-            collection.ClearRemovedKeys(new[] { "foo" });
+            Assert.IsTrue(collection.RemovedKeys.SequenceEqual(["foo"]));
+            collection.ClearRemovedKeys(["foo"]);
             Assert.AreEqual(0, collection.RemovedKeys.Count());
 
             collection.Add("foo", 1);
             collection.Add("qux", 3);
             collection.Add("baz", 4);
 
-            Assert.IsTrue(collection.Values.OrderBy(x => x).SequenceEqual(new[] { 1, 2, 3, 4 }));
+            Assert.IsTrue(collection.Values.OrderBy(x => x).SequenceEqual([1, 2, 3, 4]));
             Assert.IsTrue(collection.OrderBy(kv => kv.Value)
                 .SequenceEqual(new Dictionary<string, int> { { "foo", 1 }, { "bar", 2 }, { "qux", 3 }, { "baz", 4 } }.OrderBy(kv => kv.Value)));
 
@@ -84,11 +86,11 @@ namespace Tests.Reaqtor.QueryEngine
             for (var i = 0; i < 1000; ++i)
             {
                 collection.AddLock.Set();
-                Task.WaitAll(new[]
-                {
+                Task.WaitAll(
+                [
                     Task.Run(() => Assert.IsFalse(collection.TryAdd("foo", 2))),
                     Task.Run(() => Assert.IsFalse(collection.TryGetKey(2, out key))),
-                });
+                ]);
             }
         }
 
@@ -107,13 +109,13 @@ namespace Tests.Reaqtor.QueryEngine
             for (var i = 0; i < 1000; ++i)
             {
                 collection.AddLock.Set();
-                Task.WaitAll(new[]
-                {
+                Task.WaitAll(
+                [
                     Task.Run(() => Assert.IsFalse(collection.TryAdd("bar", 42))),
                     Task.Run(() => Assert.IsTrue(collection.TryGetKey(42, out key))),
                     Task.Run(() => Assert.IsFalse(collection.TryGetValue("bar", out value))),
-                });
-                Assert.AreEqual(key, "foo");
+                ]);
+                Assert.AreEqual("foo", key);
             }
         }
 

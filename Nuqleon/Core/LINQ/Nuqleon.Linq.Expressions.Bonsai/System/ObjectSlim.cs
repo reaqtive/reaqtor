@@ -74,10 +74,8 @@ namespace System
         /// <returns>A new slim representation of a constant value that can be lifted to a Bonsai representation.</returns>
         public static ObjectSlim Create(object value, TypeSlim typeSlim, Type type)
         {
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(typeSlim);
+            ArgumentNullException.ThrowIfNull(type);
 
             return new LiftableObjectSlim(value, typeSlim, type);
         }
@@ -91,10 +89,8 @@ namespace System
         /// <returns>A new slim representation of a constant value that can be reduced to a CLR object representation.</returns>
         public static ObjectSlim Create<TLifted>(TLifted liftedValue, TypeSlim typeSlim, Func<Type, Func<TLifted, object>> reduceFactory)
         {
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
-            if (reduceFactory == null)
-                throw new ArgumentNullException(nameof(reduceFactory));
+            ArgumentNullException.ThrowIfNull(typeSlim);
+            ArgumentNullException.ThrowIfNull(reduceFactory);
 
             return new ReducibleObjectSlim<TLifted>(liftedValue, typeSlim, reduceFactory);
         }
@@ -152,8 +148,7 @@ namespace System
 
             public override TLifted Lift<TLifted>(Func<Type, Func<object, TLifted>> liftFactory)
             {
-                if (liftFactory == null)
-                    throw new ArgumentNullException(nameof(liftFactory));
+                ArgumentNullException.ThrowIfNull(liftFactory);
 
                 var lift = liftFactory(OriginalType);
                 return lift(Value);
@@ -161,8 +156,7 @@ namespace System
 
             public override object Reduce(Type type)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
+                ArgumentNullException.ThrowIfNull(type);
 
                 return Value;
             }
@@ -200,8 +194,7 @@ namespace System
 
             public override object Reduce(Type type)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
+                ArgumentNullException.ThrowIfNull(type);
 
                 var reduce = ReduceFactory(type);
                 return reduce((TLifted)Value);

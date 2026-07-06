@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -23,13 +24,13 @@ namespace Reaqtive.Operators
 
         private sealed class _ : StatefulOperator<Merge<TSource>, TSource>
         {
-            private readonly object _gate;
+            private readonly Lock _gate;
             private readonly bool[] _done;
 
             public _(Merge<TSource> parent, IObserver<TSource> observer)
                 : base(parent, observer)
             {
-                _gate = new object();
+                _gate = new Lock();
                 _done = new bool[parent._sources.Length];
             }
 
@@ -51,7 +52,9 @@ namespace Reaqtive.Operators
                     subscriptions[i] = observer.Subscription = subscription;
                 }
 
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: the StaticCompositeSubscription constructor is used precisely because it wraps the array without cloning; a collection expression copies it.)
                 return new StaticCompositeSubscription(subscriptions /* no cloning */);
+#pragma warning restore IDE0028
             }
 
             private void OnCompleted(int index)

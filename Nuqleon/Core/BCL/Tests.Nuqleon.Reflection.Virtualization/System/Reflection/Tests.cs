@@ -89,7 +89,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(t.IsSecurityCritical, p.IsSecurityCritical(t));
                 Assert.AreEqual(t.IsSecuritySafeCritical, p.IsSecuritySafeCritical(t));
                 Assert.AreEqual(t.IsSecurityTransparent, p.IsSecurityTransparent(t));
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Exercises the provider's mirror of the obsolete member.)
                 Assert.AreEqual(t.IsSerializable, p.IsSerializable(t));
+#pragma warning restore SYSLIB0050
 
                 Assert.AreEqual(t.ContainsGenericParameters, p.ContainsGenericParameters(t));
                 Assert.AreEqual(t.HasElementType, p.HasElementType(t));
@@ -170,17 +172,17 @@ namespace Tests.System.Reflection.Virtualization
                 var t1 = typeof(Dictionary<,>);
                 var t2 = typeof(List<>);
 
-                Assert.AreEqual(t1.MakeGenericType(new[] { typeof(int), typeof(string) }), p.MakeGenericType(t1, new[] { typeof(int), typeof(string) }));
-                Assert.AreEqual(t1.MakeGenericType(new[] { typeof(bool), typeof(string) }), p.MakeGenericType(t1, new[] { typeof(bool), typeof(string) }));
+                Assert.AreEqual(t1.MakeGenericType([typeof(int), typeof(string)]), p.MakeGenericType(t1, [typeof(int), typeof(string)]));
+                Assert.AreEqual(t1.MakeGenericType([typeof(bool), typeof(string)]), p.MakeGenericType(t1, [typeof(bool), typeof(string)]));
 
-                Assert.AreEqual(t2.MakeGenericType(new[] { typeof(int) }), p.MakeGenericType(t2, new[] { typeof(int) }));
+                Assert.AreEqual(t2.MakeGenericType([typeof(int)]), p.MakeGenericType(t2, [typeof(int)]));
 
-                Assert.AreEqual(t1.MakeGenericType(new[] { typeof(int), typeof(string) }), p.MakeGenericType(t1, new[] { typeof(int), typeof(string) }));
+                Assert.AreEqual(t1.MakeGenericType([typeof(int), typeof(string)]), p.MakeGenericType(t1, [typeof(int), typeof(string)]));
 
-                Assert.AreEqual(t2.MakeGenericType(new[] { typeof(int) }), p.MakeGenericType(t2, new[] { typeof(int) }));
-                Assert.AreEqual(t2.MakeGenericType(new[] { typeof(string) }), p.MakeGenericType(t2, new[] { typeof(string) }));
+                Assert.AreEqual(t2.MakeGenericType([typeof(int)]), p.MakeGenericType(t2, [typeof(int)]));
+                Assert.AreEqual(t2.MakeGenericType([typeof(string)]), p.MakeGenericType(t2, [typeof(string)]));
 
-                Assert.AreEqual(t1.MakeGenericType(new[] { typeof(int), typeof(bool) }), p.MakeGenericType(t1, new[] { typeof(int), typeof(bool) }));
+                Assert.AreEqual(t1.MakeGenericType([typeof(int), typeof(bool)]), p.MakeGenericType(t1, [typeof(int), typeof(bool)]));
             }
         });
 
@@ -248,40 +250,38 @@ namespace Tests.System.Reflection.Virtualization
             Assert.AreEqual(length, p.GetProperty(typeof(string), nameof(string.Length), BindingFlags.Public | BindingFlags.Instance));
             Assert.AreEqual(length, p.GetProperty(typeof(string), nameof(string.Length), BindingFlags.Public | BindingFlags.Instance, binder: null, typeof(int), Type.EmptyTypes, modifiers: null));
 
-            var substring = p.GetMethod(typeof(string), nameof(string.Substring), new[] { typeof(int), typeof(int) });
-            Assert.AreEqual("barq", substring.Invoke("foobarqux", new object[] { 3, 4 }));
+            var substring = p.GetMethod(typeof(string), nameof(string.Substring), [typeof(int), typeof(int)]);
+            Assert.AreEqual("barq", substring.Invoke("foobarqux", [3, 4]));
 
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), new[] { typeof(int), typeof(int) }, modifiers: null));
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null));
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, new[] { typeof(int), typeof(int) }, modifiers: null));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), [typeof(int), typeof(int)], modifiers: null));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, [typeof(int), typeof(int)], modifiers: null));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(int), typeof(int)], modifiers: null));
 
-#if NET6_0 || NETSTANDARD2_1
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, new[] { typeof(int), typeof(int) }));
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, new[] { typeof(int), typeof(int) }, modifiers: null));
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null));
-            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, new[] { typeof(int), typeof(int) }, modifiers: null));
-#endif
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, [typeof(int), typeof(int)]));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, [typeof(int), typeof(int)], modifiers: null));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, [typeof(int), typeof(int)], modifiers: null));
+            Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(int), typeof(int)], modifiers: null));
 
             var isNullOrEmpty = p.GetMethod(typeof(string), nameof(string.IsNullOrEmpty));
-            Assert.AreEqual(true, isNullOrEmpty.Invoke(null, new object[] { "" }));
-            Assert.AreEqual(false, isNullOrEmpty.Invoke(null, new object[] { "bar" }));
+            Assert.AreEqual(true, isNullOrEmpty.Invoke(null, [""]));
+            Assert.AreEqual(false, isNullOrEmpty.Invoke(null, ["bar"]));
 
             Assert.AreEqual(isNullOrEmpty, p.GetMethod(typeof(string), nameof(string.IsNullOrEmpty), BindingFlags.Public | BindingFlags.Static));
 
-            var ctor = p.GetConstructor(typeof(string), new[] { typeof(char), typeof(int) });
-            Assert.AreEqual("***", ctor.Invoke(new object[] { '*', 3 }));
+            var ctor = p.GetConstructor(typeof(string), [typeof(char), typeof(int)]);
+            Assert.AreEqual("***", ctor.Invoke(['*', 3]));
 
-            Assert.AreEqual(ctor, p.GetConstructor(typeof(string), BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(char), typeof(int) }, modifiers: null));
-            Assert.AreEqual(ctor, p.GetConstructor(typeof(string), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, new[] { typeof(char), typeof(int) }, modifiers: null));
+            Assert.AreEqual(ctor, p.GetConstructor(typeof(string), BindingFlags.Public | BindingFlags.Instance, binder: null, [typeof(char), typeof(int)], modifiers: null));
+            Assert.AreEqual(ctor, p.GetConstructor(typeof(string), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(char), typeof(int)], modifiers: null));
 
-            var value = p.GetField(typeof(StrongBox<int>), nameof(StrongBox<int>.Value));
+            var value = p.GetField(typeof(StrongBox<int>), nameof(StrongBox<>.Value));
             var box = new StrongBox<int>();
             value.SetValue(box, 42);
             Assert.AreEqual(42, box.Value);
 
-            Assert.AreEqual(value, p.GetField(typeof(StrongBox<int>), nameof(StrongBox<int>.Value), BindingFlags.Public | BindingFlags.Instance));
+            Assert.AreEqual(value, p.GetField(typeof(StrongBox<int>), nameof(StrongBox<>.Value), BindingFlags.Public | BindingFlags.Instance));
 
-            var progressChanged = p.GetEvent(typeof(Progress<int>), nameof(Progress<int>.ProgressChanged));
+            var progressChanged = p.GetEvent(typeof(Progress<int>), nameof(Progress<>.ProgressChanged));
             var progress = new MyProgress();
             var e = new ManualResetEvent(initialState: false);
             var val = -1;
@@ -294,7 +294,7 @@ namespace Tests.System.Reflection.Virtualization
             e.WaitOne();
             Assert.AreEqual(42, val);
 
-            Assert.AreEqual(progressChanged, p.GetEvent(typeof(Progress<int>), nameof(Progress<int>.ProgressChanged), BindingFlags.Public | BindingFlags.Instance));
+            Assert.AreEqual(progressChanged, p.GetEvent(typeof(Progress<int>), nameof(Progress<>.ProgressChanged), BindingFlags.Public | BindingFlags.Instance));
 
             var a = new { bar = 42 };
             var bar = p.GetMember(a.GetType(), nameof(a.bar)).Single();
@@ -308,8 +308,8 @@ namespace Tests.System.Reflection.Virtualization
             var n = p.GetNestedType(typeof(C), "N", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             Assert.IsNotNull(n);
 
-            var enumerator = p.GetNestedType(typeof(List<int>), nameof(List<int>.Enumerator));
-            Assert.AreEqual(typeof(List<int>).GetNestedType(nameof(List<int>.Enumerator)), enumerator);
+            var enumerator = p.GetNestedType(typeof(List<int>), nameof(List<>.Enumerator));
+            Assert.AreEqual(typeof(List<int>).GetNestedType(nameof(List<>.Enumerator)), enumerator);
 
             Assert.AreEqual(typeof(string).GetInterface(nameof(IConvertible)), p.GetInterface(typeof(string), nameof(IConvertible)));
             Assert.AreEqual(typeof(string).GetInterface(nameof(IConvertible).ToLower(), ignoreCase: true), p.GetInterface(typeof(string), nameof(IConvertible).ToLower(), ignoreCase: true));
@@ -324,7 +324,7 @@ namespace Tests.System.Reflection.Virtualization
             var ex2 = p.CreateInstance(typeof(Exception).Assembly, typeof(Exception).FullName.ToLower(), ignoreCase: true);
             Assert.IsNotNull(ex2);
 
-            var ex3 = (Exception)p.CreateInstance(typeof(Exception).Assembly, typeof(Exception).FullName, ignoreCase: true, BindingFlags.Public | BindingFlags.Instance, binder: null, new object[] { "Oops!" }, culture: null, activationAttributes: null);
+            var ex3 = (Exception)p.CreateInstance(typeof(Exception).Assembly, typeof(Exception).FullName, ignoreCase: true, BindingFlags.Public | BindingFlags.Instance, binder: null, ["Oops!"], culture: null, activationAttributes: null);
             Assert.IsNotNull(ex3);
             Assert.AreEqual("Oops!", ex3.Message);
         });
@@ -339,9 +339,9 @@ namespace Tests.System.Reflection.Virtualization
         {
             foreach (var m in new[]
             {
-                typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int) }),
-                typeof(string).GetMethod(nameof(string.Equals), new[] { typeof(object) }),
-                typeof(C).GetMethod(nameof(C.F), new[] { typeof(int) }),
+                typeof(string).GetMethod(nameof(string.Substring), [typeof(int)]),
+                typeof(string).GetMethod(nameof(string.Equals), [typeof(object)]),
+                typeof(C).GetMethod(nameof(C.F), [typeof(int)]),
             })
             {
                 Assert.AreEqual(m.Attributes, p.GetAttributes(m));
@@ -372,10 +372,7 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(m.Name, p.GetName(m));
                 Assert.AreEqual(m.ReturnType, p.GetReturnType(m));
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: Another quirk where this doesn't return instances that are deemed equal.
-                {
-                    Assert.AreEqual(m.ReturnParameter, p.GetReturnParameter(m));
-                }
+                Assert.AreEqual(m.ReturnParameter, p.GetReturnParameter(m));
 
                 Assert.AreEqual(m.GetBaseDefinition(), p.GetBaseDefinition(m));
 
@@ -408,7 +405,7 @@ namespace Tests.System.Reflection.Virtualization
         [TestMethod]
         public void Methods_Invoke() => WithProviders(p =>
         {
-            var substring = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var substring = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             var str = "foobarqux";
             var args = new object[] { 3, 4 };
@@ -453,17 +450,17 @@ namespace Tests.System.Reflection.Virtualization
             var m1 = typeof(C).GetMethod(nameof(C.G));
             var m2 = typeof(C).GetMethod(nameof(C.H));
 
-            Assert.AreEqual(m1.MakeGenericMethod(new[] { typeof(int) }), p.MakeGenericMethod(m1, new[] { typeof(int) }));
+            Assert.AreEqual(m1.MakeGenericMethod([typeof(int)]), p.MakeGenericMethod(m1, [typeof(int)]));
 
-            Assert.AreEqual(m2.MakeGenericMethod(new[] { typeof(int), typeof(bool) }), p.MakeGenericMethod(m2, new[] { typeof(int), typeof(bool) }));
+            Assert.AreEqual(m2.MakeGenericMethod([typeof(int), typeof(bool)]), p.MakeGenericMethod(m2, [typeof(int), typeof(bool)]));
 
-            Assert.AreEqual(m1.MakeGenericMethod(new[] { typeof(int) }), p.MakeGenericMethod(m1, new[] { typeof(int) }));
-            Assert.AreEqual(m1.MakeGenericMethod(new[] { typeof(bool) }), p.MakeGenericMethod(m1, new[] { typeof(bool) }));
+            Assert.AreEqual(m1.MakeGenericMethod([typeof(int)]), p.MakeGenericMethod(m1, [typeof(int)]));
+            Assert.AreEqual(m1.MakeGenericMethod([typeof(bool)]), p.MakeGenericMethod(m1, [typeof(bool)]));
 
-            Assert.AreEqual(m2.MakeGenericMethod(new[] { typeof(string), typeof(bool) }), p.MakeGenericMethod(m2, new[] { typeof(string), typeof(bool) }));
-            Assert.AreEqual(m2.MakeGenericMethod(new[] { typeof(int), typeof(bool) }), p.MakeGenericMethod(m2, new[] { typeof(int), typeof(bool) }));
+            Assert.AreEqual(m2.MakeGenericMethod([typeof(string), typeof(bool)]), p.MakeGenericMethod(m2, [typeof(string), typeof(bool)]));
+            Assert.AreEqual(m2.MakeGenericMethod([typeof(int), typeof(bool)]), p.MakeGenericMethod(m2, [typeof(int), typeof(bool)]));
 
-            var m = m2.MakeGenericMethod(new[] { typeof(int), typeof(bool) });
+            var m = m2.MakeGenericMethod([typeof(int), typeof(bool)]);
 
             Assert.AreEqual(m.GetGenericMethodDefinition(), p.GetGenericMethodDefinition(m));
             CollectionAssert.AreEqual(m.GetGenericArguments(), p.GetGenericArguments(m).ToArray());
@@ -480,7 +477,7 @@ namespace Tests.System.Reflection.Virtualization
             foreach (var prop in new[]
             {
                 typeof(string).GetProperty(nameof(string.Length)),
-                typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) })),
+                typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)])),
                 typeof(Console).GetProperty(nameof(Console.ForegroundColor)),
             })
             {
@@ -499,10 +496,7 @@ namespace Tests.System.Reflection.Virtualization
 
                 CollectionAssert.AreEqual(prop.GetAccessors(), p.GetAccessors(prop).ToArray());
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: Quirk on Mono with indexers.
-                {
-                    CollectionAssert.AreEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
-                }
+                CollectionAssert.AreEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
             }
         });
 
@@ -511,18 +505,18 @@ namespace Tests.System.Reflection.Virtualization
         {
             {
                 var length = typeof(string).GetProperty(nameof(string.Length));
-                var index = typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) }));
+                var index = typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)]));
 
                 Assert.AreEqual(length.GetValue("bar"), p.GetValue(length, "bar"));
-                Assert.AreEqual(index.GetValue("bar", new object[] { 1 }), p.GetValue(index, "bar", new object[] { 1 }));
+                Assert.AreEqual(index.GetValue("bar", [1]), p.GetValue(index, "bar", [1]));
             }
 
             {
-                var item = typeof(List<int>).GetProperties().Single(x => x.PropertyType == typeof(int) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) }));
+                var item = typeof(List<int>).GetProperties().Single(x => x.PropertyType == typeof(int) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)]));
 
                 var xs = new List<int> { 1, 2, 3 };
 
-                p.SetValue(item, xs, 42, new object[] { 1 });
+                p.SetValue(item, xs, 42, [1]);
 
                 Assert.AreEqual(42, xs[1]);
             }
@@ -561,7 +555,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(f.IsFamilyOrAssembly, p.IsFamilyOrAssembly(f));
                 Assert.AreEqual(f.IsInitOnly, p.IsInitOnly(f));
                 Assert.AreEqual(f.IsLiteral, p.IsLiteral(f));
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Exercises the provider's mirror of the obsolete member.)
                 Assert.AreEqual(f.IsNotSerialized, p.IsNotSerialized(f));
+#pragma warning restore SYSLIB0050
                 Assert.AreEqual(f.IsPinvokeImpl, p.IsPinvokeImpl(f));
                 Assert.AreEqual(f.IsPrivate, p.IsPrivate(f));
                 Assert.AreEqual(f.IsPublic, p.IsPublic(f));
@@ -624,7 +620,7 @@ namespace Tests.System.Reflection.Virtualization
         {
             foreach (var e in new[]
             {
-                typeof(Progress<int>).GetEvent(nameof(Progress<int>.ProgressChanged)),
+                typeof(Progress<int>).GetEvent(nameof(Progress<>.ProgressChanged)),
             })
             {
                 Assert.AreEqual(e.Attributes, p.GetAttributes(e));
@@ -640,11 +636,8 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(e.GetRaiseMethod(), p.GetRaiseMethod(e));
                 Assert.AreEqual(e.GetRaiseMethod(nonPublic: true), p.GetRaiseMethod(e, nonPublic: true));
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: NullReferenceException in `System.Reflection.RuntimeEventInfo.GetOtherMethods` on Mono.
-                {
-                    CollectionAssert.AreEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
-                    CollectionAssert.AreEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
-                }
+                CollectionAssert.AreEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
+                CollectionAssert.AreEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
             }
         });
 
@@ -707,7 +700,7 @@ namespace Tests.System.Reflection.Virtualization
         {
             foreach (var c in new[]
             {
-                typeof(string).GetConstructor(new[] { typeof(char), typeof(int) }),
+                typeof(string).GetConstructor([typeof(char), typeof(int)]),
             })
             {
                 Assert.AreEqual(c.Attributes, p.GetAttributes(c));
@@ -722,10 +715,10 @@ namespace Tests.System.Reflection.Virtualization
         [TestMethod]
         public void Constructors_Invoke() => WithProviders(p =>
         {
-            var ctor = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
-            Assert.AreEqual("***", p.Invoke(ctor, new object[] { '*', 3 }));
-            Assert.AreEqual("***", p.Invoke(ctor, BindingFlags.Default, binder: null, new object[] { '*', 3 }, culture: null));
+            Assert.AreEqual("***", p.Invoke(ctor, ['*', 3]));
+            Assert.AreEqual("***", p.Invoke(ctor, BindingFlags.Default, binder: null, ['*', 3], culture: null));
         });
 
         [TestMethod]
@@ -1068,11 +1061,6 @@ namespace Tests.System.Reflection.Virtualization
         {
             var asm = typeof(string).Assembly;
 
-#if !NET6_0
-            Assert.AreEqual(asm.CodeBase, p.GetCodeBase(asm));
-            Assert.AreEqual(asm.EscapedCodeBase, p.GetEscapedCodeBase(asm));
-            Assert.AreEqual(asm.GlobalAssemblyCache, p.GetGlobalAssemblyCache(asm));
-#endif
 
             Assert.AreEqual(asm.FullName, p.GetFullName(asm));
             Assert.AreEqual(asm.HostContext, p.GetHostContext(asm));

@@ -28,8 +28,7 @@ namespace System.Time
         /// <param name="initialTime">Initial time to set the clock to.</param>
         public VirtualTimeClock(long initialTime)
         {
-            if (initialTime < 0L)
-                throw new ArgumentOutOfRangeException(nameof(initialTime));
+            ArgumentOutOfRangeException.ThrowIfNegative(initialTime);
 
             _now = initialTime;
         }
@@ -43,8 +42,7 @@ namespace System.Time
 
             set
             {
-                if (value < 0L)
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                ArgumentOutOfRangeException.ThrowIfNegative(value);
 
                 _now = value;
             }

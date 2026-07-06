@@ -20,7 +20,7 @@ namespace System.Memory
     /// </summary>
     public static partial class Bundle
     {
-        private static readonly MethodInfo[] s_createMethods = typeof(Bundle).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsGenericMethod && m.Name == nameof(Create)).OrderBy(m => m.GetGenericArguments().Length).ToArray();
+        private static readonly MethodInfo[] s_createMethods = [.. typeof(Bundle).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsGenericMethod && m.Name == nameof(Create)).OrderBy(m => m.GetGenericArguments().Length)];
 
         private const int MAX = 16;
         private const int LEN = MAX - 1;
@@ -32,8 +32,7 @@ namespace System.Memory
         /// <returns>Bundle value with the specified items.</returns>
         public static IReadOnlyIndexed Create(params object[] items)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             return CreateImpl(items);
         }
@@ -45,11 +44,10 @@ namespace System.Memory
         /// <returns>Bundle value with the specified items.</returns>
         public static IReadOnlyIndexed Create(IEnumerable<object> items)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             var list = items as IList<object>;
-            return CreateImpl(list ?? items.ToArray());
+            return CreateImpl(list ?? [.. items]);
         }
 
         private static IReadOnlyIndexed CreateImpl(IList<object> items)

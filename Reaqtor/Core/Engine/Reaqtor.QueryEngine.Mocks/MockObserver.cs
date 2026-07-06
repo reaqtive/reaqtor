@@ -15,7 +15,7 @@ namespace Reaqtor.QueryEngine.Mocks
     /// </summary>
     public static class MockObserver
     {
-        private static readonly Dictionary<string, object> _observers = new();
+        private static readonly Dictionary<string, object> _observers = [];
 
         /// <summary>
         /// Gets or creates an observer with the specified identifier.
@@ -59,19 +59,19 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             lock (_observers)
             {
-                if (!_observers.ContainsKey(id))
+                if (!_observers.TryGetValue(id, out var observer))
                 {
                     return null;
                 }
 
-                return (MockObserver<T>)_observers[id];
+                return (MockObserver<T>)observer;
             }
         }
     }
 
     public sealed class MockObserver<T> : Observer<T>
     {
-        private readonly List<T> _values = new();
+        private readonly List<T> _values = [];
         private long _currentCount;
 
         private readonly object _lock = new();
@@ -134,8 +134,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
         public override void SetContext(IOperatorContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             InstanceId = context.InstanceId;
 

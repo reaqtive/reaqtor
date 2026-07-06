@@ -33,7 +33,7 @@ namespace Reaqtive.Scheduler
         /// <summary>
         /// Synchronization gate.
         /// </summary>
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
         /// <summary>
         /// The parent scheduler.
@@ -71,9 +71,9 @@ namespace Reaqtive.Scheduler
         private LogicalScheduler(PhysicalScheduler scheduler, LogicalScheduler parent)
         {
             _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
-            _tasks = new HashSet<WorkItem>();
+            _tasks = [];
             _status = SchedulerStatus.Running;
-            _children = new List<LogicalScheduler>();
+            _children = [];
             _parent = parent;
         }
 
@@ -140,8 +140,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, TimeSpan.Zero));
         }
@@ -153,8 +152,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(TimeSpan dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, dueTime));
         }
@@ -166,8 +164,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, dueTime.ToUniversalTime()));
         }
@@ -214,7 +211,7 @@ namespace Reaqtive.Scheduler
 
                     if (!tasksToPause.TryGetValue(worker, out var items))
                     {
-                        items = new List<WorkItem>();
+                        items = [];
                         tasksToPause.Add(worker, items);
                     }
 
@@ -252,7 +249,7 @@ namespace Reaqtive.Scheduler
                 {
                     _status = SchedulerStatus.Pausing;
                     tasks.AddRange(_tasks);
-                    currentChildren = new List<LogicalScheduler>(_children);
+                    currentChildren = [.. _children];
                 }
             }
 
@@ -342,8 +339,8 @@ namespace Reaqtive.Scheduler
                 lock (_lock)
                 {
                     _status = SchedulerStatus.Running;
-                    pausedTasks = new List<WorkItem>(_tasks);
-                    currentChildren = new List<LogicalScheduler>(_children);
+                    pausedTasks = [.. _tasks];
+                    currentChildren = [.. _children];
                 }
 
                 foreach (var runningTask in pausedTasks)
@@ -382,7 +379,7 @@ namespace Reaqtive.Scheduler
 
                 lock (_lock)
                 {
-                    currentTasks = new List<WorkItem>(_tasks);
+                    currentTasks = [.. _tasks];
                 }
 
                 foreach (var task in currentTasks)
@@ -414,8 +411,8 @@ namespace Reaqtive.Scheduler
                     return;
                 }
 
-                currentTasks = new List<WorkItem>(_tasks);
-                currentChildren = new List<IScheduler>(_children);
+                currentTasks = [.. _tasks];
+                currentChildren = [.. _children];
 
                 _tasks.Clear();
                 _children.Clear();

@@ -40,7 +40,7 @@ namespace Reaqtor
         {
             ReactiveClientInterfaceType = reactiveClientInterfaceType;
 
-            _registeredObjects = new ConditionalWeakTable<object, Expression>();
+            _registeredObjects = [];
             _closureEliminator = new ClosureEliminator();
             _knownResourceRewriter = new KnownResourceRewriter(this);
             _clientInterfaceCallToUriRewriter = new ClientInterfaceCallToUriRewriter(this);
@@ -54,10 +54,8 @@ namespace Reaqtor
         /// <param name="expression">Expression representation of the object.</param>
         public virtual void RegisterObject(object value, Expression expression)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(expression);
 
             lock (_registeredObjects)
             {
@@ -76,8 +74,7 @@ namespace Reaqtor
         /// <returns>true if an association was found; otherwise, false.</returns>
         public virtual bool TryGetObject(object value, out Expression expression)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             lock (_registeredObjects)
             {
@@ -92,8 +89,7 @@ namespace Reaqtor
         /// <returns>Normalized expression.</returns>
         public virtual Expression Normalize(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var inlinedExpressions = new ExpressionInliner(this).Inline(expression);
 
@@ -122,8 +118,7 @@ namespace Reaqtor
         /// <returns>Expression with unsupported constructs rewritten into funclets.</returns>
         protected virtual Expression Funcletize(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return _closureEliminator.Apply(expression);
         }
@@ -136,10 +131,8 @@ namespace Reaqtor
         /// <returns>Expression representing the named resource.</returns>
         public virtual Expression GetNamedExpression(Type type, Uri uri)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(uri);
 
             return Expression.Parameter(type, uri.ToCanonicalString());
         }
@@ -152,8 +145,7 @@ namespace Reaqtor
         /// <returns>true if the expression represents a named resource; otherwise, false.</returns>
         public virtual bool TryGetName(Expression expression, out Uri uri)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression is ParameterExpression parameter)
             {
@@ -213,7 +205,7 @@ namespace Reaqtor
             {
                 _parent = parent;
                 _impl = new Impl(this);
-                _expressions = new HashSet<Expression>();
+                _expressions = [];
             }
 
             public Expression Inline(Expression expression)
@@ -348,8 +340,8 @@ namespace Reaqtor
                     return Expression.New(ctor, args, props);
                 }
 
-                private static readonly HashSet<Type> s_tuples = new()
-                {
+                private static readonly HashSet<Type> s_tuples =
+                [
                     typeof(Tuple<>),
                     typeof(Tuple<,>),
                     typeof(Tuple<,,>),
@@ -358,7 +350,7 @@ namespace Reaqtor
                     typeof(Tuple<,,,,,>),
                     typeof(Tuple<,,,,,,>),
                     typeof(Tuple<,,,,,,,>),
-                };
+                ];
             }
         }
 
@@ -391,13 +383,13 @@ namespace Reaqtor
                             methodParameterTypes = methodParameterTypes.Skip(1);
                         }
 
-                        args = args.Zip(
+                        args = [.. args.Zip(
                             methodParameterTypes,
                             (arg, type) =>
                                 (arg.Type != type) ?
                                 Expression.Convert(arg, type) :
                                 arg
-                            ).ToList();
+                            )];
 
                         if (obj == null && !args.Any())
                         {
@@ -418,7 +410,7 @@ namespace Reaqtor
                     {
                         var obj = Visit(node.Expression);
 
-                        return _parent.GetKnownResourceInvocation(uri, node.Member, obj, Enumerable.Empty<Expression>(), node.Type);
+                        return _parent.GetKnownResourceInvocation(uri, node.Member, obj, [], node.Type);
                     }
 
                     return base.VisitMember(node);
@@ -460,16 +452,16 @@ namespace Reaqtor
 
             if (instance != null)
             {
-                argTypes = argTypes.Concat(new[] { instance.Type });
-                args = args.Concat(new[] { instance });
+                argTypes = argTypes.Concat([instance.Type]);
+                args = args.Concat([instance]);
             }
 
             argTypes = argTypes.Concat(arguments.Select(arg => arg.Type));
             args = args.Concat(arguments);
 
-            argTypes = argTypes.Concat(new[] { returnType });
+            argTypes = argTypes.Concat([returnType]);
 
-            var functionType = Expression.GetDelegateType(argTypes.ToArray());
+            var functionType = Expression.GetDelegateType([.. argTypes]);
 
             var function = GetNamedExpression(functionType, knownResourceUri);
 
@@ -772,7 +764,7 @@ namespace Reaqtor
                     {
                         var method = type.GetMethod("Invoke");
 
-                        parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
+                        parameterTypes = [.. method.GetParameters().Select(p => p.ParameterType)];
                         returnType = method.ReturnType;
                         return true;
                     }
@@ -794,7 +786,7 @@ namespace Reaqtor
                     // build new type (Func<reduced_argument_types, returntype> or custom delegate type if count of
                     // type arguments is too high)
                     var argTypes = args.Select(arg => arg.Type);
-                    var functionType = Expression.GetDelegateType(argTypes.Concat(new[] { invocation.Type }).ToArray());
+                    var functionType = Expression.GetDelegateType([.. argTypes, invocation.Type]);
                     var function = Expression.Parameter(functionType, resourceName);
 
                     return Expression.Invoke(function, args);

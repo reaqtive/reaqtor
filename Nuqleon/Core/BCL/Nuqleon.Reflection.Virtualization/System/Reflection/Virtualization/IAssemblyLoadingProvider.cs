@@ -32,16 +32,6 @@ namespace System.Reflection
         /// <returns>The loaded assembly.</returns>
         Assembly Load(AssemblyName assemblyRef);
 
-#if NET472
-        /// <summary>
-        /// Loads the assembly with a common object file format (COFF)-based image containing an emitted assembly, optionally including symbols and specifying the source for the security context. The assembly is loaded into the application domain of the caller.
-        /// </summary>
-        /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
-        /// <param name="rawSymbolStore">A byte array that contains the raw bytes representing the symbols for the assembly.</param>
-        /// <param name="securityContextSource">The source of the security context.</param>
-        /// <returns>The loaded assembly.</returns>
-        Assembly Load(byte[] rawAssembly, byte[] rawSymbolStore, System.Security.SecurityContextSource securityContextSource);
-#endif
 
         /// <summary>
         /// Loads the contents of an assembly file on the specified path.

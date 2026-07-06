@@ -19,8 +19,8 @@ namespace Nuqleon.DataModel.TypeSystem
     /// </summary>
     internal static class DataTypeHelpers
     {
-        private static readonly ConditionalWeakTable<Type, StrongBox<bool>> s_isStructuralEntityDataType = new();
-        private static readonly ConditionalWeakTable<Type, StrongBox<bool>> s_isEntityEnumDataTypeType = new();
+        private static readonly ConditionalWeakTable<Type, StrongBox<bool>> s_isStructuralEntityDataType = [];
+        private static readonly ConditionalWeakTable<Type, StrongBox<bool>> s_isEntityEnumDataTypeType = [];
 
         /// <summary>
         /// Converts a CLR type to a data model type. Support for recursive type definitions can be enabled.

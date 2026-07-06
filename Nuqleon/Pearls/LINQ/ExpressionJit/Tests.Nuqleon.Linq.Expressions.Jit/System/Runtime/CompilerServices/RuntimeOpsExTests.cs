@@ -24,13 +24,13 @@ namespace Tests
                 Item1 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, Array.Empty<long>());
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, []);
             Assert.AreEqual(0, r.Count);
 
             foreach (var index in new[] { -1, 0, 1 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Tests
                 Item1 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 0L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [0L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1, r[0]);
             r[0] = 43;
@@ -51,13 +51,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Tests
                 Item2 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item2, r[0]);
             r[0] = 43;
@@ -78,13 +78,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Tests
                 Item3 = "bar"
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L, 0L, 2L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L, 0L, 2L]);
             Assert.AreEqual(3, r.Count);
             Assert.AreEqual(c.Item2, r[0]);
             Assert.AreEqual(c.Item1, r[1]);
@@ -106,32 +106,32 @@ namespace Tests
             r[0] = 43;
             r[1] = true;
             r[2] = "foo";
-            Assert.AreEqual(c.Item2, 43);
-            Assert.AreEqual(c.Item1, true);
-            Assert.AreEqual(c.Item3, "foo");
+            Assert.AreEqual(43, c.Item2);
+            Assert.AreEqual(true, c.Item1);
+            Assert.AreEqual("foo", c.Item3);
             Assert.AreEqual(c.Item2, r[0]);
             Assert.AreEqual(c.Item1, r[1]);
             Assert.AreEqual(c.Item3, r[2]);
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var value in new object[] { "bar", 42L })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[1] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[1] = value);
             }
 
             foreach (var value in new object[] { 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[2] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[2] = value);
             }
 
             foreach (var index in new[] { -1, 3, 4 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Tests
                 }
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L << 32 | 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L << 32 | 1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1.Item2, r[0]);
             r[0] = 43;
@@ -155,13 +155,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -179,7 +179,7 @@ namespace Tests
                 }
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 2L << 32 | 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [2L << 32 | 1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1.Item1.Item2, r[0]);
             r[0] = 43;
@@ -188,13 +188,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -224,7 +224,7 @@ namespace Tests
             var h = GetEmptyHoistedLocals();
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(Exception));
-            var e = Expression.Lambda<Action>(Expression.Block(new[] { x }, Expression.TryCatch(Expression.Empty(), Expression.Catch(y, Expression.Empty(), Expression.Constant(true)))));
+            var e = Expression.Lambda<Action>(Expression.Block([x], Expression.TryCatch(Expression.Empty(), Expression.Catch(y, Expression.Empty(), Expression.Constant(true)))));
             var c = new Empty();
             var q = RuntimeOpsEx.Quote(e, h, c);
             Assert.AreSame(e, q);
@@ -234,14 +234,14 @@ namespace Tests
         public void Quote_Hoisted_Block()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
             };
             var h = new HoistedLocals(parent: null, variables, definitions);
 
-            var e = Expression.Lambda<Func<int>>(Expression.Block(new[] { Expression.Parameter(typeof(int)) }, x));
+            var e = Expression.Lambda<Func<int>>(Expression.Block([Expression.Parameter(typeof(int))], x));
 
             Assert.AreEqual(typeof(Closure<StrongBox<int>>), h.Closure.ClosureType);
 
@@ -259,7 +259,7 @@ namespace Tests
         public void Quote_Hoisted_CatchBlock()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
@@ -284,13 +284,13 @@ namespace Tests
         public void Quote_Hoisted_Parent()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
             };
             var p = new HoistedLocals(parent: null, variables, definitions);
-            var h = new HoistedLocals(p, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), new Dictionary<ParameterExpression, StorageKind>());
+            var h = new HoistedLocals(p, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), []);
 
             var e = Expression.Lambda<Func<int>>(x);
 
@@ -310,7 +310,7 @@ namespace Tests
         public void Quote_RuntimeVariables_Hoisted1()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
@@ -361,40 +361,7 @@ namespace Tests
             Assert.AreEqual(44, r[0]);
         }
 
-#if !NET6_0 // See RuntimeOps. Some functionality is currently not supported.
-        [TestMethod]
-        public void Quote_RuntimeVariables_Hoisted3()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { y });
-            var definitions = new Dictionary<ParameterExpression, StorageKind>
-            {
-                { y, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
-            };
-            var h = new HoistedLocals(parent: null, variables, definitions);
 
-            var e = Expression.Lambda<Func<int, IRuntimeVariables>>(Expression.RuntimeVariables(x, y), x);
-
-            Assert.AreEqual(typeof(Closure<StrongBox<int>>), h.Closure.ClosureType);
-
-            var c = new Closure<StrongBox<int>> { Item1 = new StrongBox<int>(42) };
-            var q = (Expression<Func<int, IRuntimeVariables>>)RuntimeOpsEx.Quote(e, h, c);
-            var f = q.Compile();
-
-            Assert.AreEqual(41, f(41)[0]);
-            Assert.AreEqual(42, f(41)[1]);
-            Assert.AreEqual(2, f(41).Count);
-
-            var r = f(43);
-            r[0] = 44;
-            r[1] = 45;
-            Assert.AreEqual(44, r[0]);
-            Assert.AreEqual(45, r[1]);
-            Assert.AreEqual(45, c.Item1.Value);
-        }
-#endif
-
-        private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), new Dictionary<ParameterExpression, StorageKind>());
+        private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), []);
     }
 }

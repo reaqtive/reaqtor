@@ -28,7 +28,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// The set of free variables found in expressions that have been visited.
         /// </summary>
-        public readonly HashSet<ParameterExpression> FreeVariables = new();
+        public readonly HashSet<ParameterExpression> FreeVariables = [];
 
         /// <summary>
         /// Keeps track of the nested variable scopes. Any variable that occurs in any of these scopes is
@@ -69,7 +69,7 @@ namespace System.Linq.Expressions
         {
             if (node.Variable != null)
             {
-                _environment.Push(new[] { node.Variable });
+                _environment.Push([node.Variable]);
             }
 
             Visit(node.Filter);

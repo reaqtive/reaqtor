@@ -9,22 +9,10 @@
             vmImage: ${{ pool.vmImage }}
           steps:
             - task: UseDotNet@2
-              displayName: Use .NET Core 7.x SDK
+              displayName: Use .NET SDK from global.json
               inputs:
-                version: 7.x
+                useGlobalJson: true
                 performMultiLevelLookup: true
-
-            - task: UseDotNet@2
-              inputs:
-                version: '6.x'
-                packageType: runtime
-              displayName: Install .NET 6.0 runtime
-
-            - task: UseDotNet@2
-              inputs:
-                version: '3.1.x'
-                packageType: runtime
-              displayName: Install .NET Core 3.1 runtime
 
             - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 
@@ -43,32 +31,31 @@
                 arguments: install -g dotnet-reportgenerator-globaltool
               displayName: Install ReportGenerator tool
 
+            # Tests run on Microsoft.Testing.Platform (see global.json "test.runner"). VSTest-style
+            # arguments are translated to their MTP equivalents: --collect "XPlat Code Coverage" ->
+            # --coverage (Microsoft.Testing.Extensions.CodeCoverage), --blame-hang-timeout ->
+            # --hangdump-timeout, coverlet.runsettings -> codecoverage.runsettings. --filter is unchanged.
             - task: DotNetCoreCLI@2
               inputs:
                 command: test
                 workingDirectory: ${{ project }}
-                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
+                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --filter "TestCategory!~NonDeterministic_Strong" --coverage --coverage-settings $(Build.SourcesDirectory)/codecoverage.runsettings --coverage-output-format cobertura --hangdump --hangdump-timeout 5m
                 testRunTitle: ${{ project }} ${{ configuration }}
               displayName: Run Unit Tests
 
-            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
+            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/*.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
               displayName: Consolidate Coverage Runs
               condition: succeededOrFailed()
 
-            - task: PublishBuildArtifacts@1
-              inputs:
-                pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
-                artifactName: RawCoverage
-                parallel: true
-                parallelCount: 8
+            # Pipeline artifacts (unlike the retired PublishBuildArtifacts@1) are immutable and
+            # unique per job, so each matrix job publishes under its own name; the coverage
+            # stage downloads them by the RawCoverage_* pattern.
+            - publish: $(Build.ArtifactStagingDirectory)/coverage
+              artifact: RawCoverage_${{ pool.name }}_${{ project }}_${{ configuration }}
               displayName: Publish Raw Coverage Output
               condition: succeededOrFailed()
 
-            - task: PublishBuildArtifacts@1
-              inputs:
-                pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-                artifactName: Logs
-                parallel: true
-                parallelCount: 8
+            - publish: $(Build.ArtifactStagingDirectory)/Logs
+              artifact: Logs_${{ pool.name }}_${{ project }}_${{ configuration }}
               displayName: Publish Build Logs
               condition: always()

@@ -58,10 +58,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
                     Expression.Constant(1),
                     null,
                     null,
-                    new[]
-                    {
+                    [
                         Expression.Catch(typeof(Exception), F)
-                    }
+                    ]
                 );
 
             var r =
@@ -409,7 +408,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var r =
                 Expression.TryCatch(
                     Expression.Block(
-                        new[] { ex1 },
+                        [ex1],
                         Expression.Assign(ex1, t.Operand),
                         WriteLine(ex1, typeof(object))
                     ),
@@ -474,7 +473,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var r =
                 Expression.TryCatch(
                     Expression.Block(
-                        new[] { ex1 },
+                        [ex1],
                         Expression.Assign(ex1, t.Operand),
                         WriteLine(ex1, typeof(object))
                     ),

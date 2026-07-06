@@ -230,7 +230,7 @@ namespace Pearls.Reaqtor.CSE
                 /// <summary>
                 /// Gets the member accesses on the range variable that were found in the analyzed expression.
                 /// </summary>
-                public List<MemberInfo> Members { get; } = new(); // not a set; want to be conservative
+                public List<MemberInfo> Members { get; } = []; // not a set; want to be conservative
 
                 /// <summary>
                 /// Visits member expressions to detect member access on the range variable.

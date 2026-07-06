@@ -29,11 +29,10 @@ namespace System.Linq.Expressions
         /// <returns>Funclet expression that will evaluate the specified expression upon reduction.</returns>
         public static FuncletExpression Create(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
-            var create = typeof(FuncletExpression<>).MakeGenericType(expression.Type).GetMethod(nameof(FuncletExpression<int>.CreateNew), BindingFlags.Static | BindingFlags.NonPublic);
-            return (FuncletExpression)create.Invoke(obj: null, new object[] { expression });
+            var create = typeof(FuncletExpression<>).MakeGenericType(expression.Type).GetMethod(nameof(FuncletExpression<>.CreateNew), BindingFlags.Static | BindingFlags.NonPublic);
+            return (FuncletExpression)create.Invoke(obj: null, [expression]);
         }
 
         /// <summary>
@@ -44,8 +43,7 @@ namespace System.Linq.Expressions
         /// <returns>Funclet expression that will evaluate the specified expression upon reduction.</returns>
         public static FuncletExpression<T> Create<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return FuncletExpression<T>.CreateNew(expression);
         }

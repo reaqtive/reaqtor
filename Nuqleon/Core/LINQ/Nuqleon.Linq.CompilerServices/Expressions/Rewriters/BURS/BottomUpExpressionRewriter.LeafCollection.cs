@@ -34,10 +34,8 @@ namespace System.Linq.CompilerServices
         public void Add<TLeaf>(Expression<Func<TLeaf, TTarget>> convert, int cost)
                 where TLeaf : Expression
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, _ => true, cost);
         }
@@ -52,12 +50,9 @@ namespace System.Linq.CompilerServices
         public void Add<TLeaf>(Expression<Func<TLeaf, TTarget>> convert, Expression<Func<TLeaf, bool>> predicate, int cost)
             where TLeaf : Expression
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentNullException.ThrowIfNull(predicate);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }

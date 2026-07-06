@@ -135,16 +135,14 @@ namespace Reaqtor
 
             public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 return new Queryable<TElement>(this, expression);
             }
 
             public IQueryable CreateQuery(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 var type = expression.Type.FindGenericType(typeof(IQueryable<>));
                 if (type == null)
@@ -154,13 +152,12 @@ namespace Reaqtor
 
                 var queryableType = typeof(Queryable<>).MakeGenericType(elementTypeArgs);
 
-                return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, new object[] { this, expression }, culture: null);
+                return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [this, expression], culture: null);
             }
 
             public TResult Execute<TResult>(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 if (!typeof(TResult).IsAssignableFrom(expression.Type))
                     throw new InvalidOperationException("Specified expression is not assignable to " + typeof(TResult) + ".");
@@ -171,12 +168,11 @@ namespace Reaqtor
 
             public object Execute(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 var genericExecuteMethod = ((MethodInfo)ReflectionHelpers.InfoOf((ReactiveMetadataProxyBase rmpb) => rmpb.Execute<object>(null))).GetGenericMethodDefinition();
                 var executeMethod = genericExecuteMethod.MakeGenericMethod(expression.Type);
-                return executeMethod.Invoke(_parent, new object[] { expression });
+                return executeMethod.Invoke(_parent, [expression]);
             }
 
             private sealed class CollectionInliner : ExpressionVisitor

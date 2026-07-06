@@ -29,11 +29,11 @@ namespace Tests.Nuqleon.Json
         [TestMethod]
         public void Serializer_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new JsonSerializer(type: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new JsonSerializer(type: null));
 
             var ser = new JsonSerializer(typeof(int));
-            Assert.ThrowsException<ArgumentNullException>(() => ser.Deserialize(default(string)));
-            Assert.ThrowsException<ArgumentNullException>(() => ser.Deserialize(default(Expression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ser.Deserialize(default(string)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ser.Deserialize(default(Expression)));
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace Tests.Nuqleon.Json
                 Assert.IsTrue(b);
             }
 
-            Assert.ThrowsException<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
+            Assert.ThrowsExactly<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
         }
 
         [TestMethod]
@@ -321,7 +321,7 @@ namespace Tests.Nuqleon.Json
                 Assert.AreEqual("bar", b);
             }
 
-            Assert.ThrowsException<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
+            Assert.ThrowsExactly<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
         }
 
         [TestMethod]
@@ -355,7 +355,7 @@ namespace Tests.Nuqleon.Json
                 Assert.IsNull(des.Deserialize(res));
             }
 
-            Assert.ThrowsException<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
+            Assert.ThrowsExactly<SerializationException>(() => new JsonSerializer(typeof(int)).Deserialize(res));
         }
 
         [TestMethod]
@@ -365,14 +365,14 @@ namespace Tests.Nuqleon.Json
             cycle1.Cycle = cycle1;
 
             var cycle2 = new Cyclic();
-            cycle2.Cycles = new[] { cycle2 };
+            cycle2.Cycles = [cycle2];
 
             var cycle3 = new Cyclic[1];
             cycle3[0] = new Cyclic { Cycles = cycle3 };
 
-            Assert.ThrowsException<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic)).Serialize(cycle1));
-            Assert.ThrowsException<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic)).Serialize(cycle2));
-            Assert.ThrowsException<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic[])).Serialize(cycle3));
+            Assert.ThrowsExactly<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic)).Serialize(cycle1));
+            Assert.ThrowsExactly<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic)).Serialize(cycle2));
+            Assert.ThrowsExactly<SerializationException>(() => _ = new JsonSerializer(typeof(Cyclic[])).Serialize(cycle3));
         }
 
         private sealed class Person

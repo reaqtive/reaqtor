@@ -34,9 +34,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 Assert.IsNull(base.VisitLambdaCore(node: null));
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Push(default(IEnumerable<ParameterExpressionSlim>)), ex => Assert.AreEqual("parameters", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Push(default(IEnumerable<KeyValuePair<ParameterExpressionSlim, ParameterExpressionSlim>>)), ex => Assert.AreEqual("scope", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => { base.TryLookup(parameter: null, out _); }, ex => Assert.AreEqual("parameter", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.Push(default(IEnumerable<ParameterExpressionSlim>)));
+                Assert.AreEqual("parameters", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.Push(default(IEnumerable<KeyValuePair<ParameterExpressionSlim, ParameterExpressionSlim>>)));
+                Assert.AreEqual("scope", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => { base.TryLookup(parameter: null, out _); });
+                Assert.AreEqual("parameter", ex3.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
             }
 

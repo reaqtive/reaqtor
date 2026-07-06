@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -32,7 +33,7 @@ namespace Reaqtive.Operators
             /// <summary>
             /// Unlike RX, we are leaking the _ object, so we can't take a lock on that reference.
             /// </summary>
-            private readonly object _syncLock = new();
+            private readonly Lock _syncLock = new();
 
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _otherSubscription;
@@ -57,7 +58,7 @@ namespace Reaqtive.Operators
                 _otherSubscription = Params._other.Subscribe(otherObserver);
                 otherObserver.Subscription = _otherSubscription;
 
-                return new[] { firstSubscription, _otherSubscription };
+                return [firstSubscription, _otherSubscription];
             }
 
             public void OnCompleted()

@@ -25,7 +25,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = stream.ReadByte();
                     Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                     // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -70,7 +70,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = stream.ReadByte();
                     Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                     // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -111,7 +111,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCodeConstant = Expression.Constant(typeCode, typeof(byte));
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -147,7 +147,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = stream.ReadByte();
                     Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                     // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -197,7 +197,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = stream.ReadByte();
                     Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                     // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -257,7 +257,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = stream.ReadByte();
                     Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                     // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -302,7 +302,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCodeConstant = Expression.Constant(typeCode, typeof(byte));
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");

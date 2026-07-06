@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <IsTestProject>false</IsTestProject>
+    <!-- Catalog of test data (no test methods), referenced by the Hashing test project. Override the
+         Exe output type that Directory.Build.props applies by name to 'Tests.*' projects. -->
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

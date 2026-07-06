@@ -171,8 +171,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQbservable<T> CreateQbservable<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -184,8 +183,7 @@ namespace Reaqtor.Reliable.Service
 
         public Func<TArgs, IReliableQbservable<TResult>> CreateQbservable<TArgs, TResult>(Expression<Func<TArgs, IReliableQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IReliableQbservable<TResult>>(arg =>
             {
@@ -203,8 +201,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQbserver<T> CreateQbserver<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -216,8 +213,7 @@ namespace Reaqtor.Reliable.Service
 
         public Func<TArgs, IReliableQbserver<TResult>> CreateQbserver<TArgs, TResult>(Expression<Func<TArgs, IReliableQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IReliableQbserver<TResult>>(arg =>
             {
@@ -235,8 +231,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -248,8 +243,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -265,8 +259,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableMultiQubject<TInput, TOutput> CreateQubject<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -282,8 +275,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscriptionFactory CreateQubscriptionFactory(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -295,8 +287,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscriptionFactory<TArgs> CreateQubscriptionFactory<TArgs>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {
@@ -312,8 +303,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscription CreateQubscription(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (_expressionServices.TryGetName(expression, out var uri))
             {

@@ -33,27 +33,39 @@ namespace Tests.System.Linq.CompilerServices
 
             var atb = rtc.GetNewAnonymousTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>()));
+            Assert.AreEqual("anonymousTypeBuilder", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null));
+            Assert.AreEqual("properties", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), Array.Empty<string>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), []));
+            Assert.AreEqual("anonymousTypeBuilder", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null, []));
+            Assert.AreEqual("properties", ex4.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>()));
+            Assert.AreEqual("anonymousTypeBuilder", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null));
+            Assert.AreEqual("properties", ex6.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), Array.Empty<string>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), []));
+            Assert.AreEqual("anonymousTypeBuilder", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null, []));
+            Assert.AreEqual("properties", ex8.ParamName);
         }
 
         [TestMethod]
         public void CreateAnonymousType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null));
+            Assert.AreEqual("properties", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null, []));
+            Assert.AreEqual("properties", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null));
+            Assert.AreEqual("properties", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null, []));
+            Assert.AreEqual("properties", ex4.ParamName);
         }
 
         [TestMethod]
@@ -63,7 +75,8 @@ namespace Tests.System.Linq.CompilerServices
 
             var atb = rtc.GetNewAnonymousTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentException>(() => rtc.DefineAnonymousType(atb, new[] { new KeyValuePair<string, Type>("Bar", typeof(int)) }, "Baz"), ex => Assert.AreEqual("keys", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => rtc.DefineAnonymousType(atb, [new KeyValuePair<string, Type>("Bar", typeof(int))], "Baz"));
+            Assert.AreEqual("keys", ex.ParamName);
         }
 
         [TestMethod]
@@ -75,11 +88,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                });
+                ]);
 
                 return atb.CreateType();
             });
@@ -94,11 +107,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
 
                 return atb.CreateType();
             });
@@ -109,11 +122,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
             });
         }
 
@@ -122,11 +135,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
             });
         }
 
@@ -135,11 +148,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                }, new[] { "Name", "Age" });
+                ], ["Name", "Age"]);
             });
         }
 
@@ -180,19 +193,19 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(prop1.CanRead);
             Assert.IsFalse(prop1.CanWrite);
 
-            var bart = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var bart = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.AreEqual("Bart", prop0.GetValue(bart));
             Assert.AreEqual(10, prop1.GetValue(bart));
             Assert.AreEqual("{ Name = Bart, Age = 10 }", bart.ToString());
 
-            var jojo = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var jojo = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.IsTrue(bart.Equals(jojo));
             Assert.IsTrue(jojo.Equals(bart));
             Assert.AreEqual(bart.GetHashCode(), jojo.GetHashCode());
 
-            var lisa = Activator.CreateInstance(ant, new object[] { "Lisa", 8 });
+            var lisa = Activator.CreateInstance(ant, ["Lisa", 8]);
 
             Assert.IsFalse(bart.Equals(lisa));
             Assert.IsFalse(lisa.Equals(bart));
@@ -208,11 +221,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, new[] { "Name" });
+                ], ["Name"]);
 
                 return atb.CreateType();
             });
@@ -223,11 +236,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_VisualBasic_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, new[] { "Name" });
+                ], ["Name"]);
             });
         }
 
@@ -268,13 +281,13 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(prop1.CanRead);
             Assert.IsTrue(prop1.CanWrite);
 
-            var bart = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var bart = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.AreEqual("Bart", prop0.GetValue(bart));
             Assert.AreEqual(10, prop1.GetValue(bart));
             Assert.AreEqual("{ Name = Bart, Age = 10 }", bart.ToString());
 
-            var jojo = Activator.CreateInstance(ant, new object[] { "Bart", 12 });
+            var jojo = Activator.CreateInstance(ant, ["Bart", 12]);
 
             Assert.IsTrue(bart.Equals(jojo));
             Assert.IsTrue(jojo.Equals(bart));
@@ -288,7 +301,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(jojo.Equals(bart));
             Assert.AreEqual(bart.GetHashCode(), jojo.GetHashCode());
 
-            var lisa = Activator.CreateInstance(ant, new object[] { "Lisa", 8 });
+            var lisa = Activator.CreateInstance(ant, ["Lisa", 8]);
 
             Assert.IsFalse(bart.Equals(lisa));
             Assert.IsFalse(lisa.Equals(bart));
@@ -338,25 +351,25 @@ namespace Tests.System.Linq.CompilerServices
             var atb1 = rtc.GetNewAnonymousTypeBuilder();
             var atb2 = rtc.GetNewAnonymousTypeBuilder();
 
-            rtc.DefineAnonymousType(atb1, new[]
-            {
+            rtc.DefineAnonymousType(atb1,
+            [
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
-            });
+            ]);
 
-            rtc.DefineAnonymousType(atb2, new[]
-            {
+            rtc.DefineAnonymousType(atb2,
+            [
                 new KeyValuePair<string, Type>("Foo", atb1),
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
-            }, new[] { "Foo" });
+            ], ["Foo"]);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
 
-            var objFoo1 = Activator.CreateInstance(foo, new object[] { 42 });
-            var objFoo2 = Activator.CreateInstance(foo, new object[] { 42 });
+            var objFoo1 = Activator.CreateInstance(foo, [42]);
+            var objFoo2 = Activator.CreateInstance(foo, [42]);
 
-            var objBar1 = Activator.CreateInstance(bar, new object[] { objFoo1, 43 });
-            var objBar2 = Activator.CreateInstance(bar, new object[] { objFoo2, 44 });
+            var objBar1 = Activator.CreateInstance(bar, [objFoo1, 43]);
+            var objBar2 = Activator.CreateInstance(bar, [objFoo2, 44]);
 
             Assert.AreEqual(objBar1, objBar2);
             Assert.AreEqual("{ Foo = { Qux = 42 }, Baz = 43 }", objBar1.ToString());
@@ -371,23 +384,23 @@ namespace Tests.System.Linq.CompilerServices
             var atb1 = rtc.GetNewAnonymousTypeBuilder();
             var atb2 = rtc.GetNewAnonymousTypeBuilder();
 
-            rtc.DefineAnonymousType(atb1, new[]
-            {
+            rtc.DefineAnonymousType(atb1,
+            [
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
                 new KeyValuePair<string, Type>("Bar", atb2),
-            }, Array.Empty<string>());
+            ], []);
 
-            rtc.DefineAnonymousType(atb2, new[]
-            {
+            rtc.DefineAnonymousType(atb2,
+            [
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
                 new KeyValuePair<string, Type>("Foo", atb1),
-            }, Array.Empty<string>());
+            ], []);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
 
-            var objFoo = Activator.CreateInstance(foo, new object[] { 42, null });
-            var objBar = Activator.CreateInstance(bar, new object[] { 43, null });
+            var objFoo = Activator.CreateInstance(foo, [42, null]);
+            var objBar = Activator.CreateInstance(bar, [43, null]);
 
             var fooBar = foo.GetProperty("Bar");
             fooBar.SetValue(objFoo, objBar);
@@ -403,26 +416,26 @@ namespace Tests.System.Linq.CompilerServices
         public void AnonymousType_Visibility()
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
-            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
+            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props2));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props2); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props2); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props3));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props3); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props3); });
 
         }
 
         [TestMethod]
         public void AnonymousType_PropertyAttribute_NoMatchingConstructor()
         {
-            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
+            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
         }
 
         [TestMethod]
@@ -450,14 +463,17 @@ namespace Tests.System.Linq.CompilerServices
 
             var atb = rtc.GetNewClosureTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineClosureType(closureTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>()), ex => Assert.AreEqual("closureTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineClosureType(atb, fields: null), ex => Assert.AreEqual("fields", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineClosureType(closureTypeBuilder: null, []));
+            Assert.AreEqual("closureTypeBuilder", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineClosureType(atb, fields: null));
+            Assert.AreEqual("fields", ex2.ParamName);
         }
 
         [TestMethod]
         public void CreateClosureType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateClosureType(fields: null), ex => Assert.AreEqual("fields", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateClosureType(fields: null));
+            Assert.AreEqual("fields", ex.ParamName);
         }
 
         [TestMethod]
@@ -467,7 +483,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var ctb = rtc.GetNewClosureTypeBuilder();
 
-            rtc.DefineClosureType(ctb, Array.Empty<KeyValuePair<string, Type>>());
+            rtc.DefineClosureType(ctb, []);
 
             var clt = ctb.CreateType();
 
@@ -485,11 +501,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var ctb = rtc.GetNewClosureTypeBuilder();
 
-                rtc.DefineClosureType(ctb, new[]
-                {
+                rtc.DefineClosureType(ctb,
+                [
                     new KeyValuePair<string, Type>("bar", typeof(int)),
                     new KeyValuePair<string, Type>("foo", typeof(string)),
-                });
+                ]);
 
                 return ctb.CreateType();
             });
@@ -500,11 +516,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             ClosureType_NonTrivial_Impl(() =>
             {
-                return RuntimeCompiler.CreateClosureType(new[]
-                {
+                return RuntimeCompiler.CreateClosureType(
+                [
                     new KeyValuePair<string, Type>("bar", typeof(int)),
                     new KeyValuePair<string, Type>("foo", typeof(string)),
-                });
+                ]);
             });
         }
 
@@ -540,8 +556,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateClosureType(props));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewClosureTypeBuilder(); rtc.DefineClosureType(atb, props); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateClosureType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewClosureTypeBuilder(); rtc.DefineClosureType(atb, props); });
         }
 
         #endregion
@@ -555,17 +571,23 @@ namespace Tests.System.Linq.CompilerServices
 
             var rtb = rtc.GetNewRecordTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineRecordType(recordTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), valueEquality: true), ex => Assert.AreEqual("recordTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineRecordType(rtb, properties: (KeyValuePair<string, Type>[])null, valueEquality: true), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineRecordType(recordTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), valueEquality: true), ex => Assert.AreEqual("recordTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineRecordType(rtb, properties: (StructuralFieldDeclaration[])null, valueEquality: true), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineRecordType(recordTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), valueEquality: true));
+            Assert.AreEqual("recordTypeBuilder", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineRecordType(rtb, properties: (KeyValuePair<string, Type>[])null, valueEquality: true));
+            Assert.AreEqual("properties", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineRecordType(recordTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), valueEquality: true));
+            Assert.AreEqual("recordTypeBuilder", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => rtc.DefineRecordType(rtb, properties: (StructuralFieldDeclaration[])null, valueEquality: true));
+            Assert.AreEqual("properties", ex4.ParamName);
         }
 
         [TestMethod]
         public void CreateRecordType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateRecordType(properties: (KeyValuePair<string, Type>[])null, valueEquality: true), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateRecordType(properties: (StructuralFieldDeclaration[])null, valueEquality: true), ex => Assert.AreEqual("properties", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateRecordType(properties: (KeyValuePair<string, Type>[])null, valueEquality: true));
+            Assert.AreEqual("properties", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => RuntimeCompiler.CreateRecordType(properties: (StructuralFieldDeclaration[])null, valueEquality: true));
+            Assert.AreEqual("properties", ex2.ParamName);
         }
 
         [TestMethod]
@@ -579,11 +601,11 @@ namespace Tests.System.Linq.CompilerServices
 
                     var rtb = rtc.GetNewRecordTypeBuilder();
 
-                    rtc.DefineRecordType(rtb, new[]
-                    {
+                    rtc.DefineRecordType(rtb,
+                    [
                         new KeyValuePair<string, Type>("Name", typeof(string)),
                         new KeyValuePair<string, Type>("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
 
                     return rtb.CreateType();
                 }, eq);
@@ -601,11 +623,11 @@ namespace Tests.System.Linq.CompilerServices
 
                     var rtb = rtc.GetNewRecordTypeBuilder();
 
-                    rtc.DefineRecordType(rtb, new[]
-                    {
+                    rtc.DefineRecordType(rtb,
+                    [
                         new StructuralFieldDeclaration("Name", typeof(string)),
                         new StructuralFieldDeclaration("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
 
                     return rtb.CreateType();
                 }, eq);
@@ -619,11 +641,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 RecordType_Impl(() =>
                 {
-                    return RuntimeCompiler.CreateRecordType(new[]
-                    {
+                    return RuntimeCompiler.CreateRecordType(
+                    [
                         new KeyValuePair<string, Type>("Name", typeof(string)),
                         new KeyValuePair<string, Type>("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
                 }, eq);
             }
         }
@@ -635,11 +657,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 RecordType_Impl(() =>
                 {
-                    return RuntimeCompiler.CreateRecordType(new[]
-                    {
+                    return RuntimeCompiler.CreateRecordType(
+                    [
                         new StructuralFieldDeclaration("Name", typeof(string)),
                         new StructuralFieldDeclaration("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
                 }, eq);
             }
         }
@@ -716,25 +738,25 @@ namespace Tests.System.Linq.CompilerServices
         public void RecordType_Visibility()
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
-            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
+            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props, valueEquality: true); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props2, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props2, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props2, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props2, valueEquality: true); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props3, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props3, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props3, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props3, valueEquality: true); });
         }
 
         [TestMethod]
         public void RecordType_PropertyAttribute_NoMatchingConstructor()
         {
-            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
+            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
         }
 
         [TestMethod]
@@ -759,9 +781,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void CustomAttributeDeclaration_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new CustomAttributeDeclaration(type: null, new List<object>().AsReadOnly()), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new CustomAttributeDeclaration(typeof(FooAttribute), default(ReadOnlyCollection<object>)), ex => Assert.AreEqual("arguments", ex.ParamName));
-            Assert.ThrowsException<InvalidOperationException>(() => new CustomAttributeDeclaration(typeof(Bar), new List<object>().AsReadOnly()));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new CustomAttributeDeclaration(type: null, new List<object>().AsReadOnly()));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new CustomAttributeDeclaration(typeof(FooAttribute), default(ReadOnlyCollection<object>)));
+            Assert.AreEqual("arguments", ex2.ParamName);
+            Assert.ThrowsExactly<InvalidOperationException>(() => new CustomAttributeDeclaration(typeof(Bar), new List<object>().AsReadOnly()));
         }
 
         #endregion

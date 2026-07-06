@@ -34,7 +34,7 @@ namespace System.Memory
         /// Dictionary mapping types onto editors. If a type does not have an editor, an entry with <see cref="s_nop"/>
         /// is put in the dictionary as to avoid re-resolving an editor.
         /// </summary>
-        private readonly Dictionary<Type, HeapEditor> _editors = new();
+        private readonly Dictionary<Type, HeapEditor> _editors = [];
 
         /// <summary>
         /// Replaces the specified object in <paramref name="obj"/> by a shared copy if its type passes

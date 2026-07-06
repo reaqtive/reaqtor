@@ -23,8 +23,8 @@ namespace Tests
         [TestMethod]
         public void DefaultNameProvider_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(FieldInfo)));
-            Assert.ThrowsException<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(PropertyInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(FieldInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(PropertyInfo)));
         }
 
         [TestMethod]

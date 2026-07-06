@@ -29,8 +29,7 @@ namespace Tests.ReifiedOperations
 
         public static SequenceOperation<TValue> Sequence<TValue>(params IOperation<TValue>[] operations)
         {
-            if (operations == null)
-                throw new ArgumentNullException(nameof(operations));
+            ArgumentNullException.ThrowIfNull(operations);
 
             return new SequenceOperation<TValue>(operations);
         }

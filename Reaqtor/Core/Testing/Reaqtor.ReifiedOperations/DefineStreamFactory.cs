@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class DefineStreamFactory : DefineServiceOperation
     {
         public DefineStreamFactory(Uri streamFactoryUri)

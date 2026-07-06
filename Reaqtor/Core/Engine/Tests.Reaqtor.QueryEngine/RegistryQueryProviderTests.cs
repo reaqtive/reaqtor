@@ -23,25 +23,25 @@ namespace Tests.Reaqtor.QueryEngine
     [TestClass]
     public class RegistryQueryProviderTests
     {
-        private static readonly string[] Keys = new[]
-        {
+        private static readonly string[] Keys =
+        [
             "test://key1",
             "test://key2",
             "test://key3",
             "test://key4",
             "test://key5",
             "test://key6",
-        };
+        ];
 
-        private static readonly Expression[] Expressions = new Expression[]
-        {
+        private static readonly Expression[] Expressions =
+        [
             Expression.New(typeof(DummySubject)),
             Expression.Default(typeof(ISubscribable<int>)),
             Expression.Default(typeof(IObserver<int>)),
             Expression.Default(typeof(Func<IReliableMultiSubject<int>>)),
             Expression.New(typeof(DummySubscription)),
             Expression.Default(typeof(Func<ISubscription>)),
-        };
+        ];
 
         [TestMethod]
         public void RegistryQueryProvider_NotImplemented()
@@ -52,12 +52,12 @@ namespace Tests.Reaqtor.QueryEngine
             var values = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Value));
             var enums = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q);
 
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.CreateQuery(null));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery(null));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
         }
 
         [TestMethod]
@@ -69,9 +69,9 @@ namespace Tests.Reaqtor.QueryEngine
             var nonMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value == null));
             var notByKey = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Value == null));
 
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
         }
 
         [TestMethod]
@@ -99,12 +99,12 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[0]) }));
-            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[1]) }));
-            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[2]) }));
-            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[3]) }));
-            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[4]) }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[5]) }));
+            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
+            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
+            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
+            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
+            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
         }
 
         [TestMethod]
@@ -120,12 +120,12 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[0]) }));
-            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[1]) }));
-            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[2]) }));
-            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[3]) }));
-            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[4]) }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual(new[] { new Uri(Keys[5]) }));
+            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
+            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
+            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
+            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
+            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
         }
 
         [TestMethod]
@@ -141,26 +141,26 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[0] }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[1] }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[2] }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[3] }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[4] }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[5] }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[0]) }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[1]) }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[2]) }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[3]) }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[4]) }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[5]) }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
         }
 
         [TestMethod]
@@ -176,26 +176,26 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[0] }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[1] }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[2] }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[3] }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[4] }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual(new[] { Expressions[5] }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[0]) }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[1]) }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[2]) }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[3]) }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[4]) }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual(new[] { new Uri(Keys[5]) }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual(new object[] { null }));
+            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
         }
 
         [TestMethod]
@@ -211,12 +211,12 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[0] }));
-            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[1] }));
-            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[2] }));
-            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[3] }));
-            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[4] }));
-            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[5] }));
+            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
+            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
+            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
+            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
+            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
+            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
         }
 
         [TestMethod]
@@ -232,12 +232,12 @@ namespace Tests.Reaqtor.QueryEngine
             provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
             provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[0] }));
-            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[1] }));
-            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[2] }));
-            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[3] }));
-            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[4] }));
-            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual(new[] { Expressions[5] }));
+            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
+            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
+            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
+            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
+            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
+            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
         }
 
         [TestMethod]

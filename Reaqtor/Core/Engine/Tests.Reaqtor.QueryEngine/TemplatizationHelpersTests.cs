@@ -50,7 +50,8 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void TemplatizationHelpers_TemplatizeAndIdentify_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((Expression)null).TemplatizeAndIdentify(), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ((Expression)null).TemplatizeAndIdentify());
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]
@@ -75,13 +76,14 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void TemplatizationHelpers_SubstituteTemplateId_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((Expression)null).SubstituteTemplateId(replacement: null), ex => Assert.AreEqual("replacement", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ((Expression)null).SubstituteTemplateId(replacement: null));
+            Assert.AreEqual("replacement", ex.ParamName);
         }
 
         [TestMethod]
         public void TemplatizationHelpers_SubstituteTemplateId_ThrowsInvalidOperation()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.New(typeof(int)).SubstituteTemplateId("foo"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.New(typeof(int)).SubstituteTemplateId("foo"));
         }
 
         [TestMethod]

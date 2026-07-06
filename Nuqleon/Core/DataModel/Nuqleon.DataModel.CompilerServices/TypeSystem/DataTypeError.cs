@@ -11,7 +11,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace Nuqleon.DataModel.TypeSystem
@@ -19,34 +18,14 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Provides information about data type errors, when converting from CLR types.
     /// </summary>
-    [Serializable]
-    public class DataTypeError : ISerializable
+    public class DataTypeError
     {
         internal DataTypeError(Type type, string message, Type[] stack)
         {
             Type = type;
             Message = message;
 
-            //
-            // Cannot be changed to `ToReadOnly()` since the resulting
-            // collection type is not serializable.
-            //
             Stack = stack.ToList().AsReadOnly();
-        }
-
-        /// <summary>
-        /// Creates a new data type error object from serialization information.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Streaming context.</param>
-        protected DataTypeError(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            Type = (Type)info.GetValue(nameof(Type), typeof(Type));
-            Message = info.GetString(nameof(Message));
-            Stack = (ReadOnlyCollection<Type>)info.GetValue(nameof(Stack), typeof(ReadOnlyCollection<Type>));
         }
 
         /// <summary>
@@ -91,24 +70,5 @@ namespace Nuqleon.DataModel.TypeSystem
 
             return sb.ToString();
         }
-
-        /// <summary>
-        /// Serializes the object instance to the specified serialization info object.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">Streaming context.</param>
-        protected virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            // NB: Order kept for compat.
-
-            info.AddValue(nameof(Type), Type);
-            info.AddValue(nameof(Stack), Stack);
-            info.AddValue(nameof(Message), Message);
-        }
-
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context) => GetObjectData(info, context);
     }
 }

@@ -38,9 +38,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             var d = o.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 ;
 
             Assert.IsFalse(d.IsCompleted);
@@ -49,7 +47,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Exit the last operation.
@@ -67,7 +65,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
         }
 
         [TestMethod]
@@ -87,9 +85,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             var d1 = o.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 ;
 
             Assert.IsFalse(d1.IsCompleted);
@@ -98,16 +94,14 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Initiate dispose a second time.
             //
 
             var d2 = o.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 ;
 
             Assert.IsFalse(d2.IsCompleted);
@@ -125,7 +119,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Exit the other operation.
@@ -144,23 +138,21 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Dispose is a no-op now.
             //
 
             o.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             //
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
         }
 
         [TestMethod]
@@ -212,9 +204,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             t.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             //

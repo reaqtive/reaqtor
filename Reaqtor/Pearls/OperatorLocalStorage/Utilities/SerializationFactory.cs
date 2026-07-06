@@ -32,12 +32,12 @@ namespace Utilities
         /// <summary>
         /// Cache of serializers by type.
         /// </summary>
-        private readonly ConditionalWeakTable<Type, object> _serializers = new();
+        private readonly ConditionalWeakTable<Type, object> _serializers = [];
 
         /// <summary>
         /// Cache of deserializers by type.
         /// </summary>
-        private readonly ConditionalWeakTable<Type, object> _deserializers = new();
+        private readonly ConditionalWeakTable<Type, object> _deserializers = [];
 
         /// <summary>
         /// The reflection object for <see cref="GetSerializer{T}"/>.
@@ -90,7 +90,7 @@ namespace Utilities
 
                 try
                 {
-                    entitySerializer = s_GetSerializer.MakeGenericMethod(keyValueEntityType).Invoke(this, Array.Empty<object>());
+                    entitySerializer = s_GetSerializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
                 }
                 catch (TargetInvocationException tie)
                 {
@@ -120,7 +120,7 @@ namespace Utilities
 
                 var selector = selectorExpression.Compile();
 
-                return (ISerializer<T>)Activator.CreateInstance(projectingSerializerType, new object[] { selector, entitySerializer });
+                return (ISerializer<T>)Activator.CreateInstance(projectingSerializerType, [selector, entitySerializer]);
             }
 
             return new Serializer<T>();
@@ -167,7 +167,7 @@ namespace Utilities
 
                 try
                 {
-                    entityDeserializer = s_GetDeserializer.MakeGenericMethod(keyValueEntityType).Invoke(this, Array.Empty<object>());
+                    entityDeserializer = s_GetDeserializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
                 }
                 catch (TargetInvocationException tie)
                 {
@@ -191,7 +191,7 @@ namespace Utilities
 
                 var selector = selectorExpression.Compile();
 
-                return (IDeserializer<T>)Activator.CreateInstance(projectingDeserializerType, new object[] { selector, entityDeserializer });
+                return (IDeserializer<T>)Activator.CreateInstance(projectingDeserializerType, [selector, entityDeserializer]);
             }
 
             return new Deserializer<T>();
@@ -203,7 +203,7 @@ namespace Utilities
             {
                 var args = type.GetGenericArguments();
 
-                keyValueEntityType = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1]) }, valueEquality: true);
+                keyValueEntityType = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1])], valueEquality: true);
 
                 return true;
             }
@@ -272,7 +272,7 @@ namespace Utilities
 
             public IEnumerable<string> GetNames(FieldInfo field) => GetNames((MemberInfo)field);
 
-            private static IEnumerable<string> GetNames(MemberInfo member) => new[] { member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name };
+            private static IEnumerable<string> GetNames(MemberInfo member) => [member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name];
         }
 
         private sealed class ProjectingSerializer<TInput, TOutput> : ISerializer<TInput>

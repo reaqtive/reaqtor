@@ -35,8 +35,8 @@ namespace Tests.Reaqtor.Expressions.Core
             var u = new Uri("bar://foo");
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents the signature)
-            Assert.ThrowsException<ArgumentNullException>(() => q.SubscribeAsync(default(IAsyncReactiveQbserver<int>), u, null).GetAwaiter().GetResult());
-            Assert.ThrowsException<ArgumentNullException>(() => q.SubscribeAsync(o, default(Uri), null).GetAwaiter().GetResult());
+            Assert.ThrowsExactly<ArgumentNullException>(() => q.SubscribeAsync(default(IAsyncReactiveQbserver<int>), u, null).GetAwaiter().GetResult());
+            Assert.ThrowsExactly<ArgumentNullException>(() => q.SubscribeAsync(o, default(Uri), null).GetAwaiter().GetResult());
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -45,7 +45,7 @@ namespace Tests.Reaqtor.Expressions.Core
         {
             var q = new MyAsyncReactiveQubject<bool, int>(null);
             var o = new MyLocalAsyncObserver<int>();
-            Assert.ThrowsException<NotSupportedException>(() => q.SubscribeAsync(o, new Uri("bar://foo"), null).GetAwaiter().GetResult());
+            Assert.ThrowsExactly<NotSupportedException>(() => q.SubscribeAsync(o, new Uri("bar://foo"), null).GetAwaiter().GetResult());
         }
 
         [TestMethod]

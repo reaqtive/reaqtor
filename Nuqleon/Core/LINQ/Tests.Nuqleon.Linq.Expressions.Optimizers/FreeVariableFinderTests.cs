@@ -31,7 +31,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var e =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Lambda(
                         Expression.TryCatch(
                             Expression.Add(x, y),

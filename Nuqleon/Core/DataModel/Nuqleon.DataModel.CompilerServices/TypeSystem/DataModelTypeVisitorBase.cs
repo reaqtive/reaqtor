@@ -27,8 +27,8 @@ namespace Nuqleon.DataModel.TypeSystem
         // WARNING: Known subtypes of this type implement IClearable. Adding state here is a breaking change and requires implementing IClearable with
         //          a virtual Clear method for subtypes to override.
 
-        private static readonly HashSet<Type> s_primitiveTypes = new()
-        {
+        private static readonly HashSet<Type> s_primitiveTypes =
+        [
             typeof(Unit),
             typeof(sbyte),
             typeof(byte),
@@ -49,12 +49,12 @@ namespace Nuqleon.DataModel.TypeSystem
             typeof(TimeSpan),
             typeof(Guid),
             typeof(Uri),
-        };
+        ];
 
         protected static readonly Type s_tupleMax = typeof(Tuple<,,,,,,,>);
 
-        private static readonly HashSet<Type> s_tuples = new()
-        {
+        private static readonly HashSet<Type> s_tuples =
+        [
             typeof(Tuple<>),
             typeof(Tuple<,>),
             typeof(Tuple<,,>),
@@ -63,7 +63,7 @@ namespace Nuqleon.DataModel.TypeSystem
             typeof(Tuple<,,,,,>),
             typeof(Tuple<,,,,,,>),
             s_tupleMax,
-        };
+        ];
 
         public override TType Visit(Type type)
         {
@@ -221,7 +221,7 @@ namespace Nuqleon.DataModel.TypeSystem
             using (var phs = Helpers.NewHashSetOfString())
             {
                 var mappings = phs.HashSet;
-                mappedMembers = new List<KeyValuePair<string, MemberInfo>>();
+                mappedMembers = [];
 
                 foreach (var member in members)
                 {
@@ -397,7 +397,7 @@ namespace Nuqleon.DataModel.TypeSystem
             using (var phs = Helpers.NewHashSetOfString())
             {
                 var mappings = phs.HashSet;
-                mappedFields = new List<KeyValuePair<string, FieldInfo>>();
+                mappedFields = [];
 
                 foreach (var field in fields)
                 {

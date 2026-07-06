@@ -24,7 +24,8 @@ namespace Test.Reaqtor
         [TestMethod]
         public void MultiSubjectProxy_Untyped_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new MultiSubjectProxy(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MultiSubjectProxy(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]
@@ -32,7 +33,7 @@ namespace Test.Reaqtor
         {
             using (new MultiSubjectProxy(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 
@@ -104,7 +105,8 @@ namespace Test.Reaqtor
         [TestMethod]
         public void MultiSubjectProxy_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new MultiSubjectProxy<object, object>(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MultiSubjectProxy<object, object>(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]
@@ -112,7 +114,7 @@ namespace Test.Reaqtor
         {
             using (new MultiSubjectProxy<int, int>(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 
@@ -416,7 +418,7 @@ namespace Test.Reaqtor
 
             public IEnumerable<ISubscription> Inputs
             {
-                get { IsInputsCalled = true; return new[] { new DummyInput() }; }
+                get { IsInputsCalled = true; return [new DummyInput()]; }
             }
 
             public void Subscribe() { }

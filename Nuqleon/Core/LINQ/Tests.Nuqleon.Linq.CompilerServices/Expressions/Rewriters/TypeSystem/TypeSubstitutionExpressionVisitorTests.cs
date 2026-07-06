@@ -25,9 +25,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void TypeSubstitutionExpressionVisitor_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionVisitor(default(TypeSubstitutor)), ex => Assert.AreEqual("typeSubstitutor", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionVisitor(default(IDictionary<Type, Type>)), ex => Assert.AreEqual("typeMap", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionVisitor(default(TypeSubstitutor)));
+            Assert.AreEqual("typeSubstitutor", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionVisitor(default(IDictionary<Type, Type>)));
+            Assert.AreEqual("typeMap", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null));
+            Assert.AreEqual("expression", ex3.ParamName);
 
             new MySubst().Do();
         }
@@ -46,30 +49,45 @@ namespace Tests.System.Linq.CompilerServices
 
                 var ctor = typeof(MySubst).GetConstructor(Type.EmptyTypes);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts), ex => Assert.AreEqual("originalConstructor", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts));
+                Assert.AreEqual("originalConstructor", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts));
+                Assert.AreEqual("declaringType", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null));
+                Assert.AreEqual("parameters", ex3.ParamName);
 
                 var prop = typeof(string).GetProperty("Length");
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts), ex => Assert.AreEqual("originalProperty", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, t, propertyType: null, ts), ex => Assert.AreEqual("propertyType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null), ex => Assert.AreEqual("indexerParameters", ex.ParamName));
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts));
+                Assert.AreEqual("originalProperty", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts));
+                Assert.AreEqual("declaringType", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, t, propertyType: null, ts));
+                Assert.AreEqual("propertyType", ex6.ParamName);
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null));
+                Assert.AreEqual("indexerParameters", ex7.ParamName);
 
                 var fld = typeof(string).GetField("Empty");
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t), ex => Assert.AreEqual("originalField", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(fld, t, fieldType: null), ex => Assert.AreEqual("fieldType", ex.ParamName));
+                var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t));
+                Assert.AreEqual("originalField", ex8.ParamName);
+                var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t));
+                Assert.AreEqual("declaringType", ex9.ParamName);
+                var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(fld, t, fieldType: null));
+                Assert.AreEqual("fieldType", ex10.ParamName);
 
                 var mtd = typeof(string).GetMethod("ToUpper", Type.EmptyTypes);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t), ex => Assert.AreEqual("originalMethod", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t), ex => Assert.AreEqual("genericArguments", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t), ex => Assert.AreEqual("parameters", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null), ex => Assert.AreEqual("returnType", ex.ParamName));
+                var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t));
+                Assert.AreEqual("originalMethod", ex11.ParamName);
+                var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t));
+                Assert.AreEqual("declaringType", ex12.ParamName);
+                var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t));
+                Assert.AreEqual("genericArguments", ex13.ParamName);
+                var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t));
+                Assert.AreEqual("parameters", ex14.ParamName);
+                var ex15 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null));
+                Assert.AreEqual("returnType", ex15.ParamName);
             }
         }
 
@@ -135,7 +153,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var expA = Expression.Block(Expression.Constant(1));
             var expB = Expression.Block(Expression.Constant(1.0));
-            var expC = Expression.Block(new[] { p }, p);
+            var expC = Expression.Block([p], p);
 
             var res1 = subst.Apply(expA);
             var res2 = subst.Apply(expB);
@@ -143,7 +161,7 @@ namespace Tests.System.Linq.CompilerServices
 
             AssertEqual(res1, Expression.Block(Expression.Constant(1L)));
             Assert.AreSame(expB, res2);
-            AssertEqual(res3, Expression.Block(new[] { q }, q));
+            AssertEqual(res3, Expression.Block([q], q));
         }
 
         #endregion
@@ -242,11 +260,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var expA = Expression.Dynamic(
@@ -326,13 +343,13 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), new[] { Expression.Constant(1) });
-            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), new[] { Expression.Constant(1.0) });
+            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), [Expression.Constant(1)]);
+            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), [Expression.Constant(1.0)]);
 
             var res1 = subst.Apply(expA);
             var res2 = subst.Apply(expB);
 
-            AssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), new[] { Expression.Constant(1L) }));
+            AssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), [Expression.Constant(1L)]));
             Assert.AreSame(expB, res2);
         }
 
@@ -341,9 +358,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = Expression.MakeIndex(Expression.Parameter(typeof(Bar)), typeof(Bar).GetProperty("Item"), new[] { Expression.Constant(1) });
+            var exp = Expression.MakeIndex(Expression.Parameter(typeof(Bar)), typeof(Bar).GetProperty("Item"), [Expression.Constant(1)]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp));
         }
 
         #endregion
@@ -490,7 +507,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var exp = Expression.Property(Expression.Parameter(typeof(string)), "Length");
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp));
         }
 
         [TestMethod]
@@ -519,13 +536,13 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<Baz, int>>)((Baz b) => b.x);
-            var exp2 = (Expression<Func<Bar, int>>)((Bar b) => b.Wrong2);
-            var exp3 = (Expression<Func<Bar, int>>)((Bar b) => b.Wrong3);
+            var exp1 = (Expression<Func<Baz, int>>)(b => b.x);
+            var exp2 = (Expression<Func<Bar, int>>)(b => b.Wrong2);
+            var exp3 = (Expression<Func<Bar, int>>)(b => b.Wrong3);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1));
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2));
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp3));
         }
 
         [TestMethod]
@@ -533,9 +550,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = (Expression<Func<Baz, int>>)((Baz b) => b.Y);
+            var exp = (Expression<Func<Baz, int>>)(b => b.Y);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp));
         }
 
         #endregion
@@ -626,11 +643,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<Baz, int>>)((Baz b) => b.Z(5));
-            var exp2 = (Expression<Func<Baz, int>>)((Baz b) => b.A<bool>(5));
+            var exp1 = (Expression<Func<Baz, int>>)(b => b.Z(5));
+            var exp2 = (Expression<Func<Baz, int>>)(b => b.A<bool>(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1));
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp2));
         }
 
         #endregion
@@ -694,7 +711,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var exp = (Expression<Func<Baz>>)(() => new Baz(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp));
         }
 
         [TestMethod]
@@ -942,15 +959,15 @@ namespace Tests.System.Linq.CompilerServices
             var pers = typeof(Person);
             var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
 
-            var check1 = new TypeErasureChecker(new[] { typeof(Person) });
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(query));
+            var check1 = new TypeErasureChecker([typeof(Person)]);
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));
 
 
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("Name", typeof(string)),
                 new KeyValuePair<string, Type>("Age", typeof(int)),
-            });
+            ]);
 
             var subst1 = new TypeSubstitutionExpressionVisitor(new Dictionary<Type, Type>
             {
@@ -961,15 +978,15 @@ namespace Tests.System.Linq.CompilerServices
 
             check1.Visit(res1);
 
-            var check2 = new TypeErasureChecker(new[] { anon });
-            Assert.ThrowsException<InvalidOperationException>(() => check2.Visit(res1));
+            var check2 = new TypeErasureChecker([anon]);
+            Assert.ThrowsExactly<InvalidOperationException>(() => check2.Visit(res1));
 
 
             var f = ((LambdaExpression)res1).Compile();
 
             var cast = ((MethodInfo)ReflectionHelpers.InfoOf(() => Enumerable.Cast<int>(null))).GetGenericMethodDefinition().MakeGenericMethod(anon);
-            var peopleObj = new[] { Activator.CreateInstance(anon, new object[] { "Bart", 10 }), Activator.CreateInstance(anon, new object[] { "Lisa", 8 }), Activator.CreateInstance(anon, new object[] { "Bart", 21 }) };
-            var peopleAnon = cast.Invoke(obj: null, new object[] { peopleObj });
+            var peopleObj = new[] { Activator.CreateInstance(anon, ["Bart", 10]), Activator.CreateInstance(anon, ["Lisa", 8]), Activator.CreateInstance(anon, ["Bart", 21]) };
+            var peopleAnon = cast.Invoke(obj: null, [peopleObj]);
             var qres = (IEnumerable<string>)f.DynamicInvoke(peopleAnon);
             Assert.IsTrue(new[] { "BART is 21" }.SequenceEqual(qres));
 
@@ -982,7 +999,7 @@ namespace Tests.System.Linq.CompilerServices
 
             check2.Visit(res2);
 
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(res2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(res2));
 
             var eq = new ExpressionEqualityComparer();
 
@@ -1052,7 +1069,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var subst = new MyTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f));
         }
 
         [TestMethod]
@@ -1062,7 +1079,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var subst = new NotQuiteForgivingTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f));
         }
 
         private sealed class NotQuiteForgivingTypeSubstitutionExpressionVisitor : MyTypeSubstitutionExpressionVisitor
@@ -1144,7 +1161,7 @@ namespace Tests.System.Linq.CompilerServices
                 { typeof(int), typeof(long) }
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f));
         }
 
         [TestMethod]

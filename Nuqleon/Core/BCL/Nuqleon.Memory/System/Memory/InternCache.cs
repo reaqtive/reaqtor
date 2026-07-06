@@ -27,8 +27,7 @@ namespace System.Memory
         public static IInternCache<T> CreateInternCache<T>(this IMemoizationCacheFactory cacheFactory, IEqualityComparer<T> comparer = null)
             where T : class
         {
-            if (cacheFactory == null)
-                throw new ArgumentNullException(nameof(cacheFactory));
+            ArgumentNullException.ThrowIfNull(cacheFactory);
 
             var create = new Func<T, T>(x => x);
             var res = Memoizer.Create(cacheFactory).Memoize(create, MemoizationOptions.None, comparer);
@@ -55,10 +54,8 @@ namespace System.Memory
         public static IWeakInternCache<T> CreateWeakInternCache<T>(this IMemoizationCacheFactory cacheFactory, Func<T, T> clone)
             where T : class
         {
-            if (cacheFactory == null)
-                throw new ArgumentNullException(nameof(cacheFactory));
-            if (clone == null)
-                throw new ArgumentNullException(nameof(clone));
+            ArgumentNullException.ThrowIfNull(cacheFactory);
+            ArgumentNullException.ThrowIfNull(clone);
 
             var cloneSafe = new Func<T, T>(x =>
             {

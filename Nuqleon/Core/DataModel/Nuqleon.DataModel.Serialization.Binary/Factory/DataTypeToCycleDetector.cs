@@ -15,12 +15,11 @@ namespace Nuqleon.DataModel.Serialization.Binary
 {
     internal sealed class DataTypeToCycleDetector : DataTypeVisitor<Expression, Tuple<DataProperty, Expression>>
     {
-        private readonly Dictionary<Type, CycleHelper> _visited = new();
+        private readonly Dictionary<Type, CycleHelper> _visited = [];
 
         protected override Expression VisitStructural(StructuralDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_visited.TryGetValue(type.UnderlyingType, out var cycleHelper))
             {
@@ -45,8 +44,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             if (elementType != null)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
+                ArgumentNullException.ThrowIfNull(type);
 
                 var hashSetParameter = Expression.Parameter(typeof(HashSet<object>), "hashSet");
                 var valueParameter = Expression.Parameter(typeof(object), "value");
@@ -56,17 +54,17 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
                 var accessExpression = type.UnderlyingType.IsArray
                     ? (Expression)Expression.ArrayIndex(convertedParameter, loopParameter)
-                    : Expression.Call(convertedParameter, type.UnderlyingType.GetMethod("get_Item", new[] { typeof(int) }), loopParameter);
+                    : Expression.Call(convertedParameter, type.UnderlyingType.GetMethod("get_Item", [typeof(int)]), loopParameter);
 
                 Debug.Assert(elementType.Type == typeof(CycleDetector));
 
                 var body = Expression.Block(
-                    new[] { convertedParameter },
+                    [convertedParameter],
                     Expression.Assign(convertedParameter, Expression.Convert(valueParameter, type.UnderlyingType)),
                     Expression.IfThen(
                         Expression.NotEqual(convertedParameter, ReflectionConstants.NullObject),
                         Expression.Block(
-                            new[] { lengthParameter, loopParameter },
+                            [lengthParameter, loopParameter],
                             Expression.Assign(lengthParameter, Expression.Property(convertedParameter, ReflectionConstants.ListCount)),
                             // var i = 0; while (true) { if (i < length) { inner(value[i], hashSet); i++; } else { break; } }
                             ExpressionHelpers.For(
@@ -93,11 +91,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override Expression MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<DataProperty, Expression>> properties)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var hashSetParameter = Expression.Parameter(typeof(HashSet<object>), "hashSet");
             var valueParameter = Expression.Parameter(typeof(object), "value");
@@ -129,7 +125,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     Expression.IfThenElse(
                         Expression.Call(hashSetParameter, ReflectionConstants.HashSetAdd, valueParameter),
                         Expression.TryFinally(
-                            Expression.Block(new[] { convertedParameter }, propertyChecks),
+                            Expression.Block([convertedParameter], propertyChecks),
                             Expression.Call(hashSetParameter, ReflectionConstants.HashSetRemove, valueParameter)
                         ),
                         Expression.Throw(Expression.Constant(new InvalidOperationException("Objects with cycles cannot be serialized."), typeof(InvalidOperationException)))
@@ -156,8 +152,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override Expression VisitCustom(DataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Custom data type {0} is not supported.", type.UnderlyingType.FullName));
         }

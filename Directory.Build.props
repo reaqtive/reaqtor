@@ -1,15 +1,25 @@
 ﻿<Project>
   <PropertyGroup>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>14.0</LangVersion>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <AnalysisLevel>7.0</AnalysisLevel>
     <!--
-    Apparently setting AnalysisLevel isn't quite enough to avoid the new warnings we get in .NET SDK 8.0.
-    This NoWarn line should be removed when we do https://github.com/reaqtive/reaqtor/issues/143 -->
-    <NoWarn>$(NoWarn);IDE0079;IDE0090;CA1305;CA1822;CA1854</NoWarn>
-    
+    Track the newest analyzers (issue #143). The migration-era NoWarn lists (IDE0079;IDE0090;
+    CA1305;CA1822;CA1854 and the CA2000;CA2213 disposal wave) are retired: the former were fixed
+    at their sites, and the disposal rules no longer fire at all on this codebase at the current
+    analysis level - the .NET 10 analyzers resolved the false-positive patterns that forced the
+    wholesale suppression during the migration (the one genuine leak they surfaced,
+    SynchronizedFactory.Impl in MemoizationCacheFactoryExtensions, was fixed in code back then). -->
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <!--
+    The Reaqtive/Reaqtor operators use a deliberate, long-standing convention of terse private
+    nested type names (e.g. '_' for the primary operator/observer and 'i' for a secondary inner
+    observer). The C# 14 compiler flags all-lower-case type names with CS8981 ("may become a
+    reserved word"); suppress it to keep that intentional convention. -->
+    <NoWarn>$(NoWarn);CS8981</NoWarn>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -51,40 +61,61 @@
     <GeneratePackageOnBuild Condition=" '$(CreatePackage)' == 'true' ">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <!--
+    Every shipping assembly is CLS-compliant. Synthesized here (WriteCodeFragment) instead of
+    75 per-project Properties\AssemblyInfo.cs files, each of which carried only this attribute.
+  -->
+  <ItemGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
     <AnalysisMode>Default</AnalysisMode>
     <IsPackable>false</IsPackable>
+    <!--
+      XML docs are generated (and discarded) so the compiler can run IDE0005 (remove unnecessary
+      usings) on build - see https://github.com/dotnet/roslyn/issues/41640; CS1591 (missing XML
+      comment) is suppressed since test/perf/playground members are deliberately undocumented. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
+  <PropertyGroup>
+    <!--
+      Style violations fail the build (deliberate exceptions carry a per-site #pragma citing
+      their rationale). The dotnet-format CI gate is enforcing too; its solution-scoped
+      exclusions (issue #138) remain for the *apply* path only - build-time enforcement
+      covers the excluded files, so they cannot rot.
+    -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
   </ItemGroup>
+
+  <!-- Test projects run on Microsoft.Testing.Platform (MTP): each builds as a self-contained executable. -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <!--
-      NB: Trying to put these in a .csproj included through ProjectReference results in errors at runtime:
-
-            Testhost process exited with error: A fatal error was encountered. The library 'hostpolicy.dll'
-            required to execute the application was not found in 'C:\Program Files\dotnet'.
-
-          Apparently cross-referencing test projects causes 'testhost.runtimeconfig.json' to not get copied
-          properly to the test project output folder, which then causes the test runner to treat the project
-          as a "self-contained app".
+      NB: These belong here rather than in a ProjectReference'd .csproj. Cross-referencing test
+          projects breaks the per-project test runtime config. With MTP each test project is its
+          own executable, so this guidance is more important, not less.
     -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">

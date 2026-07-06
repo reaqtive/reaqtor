@@ -28,7 +28,7 @@ namespace Playground
                 ((Expression<Func<List<int>>>)(() => new List<int> { 1, 2, "bar".Length })).Body,
                 ((Expression<Func<Bar>>)(() => new Bar { Foo = "bar".Length, Qux = { int.Parse("42") }, Baz = "foo".Length })).Body,
                 ((Expression<Func<int>>)(() => Enumerable.Range(0, 10).Sum())).Body,
-                ((Expression<Func<int>>)(() => Enumerable.Range(0, 10).Select(x => x).Sum())).Body,
+                ((Expression<Func<int>>)(() => Enumerable.Range(0, 10).Sum(x => x))).Body,
                 ((Expression<Func<int>>)(() => new[] { 1, 2, 3 }.Sum())).Body,
                 ((Expression<Func<string>>)(() => Console.ReadLine())).Body, // side-effect
             })
@@ -43,7 +43,7 @@ namespace Playground
     {
         public Bar()
         {
-            Qux = new List<int>();
+            Qux = [];
         }
 
         public int Foo { get; set; }
@@ -53,13 +53,13 @@ namespace Playground
 
     internal class MyEvaluator : PartialExpressionEvaluatorBase
     {
-        private static readonly HashSet<Type> s_types = new()
-        {
+        private static readonly HashSet<Type> s_types =
+        [
             typeof(int),
             typeof(string),
             typeof(Bar),
             //typeof(Func<int, int>),
-        };
+        ];
 
         protected override bool CanEvaluate(ConstantExpression node)
         {

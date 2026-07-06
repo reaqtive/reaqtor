@@ -170,7 +170,7 @@ namespace Nuqleon.Json.Serialization
                             Expression.Call(ReflectionCache.TryGetNextCharString, str, len, i, c),
                             Expression.Switch(
                                 c,
-                                Children.Select(kv => Expression.SwitchCase(kv.Value.CompileString(str, len, b, i, res, e, c, terminals), Expression.Constant(kv.Key))).ToArray()
+                                [.. Children.Select(kv => Expression.SwitchCase(kv.Value.CompileString(str, len, b, i, res, e, c, terminals), Expression.Constant(kv.Key)))]
                             )
                         );
                 }
@@ -187,7 +187,7 @@ namespace Nuqleon.Json.Serialization
 
                 next =
                     Expression.IfThenElse(
-                        Expression.Equal(Expression.MakeIndex(str, ReflectionCache.Chars, new[] { i }), Expression.Constant('\"')),
+                        Expression.Equal(Expression.MakeIndex(str, ReflectionCache.Chars, [i]), Expression.Constant('\"')),
                         Expression.Block(
                             Expression.Assign(res, Expression.Constant(id)),
                             Expression.Return(e, ExpressionUtils.ConstantTrue)
@@ -312,7 +312,7 @@ namespace Nuqleon.Json.Serialization
                             Expression.Call(ReflectionCache.TryGetNextCharReader, reader, c),
                             Expression.Switch(
                                 c,
-                                Children.Select(kv => Expression.SwitchCase(kv.Value.CompileReader(reader, res, e, c, terminals), Expression.Constant((int)kv.Key))).ToArray()
+                                [.. Children.Select(kv => Expression.SwitchCase(kv.Value.CompileReader(reader, res, e, c, terminals), Expression.Constant((int)kv.Key)))]
                             )
                         );
                 }

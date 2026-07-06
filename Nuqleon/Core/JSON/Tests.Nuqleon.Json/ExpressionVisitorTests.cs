@@ -25,11 +25,11 @@ namespace Tests
         {
             var v = new ExpressionVisitor<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => v.Visit(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
 
-            Assert.ThrowsException<NotImplementedException>(() => v.VisitObject(node: null));
-            Assert.ThrowsException<NotImplementedException>(() => v.VisitArray(node: null));
-            Assert.ThrowsException<NotImplementedException>(() => v.VisitConstant(node: null));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitObject(node: null));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitArray(node: null));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitConstant(node: null));
         }
 
         [TestMethod]
@@ -37,11 +37,11 @@ namespace Tests
         {
             var v = new ExpressionVisitor();
 
-            Assert.ThrowsException<ArgumentNullException>(() => v.Visit(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
 
-            Assert.ThrowsException<ArgumentNullException>(() => v.VisitObject(node: null));
-            Assert.ThrowsException<ArgumentNullException>(() => v.VisitArray(node: null));
-            Assert.ThrowsException<ArgumentNullException>(() => v.VisitConstant(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitObject(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitArray(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitConstant(node: null));
         }
 
         [TestMethod]

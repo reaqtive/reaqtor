@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -94,7 +94,7 @@ using System.Threading.Tasks;
 
 namespace PartitionedSubject
 {
-    public static class Program
+    internal static class Program
     {
         public static void Main()
         {
@@ -110,7 +110,7 @@ namespace PartitionedSubject
 
             var c = new Dictionary<string, int>();
 
-            var rnd1 = new Random();
+            var rnd1 = Random.Shared;
 
             var sw = Stopwatch.StartNew();
 
@@ -145,7 +145,7 @@ namespace PartitionedSubject
 
             var c = new Dictionary<string, int>();
 
-            var rnd1 = new Random();
+            var rnd1 = Random.Shared;
 
             var sw = Stopwatch.StartNew();
 
@@ -182,7 +182,7 @@ namespace PartitionedSubject
 
             var pub = Task.Run(() =>
             {
-                var rnd2 = new Random();
+                var rnd2 = Random.Shared;
 
                 for (var n = 0; n < N; n++)
                 {

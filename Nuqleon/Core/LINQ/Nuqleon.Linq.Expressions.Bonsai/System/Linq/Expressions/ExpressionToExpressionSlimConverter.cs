@@ -63,8 +63,8 @@ namespace System.Linq.Expressions
         {
             TypeSpace = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _parameters = new Dictionary<ParameterExpression, ParameterExpressionSlim>();
-            _labels = new Dictionary<LabelTarget, LabelTargetSlim>();
+            _parameters = [];
+            _labels = [];
         }
 
         #endregion

@@ -24,10 +24,10 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Client
 {
@@ -46,7 +46,7 @@ namespace Tests.Reaqtor.Client
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -62,7 +62,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -78,7 +78,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
 <#}#>
                 }
             );
@@ -94,7 +94,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
 <#}#>
                 }
             );
@@ -147,7 +147,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -162,7 +162,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -177,7 +177,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
 <#}#>
                 }
             );
@@ -192,7 +192,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
 <#}#>
                 }
             );
@@ -440,7 +440,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         ys.SubscribeAsync(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), state: null).Wait();
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -485,7 +485,7 @@ for (int j = 1; j <= i; j++)
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -779,10 +779,10 @@ for (int j = 1; j <= i; j++)
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestClientContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { <#=string.Join(", ", Enumerable.Repeat("typeof(int)", i).ToArray())#>, typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [<#=string.Join(", ", Enumerable.Repeat("typeof(int)", i).ToArray())#>, typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             <#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>
                                         ),
@@ -837,10 +837,10 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), <#=args#>, state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(new Uri(Constants.Stream.QUX), <#=args#>, state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -927,16 +927,12 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), <#=args#>, state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
-#else
-                    sub.DisposeAsync().Wait();
-#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -998,7 +994,7 @@ for (int j = 1; j <= i; ++j)
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             uri: null,
                             (<#=parameters#>) => obs(<#=parameters#>),
@@ -1007,7 +1003,7 @@ for (int j = 1; j <= i; ++j)
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -1081,7 +1077,7 @@ for (int j = 1; j <= i; ++j)
                     var obsExpr = (Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>>)((<#=parameters#>) => obs(<#=parameters#>));
                     ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             uri: null,
                             obsExpr,
@@ -1090,7 +1086,7 @@ for (int j = 1; j <= i; ++j)
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -1148,7 +1144,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 
                     ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
                             uri: null,
                             factory,
@@ -1157,7 +1153,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -1197,7 +1193,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 
                     ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             uri: null,
                             factory,
@@ -1206,7 +1202,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>),
@@ -1236,7 +1232,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             uri: null,
                             factory,
@@ -1245,7 +1241,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             uri: null,
                             default(Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubscription>>),
@@ -1254,7 +1250,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubscription>>),

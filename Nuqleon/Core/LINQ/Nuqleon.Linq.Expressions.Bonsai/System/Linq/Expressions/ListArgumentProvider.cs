@@ -56,8 +56,7 @@ namespace System.Linq.Expressions
 
         public void CopyTo(ExpressionSlim[] array, int arrayIndex)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
+            ArgumentNullException.ThrowIfNull(array);
 
             array[arrayIndex++] = _arg0;
 

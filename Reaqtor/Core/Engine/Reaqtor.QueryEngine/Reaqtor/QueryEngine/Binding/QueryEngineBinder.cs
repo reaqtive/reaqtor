@@ -134,7 +134,7 @@ namespace Reaqtor.QueryEngine
 
                 return Expression.Convert(
                             Expression.New(
-                                outputAdapterType.GetConstructor(new Type[] { createObserverMethod.ReturnType }),
+                                outputAdapterType.GetConstructor([createObserverMethod.ReturnType]),
                                 Expression.Call(
                                     createObserverMethod,
                                     expr)),
@@ -282,14 +282,14 @@ namespace Reaqtor.QueryEngine
                     Type multiSubjectType;
                     if (reliableMultiSubjectType != null)
                     {
-                        var proxyCtor = typeof(ReliableMultiSubjectProxy<,>).MakeGenericType(reliableMultiSubjectType.GetGenericArguments()).GetConstructor(new[] { typeof(Uri) });
+                        var proxyCtor = typeof(ReliableMultiSubjectProxy<,>).MakeGenericType(reliableMultiSubjectType.GetGenericArguments()).GetConstructor([typeof(Uri)]);
                         return Expression.New(proxyCtor, Expression.New(s_ctorUri, Expression.Constant(id, typeof(string))));
                     }
                     // Note, right now all IMultiSubject<,> are also IReliableMultiSubject<,>
                     // so it is unlikely that this `else if` will be used.
                     else if ((multiSubjectType = expr.Type.FindGenericType(typeof(IMultiSubject<,>))) != null)
                     {
-                        var proxyCtor = typeof(MultiSubjectProxy<,>).MakeGenericType(multiSubjectType.GetGenericArguments()).GetConstructor(new[] { typeof(Uri) });
+                        var proxyCtor = typeof(MultiSubjectProxy<,>).MakeGenericType(multiSubjectType.GetGenericArguments()).GetConstructor([typeof(Uri)]);
                         return Expression.New(proxyCtor, Expression.New(s_ctorUri, Expression.Constant(id, typeof(string))));
                     }
                     else if (typeof(IMultiSubject).IsAssignableFrom(expr.Type))
@@ -582,7 +582,7 @@ namespace Reaqtor.QueryEngine
                 return factoryExpr;
             }
 
-            ParameterExpression[] parameters = args.Take(parameterCount).Select((t, i) => Expression.Parameter(t, "p" + i)).ToArray();
+            ParameterExpression[] parameters = [.. args.Take(parameterCount).Select((t, i) => Expression.Parameter(t, "p" + i))];
 
             Expression lambda = Expression.Lambda(
                 Expression.Call(

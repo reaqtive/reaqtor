@@ -28,8 +28,7 @@ namespace Reaqtive.Disposables
         /// <exception cref="ArgumentNullException"><paramref name="dispose"/> is <c>null</c>.</exception>
         public static IDisposable Create(Action dispose)
         {
-            if (dispose == null)
-                throw new ArgumentNullException(nameof(dispose));
+            ArgumentNullException.ThrowIfNull(dispose);
 
             return new AnonymousDisposable(dispose);
         }

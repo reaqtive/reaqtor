@@ -17,7 +17,7 @@ namespace System.Linq.CompilerServices
     /// </summary>
     public class ExpressionTypeAllowListScanner : ExpressionTypeAllowListScannerBase
     {
-        private readonly HashSet<Type> _entries = new();
+        private readonly HashSet<Type> _entries = [];
 
         /// <summary>
         /// Creates a new allow list scanner for types. To complete instantiation, initialize the Types property, e.g. by using collection initializers.
@@ -38,8 +38,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the type is supported; otherwise, false.</returns>
         protected override bool Check(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_entries.Contains(type))
             {

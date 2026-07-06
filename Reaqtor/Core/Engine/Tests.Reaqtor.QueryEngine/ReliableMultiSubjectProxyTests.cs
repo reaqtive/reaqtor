@@ -27,7 +27,8 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void ReliableMultiSubjectProxy_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new ReliableMultiSubjectProxy<int, int>(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ReliableMultiSubjectProxy<int, int>(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]
@@ -35,7 +36,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             using (new ReliableMultiSubjectProxy<int, int>(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 
@@ -268,7 +269,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var proxy = new ReliableMultiSubjectProxy<int, int>(uri);
                 var sub = SubscribeRoot(Subscribable.Never<int>(), new ObserverToReliableObserver<int>(proxy.CreateObserver()));
-                Assert.ThrowsException<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
+                Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
             });
         }
 
@@ -287,7 +288,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var proxy = new ReliableMultiSubjectProxy<int, int>(uri);
                 var observer = new MockObserver<int>(client);
                 var sub = proxy.ToSubscribable().Subscribe(observer);
-                Assert.ThrowsException<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
+                Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
             });
         }
 
@@ -470,7 +471,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             public IEnumerable<ISubscription> Inputs
             {
-                get { IsInputsCalled = true; return new[] { new DummyInput() }; }
+                get { IsInputsCalled = true; return [new DummyInput()]; }
             }
 
             public void Subscribe() { }

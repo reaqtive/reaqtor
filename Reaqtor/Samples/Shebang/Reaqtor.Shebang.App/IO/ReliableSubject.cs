@@ -15,9 +15,9 @@ namespace Reaqtor.Shebang.App
 {
     internal sealed class ReliableSubject<T> : IReliableSubject<T>
     {
-        private readonly object _gate = new();
-        private readonly SortedDictionary<long, T> _values = new();
-        private readonly List<IObserver<(long sequenceId, T item)>> _observers = new();
+        private readonly Lock _gate = new();
+        private readonly SortedDictionary<long, T> _values = [];
+        private readonly List<IObserver<(long sequenceId, T item)>> _observers = [];
         private Exception _error;
         private bool _done;
 

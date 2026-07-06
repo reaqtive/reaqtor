@@ -20,7 +20,7 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// Creates a new serializer instance.
         /// </summary>
         protected DataSerializer()
-            : this(Array.Empty<DataConverter>())
+            : this([])
         {
         }
 
@@ -162,10 +162,7 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// <exception cref="DataSerializerException">The object cannot be serialized. Please check the inner exception.</exception>
         public void Serialize<T>(T value, Stream serialized)
         {
-            if (serialized == null)
-            {
-                throw new ArgumentNullException(nameof(serialized));
-            }
+            ArgumentNullException.ThrowIfNull(serialized);
 
             try
             {
@@ -189,10 +186,7 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// <exception cref="DataSerializerException">The object cannot be deserialized. Please check the inner exception.</exception>
         public T Deserialize<T>(Stream serialized)
         {
-            if (serialized == null)
-            {
-                throw new ArgumentNullException(nameof(serialized));
-            }
+            ArgumentNullException.ThrowIfNull(serialized);
 
             try
             {

@@ -23,10 +23,14 @@ namespace Tests.System
         [TestMethod]
         public void ObjectSlim_NullArguments()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ObjectSlim.Create(value: null, typeSlim: null, type: null), ex => Assert.AreEqual(ex.ParamName, "typeSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ObjectSlim.Create(value: null, SlimType, type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ObjectSlim.Create(liftedValue: null, typeSlim: null, reduceFactory: (Func<Type, Func<object, object>>)null), ex => Assert.AreEqual(ex.ParamName, "typeSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ObjectSlim.Create(liftedValue: null, SlimType, reduceFactory: (Func<Type, Func<object, object>>)null), ex => Assert.AreEqual(ex.ParamName, "reduceFactory"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ObjectSlim.Create(value: null, typeSlim: null, type: null));
+            Assert.AreEqual("typeSlim", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ObjectSlim.Create(value: null, SlimType, type: null));
+            Assert.AreEqual("type", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ObjectSlim.Create(liftedValue: null, typeSlim: null, reduceFactory: (Func<Type, Func<object, object>>)null));
+            Assert.AreEqual("typeSlim", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ObjectSlim.Create(liftedValue: null, SlimType, reduceFactory: (Func<Type, Func<object, object>>)null));
+            Assert.AreEqual("reduceFactory", ex4.ParamName);
         }
 
         [TestMethod]
@@ -34,9 +38,10 @@ namespace Tests.System
         {
             var os1 = ObjectSlim.Create(1, SlimType, typeof(int));
             var os2 = ObjectSlim.Create<string>("1", SlimType, t => o => o);
-            AssertEx.ThrowsException<ArgumentNullException>(() => os1.Lift<string>(liftFactory: null), ex => Assert.AreEqual(ex.ParamName, "liftFactory"));
-            Assert.ThrowsException<InvalidOperationException>(() => { var ot = os2.OriginalType; });
-            Assert.ThrowsException<InvalidOperationException>(() => os2.Lift<string>(t => o => o.ToString()));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => os1.Lift<string>(liftFactory: null));
+            Assert.AreEqual("liftFactory", ex.ParamName);
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var ot = os2.OriginalType; });
+            Assert.ThrowsExactly<InvalidOperationException>(() => os2.Lift<string>(t => o => o.ToString()));
         }
 
         [TestMethod]
@@ -44,7 +49,8 @@ namespace Tests.System
         {
             var os1 = ObjectSlim.Create(1, SlimType, typeof(int));
             var os2 = ObjectSlim.Create("1", SlimType, t => o => o);
-            AssertEx.ThrowsException<ArgumentNullException>(() => os2.Reduce(type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => os2.Reduce(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -55,7 +61,7 @@ namespace Tests.System
             Assert.IsTrue(os1.CanLift);
             Assert.IsFalse(os2.CanLift);
             Assert.AreSame(typeof(int), os1.OriginalType);
-            Assert.AreEqual(os1.Lift<string>(t => o => o.ToString()), "1");
+            Assert.AreEqual("1", os1.Lift<string>(t => o => o.ToString()));
         }
 
         [TestMethod]
@@ -66,7 +72,7 @@ namespace Tests.System
             var os2 = ObjectSlim.Create("1", SlimType, rf);
             Assert.IsTrue(os2.CanReduce);
             Assert.IsFalse(os1.CanReduce);
-            Assert.AreEqual(os2.Reduce(typeof(int)), 1);
+            Assert.AreEqual(1, os2.Reduce(typeof(int)));
         }
 
         [TestMethod]

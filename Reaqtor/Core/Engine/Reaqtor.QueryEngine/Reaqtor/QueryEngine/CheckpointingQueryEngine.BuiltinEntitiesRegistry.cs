@@ -11,6 +11,7 @@ using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 using Reaqtive;
 
@@ -44,7 +45,7 @@ namespace Reaqtor.QueryEngine
 
             private readonly ConditionalWeakTable<Expression, Expression> _metadataRewrites;
 
-            private readonly object _createStreamGate = new();
+            private readonly Lock _createStreamGate = new();
 
             private bool _disposed;
 
@@ -76,7 +77,7 @@ namespace Reaqtor.QueryEngine
                 _subscriptions = new ReactiveEntityCollection<string, SubscriptionEntity>(StringComparer.Ordinal);
                 _reliableSubscriptions = new ReactiveEntityCollection<string, ReliableSubscriptionEntity>(StringComparer.Ordinal);
 
-                _metadataRewrites = new ConditionalWeakTable<Expression, Expression>();
+                _metadataRewrites = [];
 
                 InitializeBuiltinDefinitions(queryEngine);
             }

@@ -28,8 +28,10 @@ namespace Tests.System.Reflection
         public void TypeSlimVisitor_Visit_NullArguments()
         {
             var visitor = new TypeSlimVisitor();
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit((TypeSlim)null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit((ReadOnlyCollection<TypeSlim>)null), ex => Assert.AreEqual("types", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit((TypeSlim)null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit((ReadOnlyCollection<TypeSlim>)null));
+            Assert.AreEqual("types", ex2.ParamName);
         }
 
         [TestMethod]
@@ -181,11 +183,10 @@ namespace Tests.System.Reflection
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TypeSlimVisitor_VisitAndConvert_Fail()
         {
             var visitor = new D();
-            visitor.VisitAndConvert<SimpleTypeSlim>(SlimType);
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.VisitAndConvert<SimpleTypeSlim>(SlimType));
         }
 
         private sealed class D : TypeSlimVisitor
@@ -235,7 +236,7 @@ namespace Tests.System.Reflection
 
             var visitor = new TypeSlimVisitor();
 
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(t));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(t));
         }
 
         private sealed class MyTypeSlim : TypeSlim
@@ -330,11 +331,7 @@ namespace Tests.System.Reflection
             {
                 if (type.Name.StartsWith("System.Func`"))
                 {
-#if NET6_0
                     var action = "System.Action`" + type.Name["System.Func`".Length..];
-#else
-                    var action = "System.Action`" + type.Name.Substring("System.Func`".Length);
-#endif
                     return TypeSlim.GenericDefinition(type.Assembly, action);
                 }
 
@@ -359,16 +356,16 @@ namespace Tests.System.Reflection
         {
             public void Test()
             {
-                Assert.ThrowsException<ArgumentNullException>(() => base.Visit(default(ReadOnlyCollection<TypeSlim>)));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitAndConvert<int>(default(ReadOnlyCollection<TypeSlim>)));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.Visit(default(ReadOnlyCollection<TypeSlim>)));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitAndConvert<int>(default(ReadOnlyCollection<TypeSlim>)));
 
                 var ts = new TypeSlim[] { typeof(int).ToTypeSlim(), typeof(long).ToTypeSlim() }.ToReadOnly();
 
                 var res1 = base.Visit(ts);
-                Assert.IsTrue(res1.SequenceEqual(new[] { 32, 64 }));
+                Assert.IsTrue(res1.SequenceEqual([32, 64]));
 
                 var res2 = base.VisitAndConvert<int>(ts);
-                Assert.IsTrue(res2.SequenceEqual(new[] { 32, 64 }));
+                Assert.IsTrue(res2.SequenceEqual([32, 64]));
             }
 
             protected override int VisitSimple(SimpleTypeSlim type)

@@ -24,7 +24,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 1; i++)
             {
                 var arr = default(ByteArray1);
-                Assert.AreEqual(arr.Length, 1);
+                Assert.AreEqual(1, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 1; j++)
@@ -36,7 +36,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 2; i++)
             {
                 var arr = default(ByteArray2);
-                Assert.AreEqual(arr.Length, 2);
+                Assert.AreEqual(2, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 2; j++)
@@ -48,7 +48,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 3; i++)
             {
                 var arr = default(ByteArray3);
-                Assert.AreEqual(arr.Length, 3);
+                Assert.AreEqual(3, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 3; j++)
@@ -60,7 +60,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 4; i++)
             {
                 var arr = default(ByteArray4);
-                Assert.AreEqual(arr.Length, 4);
+                Assert.AreEqual(4, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 4; j++)
@@ -72,7 +72,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 5; i++)
             {
                 var arr = default(ByteArray5);
-                Assert.AreEqual(arr.Length, 5);
+                Assert.AreEqual(5, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 5; j++)
@@ -84,7 +84,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 6; i++)
             {
                 var arr = default(ByteArray6);
-                Assert.AreEqual(arr.Length, 6);
+                Assert.AreEqual(6, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 6; j++)
@@ -96,7 +96,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 7; i++)
             {
                 var arr = default(ByteArray7);
-                Assert.AreEqual(arr.Length, 7);
+                Assert.AreEqual(7, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 7; j++)
@@ -108,7 +108,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 8; i++)
             {
                 var arr = default(ByteArray8);
-                Assert.AreEqual(arr.Length, 8);
+                Assert.AreEqual(8, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 8; j++)
@@ -120,7 +120,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 9; i++)
             {
                 var arr = default(ByteArray9);
-                Assert.AreEqual(arr.Length, 9);
+                Assert.AreEqual(9, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 9; j++)
@@ -132,7 +132,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 10; i++)
             {
                 var arr = default(ByteArray10);
-                Assert.AreEqual(arr.Length, 10);
+                Assert.AreEqual(10, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 10; j++)
@@ -144,7 +144,7 @@ namespace Tests.System.Collections.Specialized
             for (var i = 0; i < 11; i++)
             {
                 var arr = default(ByteArray11);
-                Assert.AreEqual(arr.Length, 11);
+                Assert.AreEqual(11, arr.Length);
                 arr[i] = 0xff;
 
                 for (var j = 0; j < 11; j++)

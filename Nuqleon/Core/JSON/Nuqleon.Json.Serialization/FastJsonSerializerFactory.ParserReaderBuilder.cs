@@ -96,7 +96,7 @@ namespace Nuqleon.Json.Serialization
             // THREADING: This type is thread-safe.
             //
 
-            private readonly ConditionalWeakTable<Type, StrongBox<object>> _parsers = new();
+            private readonly ConditionalWeakTable<Type, StrongBox<object>> _parsers = [];
 
             //
             // THREADING: Implementations of INameProvider are assumed to be thread-safe.
@@ -152,7 +152,7 @@ namespace Nuqleon.Json.Serialization
                     //
                     var parser = default(ParseReaderFunc<T>);
 
-                    var forwarder = new ParseReaderFunc<T>((TextReader reader, ParserContext ctx) => parser(reader, ctx));
+                    var forwarder = new ParseReaderFunc<T>((reader, ctx) => parser(reader, ctx));
                     res.Value = forwarder;
 
                     parser = CreateParser<T>(type);
@@ -195,7 +195,7 @@ namespace Nuqleon.Json.Serialization
                     }
 
                     var toArray = Delegate.CreateDelegate(typeof(Func<,>).MakeGenericType(typeof(ArrayBuilder<>).MakeGenericType(elem), type), s_toArray.MakeGenericMethod(elem));
-                    return (ParseReaderFunc<T>)s_createArrayParser.MakeGenericMethod(elem, type).Invoke(this, new object[] { toArray });
+                    return (ParseReaderFunc<T>)s_createArrayParser.MakeGenericMethod(elem, type).Invoke(this, [toArray]);
                 }
                 else if (type.IsConstructedGenericType)
                 {
@@ -244,8 +244,8 @@ namespace Nuqleon.Json.Serialization
                             return ParserAs<DateTimeOffset?, T>(s_parseNullableDateTimeOffset ??= Parser.ParseNullableDateTimeOffset);
                         }
 
-                        var nonNullParser = s_createObjectParser.MakeGenericMethod(type).Invoke(this, ArrayBuilder<object>.Empty);
-                        var nullableParser = s_nullOr.MakeGenericMethod(type).Invoke(obj: null, new object[] { nonNullParser });
+                        var nonNullParser = s_createObjectParser.MakeGenericMethod(type).Invoke(this, []);
+                        var nullableParser = s_nullOr.MakeGenericMethod(type).Invoke(obj: null, [nonNullParser]);
                         return (ParseReaderFunc<T>)nullableParser;
                     }
                     else if (def == typeof(List<>) || def == typeof(IList<>) || def == typeof(IReadOnlyList<>) || def == typeof(IEnumerable<>))
@@ -256,7 +256,7 @@ namespace Nuqleon.Json.Serialization
 
                         var elemType = type.GetGenericArguments()[0];
                         var toList = Delegate.CreateDelegate(typeof(Func<,>).MakeGenericType(typeof(ArrayBuilder<>).MakeGenericType(elemType), type), s_toList.MakeGenericMethod(elemType));
-                        return (ParseReaderFunc<T>)s_createArrayParser.MakeGenericMethod(elemType, type).Invoke(this, new object[] { toList });
+                        return (ParseReaderFunc<T>)s_createArrayParser.MakeGenericMethod(elemType, type).Invoke(this, [toList]);
                     }
                     else if (def == typeof(Dictionary<,>) || def == typeof(IDictionary<,>) || def == typeof(IReadOnlyDictionary<,>))
                     {
@@ -269,7 +269,7 @@ namespace Nuqleon.Json.Serialization
                         }
 
                         var valueType = args[1];
-                        return (ParseReaderFunc<T>)s_createAnyObjectParser.MakeGenericMethod(valueType).Invoke(this, ArrayBuilder<object>.Empty);
+                        return (ParseReaderFunc<T>)s_createAnyObjectParser.MakeGenericMethod(valueType).Invoke(this, []);
                     }
                     else
                     {
@@ -347,7 +347,7 @@ namespace Nuqleon.Json.Serialization
             {
                 var elementParser = Create<TElement>();
 
-                return (TextReader reader, ParserContext ctx) =>
+                return (reader, ctx) =>
                 {
                     //
                     // NB: We don't have to skip leading whitespace. The top-level parser skips leading whitespace, and predecessors to an array
@@ -463,7 +463,7 @@ namespace Nuqleon.Json.Serialization
 
                 if (hasNull)
                 {
-                    var defaultCtor = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, ArrayBuilder<Type>.Empty, modifiers: null);
+                    var defaultCtor = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, [], modifiers: null);
 
                     //
                     // CONSIDER: Add support for types that get instantiated through a constructor, e.g. anonymous types and tuples. This would
@@ -497,7 +497,7 @@ namespace Nuqleon.Json.Serialization
 
                 var @new = Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
 
-                return (TextReader reader, ParserContext ctx) =>
+                return (reader, ctx) =>
                 {
                     //
                     // NB: We don't have to skip leading whitespace. The top-level parser skips leading whitespace, and predecessors to an object
@@ -673,7 +673,7 @@ namespace Nuqleon.Json.Serialization
             /// <returns>An assignment delegate that, given an object and a string input, can deserialize a value and assign it to the specified member.</returns>
             private Assign<T> GetParseAndAssignFunction<T>(Type elementType, MemberInfo member)
             {
-                var parser = s_create.MakeGenericMethod(elementType).Invoke(this, ArrayBuilder<object>.Empty);
+                var parser = s_create.MakeGenericMethod(elementType).Invoke(this, []);
 
                 var res = Expression.Parameter(typeof(T).MakeByRefType(), "res");
                 var rdr = Expression.Parameter(typeof(TextReader), "reader");
@@ -693,7 +693,7 @@ namespace Nuqleon.Json.Serialization
             private ParseReaderFunc<Dictionary<string, TValue>> CreateAnyObjectParser<TValue>()
             {
                 var parseValue = Create<TValue>();
-                return (TextReader reader, ParserContext ctx) => Parser.ParseAnyObject(reader, ctx, parseValue);
+                return (reader, ctx) => Parser.ParseAnyObject(reader, ctx, parseValue);
             }
 
             /// <summary>
@@ -705,7 +705,7 @@ namespace Nuqleon.Json.Serialization
             private static ParseReaderFunc<T?> NullOr<T>(ParseReaderFunc<T> parser)
                 where T : struct
             {
-                return (TextReader reader, ParserContext ctx) =>
+                return (reader, ctx) =>
                 {
                     //
                     // NB: We don't have to skip leading whitespace. The top-level parser skips leading whitespace, and predecessors to an object
@@ -763,7 +763,7 @@ namespace Nuqleon.Json.Serialization
             /// <typeparam name="T">The type of the elements in the array builder.</typeparam>
             /// <param name="builder">The array builder to convert to a list.</param>
             /// <returns>A list containing the elements in the builder.</returns>
-            private static List<T> ToList<T>(ArrayBuilder<T> builder) => builder != null ? builder.ToList() : new List<T>();
+            private static List<T> ToList<T>(ArrayBuilder<T> builder) => builder != null ? builder.ToList() : [];
 
             /// <summary>
             /// Converts an array builder to an array containing the elements in the builder. If the builder is null, a singleton of an empty array is returned.
@@ -771,7 +771,7 @@ namespace Nuqleon.Json.Serialization
             /// <typeparam name="T">The type of the elements in the array builder.</typeparam>
             /// <param name="builder">The array builder to convert to an array.</param>
             /// <returns>An array containing the elements in the builder.</returns>
-            private static T[] ToArray<T>(ArrayBuilder<T> builder) => builder != null ? builder.ToArray() : ArrayBuilder<T>.Empty;
+            private static T[] ToArray<T>(ArrayBuilder<T> builder) => builder != null ? builder.ToArray() : [];
 
             /// <summary>
             /// Delegate that combines a recursive deserialization from the specified string with an assignment to a member in the specified object.

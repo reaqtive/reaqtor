@@ -19,17 +19,13 @@ namespace System.Linq.CompilerServices.Optimizers
     /// </summary>
     public class QueryableToQueryTreeConverter
     {
-#if !NET6_0_OR_GREATER  // The latest analyzer doesn't apply IDE0034 in expression trees, but we get this warning on older targets.
-#pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of the method signatures)
-#endif
         private static readonly MethodInfo s_first = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First())).GetGenericMethodDefinition();
+#pragma warning disable IDE0034 // Simplify 'default' expression. (Deliberate: illustrative of the reflected method's signature, keeping this line parallel with the sibling declarations below - where a bare 'default' would be ambiguous anyway, so only this one fires.)
         private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
+#pragma warning restore IDE0034
         private static readonly MethodInfo s_select = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Select(default(Expression<Func<int, int>>)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_take = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Take(default(int)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_where = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Where(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
-#if !NET6_0_OR_GREATER
-#pragma warning restore IDE0034 // Simplify 'default' expression
-#endif
 
         private readonly Impl _converter;
 
@@ -67,8 +63,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
             protected override bool TryGetOperatorType(MethodInfo method, out OperatorType operatorType)
             {
-                if (method == null)
-                    throw new ArgumentNullException(nameof(method));
+                ArgumentNullException.ThrowIfNull(method);
 
                 if (!method.IsGenericMethod)
                 {

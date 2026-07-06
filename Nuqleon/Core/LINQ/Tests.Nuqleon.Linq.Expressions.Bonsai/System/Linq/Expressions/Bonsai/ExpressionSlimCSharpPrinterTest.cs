@@ -36,7 +36,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             foreach (var t in tests)
             {
-                Assert.ThrowsException<NotImplementedException>(() => t.ToExpressionSlim().ToCSharpString());
+                Assert.ThrowsExactly<NotImplementedException>(() => t.ToExpressionSlim().ToCSharpString());
             }
         }
 
@@ -541,12 +541,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 { Expression.PreDecrementAssign(x), "--x" },
             });
 
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Decrement(x)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Increment(x)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.IsTrue(b)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.IsFalse(b)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Throw(e)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Unbox(o, typeof(int))));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Decrement(x)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Increment(x)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.IsTrue(b)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.IsFalse(b)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Throw(e)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Unbox(o, typeof(int))));
         }
 
         private static void AssertPrint(Dictionary<Expression, string> tests)

@@ -27,8 +27,10 @@ namespace Tests.System.Memory
         [TestMethod]
         public void Cache_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new Cache<string>(storage: null), ex => Assert.AreEqual("storage", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache(innerCache: null), ex => Assert.AreEqual("innerCache", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new Cache<string>(storage: null));
+            Assert.AreEqual("storage", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache(innerCache: null));
+            Assert.AreEqual("innerCache", ex2.ParamName);
         }
 
         [TestMethod]
@@ -161,14 +163,14 @@ namespace Tests.System.Memory
             var ref1 = cache.Create(str);
             ref1.Dispose();
             var unused = default(string);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref1.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused = ref1.Value);
 
             var testCache = new TestCache();
             var foo = new Foo { Shared = "shared" };
             var ref2 = testCache.Create(foo);
             ref2.Dispose();
             var unused2 = default(Foo);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused2 = ref2.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused2 = ref2.Value);
         }
 
         [TestMethod]
@@ -179,17 +181,17 @@ namespace Tests.System.Memory
             var ref2 = testCache.Create(foo);
             ref2.Dispose();
             var unused2 = default(Foo);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused2 = ref2.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused2 = ref2.Value);
         }
 
         [TestMethod]
         public void Cache_StorageReturnsNull_ThrowsInvalidOperation()
         {
             var cache = new Cache<string>(new BadStorage<string>());
-            Assert.ThrowsException<InvalidOperationException>(() => cache.Create("foo"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => cache.Create("foo"));
 
             var testCache = new TestCache(cache);
-            Assert.ThrowsException<InvalidOperationException>(() => testCache.Create(new Foo { Shared = "foo" }));
+            Assert.ThrowsExactly<InvalidOperationException>(() => testCache.Create(new Foo { Shared = "foo" }));
         }
 
         private sealed class FaultyComparer : IEqualityComparer<string>

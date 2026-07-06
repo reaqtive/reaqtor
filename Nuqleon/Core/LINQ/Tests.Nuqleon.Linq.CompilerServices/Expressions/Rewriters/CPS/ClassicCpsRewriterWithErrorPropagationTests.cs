@@ -36,31 +36,50 @@ namespace Tests.System.Linq.CompilerServices
             var c2 = (Expression<Action>)(() => Console.WriteLine("foo"));
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(default(LambdaExpression)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(LambdaExpression)));
+            Assert.AreEqual("expression", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Func<int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Func<int, int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int, int, int, int>(default(Expression<Func<int, int, int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>)));
+            Assert.AreEqual("expression", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Func<int, int>>)));
+            Assert.AreEqual("expression", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Func<int, int, int>>)));
+            Assert.AreEqual("expression", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int, int>(default(Expression<Func<int, int, int, int>>)));
+            Assert.AreEqual("expression", ex6.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Action<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Action<int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Action<int, int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>)));
+            Assert.AreEqual("expression", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Action<int>>)));
+            Assert.AreEqual("expression", ex8.ParamName);
+            var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Action<int, int>>)));
+            Assert.AreEqual("expression", ex9.ParamName);
+            var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Action<int, int, int>>)));
+            Assert.AreEqual("expression", ex10.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>), c2, d1), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(f2, default(Expression<Action>), d1), ex => Assert.AreEqual("success", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(f2, c2, default(Expression<Action<Exception>>)), ex => Assert.AreEqual("failure", ex.ParamName));
+            var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>), c2, d1));
+            Assert.AreEqual("expression", ex11.ParamName);
+            var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, default(Expression<Action>), d1));
+            Assert.AreEqual("success", ex12.ParamName);
+            var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, c2, default(Expression<Action<Exception>>)));
+            Assert.AreEqual("failure", ex13.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>), c1, d1), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int>(f1, default(Expression<Action<int>>), d1), ex => Assert.AreEqual("success", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite<int>(f1, c1, default(Expression<Action<Exception>>)), ex => Assert.AreEqual("failure", ex.ParamName));
+            var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>), c1, d1));
+            Assert.AreEqual("expression", ex14.ParamName);
+            var ex15 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, default(Expression<Action<int>>), d1));
+            Assert.AreEqual("success", ex15.ParamName);
+            var ex16 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, c1, default(Expression<Action<Exception>>)));
+            Assert.AreEqual("failure", ex16.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(default(Expression), e1, e1), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(e1, default(Expression), e1), ex => Assert.AreEqual("success", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cps.Rewrite(e1, e1, default(Expression)), ex => Assert.AreEqual("failure", ex.ParamName));
+            var ex17 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression), e1, e1));
+            Assert.AreEqual("expression", ex17.ParamName);
+            var ex18 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, default(Expression), e1));
+            Assert.AreEqual("success", ex18.ParamName);
+            var ex19 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, e1, default(Expression)));
+            Assert.AreEqual("failure", ex19.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

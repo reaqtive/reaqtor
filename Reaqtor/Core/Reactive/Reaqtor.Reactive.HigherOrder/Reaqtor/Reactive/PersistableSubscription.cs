@@ -318,7 +318,7 @@ namespace Reaqtor.Reactive
                 private set => _stateful.StateChanged = value;
             }
 
-            public IEnumerable<ISubscription> Inputs => new[] { _subscription };
+            public IEnumerable<ISubscription> Inputs => [_subscription];
         }
     }
 }

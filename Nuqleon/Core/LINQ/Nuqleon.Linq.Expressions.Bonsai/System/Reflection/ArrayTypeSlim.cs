@@ -88,8 +88,7 @@ namespace System.Reflection
         {
             RequireNotNull(elementType, nameof(elementType));
 
-            if (rank <= 0)
-                throw new ArgumentOutOfRangeException(nameof(rank));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(rank);
 
             return new MultiDimensionalArrayTypeSlim(elementType, rank);
         }

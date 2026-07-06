@@ -108,7 +108,7 @@ namespace System.Linq.Expressions.Jit
             /// The indexes correspond to the entries in the method table passed to the top-level
             /// lambda.
             /// </summary>
-            private readonly Dictionary<int, LambdaInfo> _lambdas = new();
+            private readonly Dictionary<int, LambdaInfo> _lambdas = [];
 
             /// <summary>
             /// The current compiler scope to bind variable accesses against.
@@ -152,7 +152,7 @@ namespace System.Linq.Expressions.Jit
                 for (var i = 0; i < count; i++)
                 {
                     var lambda = _lambdas[i];
-                    var thunk = Activator.CreateInstance(lambda.ThunkType, new object[] { lambda.Lambda });
+                    var thunk = Activator.CreateInstance(lambda.ThunkType, [lambda.Lambda]);
                     thunks[i] = thunk;
                 }
 
@@ -378,7 +378,7 @@ namespace System.Linq.Expressions.Jit
                     // on the thunk. The thunk is retrieved from the method table that's passed to
                     // the top-level lambda by indexing into the Thunks array.
                     //
-                    var createDelegate = thunkType.GetMethod(nameof(ActionThunk<object>.CreateDelegate));
+                    var createDelegate = thunkType.GetMethod(nameof(ActionThunk<>.CreateDelegate));
                     var methodTable = currentScope.Bind(_methodTable);
 
                     var createDelegateCall =
@@ -610,7 +610,7 @@ namespace System.Linq.Expressions.Jit
                     _scope = null;
                     Closure = methodTable;
                     _hoistedLocals = new HoistedLocals(methodTable);
-                    Locals = new List<ParameterExpression>();
+                    Locals = [];
                 }
 
                 /// <summary>

@@ -44,9 +44,12 @@ namespace Test.Reaqtive
             sub.Observer.OnNext(42);
             sub.Observer.OnCompleted();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(42), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("terminated"));
+            var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
+            Assert.IsTrue(ex2.Message.Contains("terminated"));
+            var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex3.Message.Contains("terminated"));
+            var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex4.Message.Contains("terminated"));
 
             Assert.AreEqual(42, res);
         }
@@ -79,9 +82,12 @@ namespace Test.Reaqtive
             sub.Observer.OnNext(42);
             sub.Observer.OnError(new Exception("foo"));
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(42), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("terminated"));
+            var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
+            Assert.IsTrue(ex2.Message.Contains("terminated"));
+            var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex3.Message.Contains("terminated"));
+            var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex4.Message.Contains("terminated"));
 
             Assert.AreEqual(42, res);
         }
@@ -115,9 +121,12 @@ namespace Test.Reaqtive
             var t = Task.Run(() => sub.Observer.OnNext(42));
             s.WaitOne();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(43), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("processing"));
+            var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
+            Assert.IsTrue(ex2.Message.Contains("processing"));
+            var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex3.Message.Contains("processing"));
+            var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex4.Message.Contains("processing"));
 
             e.Set();
             t.Wait();
@@ -155,16 +164,22 @@ namespace Test.Reaqtive
             var t = Task.Run(() => sub.Observer.OnError(new Exception()));
             s.WaitOne();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(43), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("processing"));
+            var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
+            Assert.IsTrue(ex2.Message.Contains("processing"));
+            var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex3.Message.Contains("processing"));
+            var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex4.Message.Contains("processing"));
 
             e.Set();
             t.Wait();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(42), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("terminated"));
+            var ex5 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
+            Assert.IsTrue(ex5.Message.Contains("terminated"));
+            var ex6 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex6.Message.Contains("terminated"));
+            var ex7 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex7.Message.Contains("terminated"));
         }
 
         [TestMethod]
@@ -196,16 +211,22 @@ namespace Test.Reaqtive
             var t = Task.Run(() => sub.Observer.OnCompleted());
             s.WaitOne();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(43), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("processing"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("processing"));
+            var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
+            Assert.IsTrue(ex2.Message.Contains("processing"));
+            var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex3.Message.Contains("processing"));
+            var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex4.Message.Contains("processing"));
 
             e.Set();
             t.Wait();
 
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnNext(42), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnError(new Exception()), ex => ex.Message.Contains("terminated"));
-            AssertEx.ThrowsException<InvalidOperationException>(() => sub.Observer.OnCompleted(), ex => ex.Message.Contains("terminated"));
+            var ex5 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
+            Assert.IsTrue(ex5.Message.Contains("terminated"));
+            var ex6 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
+            Assert.IsTrue(ex6.Message.Contains("terminated"));
+            var ex7 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
+            Assert.IsTrue(ex7.Message.Contains("terminated"));
         }
 
         private sealed class MySubscribable : SubscribableBase<int>

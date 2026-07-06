@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Memory;
 using System.Runtime.ExceptionServices;
@@ -90,14 +89,14 @@ namespace Reaqtor.QueryEngine
 
         private Subscription _subscription;
 
-        private List<T> _queue = new();
+        private List<T> _queue = [];
         private Exception _error;
         private bool _done;
 
         private bool _completeNotified;
         private long _lowWatermark = 0;
 
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
         private int _disposed = 0;
         private StateChangedManager _stateful;
 
@@ -245,10 +244,12 @@ namespace Reaqtor.QueryEngine
 
         public IReliableSubscription Subscribe(IReliableObserver<T> observer)
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the bridge's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Volatile.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.ToCanonicalString());
             }
+#pragma warning restore CA1513
 
             var subscription = new Subscription(this, observer, _lowWatermark - 1);
 
@@ -621,7 +622,7 @@ namespace Reaqtor.QueryEngine
 
             public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
 
-            public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+            public IEnumerable<ISubscription> Inputs => [];
 
             public void SetContext(IOperatorContext context) => Context = (IHostedOperatorContext)context;
         }
@@ -722,7 +723,7 @@ namespace Reaqtor.QueryEngine
 
         #region State
 
-        public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public string Name => "rce:Bridge";
 

@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class UndefineServiceOperation : ServiceOperation
     {
         public UndefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)

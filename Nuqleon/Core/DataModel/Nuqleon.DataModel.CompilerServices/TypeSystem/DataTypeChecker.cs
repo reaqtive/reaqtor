@@ -26,8 +26,8 @@ namespace Nuqleon.DataModel.TypeSystem
         private static readonly ObjectPool<Impl> s_poolNoCycles = new(() => new Impl(allowCycles: false));
         private static readonly ObjectPool<Impl> s_poolAllowCycles = new(() => new Impl(allowCycles: true));
 
-        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheNoCycles = new();
-        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheAllowCycles = new();
+        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheNoCycles = [];
+        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheAllowCycles = [];
 
         public static bool TryCheck(Type type, bool allowCycles, out ReadOnlyCollection<DataTypeError> errors)
         {
@@ -62,7 +62,7 @@ namespace Nuqleon.DataModel.TypeSystem
             {
                 _allowCycles = allowCycles;
                 _stack = new Stack<Record>();
-                _errors = new List<DataTypeError>();
+                _errors = [];
             }
 
             private sealed class Record
@@ -80,7 +80,7 @@ namespace Nuqleon.DataModel.TypeSystem
                 {
                     get
                     {
-                        _errors ??= new List<string>();
+                        _errors ??= [];
 
                         return _errors;
                     }
@@ -95,10 +95,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
             public override bool Visit(Type type)
             {
-                if (type == null)
-                {
-                    throw new ArgumentNullException(nameof(type));
-                }
+                ArgumentNullException.ThrowIfNull(type);
 
                 foreach (var previousRecord in _stack)
                 {
@@ -113,7 +110,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
                             var cycle = string.Format(CultureInfo.InvariantCulture, "Cycle detected due to recursive type definition: {0}", string.Join(" -> ", path));
 
-                            _errors.Add(new DataTypeError(type, cycle, _stack.Select(t => t.Type).ToArray()));
+                            _errors.Add(new DataTypeError(type, cycle, [.. _stack.Select(t => t.Type)]));
 
                             return false;
                         }
@@ -143,7 +140,7 @@ namespace Nuqleon.DataModel.TypeSystem
                             sb.AppendLine(error);
                         }
 
-                        _errors.Add(new DataTypeError(type, sb.ToString(), _stack.Select(t => t.Type).ToArray()));
+                        _errors.Add(new DataTypeError(type, sb.ToString(), [.. _stack.Select(t => t.Type)]));
                     }
                 }
 

@@ -46,7 +46,7 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.IsTrue(ch.Keys.OrderBy(x => x).SequenceEqual(new[] { "bar", "foo", "qux" }));
+            Assert.IsTrue(ch.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo", "qux"]));
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.IsTrue(ch.Values.OrderBy(x => x).SequenceEqual(new[] { 42, 43, 44 }));
+            Assert.IsTrue(ch.Values.OrderBy(x => x).SequenceEqual([42, 43, 44]));
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace Tests.Reaqtor.Shared.Core
             Assert.AreEqual(43, ch["foo"]);
             Assert.AreEqual(44, ch["qux"]);
 
-            Assert.ThrowsException<KeyNotFoundException>(() => ch["baz"]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => ch["baz"]);
         }
 
         [TestMethod]
@@ -116,12 +116,12 @@ namespace Tests.Reaqtor.Shared.Core
 
         private static void AssertEnumeration(IEnumerable<KeyValuePair<string, int>> e)
         {
-            Assert.IsTrue(e.OrderBy(kv => kv.Key).SequenceEqual(new[]
-            {
+            Assert.IsTrue(e.OrderBy(kv => kv.Key).SequenceEqual(
+            [
                 new KeyValuePair<string, int>("bar", 42),
                 new KeyValuePair<string, int>("foo", 43),
                 new KeyValuePair<string, int>("qux", 44),
-            }));
+            ]));
         }
 
         private sealed class Enumerable : IEnumerable
@@ -164,13 +164,13 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.ThrowsException<NotImplementedException>(() => ch["baz"] = 45);
-            Assert.ThrowsException<NotImplementedException>(() => ch.Add("baz", 45));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Add(new KeyValuePair<string, int>("baz", 45)));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Clear());
-            Assert.ThrowsException<NotImplementedException>(() => ch.CopyTo(null, 0));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Remove("baz"));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Remove(new KeyValuePair<string, int>("baz", 45)));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch["baz"] = 45);
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Add("baz", 45));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Add(new KeyValuePair<string, int>("baz", 45)));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Clear());
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.CopyTo(null, 0));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Remove("baz"));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Remove(new KeyValuePair<string, int>("baz", 45)));
         }
 
         private static IDictionary<string, int> GetChainedDictionary()

@@ -34,10 +34,8 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
         public IPersistedArray<T> CreateArray<T>(string id, int length)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            ArgumentNullException.ThrowIfNull(id);
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
 
             var array = new Array(this, length);
             _items.Add(id, array);
@@ -55,8 +53,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidCastException">A persisted object with identifier <paramref name="id"/> was found but is incompatible with the requested persisted array type.</exception>
         public IPersistedArray<T> GetArray<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return CreateArrayCore<T>(id, (Array)_items[id]);
         }

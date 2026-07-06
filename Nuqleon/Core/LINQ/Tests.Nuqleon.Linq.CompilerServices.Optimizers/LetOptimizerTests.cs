@@ -92,7 +92,11 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         let c = 2
                         let d = i + 1
                         let f = i - 3
-                        select string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}", i, x, y, z, a, b, c, d, f)
+                        // NB: explicit object[] forces the classic string.Format(string, object[]) overload.
+                        //     In C# 14 a bare argument list binds to the params ReadOnlySpan<object> overload,
+                        //     which a LINQ expression tree cannot represent (CS8640/CS9226). The expression
+                        //     produced here is identical to the previous params-array expansion.
+                        select string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}", new object[] { i, x, y, z, a, b, c, d, f })
                     ).Body;
 
                 var converter = new EnumerableToQueryTreeConverter();
@@ -176,14 +180,14 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var y = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, u }),
+                        select.MakeGenericMethod([t, u]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -192,18 +196,17 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         Expression.Lambda(
                             Expression.New(
                                 u.GetConstructors().Single(),
-                                new Expression[]
-                                {
+                                [
                                     y,
                                     Expression.Invoke(
                                         Expression.Lambda(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), y),
                                         Expression.New(
                                             t.GetConstructors().Single(),
-                                            new[] { Expression.Constant(2) },
+                                            [Expression.Constant(2)],
                                             t.GetMember("i").Single()
                                         )
                                     )
-                                },
+                                ],
                                 u.GetMember("A").Single(),
                                 u.GetMember("b").Single()
                             ),
@@ -245,14 +248,14 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var z = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, u }),
+                        select.MakeGenericMethod([t, u]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -261,18 +264,17 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         Expression.Lambda(
                             Expression.New(
                                 u.GetConstructors().Single(),
-                                new Expression[]
-                                {
+                                [
                                     y,
                                     Expression.Invoke(
                                         Expression.Lambda(Expression.MakeMemberAccess(z, t.GetMember("i").Single()), z),
                                         Expression.New(
                                             t.GetConstructors().Single(),
-                                            new[] { Expression.Constant(2) },
+                                            [Expression.Constant(2)],
                                             t.GetMember("i").Single()
                                         )
                                     )
-                                },
+                                ],
                                 u.GetMember("A").Single(),
                                 u.GetMember("b").Single()
                             ),
@@ -306,14 +308,14 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var y = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, typeof(int) }),
+                        select.MakeGenericMethod([t, typeof(int)]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -324,7 +326,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                                 Expression.Lambda(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), y),
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Add(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), Expression.Constant(1)) },
+                                    [Expression.Add(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), Expression.Constant(1))],
                                     t.GetMember("i").Single()
                                 )
                             ),

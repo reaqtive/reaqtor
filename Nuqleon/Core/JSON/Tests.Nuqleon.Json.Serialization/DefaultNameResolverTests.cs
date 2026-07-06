@@ -24,8 +24,8 @@ namespace Tests
         [TestMethod]
         public void DefaultNameResolver_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(FieldInfo)));
-            Assert.ThrowsException<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(PropertyInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(FieldInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(PropertyInfo)));
         }
 
         [TestMethod]

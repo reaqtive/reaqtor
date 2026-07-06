@@ -180,27 +180,31 @@ namespace Tests
         public void Domain_AddMember_Exceptions()
         {
             var domain = new SerializationDomain(BonsaiVersion.Default);
-            AssertEx.ThrowsException<ArgumentNullException>(() => domain.AddMember(member: null), ex => Assert.AreEqual(ex.ParamName, "member"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.AddMember(member: null));
+            Assert.AreEqual("member", ex.ParamName);
         }
 
         [TestMethod]
         public void Domain_GetMember_Exceptions()
         {
             var domain = GetDomain();
-            AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetMember(expression: null), ex => Assert.AreEqual(ex.ParamName, "expression"));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetMember(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
         }
 
         [TestMethod]
         public void Domain_GetType_Exceptions()
         {
             var domain = GetDomain();
-            AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetType((Json.Expression)null), ex => Assert.AreEqual(ex.ParamName, "expression"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetType((TypeRef)null), ex => Assert.AreEqual(ex.ParamName, "typeRef"));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((Json.Expression)null));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((TypeRef)null));
+            Assert.AreEqual("typeRef", ex2.ParamName);
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
         }
 
         private static DeserializationDomain GetDomain()
@@ -225,7 +229,7 @@ namespace Tests
             foreach (var expr in jsonExpressions)
             {
                 var json = Json.Expression.Parse(expr, ensureTopLevelObjectOrArray: false);
-                Assert.ThrowsException<T>(() => new DeserializationDomain(json));
+                Assert.ThrowsExactly<T>(() => new DeserializationDomain(json));
             }
         }
     }

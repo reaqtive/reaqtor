@@ -71,7 +71,7 @@ namespace Reaqtive
         private ConditionalWeakTable<object, object> GetTable(object o)
         {
             var id = RuntimeHelpers.GetHashCode(o) % BUCKETCOUNT;
-            return _payForPlayLogs.GetOrAdd(id, _ => new ConditionalWeakTable<object, object>());
+            return _payForPlayLogs.GetOrAdd(id, _ => []);
         }
     }
 }

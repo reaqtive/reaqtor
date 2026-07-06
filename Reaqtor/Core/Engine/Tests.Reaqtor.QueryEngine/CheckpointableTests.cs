@@ -23,15 +23,22 @@ namespace Tests.Reaqtor.QueryEngine
         {
             Run((_, sr, sw, ct, pr) =>
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, ct), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, pr), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw));
+                Assert.AreEqual("this", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, ct));
+                Assert.AreEqual("this", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, pr));
+                Assert.AreEqual("this", ex3.ParamName);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, ct), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, pr), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr));
+                Assert.AreEqual("this", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, ct));
+                Assert.AreEqual("this", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, pr));
+                Assert.AreEqual("this", ex6.ParamName);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.UnloadAsync(null), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.UnloadAsync(null));
+                Assert.AreEqual("this", ex7.ParamName);
             });
         }
 
@@ -45,10 +52,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, CancellationToken.None, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -63,10 +70,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, ct, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -81,10 +88,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, CancellationToken.None, pr)),
-                    }));
+                    ]));
                 }
             );
         }
@@ -99,10 +106,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, CancellationToken.None, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -117,10 +124,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, ct, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -135,10 +142,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, CancellationToken.None, pr)),
-                    }));
+                    ]));
                 }
             );
         }
@@ -153,10 +160,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Unload, Tuple.Create(default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -184,7 +191,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         private sealed class MyCheckpointable : ICheckpointable
         {
-            public List<Tuple<CheckpointableRequest, object>> Requests = new();
+            public List<Tuple<CheckpointableRequest, object>> Requests = [];
 
             public Task CheckpointAsync(IStateWriter writer, CancellationToken token, IProgress<int> progress)
             {

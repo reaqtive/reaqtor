@@ -81,7 +81,7 @@ namespace Test.Reaqtive
             Assert.IsTrue(mo.Started);
             Assert.IsTrue(mo.StateChanged);
 
-            Assert.ThrowsException<ArgumentNullException>(() => mo.SaveState(null, mo.Version));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mo.SaveState(null, mo.Version));
 
             var writer = writerFactory.Create(mo);
             mo.SaveState(writer, mo.Version);
@@ -94,7 +94,7 @@ namespace Test.Reaqtive
 
             var reader = readerFactory.Create(mor);
 
-            Assert.ThrowsException<ArgumentNullException>(() => mor.LoadState(null, mor.Version));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mor.LoadState(null, mor.Version));
 
             mor.LoadState(reader, mor.Version);
 
@@ -153,12 +153,12 @@ namespace Test.Reaqtive
             mo.Start();
 
             var writer = writerFactory.Create(mo);
-            Assert.ThrowsException<NotSupportedException>(() => mo.SaveState(writer, new Version(2, 0, 0, 0)));
+            Assert.ThrowsExactly<NotSupportedException>(() => mo.SaveState(writer, new Version(2, 0, 0, 0)));
 
             var mor = new MyOperator(o);
 
             var reader = readerFactory.Create(mor);
-            Assert.ThrowsException<NotSupportedException>(() => mor.LoadState(reader, new Version(2, 0, 0, 0)));
+            Assert.ThrowsExactly<NotSupportedException>(() => mor.LoadState(reader, new Version(2, 0, 0, 0)));
         }
 
         private sealed class MyOperator : StatefulOperator<string, int>, IObserver<int>
@@ -186,7 +186,7 @@ namespace Test.Reaqtive
                 Error = error;
             }
 
-            public List<int> Values = new();
+            public List<int> Values = [];
 
             public void OnNext(int value)
             {

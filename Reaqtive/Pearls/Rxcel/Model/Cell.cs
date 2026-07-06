@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
@@ -27,7 +28,6 @@ namespace Rxcel
         private readonly Sheet _sheet;
         private readonly BehaviorSubject<double?> _subject;
         private readonly SerialDisposable _subscription;
-        private string _formula;
         private LambdaExpression _expr;
 
         public Cell(Sheet sheet)
@@ -39,21 +39,21 @@ namespace Rxcel
 
         public string Value
         {
-            get => !string.IsNullOrEmpty(_formula) ? _formula : _subject.Value.ToString();
+            get => !string.IsNullOrEmpty(field) ? field : _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
 
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(null);
                 }
                 else if (double.TryParse(value, out var v))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(v);
                 }
@@ -61,7 +61,7 @@ namespace Rxcel
                 {
                     var text = value.TrimStart();
 
-                    if (text.StartsWith("=", StringComparison.Ordinal))
+                    if (text.StartsWith('='))
                     {
                         text = text[1..];
 
@@ -94,7 +94,7 @@ namespace Rxcel
 
 #pragma warning restore CA1031
 
-                        _formula = value;
+                        field = value;
                     }
                     else
                     {
@@ -115,7 +115,8 @@ namespace Rxcel
 
         public override string ToString()
         {
-            return _subject.Value.ToString();
+            // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
+            return _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
         }
 
         private void CreateSubscription(LambdaExpression f)
@@ -180,7 +181,7 @@ namespace Rxcel
                 throw new InvalidOperationException("Cycle detected.");
             }
 
-            var res = Expression.Call(mtd, cells.Select(c => Expression.Constant(c)).Concat(new Expression[] { f }).ToArray());
+            var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), f]);
 
             var src = Expression.Lambda<Func<IObservable<double?>>>(res).Compile()();
 

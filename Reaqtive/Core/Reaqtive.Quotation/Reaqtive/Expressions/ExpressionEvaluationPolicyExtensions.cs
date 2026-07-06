@@ -23,15 +23,9 @@ namespace Reaqtive.Expressions
         /// <returns>The result of evaluating the expression with the given policy.</returns>
         public static T Evaluate<T>(this IExpressionEvaluationPolicy policy, Expression expression)
         {
-            if (policy == null)
-            {
-                throw new ArgumentNullException(nameof(policy));
-            }
+            ArgumentNullException.ThrowIfNull(policy);
 
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
+            ArgumentNullException.ThrowIfNull(expression);
 
             var delegateCache = policy.DelegateCache;
             if (delegateCache == null)

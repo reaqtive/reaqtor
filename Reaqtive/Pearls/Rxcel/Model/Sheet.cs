@@ -54,8 +54,8 @@ namespace Rxcel
                 return;
             }
 
-            var ctor = typeof(Sheet).GetConstructor(new[] { typeof(int), typeof(int) });
-            var index = typeof(Sheet).GetProperty("Item", new[] { typeof(int), typeof(int) });
+            var ctor = typeof(Sheet).GetConstructor([typeof(int), typeof(int)]);
+            var index = typeof(Sheet).GetProperty("Item", [typeof(int), typeof(int)]);
             var value = typeof(Cell).GetProperty(nameof(Cell.Value));
 
             var sheet = Expression.Parameter(typeof(Sheet));
@@ -76,11 +76,10 @@ namespace Rxcel
                                     Expression.MakeIndex(
                                         sheet,
                                         index,
-                                        new[]
-                                        {
+                                        [
                                             Expression.Constant(i),
                                             Expression.Constant(j)
-                                        }
+                                        ]
                                     ),
                                     value
                                 ),
@@ -93,9 +92,8 @@ namespace Rxcel
 
             var body =
                 Expression.Block(
-                    new[] { sheet },
-                    new Expression[]
-                    {
+                    [sheet],
+                    [
                         Expression.Assign(
                             sheet,
                             Expression.New(
@@ -106,7 +104,7 @@ namespace Rxcel
                         ),
                         Expression.Block(initCells),
                         sheet
-                    }
+                    ]
                 );
 
             var expr = Expression.Lambda<Func<Sheet>>(body);

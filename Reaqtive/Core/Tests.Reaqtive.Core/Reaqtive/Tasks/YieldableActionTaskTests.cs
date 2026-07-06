@@ -23,8 +23,8 @@ namespace Test.Reaqtive
         public void YieldableActionTask_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new YieldableActionTask(default(Func<YieldToken, bool>)));
-            Assert.ThrowsException<ArgumentNullException>(() => new YieldableActionTask<int>(default(Func<int, YieldToken, bool>), 42));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new YieldableActionTask(default(Func<YieldToken, bool>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new YieldableActionTask<int>(default(Func<int, YieldToken, bool>), 42));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

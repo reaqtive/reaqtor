@@ -19,15 +19,20 @@ namespace Test.Reaqtive
         public void StableCompositeSubscription_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StableCompositeSubscription(default(IEnumerable<ISubscription>)), ex => Assert.AreEqual("subscriptions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StableCompositeSubscription(default(ISubscription[])), ex => Assert.AreEqual("subscriptions", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new StableCompositeSubscription(default(IEnumerable<ISubscription>)));
+            Assert.AreEqual("subscriptions", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new StableCompositeSubscription(default(ISubscription[])));
+            Assert.AreEqual("subscriptions", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var cs = new StableCompositeSubscription();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.Add(null), ex => Assert.AreEqual("subscription", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.AddRange(null), ex => Assert.AreEqual("subscriptions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.Remove(null), ex => Assert.AreEqual("subscription", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.Add(null));
+            Assert.AreEqual("subscription", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.AddRange(null));
+            Assert.AreEqual("subscriptions", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.Remove(null));
+            Assert.AreEqual("subscription", ex5.ParamName);
         }
 
         [TestMethod]
@@ -77,7 +82,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(1, s3.DisposedCount);
             Assert.AreEqual(0, cs.Count);
 
-            cs.AddRange(new[] { s1, s2, s3 });
+            cs.AddRange([s1, s2, s3]);
             Assert.AreEqual(3, cs.Count);
             cs.Remove(s3);
             Assert.AreEqual(2, s3.DisposedCount);
@@ -100,13 +105,13 @@ namespace Test.Reaqtive
             var cs = new StableCompositeSubscription();
 
             var s1 = new MySub();
-            cs.AddRange(new ISubscription[] { s1 });
+            cs.AddRange([s1]);
             Start(cs);
             Assert.AreEqual(1, s1.StartCount);
             Assert.AreEqual(1, cs.Count);
 
             var s2 = new MySub();
-            cs.AddRange(new ISubscription[] { s2 });
+            cs.AddRange([s2]);
             Start(cs);
             Assert.AreEqual(2, s1.StartCount);
             Assert.AreEqual(1, s2.StartCount);
@@ -130,14 +135,14 @@ namespace Test.Reaqtive
             Assert.AreEqual(2, s2.StartCount);
 
             var s3 = new MySub();
-            cs.AddRange(new ISubscription[] { s3 });
+            cs.AddRange([s3]);
             Start(cs);
             Assert.AreEqual(2, s1.StartCount);
             Assert.AreEqual(2, s2.StartCount);
             Assert.AreEqual(1, s3.StartCount);
             Assert.AreEqual(1, cs.Count);
 
-            cs.AddRange(Array.Empty<ISubscription>());
+            cs.AddRange([]);
             Start(cs);
             Assert.AreEqual(2, s1.StartCount);
             Assert.AreEqual(2, s2.StartCount);
@@ -186,7 +191,7 @@ namespace Test.Reaqtive
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs));
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
-            cs.AddRange(new ISubscription[] { s1, s2, s3, s4 });
+            cs.AddRange([s1, s2, s3, s4]);
 
             Assert.AreEqual(2, s1.DisposedCount);
             Assert.AreEqual(2, s2.DisposedCount);
@@ -232,7 +237,7 @@ namespace Test.Reaqtive
 
             var rand = new Random(1983);
 
-            ds1 = ds1.OrderBy(_ => rand.Next()).ToList();
+            ds1 = [.. ds1.OrderBy(_ => rand.Next())];
 
             var R = 2 * N / 3;
 

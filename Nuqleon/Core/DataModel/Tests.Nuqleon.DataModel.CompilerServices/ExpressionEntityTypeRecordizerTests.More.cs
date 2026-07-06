@@ -55,7 +55,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public ListPropertyTest()
             {
-                List = new List<int>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -72,7 +72,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public RecordListPropertyTest()
             {
-                List = new List<SimplePropertyTest>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -158,14 +158,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public Star()
             {
-                List = new List<int>();
-                Planets = new List<Planet>();
+                List = [];
+                Planets = [];
             }
 
             public Star([Mapping("contoso://list")] List<int> list)
             {
                 List = list;
-                Planets = new List<Planet>();
+                Planets = [];
             }
 
             [Mapping("contoso://list")]
@@ -318,7 +318,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_WithConstantArrayType_Success()
         {
-            var obj = new SimplePropertyTest[] { new SimplePropertyTest(1) };
+            var obj = new SimplePropertyTest[] { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetElementType();
             AssertRecordizationFromConstant(obj, getRecord);
@@ -327,7 +327,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_WithConstantEnumerableType_Success()
         {
-            var obj = new List<SimplePropertyTest> { new SimplePropertyTest(1) };
+            var obj = new List<SimplePropertyTest> { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetGenericArguments()[0];
             AssertRecordizationFromConstant(obj, getRecord);
@@ -368,7 +368,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_MemberMemberBindingWithNewList_Success()
         {
-            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new SimplePropertyTest(1) } } });
+            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } });
 
             static Type getRecord(Expression expr) => (expr as LambdaExpression).ReturnType;
             AssertRecordizationFromExpression(exp, getRecord);
@@ -380,7 +380,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var exp = (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } });
 
             static Type getRecord(Expression expr) => (expr as LambdaExpression).ReturnType;
-            AssertRecordizationFromExpression(exp, getRecord, new List<SimplePropertyTest> { new SimplePropertyTest(1) });
+            AssertRecordizationFromExpression(exp, getRecord, new List<SimplePropertyTest> { new(1) });
         }
 
         [TestMethod]
@@ -482,7 +482,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             where T : Exception
         {
             var etr = new ExpressionEntityTypeRecordizer();
-            Assert.ThrowsException<T>(() => etr.Apply(exp));
+            Assert.ThrowsExactly<T>(() => etr.Apply(exp));
         }
 
         private static void AssertRecordizationException<T>(object obj)
@@ -496,7 +496,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             where T : Exception
         {
             var etr = new ExpressionEntityTypeRecordizer();
-            AssertEx.ThrowsException<T>(() => etr.Apply(exp), assert);
+            assert(Assert.ThrowsExactly<T>(() => etr.Apply(exp)));
         }
 
         private static void AssertRecordizationException<T>(object obj, Action<T> assert)

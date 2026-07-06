@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 using Reaqtive;
 using Reaqtive.Scheduler;
@@ -140,7 +139,7 @@ namespace Reaqtor.QueryEngine
         {
         }
 
-        public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public void Subscribe() { }
 

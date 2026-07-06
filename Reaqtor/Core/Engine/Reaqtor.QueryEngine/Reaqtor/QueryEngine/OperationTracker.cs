@@ -55,14 +55,11 @@ namespace Reaqtor.QueryEngine
             {
                 var count = Volatile.Read(ref _count);
 
-                if (count < 0)
-                {
-                    //
-                    // Either int.MinValue (Disposed) or another value < 0 (Disposing). Don't allow
-                    // new work to come in.
-                    //
-                    throw new ObjectDisposedException("this");
-                }
+                //
+                // Either int.MinValue (Disposed) or another value < 0 (Disposing). Don't allow
+                // new work to come in.
+                //
+                ObjectDisposedException.ThrowIf(count < 0, this);
 
                 if (Interlocked.CompareExchange(ref _count, count + 1, count) == count)
                 {
@@ -79,11 +76,7 @@ namespace Reaqtor.QueryEngine
         /// Disposes the component by draining the remaining work. This call blocks until all work has
         /// completed.
         /// </summary>
-#if NET6_0 || NETSTANDARD2_1
         public async ValueTask DisposeAsync()
-#else
-        public async Task DisposeAsync(CancellationToken token)
-#endif
         {
             while (true)
             {

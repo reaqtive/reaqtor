@@ -27,8 +27,8 @@ namespace Test.Reaqtive
             var ee = new Environment();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new OperatorContext(default(Uri), sh, tc, ee));
-            Assert.ThrowsException<ArgumentNullException>(() => new OperatorContext(ur, default(IScheduler), tc, ee));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(default(Uri), sh, tc, ee));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(ur, default(IScheduler), tc, ee));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

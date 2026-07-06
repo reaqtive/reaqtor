@@ -8,29 +8,25 @@
 //   BD - 07/02/2014 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if !NET6_0
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 
 namespace Tests
 {
     [TestClass]
     public class PooledHashSetTests : TestBase
     {
-        private static readonly string[] exp = new[] { "qux", "foo", "bar", "baz" };
+        private static readonly string[] exp = ["qux", "foo", "bar", "baz"];
 
         [TestMethod]
         public void PooledHashSet_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
         }
 
         [TestMethod]
@@ -203,37 +199,6 @@ namespace Tests
             }
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void PooledHashSet_Serialization()
-        {
-            var ms = new MemoryStream();
-
-            using (var obj = PooledHashSet<string>.New())
-            {
-                var set = obj.HashSet;
-
-                set.Add("qux");
-                set.Add("foo");
-                set.Add("bar");
-                set.Add("baz");
-
-                var fmt = new BinaryFormatter();
-                fmt.Serialize(ms, set);
-            }
-
-            ms.Position = 0;
-
-            {
-                var fmt = new BinaryFormatter();
-                var set = (PooledHashSet<string>)fmt.Deserialize(ms);
-
-                Assert.IsTrue(set.SetEquals(exp));
-
-                set.Free(); // no-op but doesn't throw
-            }
-        }
-#endif
 
         [TestMethod]
         public void PooledHashSet_GottenTooBig()

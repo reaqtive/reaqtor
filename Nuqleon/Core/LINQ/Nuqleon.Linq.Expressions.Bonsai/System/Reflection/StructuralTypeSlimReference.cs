@@ -54,8 +54,7 @@ namespace System.Reflection
         /// <param name="property">The property to add.</param>
         public void AddProperty(PropertyInfoSlim property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
             if (_properties.IsFrozen)
                 throw new InvalidOperationException("The structural type has been frozen.  Cannot add property to frozen structural type.");
 
@@ -84,8 +83,7 @@ namespace System.Reflection
         /// <returns>A new structural type that's initially mutable.</returns>
         public static StructuralTypeSlimReference Create(bool hasValueEqualitySemantics, StructuralTypeSlimKind kind, int capacity)
         {
-            if (capacity < 0)
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+            ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
             return kind switch
             {

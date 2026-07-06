@@ -52,13 +52,13 @@ namespace Tests
         [TestMethod]
         public void StopwatchFactory_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => StopwatchFactory.FromClock(clock: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StopwatchFactory.FromClock(clock: null));
         }
 
         [TestMethod]
         public void StopwatchFactoryExtensions_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => StopwatchFactoryExtensions.StartNew(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => StopwatchFactoryExtensions.StartNew(factory: null));
         }
 
         [TestMethod]

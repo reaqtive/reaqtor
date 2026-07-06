@@ -11,7 +11,7 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment : IHigherOrderExecutionEnvironment
     {
-        private readonly Dictionary<Uri, object> _artifacts = new();
+        private readonly Dictionary<Uri, object> _artifacts = [];
         private bool _frozen;
 
         public void Freeze() => _frozen = true;

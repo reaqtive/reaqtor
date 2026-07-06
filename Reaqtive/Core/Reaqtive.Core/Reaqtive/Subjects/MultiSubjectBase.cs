@@ -53,7 +53,7 @@ namespace Reaqtive
         /// <summary>
         /// A set of subscriptions to visit upon visiting the current instance.
         /// </summary>
-        public virtual IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+        public virtual IEnumerable<ISubscription> Inputs => [];
 
         /// <summary>
         /// Reports whether subject is disposed.

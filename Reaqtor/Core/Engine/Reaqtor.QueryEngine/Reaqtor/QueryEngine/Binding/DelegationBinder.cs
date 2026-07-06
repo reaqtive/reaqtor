@@ -45,7 +45,7 @@ namespace Reaqtor.QueryEngine
         public DelegationBinder(IQueryEngineRegistry registry)
             : base(registry)
         {
-            targetMapper = new Dictionary<Expression, IDelegationTarget>();
+            targetMapper = [];
         }
 
         protected override Expression LookupOther(string id, Type type, Type funcType) => null;

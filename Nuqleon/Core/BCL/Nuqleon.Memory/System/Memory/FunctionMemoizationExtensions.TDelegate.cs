@@ -25,8 +25,8 @@ namespace System.Memory
         /// <summary>
         /// Types of tuplets used for argument bundles. The tuplet type at position n represents an (n + 1)-tuplet.
         /// </summary>
-        private static readonly Type[] s_argsTypes = new[]
-        {
+        private static readonly Type[] s_argsTypes =
+        [
             typeof(Tuplet<>),
             typeof(Tuplet<,>),
             typeof(Tuplet<,,>),
@@ -43,7 +43,7 @@ namespace System.Memory
             typeof(Tuplet<,,,,,,,,,,,,,>),
             typeof(Tuplet<,,,,,,,,,,,,,,>),
             typeof(Tuplet<,,,,,,,,,,,,,,,>),
-        };
+        ];
 
         /// <summary>
         /// Type of the tuplet with a TRest parameter, used for spilling of parameters if the number exceeds 16.
@@ -53,8 +53,8 @@ namespace System.Memory
         /// <summary>
         /// Types of functions we have pre-compiled memoization methods for. The function type at position n represents a function with n + 1 parameters.
         /// </summary>
-        private static readonly List<Type> s_funcTypes = new(new[]
-        {
+        private static readonly List<Type> s_funcTypes =
+        [
             typeof(Func<>),
             typeof(Func<,>),
             typeof(Func<,,>),
@@ -72,7 +72,7 @@ namespace System.Memory
             typeof(Func<,,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,,,>),
-        });
+        ];
 
         /// <summary>
         /// Lazy computation of Memoize functions. The method at position n can memoize a function with n parameters.
@@ -85,24 +85,14 @@ namespace System.Memory
         private static readonly Lazy<MethodInfo[]> s_memoizeWeakFuncMethods = new(() => FindMemoizeMethods(nameof(MemoizeWeak), typeof(IWeakMemoizer)));
 
         /// <summary>
-        /// Lazily initialized <see cref="IMemoizer.Memoize{T, TResult}"/> method info.
-        /// </summary>
-        private static MethodInfo s_IMemoizer_Memoize;
-
-        /// <summary>
         /// Gets the <see cref="IMemoizer.Memoize{T, TResult}"/> method info.
         /// </summary>
-        private static MethodInfo IMemoizer_Memoize => s_IMemoizer_Memoize ??= typeof(IMemoizer).GetMethod(nameof(Memoize));
-
-        /// <summary>
-        /// Lazily initialized <see cref="IWeakMemoizer.MemoizeWeak{T, TResult}"/> method info.
-        /// </summary>
-        private static MethodInfo s_IWeakMemoizer_MemoizeWeak;
+        private static MethodInfo IMemoizer_Memoize => field ??= typeof(IMemoizer).GetMethod(nameof(Memoize));
 
         /// <summary>
         /// Gets the <see cref="IWeakMemoizer.MemoizeWeak{T, TResult}"/> method info.
         /// </summary>
-        private static MethodInfo IWeakMemoizer_MemoizeWeak => s_IWeakMemoizer_MemoizeWeak ??= typeof(IWeakMemoizer).GetMethod(nameof(MemoizeWeak));
+        private static MethodInfo IWeakMemoizer_MemoizeWeak => field ??= typeof(IWeakMemoizer).GetMethod(nameof(MemoizeWeak));
 
         /// <summary>
         /// Singleton instance of a <see cref="ConstantExpression"/> of type <see cref="object"/> whose <see cref="ConstantExpression.Value"/> is <c>null</c>.
@@ -120,10 +110,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<TDelegate> Memoize<TDelegate>(this IMemoizer memoizer, TDelegate function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             //
             // NB: In principle, memoizing a constant could return the original object.
@@ -144,7 +132,7 @@ namespace System.Memory
                 {
                     var genArgs = delegateType.GetGenericArguments();
                     var memoizeFuncMethod = s_memoizeFuncMethods.Value[genArgs.Length - 1].MakeGenericMethod(genArgs);
-                    return (MemoizedDelegate<TDelegate>)memoizeFuncMethod.Invoke(obj: null, new object[] { memoizer, function, options });
+                    return (MemoizedDelegate<TDelegate>)memoizeFuncMethod.Invoke(obj: null, [memoizer, function, options]);
                 }
             }
 
@@ -186,7 +174,7 @@ namespace System.Memory
             var resultType = hasNoReturn ? typeof(object) : returnType;
 
             var argsParam = Expression.Parameter(argsType);
-            var args = hasNoArgs ? Array.Empty<Expression>() : UnpackArgs(argsParam, argCount);
+            var args = hasNoArgs ? [] : UnpackArgs(argsParam, argCount);
 
             //
             // Create the invocation expression from the function and return null in case
@@ -205,7 +193,7 @@ namespace System.Memory
             var memoizeeFunction = memoizeeLambda.Compile();
 
             var memoizeMethod = IMemoizer_Memoize.MakeGenericMethod(argsType, resultType);
-            var memoizedDelegate = memoizeMethod.Invoke(memoizer, new object[] { memoizeeFunction, options, null });
+            var memoizedDelegate = memoizeMethod.Invoke(memoizer, [memoizeeFunction, options, null]);
 
             //
             // Get the Cache and Delegate properties of the result. We'll deconstruct the
@@ -214,8 +202,8 @@ namespace System.Memory
             // of type TDelegate. The Cache gets re-wrapped in the resulting instance of
             // MemoizedDelegate<TDelegate>.
             //
-            var cacheProperty = memoizeMethod.ReturnType.GetProperty(nameof(MemoizedDelegate<object>.Cache));
-            var delegateProperty = memoizeMethod.ReturnType.GetProperty(nameof(MemoizedDelegate<object>.Delegate));
+            var cacheProperty = memoizeMethod.ReturnType.GetProperty(nameof(MemoizedDelegate<>.Cache));
+            var delegateProperty = memoizeMethod.ReturnType.GetProperty(nameof(MemoizedDelegate<>.Delegate));
 
             var cache = (IMemoizationCache)cacheProperty.GetValue(memoizedDelegate, index: null);
             var @delegate = delegateProperty.GetValue(memoizedDelegate, index: null);
@@ -223,7 +211,7 @@ namespace System.Memory
             ParameterExpression[] parameters;
             if (hasNoArgs)
             {
-                parameters = Array.Empty<ParameterExpression>();
+                parameters = [];
                 argsValue = s_constantNull;
             }
             else
@@ -257,10 +245,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<TDelegate> MemoizeWeak<TDelegate>(this IWeakMemoizer weakMemoizer, TDelegate function, MemoizationOptions options = MemoizationOptions.None, IMemoizer memoizer = null)
         {
-            if (weakMemoizer == null)
-                throw new ArgumentNullException(nameof(weakMemoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(weakMemoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             //
             // NB: In principle, memoizing a constant could return the original object.
@@ -284,7 +270,7 @@ namespace System.Memory
                     if (genArgs.All(genArg => !genArg.IsValueType))
                     {
                         var memoizeFuncMethod = s_memoizeWeakFuncMethods.Value[genArgs.Length - 1].MakeGenericMethod(genArgs);
-                        return (MemoizedDelegate<TDelegate>)memoizeFuncMethod.Invoke(obj: null, new object[] { weakMemoizer, function, options });
+                        return (MemoizedDelegate<TDelegate>)memoizeFuncMethod.Invoke(obj: null, [weakMemoizer, function, options]);
                     }
                 }
             }
@@ -361,8 +347,8 @@ namespace System.Memory
                 // of type System.Object in order to call MemoizeWeak. Also insert a dummy return
                 // statement of type System.Object in case the function is void-returning.
                 //
-                parameters = Array.Empty<ParameterExpression>();
-                arguments = new List<Expression>(1) { s_constantNull };
+                parameters = [];
+                arguments = [s_constantNull];
 
                 curriedInvocation = Expression.Invoke(Expression.Constant(function));
 
@@ -406,7 +392,7 @@ namespace System.Memory
                 // bundle (v1, v2).
                 //
                 parameters = new ParameterExpression[argCount];
-                arguments = new List<Expression>();
+                arguments = [];
 
                 var invocationArguments = new Expression[argCount];
                 var valueParameters = new List<Expression>();
@@ -522,7 +508,7 @@ namespace System.Memory
                             curriedParameter
                         ),
                         Expression.Constant(options),
-                        Expression.Property(expression: null, typeof(FastEqualityComparer<>).MakeGenericType(valueArgsType).GetProperty(nameof(FastEqualityComparer<object>.Default)))
+                        Expression.Property(expression: null, typeof(FastEqualityComparer<>).MakeGenericType(valueArgsType).GetProperty(nameof(FastEqualityComparer<>.Default)))
                     );
 
                     hasCurried = true;
@@ -576,10 +562,10 @@ namespace System.Memory
             // of type TDelegate. The Cache gets re-wrapped in the resulting instance of
             // MemoizedDelegate<TDelegate>.
             //
-            var delegateProperty = curriedInvocation.Type.GetProperty(nameof(MemoizedDelegate<object>.Delegate));
+            var delegateProperty = curriedInvocation.Type.GetProperty(nameof(MemoizedDelegate<>.Delegate));
             var @delegate = delegateProperty.GetValue(memoizedDelegate, index: null);
 
-            var cacheProperty = curriedInvocation.Type.GetProperty(nameof(MemoizedDelegate<object>.Cache));
+            var cacheProperty = curriedInvocation.Type.GetProperty(nameof(MemoizedDelegate<>.Cache));
             var cache = (IMemoizationCache)cacheProperty.GetValue(memoizedDelegate, index: null);
 
             //
@@ -615,10 +601,8 @@ namespace System.Memory
             // NB: This method is used by s_memoizeWeakFuncMethods as a convenience to bind MemoizeWeak<TDelegate> calls.
             //
 
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             return memoizer.MemoizeWeak<T, TResult>(function, options);
         }
@@ -657,7 +641,7 @@ namespace System.Memory
                       orderby g.Length
                       select m;
 
-            return res.ToArray();
+            return [.. res];
         }
 
         /// <summary>

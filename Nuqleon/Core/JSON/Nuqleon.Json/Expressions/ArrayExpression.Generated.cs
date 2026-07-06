@@ -23,8 +23,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
+            ArgumentNullException.ThrowIfNull(element1);
 
             return new ArrayExpression1(element1);
         }
@@ -37,10 +36,8 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1, Expression element2)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
-            if (element2 == null)
-                throw new ArgumentNullException(nameof(element2));
+            ArgumentNullException.ThrowIfNull(element1);
+            ArgumentNullException.ThrowIfNull(element2);
 
             return new ArrayExpression2(element1, element2);
         }
@@ -54,12 +51,9 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1, Expression element2, Expression element3)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
-            if (element2 == null)
-                throw new ArgumentNullException(nameof(element2));
-            if (element3 == null)
-                throw new ArgumentNullException(nameof(element3));
+            ArgumentNullException.ThrowIfNull(element1);
+            ArgumentNullException.ThrowIfNull(element2);
+            ArgumentNullException.ThrowIfNull(element3);
 
             return new ArrayExpression3(element1, element2, element3);
         }
@@ -74,14 +68,10 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1, Expression element2, Expression element3, Expression element4)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
-            if (element2 == null)
-                throw new ArgumentNullException(nameof(element2));
-            if (element3 == null)
-                throw new ArgumentNullException(nameof(element3));
-            if (element4 == null)
-                throw new ArgumentNullException(nameof(element4));
+            ArgumentNullException.ThrowIfNull(element1);
+            ArgumentNullException.ThrowIfNull(element2);
+            ArgumentNullException.ThrowIfNull(element3);
+            ArgumentNullException.ThrowIfNull(element4);
 
             return new ArrayExpression4(element1, element2, element3, element4);
         }
@@ -97,16 +87,11 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1, Expression element2, Expression element3, Expression element4, Expression element5)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
-            if (element2 == null)
-                throw new ArgumentNullException(nameof(element2));
-            if (element3 == null)
-                throw new ArgumentNullException(nameof(element3));
-            if (element4 == null)
-                throw new ArgumentNullException(nameof(element4));
-            if (element5 == null)
-                throw new ArgumentNullException(nameof(element5));
+            ArgumentNullException.ThrowIfNull(element1);
+            ArgumentNullException.ThrowIfNull(element2);
+            ArgumentNullException.ThrowIfNull(element3);
+            ArgumentNullException.ThrowIfNull(element4);
+            ArgumentNullException.ThrowIfNull(element5);
 
             return new ArrayExpression5(element1, element2, element3, element4, element5);
         }
@@ -123,18 +108,12 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(Expression element1, Expression element2, Expression element3, Expression element4, Expression element5, Expression element6)
         {
-            if (element1 == null)
-                throw new ArgumentNullException(nameof(element1));
-            if (element2 == null)
-                throw new ArgumentNullException(nameof(element2));
-            if (element3 == null)
-                throw new ArgumentNullException(nameof(element3));
-            if (element4 == null)
-                throw new ArgumentNullException(nameof(element4));
-            if (element5 == null)
-                throw new ArgumentNullException(nameof(element5));
-            if (element6 == null)
-                throw new ArgumentNullException(nameof(element6));
+            ArgumentNullException.ThrowIfNull(element1);
+            ArgumentNullException.ThrowIfNull(element2);
+            ArgumentNullException.ThrowIfNull(element3);
+            ArgumentNullException.ThrowIfNull(element4);
+            ArgumentNullException.ThrowIfNull(element5);
+            ArgumentNullException.ThrowIfNull(element6);
 
             return new ArrayExpression6(element1, element2, element3, element4, element5, element6);
         }

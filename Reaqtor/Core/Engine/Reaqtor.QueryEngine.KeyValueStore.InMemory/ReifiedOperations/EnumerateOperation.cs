@@ -18,7 +18,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
         public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
         {
-            return new EnumerateOperationResult<TKey, TValue>(dictionary.Where(kvp => _filter(kvp.Key)).ToList());
+            return new EnumerateOperationResult<TKey, TValue>([.. dictionary.Where(kvp => _filter(kvp.Key))]);
         }
     }
 }

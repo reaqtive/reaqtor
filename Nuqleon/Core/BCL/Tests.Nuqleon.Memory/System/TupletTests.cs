@@ -22,7 +22,7 @@ namespace Tests
         [TestMethod]
         public void Tuplet_TRest_NotValid()
         {
-            Assert.ThrowsException<ArgumentException>(() => _ = new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            Assert.ThrowsExactly<ArgumentException>(() => _ = new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
         }
 
         [TestMethod]

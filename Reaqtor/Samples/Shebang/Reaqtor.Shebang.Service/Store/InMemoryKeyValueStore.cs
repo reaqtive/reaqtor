@@ -1,10 +1,11 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -38,7 +39,7 @@ namespace Reaqtor.Shebang.Service
     {
         private readonly Dictionary<string, Dictionary<string, byte[]>> _data;
 
-        public InMemoryKeyValueStore() => _data = new();
+        public InMemoryKeyValueStore() => _data = [];
 
         private InMemoryKeyValueStore(Dictionary<string, Dictionary<string, byte[]>> data) => _data = data;
 
@@ -106,30 +107,30 @@ namespace Reaqtor.Shebang.Service
                     {
                         var tableSize = table.Key.Length * 2;
 
-                        sb.AppendLine($"Table '{table.Key}':");
+                        sb.AppendLine(CultureInfo.InvariantCulture, $"Table '{table.Key}':");
                         sb.AppendLine();
 
                         foreach (var row in table.Value)
                         {
                             var rowSize = row.Value.Length + row.Key.Length * 2;
 
-                            sb.AppendLine($"  Key '{row.Key}':");
-                            sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
-                            sb.AppendLine($"    ASCII = {new string(row.Value.Select(b => (char)b).ToArray())}");
-                            sb.AppendLine($"    Size  = {rowSize}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"  Key '{row.Key}':");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    Size  = {rowSize}");
                             sb.AppendLine();
 
                             tableSize += rowSize;
                         }
 
                         sb.AppendLine();
-                        sb.AppendLine($"  Size  = {tableSize}");
+                        sb.AppendLine(CultureInfo.InvariantCulture, $"  Size  = {tableSize}");
                         sb.AppendLine();
 
                         totalSize += tableSize;
                     }
 
-                    sb.AppendLine($"Total size = {totalSize}");
+                    sb.AppendLine(CultureInfo.InvariantCulture, $"Total size = {totalSize}");
                 }
 
                 return sb.ToString();
@@ -165,7 +166,7 @@ namespace Reaqtor.Shebang.Service
         private sealed class Transaction : IKeyValueStoreTransaction
         {
             private readonly InMemoryKeyValueStore _parent;
-            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = new();
+            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
 
             public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
 
@@ -173,10 +174,8 @@ namespace Reaqtor.Shebang.Service
             {
                 get
                 {
-                    if (tableName == null)
-                        throw new ArgumentNullException(nameof(tableName));
-                    if (key == null)
-                        throw new ArgumentNullException(nameof(key));
+                    ArgumentNullException.ThrowIfNull(tableName);
+                    ArgumentNullException.ThrowIfNull(key);
 
                     lock (_edits)
                     {
@@ -213,12 +212,9 @@ namespace Reaqtor.Shebang.Service
 
             public void Add(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 lock (_edits)
                 {
@@ -247,7 +243,7 @@ namespace Reaqtor.Shebang.Service
                             }
                         }
 
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
 
                         table[key] = value;
                     }
@@ -264,7 +260,7 @@ namespace Reaqtor.Shebang.Service
                         {
                             if (!_parent._data.TryGetValue(table.Key, out var existingTable))
                             {
-                                _parent._data[table.Key] = existingTable = new Dictionary<string, byte[]>();
+                                _parent._data[table.Key] = existingTable = [];
                             }
 
                             foreach (var entry in table.Value)
@@ -287,10 +283,8 @@ namespace Reaqtor.Shebang.Service
 
             public bool Contains(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 lock (_edits)
                 {
@@ -318,8 +312,7 @@ namespace Reaqtor.Shebang.Service
 
             public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
+                ArgumentNullException.ThrowIfNull(tableName);
 
                 return Core();
 
@@ -366,10 +359,8 @@ namespace Reaqtor.Shebang.Service
 
             public void Remove(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 UpdateCore(tableName, key, null);
             }
@@ -378,12 +369,9 @@ namespace Reaqtor.Shebang.Service
 
             public void Update(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 UpdateCore(tableName, key, value);
             }
@@ -394,7 +382,7 @@ namespace Reaqtor.Shebang.Service
                 {
                     if (!_edits.TryGetValue(tableName, out var table))
                     {
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
                     }
 
                     if (table.TryGetValue(key, out var existingValue))
@@ -503,7 +491,7 @@ namespace Reaqtor.Shebang.Service
         private sealed class Writer : IStateWriter
         {
             private readonly InMemoryKeyValueStore _store;
-            private readonly Dictionary<(string, string), MemoryStream> _edits = new();
+            private readonly Dictionary<(string, string), MemoryStream> _edits = [];
 
             public Writer(InMemoryKeyValueStore store) => _store = store;
 
@@ -565,7 +553,6 @@ namespace Reaqtor.Shebang.Service
     }
 
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
-    [Serializable]
     public sealed class TableNotFoundException : Exception
     {
         internal TableNotFoundException(string tableName)
@@ -573,25 +560,9 @@ namespace Reaqtor.Shebang.Service
             TableName = tableName;
         }
 
-        private TableNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-        }
-
         public string TableName { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-
-            base.GetObjectData(info, context);
-        }
     }
 
-    [Serializable]
     public sealed class KeyNotFoundException : Exception
     {
         internal KeyNotFoundException(string tableName, string key)
@@ -600,25 +571,8 @@ namespace Reaqtor.Shebang.Service
             Key = key;
         }
 
-        private KeyNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-            Key = serializationInfo.GetString(nameof(Key));
-        }
-
         public string TableName { get; }
         public string Key { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-            info.AddValue(nameof(Key), Key);
-
-            base.GetObjectData(info, context);
-        }
     }
 #pragma warning restore CA1032
 }

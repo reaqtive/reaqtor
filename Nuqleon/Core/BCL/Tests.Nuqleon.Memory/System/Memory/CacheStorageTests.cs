@@ -22,10 +22,14 @@ namespace Tests.System.Memory
         public void CacheStorage_ArgumentChecks()
         {
             var cacheStorage = new CacheStorage<string>();
-            AssertEx.ThrowsException<ArgumentNullException>(() => new CacheStorage<string>(comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cacheStorage.GetEntry(value: null), ex => Assert.AreEqual("value", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cacheStorage.ReleaseEntry(entry: null), ex => Assert.AreEqual("entry", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => cacheStorage.ReleaseEntry(new NullEntry()), ex => Assert.AreEqual("entry", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new CacheStorage<string>(comparer: null));
+            Assert.AreEqual("comparer", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => cacheStorage.GetEntry(value: null));
+            Assert.AreEqual("value", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cacheStorage.ReleaseEntry(entry: null));
+            Assert.AreEqual("entry", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentException>(() => cacheStorage.ReleaseEntry(new NullEntry()));
+            Assert.AreEqual("entry", ex4.ParamName);
         }
 
         [TestMethod]

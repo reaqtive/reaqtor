@@ -332,9 +332,12 @@ namespace Tests.System.Linq.Expressions
             var method = ((MethodCallExpressionSlim)((Expression<Func<string>>)(() => "".ToUpper())).Body.ToExpressionSlim()).Method;
             var conv = ExpressionSlim.Lambda(ExpressionSlim.Empty());
 
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method, conv), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right));
+            Assert.IsTrue(ex.Message.Contains("not a valid binary expression type"));
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method));
+            Assert.IsTrue(ex2.Message.Contains("not a valid binary expression type"));
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method, conv));
+            Assert.IsTrue(ex3.Message.Contains("not a valid binary expression type"));
         }
 
         [TestMethod]
@@ -529,8 +532,8 @@ namespace Tests.System.Linq.Expressions
         {
             var v1 = ((ConstantExpressionSlim)Expression.Constant(42).ToExpressionSlim()).Value;
 
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Constant(value: null));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Constant(value: null, typeof(string).ToTypeSlim()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Constant(value: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Constant(value: null, typeof(string).ToTypeSlim()));
 
             var c2 = ExpressionSlim.Constant(v1);
             var c3 = ExpressionSlim.Constant(v1, v1.TypeSlim);
@@ -579,25 +582,25 @@ namespace Tests.System.Linq.Expressions
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.IsNull(call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
             call = ExpressionSlim.Call(methodSlim, arg0, arg1);
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.IsNull(call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
             call = ExpressionSlim.Call(inst, methodSlim, new[] { arg0, arg1 }.ToList());
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.AreSame(inst, call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
-            call = ExpressionSlim.Call(inst, methodSlim, new[] { arg0, arg1 });
+            call = ExpressionSlim.Call(inst, methodSlim, [arg0, arg1]);
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.AreSame(inst, call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
         }
 
         [TestMethod]
@@ -696,7 +699,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_LambdaFactoryTests()
         {
             var body = ExpressionSlim.Parameter(SlimType);
-            var lambda = ExpressionSlim.Lambda(delegateType: null, body, new[] { body });
+            var lambda = ExpressionSlim.Lambda(delegateType: null, body, [body]);
             Assert.AreSame(body, lambda.Body);
             Assert.AreEqual(1, lambda.Parameters.Count);
             Assert.AreSame(body, lambda.Parameters[0]);
@@ -712,7 +715,7 @@ namespace Tests.System.Linq.Expressions
             var add = lie.Initializers[0].AddMethod;
             var x = lie.Initializers[0].Arguments[0];
 
-            var i1 = ExpressionSlim.ElementInit(add, new[] { x });
+            var i1 = ExpressionSlim.ElementInit(add, [x]);
             Assert.AreEqual(1, i1.ArgumentCount);
             Assert.AreSame(x, i1.GetArgument(0));
 
@@ -732,7 +735,7 @@ namespace Tests.System.Linq.Expressions
             var l3 = ExpressionSlim.ListInit(lie.NewExpression, ExpressionSlim.ElementInit(lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments.AsEnumerable()));
             var l4 = ExpressionSlim.ListInit(lie.NewExpression, ExpressionSlim.ElementInit(lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments[0]));
             var l5 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments.Single());
-            var l6 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, (IEnumerable<ExpressionSlim>)new[] { lie.Initializers[0].Arguments.Single() });
+            var l6 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, (IEnumerable<ExpressionSlim>)[lie.Initializers[0].Arguments.Single()]);
 
             var e1 = l1.ToExpression();
             var e2 = l2.ToExpression();
@@ -772,7 +775,7 @@ namespace Tests.System.Linq.Expressions
             var ne = (NewExpressionSlim)e.Body.ToExpressionSlim();
 
             var n1 = ExpressionSlim.New(ne.Constructor);
-            var n2 = ExpressionSlim.New(ne.Constructor, Array.Empty<ExpressionSlim>());
+            var n2 = ExpressionSlim.New(ne.Constructor, []);
             var n3 = ExpressionSlim.New(ne.Constructor, EmptyReadOnlyCollection<ExpressionSlim>.Instance);
             var n4 = ExpressionSlim.New(ne.Constructor, EmptyReadOnlyCollection<ExpressionSlim>.Instance, members: null);
 
@@ -811,21 +814,21 @@ namespace Tests.System.Linq.Expressions
             var arg0 = ExpressionSlim.Default(SlimType);
             var arg1 = ExpressionSlim.Default(SlimType);
 
-            var newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, new[] { arg0, arg1 });
+            var newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, [arg0, arg1]);
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
             newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, new[] { arg0, arg1 }.ToList());
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
-            newArrExpr = ExpressionSlim.NewArrayInit(SlimType, new[] { arg0, arg1 });
+            newArrExpr = ExpressionSlim.NewArrayInit(SlimType, [arg0, arg1]);
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
             newArrExpr = ExpressionSlim.NewArrayInit(SlimType, new[] { arg0, arg1 }.ToList());
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
         }
 
         [TestMethod]
@@ -971,8 +974,10 @@ namespace Tests.System.Linq.Expressions
             var method = ((MethodCallExpressionSlim)((Expression<Func<string>>)(() => "".ToUpper())).Body.ToExpressionSlim()).Method;
             var typ = TypeSlimExtensions.IntegerType;
 
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ), ex => Assert.IsTrue(ex.Message.Contains("not a valid unary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ, method), ex => Assert.IsTrue(ex.Message.Contains("not a valid unary expression type")));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ));
+            Assert.IsTrue(ex.Message.Contains("not a valid unary expression type"));
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ, method));
+            Assert.IsTrue(ex2.Message.Contains("not a valid unary expression type"));
         }
 
         [TestMethod]
@@ -1263,7 +1268,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var blk = ExpressionSlim.Block(a, b, c);
-                AssertElementsAreSame(new[] { a, b, c }, blk.Expressions);
+                AssertElementsAreSame([a, b, c], blk.Expressions);
                 Assert.AreEqual(0, blk.Variables.Count);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(c, blk.Result);
@@ -1278,7 +1283,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(ps, ps);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1292,7 +1297,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(ps, x, y, z);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1307,7 +1312,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var blk = ExpressionSlim.Block(SlimType, a, b, c);
-                AssertElementsAreSame(new[] { a, b, c }, blk.Expressions);
+                AssertElementsAreSame([a, b, c], blk.Expressions);
                 Assert.AreEqual(0, blk.Variables.Count);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(c, blk.Result);
@@ -1322,7 +1327,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(SlimType, ps, ps);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1336,16 +1341,14 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(SlimType, ps, x, y, z);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
 
             {
-                AssertEx.ThrowsException<ArgumentException>(
-                    () => ExpressionSlim.Block(Array.Empty<ExpressionSlim>()),
-                    ex => Assert.AreEqual("expressions", ex.ParamName)
-                );
+                var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.Block(Array.Empty<ExpressionSlim>()));
+                Assert.AreEqual("expressions", ex.ParamName);
             }
         }
 
@@ -1392,7 +1395,7 @@ namespace Tests.System.Linq.Expressions
             {
                 var sc = ExpressionSlim.SwitchCase(b, x, y);
                 Assert.AreSame(b, sc.Body);
-                AssertElementsAreSame(new[] { x, y }, sc.TestValues);
+                AssertElementsAreSame([x, y], sc.TestValues);
             }
 
             {
@@ -1411,7 +1414,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.IsNull(s.Comparison);
                 Assert.IsNull(s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1420,7 +1423,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.IsNull(s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1429,7 +1432,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, m, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1438,7 +1441,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(t, v, d, m, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1447,7 +1450,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, m, new List<SwitchCaseSlim> { c });
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1456,7 +1459,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { c });
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1464,10 +1467,8 @@ namespace Tests.System.Linq.Expressions
             }
 
             {
-                AssertEx.ThrowsException<ArgumentNullException>(
-                    () => ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { null }),
-                    ex => Assert.AreEqual("cases[0]", ex.ParamName)
-                );
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { null }));
+                Assert.AreEqual("cases[0]", ex.ParamName);
             }
         }
 
@@ -1553,7 +1554,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), Array.Empty<CatchBlockSlim>());
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), []);
                 Assert.Fail("ExpressionSlim.MakeTry did not throw when both finally and fault handlers expressions were specified.");
             }
             catch (ArgumentException)
@@ -1562,7 +1563,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, ExpressionSlim.Parameter(SlimType), new[] { ExpressionSlim.Catch(SlimType, ExpressionSlim.Parameter(SlimType)) });
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, ExpressionSlim.Parameter(SlimType), [ExpressionSlim.Catch(SlimType, ExpressionSlim.Parameter(SlimType))]);
                 Assert.Fail("ExpressionSlim.MakeTry did not throw when both catch blocks and fault handlers were specified.");
             }
             catch (ArgumentException)
@@ -1571,7 +1572,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, fault: null, Array.Empty<CatchBlockSlim>());
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, fault: null, []);
                 Assert.Fail("ExpressionSlim.MakeTry did not have fault, finally or catch.");
             }
             catch (ArgumentException)
@@ -1582,11 +1583,11 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlim_IndexExpressionFactoryTests()
         {
-            var e = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<string, int>)), typeof(Dictionary<string, int>).GetProperty("Item"), new Expression[] { Expression.Constant("foo") });
+            var e = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<string, int>)), typeof(Dictionary<string, int>).GetProperty("Item"), [Expression.Constant("foo")]);
             var ie = (IndexExpressionSlim)e.ToExpressionSlim();
 
             var i1 = ExpressionSlim.MakeIndex(ie.Object, ie.Indexer, ie.Arguments);
-            var i2 = ExpressionSlim.Property(ie.Object, ie.Indexer, ie.Arguments.ToArray());
+            var i2 = ExpressionSlim.Property(ie.Object, ie.Indexer, [.. ie.Arguments]);
             var i3 = ExpressionSlim.Property(ie.Object, ie.Indexer, ie.Arguments);
 
             var e1 = (IndexExpression)i1.ToExpression();
@@ -1624,15 +1625,15 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var i = ExpressionSlim.Call(m);
 
             Assert.AreEqual(0, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
             Assert.AreEqual(0, i.Arguments.Count);
 
@@ -1651,8 +1652,8 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -1661,9 +1662,9 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(1, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
             Assert.AreEqual(1, i.Arguments.Count);
 
@@ -1697,9 +1698,9 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -1709,10 +1710,10 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(2, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(2));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
             Assert.AreEqual(2, i.Arguments.Count);
 
@@ -1747,10 +1748,10 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -1761,11 +1762,11 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(3, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
             Assert.AreEqual(3, i.Arguments.Count);
 
@@ -1801,11 +1802,11 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -1817,12 +1818,12 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(4, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(4));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
             Assert.AreEqual(4, i.Arguments.Count);
 
@@ -1859,12 +1860,12 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(default(MethodInfoSlim), e, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, default(ExpressionSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(m, e, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -1877,13 +1878,13 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(5, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
             Assert.AreEqual(5, i.Arguments.Count);
 
@@ -1931,14 +1932,14 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(6, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
             Assert.AreSame(a5, i.GetArgument(5));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(6));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(6));
 
             Assert.AreEqual(6, i.Arguments.Count);
 
@@ -1977,15 +1978,15 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var i = ExpressionSlim.Call(e, m);
 
             Assert.AreEqual(0, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
             Assert.AreEqual(0, i.Arguments.Count);
 
@@ -2010,8 +2011,8 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2020,9 +2021,9 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(1, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
             Assert.AreEqual(1, i.Arguments.Count);
 
@@ -2062,9 +2063,9 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2074,10 +2075,10 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(2, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(2));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
             Assert.AreEqual(2, i.Arguments.Count);
 
@@ -2118,10 +2119,10 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2132,11 +2133,11 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(3, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
             Assert.AreEqual(3, i.Arguments.Count);
 
@@ -2178,11 +2179,11 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2194,12 +2195,12 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(4, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(4));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
             Assert.AreEqual(4, i.Arguments.Count);
 
@@ -2242,12 +2243,12 @@ namespace Tests.System.Linq.Expressions
             var m = typeof(int).ToTypeSlim().GetSimpleMethod("Bar", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(void).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, default(MethodInfoSlim), e, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, default(ExpressionSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Call(e, m, e, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2260,13 +2261,13 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(5, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
             Assert.AreEqual(5, i.Arguments.Count);
 
@@ -2320,14 +2321,14 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(6, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
             Assert.AreSame(a5, i.GetArgument(5));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(6));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(6));
 
             Assert.AreEqual(6, i.Arguments.Count);
 
@@ -2371,7 +2372,7 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2382,8 +2383,8 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(0, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
             Assert.AreEqual(0, i.Arguments.Count);
 
@@ -2402,8 +2403,8 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2415,9 +2416,9 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(1, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
             Assert.AreEqual(1, i.Arguments.Count);
 
@@ -2454,9 +2455,9 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2469,10 +2470,10 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(2, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(2));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
             Assert.AreEqual(2, i.Arguments.Count);
 
@@ -2510,10 +2511,10 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2527,11 +2528,11 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(3, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
             Assert.AreEqual(3, i.Arguments.Count);
 
@@ -2570,11 +2571,11 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2589,12 +2590,12 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(4, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(4));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
             Assert.AreEqual(4, i.Arguments.Count);
 
@@ -2634,12 +2635,12 @@ namespace Tests.System.Linq.Expressions
             var e = ExpressionSlim.Parameter(typeof(int).ToTypeSlim());
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(default(ExpressionSlim), e, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, default(ExpressionSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Invoke(e, e, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var f = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "f");
@@ -2655,13 +2656,13 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(5, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
             Assert.AreEqual(5, i.Arguments.Count);
 
@@ -2699,7 +2700,7 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlim_NewFactoryTestValueType()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(TypeSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(TypeSlim)));
 
             var t = typeof(int).ToTypeSlim();
             var i = ExpressionSlim.New(t);
@@ -2710,8 +2711,8 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(0, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
             Assert.AreEqual(0, i.Arguments.Count);
 
@@ -2730,7 +2731,7 @@ namespace Tests.System.Linq.Expressions
             var t = typeof(int).ToTypeSlim();
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim)));
 
             var i = ExpressionSlim.New(c);
 
@@ -2740,8 +2741,8 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(0, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
             Assert.AreEqual(0, i.Arguments.Count);
 
@@ -2760,8 +2761,8 @@ namespace Tests.System.Linq.Expressions
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2774,9 +2775,9 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(1, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
             Assert.AreEqual(1, i.Arguments.Count);
 
@@ -2810,9 +2811,9 @@ namespace Tests.System.Linq.Expressions
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2826,10 +2827,10 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(2, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(2));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
             Assert.AreEqual(2, i.Arguments.Count);
 
@@ -2864,10 +2865,10 @@ namespace Tests.System.Linq.Expressions
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2882,11 +2883,11 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(3, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
             Assert.AreEqual(3, i.Arguments.Count);
 
@@ -2922,11 +2923,11 @@ namespace Tests.System.Linq.Expressions
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -2942,12 +2943,12 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(4, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(4));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
             Assert.AreEqual(4, i.Arguments.Count);
 
@@ -2984,12 +2985,12 @@ namespace Tests.System.Linq.Expressions
             var c = t.GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e, e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim), e, e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, default(ExpressionSlim), e));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, e, default(ExpressionSlim)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(default(ConstructorInfoSlim), e, e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, default(ExpressionSlim), e, e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, default(ExpressionSlim), e, e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, default(ExpressionSlim), e, e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, default(ExpressionSlim), e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.New(c, e, e, e, e, default(ExpressionSlim)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var a0 = ExpressionSlim.Parameter(typeof(int).ToTypeSlim(), "a0");
@@ -3006,13 +3007,13 @@ namespace Tests.System.Linq.Expressions
 
             Assert.AreEqual(5, i.ArgumentCount);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
             Assert.AreSame(a0, i.GetArgument(0));
             Assert.AreSame(a1, i.GetArgument(1));
             Assert.AreSame(a2, i.GetArgument(2));
             Assert.AreSame(a3, i.GetArgument(3));
             Assert.AreSame(a4, i.GetArgument(4));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => i.GetArgument(5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
             Assert.AreEqual(5, i.Arguments.Count);
 

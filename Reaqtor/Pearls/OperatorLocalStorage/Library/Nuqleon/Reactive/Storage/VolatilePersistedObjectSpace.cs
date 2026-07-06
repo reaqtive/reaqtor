@@ -23,7 +23,7 @@ namespace Reaqtive.Storage
         /// <summary>
         /// The registry holding the entries of the object space.
         /// </summary>
-        private readonly Dictionary<string, IPersisted> _registry = new();
+        private readonly Dictionary<string, IPersisted> _registry = [];
 
         /// <summary>
         /// Creates a persisted array.
@@ -46,7 +46,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted dictionary instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string id) => Create<IPersistedDictionary<TKey, TValue>>(id, () => new DictionaryWrapper<TKey, TValue>(id, new Dictionary<TKey, TValue>()));
+        public IPersistedDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string id) => Create<IPersistedDictionary<TKey, TValue>>(id, () => new DictionaryWrapper<TKey, TValue>(id, []));
 
         /// <summary>
         /// Creates a persisted linked list.
@@ -66,7 +66,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted list instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedList<T> CreateList<T>(string id) => Create<IPersistedList<T>>(id, () => new ListWrapper<T>(id, new List<T>()));
+        public IPersistedList<T> CreateList<T>(string id) => Create<IPersistedList<T>>(id, () => new ListWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted queue.
@@ -86,7 +86,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted set instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSet<T> CreateSet<T>(string id) => Create<IPersistedSet<T>>(id, () => new SetWrapper<T>(id, new HashSet<T>()));
+        public IPersistedSet<T> CreateSet<T>(string id) => Create<IPersistedSet<T>>(id, () => new SetWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted sorted dictionary.
@@ -97,7 +97,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted sorted dictionary instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSortedDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>(string id) => Create<IPersistedSortedDictionary<TKey, TValue>>(id, () => new SortedDictionaryWrapper<TKey, TValue>(id, new SortedDictionary<TKey, TValue>()));
+        public IPersistedSortedDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>(string id) => Create<IPersistedSortedDictionary<TKey, TValue>>(id, () => new SortedDictionaryWrapper<TKey, TValue>(id, []));
 
         /// <summary>
         /// Creates a persisted sorted set.
@@ -107,7 +107,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted sorted set instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSortedSet<T> CreateSortedSet<T>(string id) => Create<IPersistedSortedSet<T>>(id, () => new SortedSetWrapper<T>(id, new SortedSet<T>()));
+        public IPersistedSortedSet<T> CreateSortedSet<T>(string id) => Create<IPersistedSortedSet<T>>(id, () => new SortedSetWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted stack.
@@ -137,8 +137,7 @@ namespace Reaqtive.Storage
         /// <exception cref="KeyNotFoundException">A persisted object with identifier <paramref name="id"/> could not be found.</exception>
         public void Delete(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             lock (_registry)
             {
@@ -273,8 +272,7 @@ namespace Reaqtive.Storage
         private T Get<T>(string id)
             where T : IPersisted
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             lock (_registry)
             {
@@ -294,8 +292,7 @@ namespace Reaqtive.Storage
         private T Create<T>(string id, Func<T> factory)
             where T : IPersisted
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var value = factory();
 
@@ -404,7 +401,7 @@ namespace Reaqtive.Storage
             // REVIEW: In tests, assert that wrappers for adjacent nodes reflect changes correctly upon applying edits (insert before, insert after, remove).
 
             private readonly LinkedList<T> _list;
-            private readonly ConditionalWeakTable<LinkedListNode<T>, LinkedListNodeWrapper> _nodeCache = new();
+            private readonly ConditionalWeakTable<LinkedListNode<T>, LinkedListNodeWrapper> _nodeCache = [];
 
             public LinkedListWrapper(string id, LinkedList<T> list)
                 : base(id)
@@ -426,8 +423,7 @@ namespace Reaqtive.Storage
 
             public ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -438,10 +434,8 @@ namespace Reaqtive.Storage
 
             public void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
-                if (newNode == null)
-                    throw new ArgumentNullException(nameof(newNode));
+                ArgumentNullException.ThrowIfNull(node);
+                ArgumentNullException.ThrowIfNull(newNode);
 
                 var nodeWrapper = AsWrapper(node);
                 var newNodeWrapper = AsWrapper(newNode);
@@ -451,8 +445,7 @@ namespace Reaqtive.Storage
 
             public ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -463,10 +456,8 @@ namespace Reaqtive.Storage
 
             public void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
-                if (newNode == null)
-                    throw new ArgumentNullException(nameof(newNode));
+                ArgumentNullException.ThrowIfNull(node);
+                ArgumentNullException.ThrowIfNull(newNode);
 
                 var nodeWrapper = AsWrapper(node);
                 var newNodeWrapper = AsWrapper(newNode);
@@ -478,8 +469,7 @@ namespace Reaqtive.Storage
 
             public void AddFirst(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -490,8 +480,7 @@ namespace Reaqtive.Storage
 
             public void AddLast(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -508,8 +497,7 @@ namespace Reaqtive.Storage
 
             public void Remove(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 

@@ -17,8 +17,6 @@ namespace System.Reflection
     /// </summary>
     public class StructuralMemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
     {
-        private static StructuralMemberInfoEqualityComparer _instance;
-
         private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory;
 
         /// <summary>
@@ -42,8 +40,8 @@ namespace System.Reflection
         {
             get
             {
-                _instance ??= new StructuralMemberInfoEqualityComparer();
-                return _instance;
+                field ??= new StructuralMemberInfoEqualityComparer();
+                return field;
             }
         }
 

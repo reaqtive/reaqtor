@@ -562,7 +562,7 @@ namespace System.Linq.CompilerServices
             {
                 if (_labels == null)
                 {
-                    _labels = new Dictionary<LabelTarget, LabelTarget>();
+                    _labels = [];
                 }
                 else if (_labels.TryGetValue(node, out LabelTarget res))
                 {
@@ -1411,8 +1411,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of applying the visitor function to the node.</returns>
         protected static T VisitIfNotNull<T>(T node, Func<T, T> nodeVisitor)
         {
-            if (nodeVisitor == null)
-                throw new ArgumentNullException(nameof(nodeVisitor));
+            ArgumentNullException.ThrowIfNull(nodeVisitor);
 
             if (node != null)
             {

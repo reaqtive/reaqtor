@@ -35,10 +35,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Expression Tupletize(Expression expression, Expression unitValue)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (unitValue == null)
-                throw new ArgumentNullException(nameof(unitValue));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(unitValue);
 
             return TupletizeImpl(expression, unitValue, excludeVisibleTypes: false);
         }
@@ -57,10 +55,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Expression Tupletize(Expression expression, Expression unitValue, bool excludeVisibleTypes)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (unitValue == null)
-                throw new ArgumentNullException(nameof(unitValue));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(unitValue);
 
             return TupletizeImpl(expression, unitValue, excludeVisibleTypes);
         }
@@ -118,7 +114,7 @@ namespace System.Linq.CompilerServices
 
             private sealed class TypeFinder : TypeVisitor
             {
-                public readonly HashSet<Type> _anons = new();
+                public readonly HashSet<Type> _anons = [];
 
                 public override Type Visit(Type type)
                 {
@@ -134,18 +130,16 @@ namespace System.Linq.CompilerServices
 
         private sealed class TypeTupletizer : TypeVisitor
         {
-            private static ConstructorInfo s_invalidOperationExceptionCtor;
-
-            private static ConstructorInfo InvalidOperationExceptionCtor => s_invalidOperationExceptionCtor ??= typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
+            private static ConstructorInfo InvalidOperationExceptionCtor => field ??= typeof(InvalidOperationException).GetConstructor([typeof(string)]);
 
             private readonly Expression _unit;
 
             public TypeTupletizer(IEnumerable<Type> subst, Expression unit)
             {
                 TypeMap = subst.ToDictionary(t => t, t => default(Type));
-                ConstructorMap = new Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>>();
-                PropertyMap = new Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>>();
-                ConstantConverters = new Dictionary<Type, Func<object, Func<object, object>, object>>();
+                ConstructorMap = [];
+                PropertyMap = [];
+                ConstantConverters = [];
                 _unit = unit;
             }
 

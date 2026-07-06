@@ -25,12 +25,15 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BottomUpOptimizer_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(sourceTreeComparer: null, EqualityComparer<Bar>.Default), ex => Assert.AreEqual("sourceTreeComparer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(EqualityComparer<ITree<Bar>>.Default, sourceNodeComparer: null), ex => Assert.AreEqual("sourceNodeComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(sourceTreeComparer: null, EqualityComparer<Bar>.Default));
+            Assert.AreEqual("sourceTreeComparer", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(EqualityComparer<ITree<Bar>>.Default, sourceNodeComparer: null));
+            Assert.AreEqual("sourceNodeComparer", ex2.ParamName);
 
             var burs = new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Optimize(tree: null), ex => Assert.AreEqual("tree", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Optimize(tree: null));
+            Assert.AreEqual("tree", ex3.ParamName);
         }
 
         [TestMethod]

@@ -13,10 +13,6 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,9 +24,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void UnboundParameterException_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", expression: null, Array.Empty<ParameterExpression>()), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", Expression.Constant(42), parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => UnboundParameterException.ThrowIfOpen(expression: null, ""), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new UnboundParameterException("", expression: null, []));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new UnboundParameterException("", Expression.Constant(42), parameters: null));
+            Assert.AreEqual("parameters", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => UnboundParameterException.ThrowIfOpen(expression: null, ""));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         [TestMethod]
@@ -44,32 +43,16 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(p.SequenceEqual(ex.Parameters));
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void UnboundParameterException_Serialize()
-        {
-            var ex = new UnboundParameterException("Oops", Expression.Constant(42), new[] { Expression.Parameter(typeof(int)) });
-
-            var ms = new MemoryStream();
-            new BinaryFormatter().Serialize(ms, ex);
-            ms.Position = 0;
-
-            var err = (UnboundParameterException)new BinaryFormatter().Deserialize(ms);
-            Assert.IsNotNull(err);
-            Assert.AreEqual(ex.Message, err.Message);
-        }
-#endif
 
         [TestMethod]
         public void UnboundParameterException_ThrowIfOpen_Positive()
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            AssertEx.ThrowsException<UnboundParameterException>(() => UnboundParameterException.ThrowIfOpen(f.Body, "Oops"), ex =>
-            {
-                Assert.AreSame(f.Body, ex.Expression);
-                Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
-            });
+            var ex = Assert.ThrowsExactly<UnboundParameterException>(() => UnboundParameterException.ThrowIfOpen(f.Body, "Oops"));
+            Assert.AreSame(f.Body, ex.Expression);
+
+            Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
         }
 
         [TestMethod]
@@ -77,9 +60,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            UnboundParameterException.ThrowIfOpen(f, "Oops");
-
-            Assert.IsTrue(true);
+            UnboundParameterException.ThrowIfOpen(f, "Oops"); // does not throw
         }
     }
 }

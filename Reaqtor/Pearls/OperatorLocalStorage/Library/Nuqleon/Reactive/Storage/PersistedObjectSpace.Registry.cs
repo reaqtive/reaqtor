@@ -186,7 +186,7 @@ namespace Reaqtive.Storage
                 // NB: Enumeration over "this" includes all of the newly added (but not yet committed) entries to the transactional dictionary. For new entities, StateChanged will be set to true as well.
                 //
 
-                _edits = new List<IPersistable>();
+                _edits = [];
 
                 foreach (var entry in this)
                 {

@@ -38,7 +38,7 @@ using Reaqtor.Reliable;
 namespace Tests.Reaqtor.QueryEngine
 {
     [TestClass]
-    public class CheckpointingTests : PhysicalTimeEngineTest
+    public partial class CheckpointingTests : PhysicalTimeEngineTest
     {
 #pragma warning disable IDE0060 // Remove unused parameter (MSTest)
         [ClassInitialize]
@@ -46,13 +46,13 @@ namespace Tests.Reaqtor.QueryEngine
 #pragma warning restore IDE0060 // Remove unused parameter
 
         [ClassCleanup]
-        public static new void ClassCleanup() => PhysicalTimeEngineTest.ClassCleanup();
+        public static void ClassTeardown() => PhysicalTimeEngineTest.ClassCleanup();
 
         [TestInitialize]
-        public new void TestInitialize() => base.Setup();
+        public void TestSetup() => base.Setup();
 
         [TestCleanup]
-        public new void TestCleanup() => base.Cleanup();
+        public void TestTeardown() => base.Cleanup();
 
         [TestMethod]
         public void InvalidParametersForCheckpointing()
@@ -97,7 +97,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var observable = reactive.GetObservable<int>(sourceUri);
 
                 // Create observer
-                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(value, 1)).AsQbserver(), null);
+                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(1, value)).AsQbserver(), null);
 
                 // Create observable
                 reactive.DefineObservable<int, int>(observableUri, (value) => Observable.Return(value).AsQbservable(), null);
@@ -108,7 +108,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var srcs = source.Synchronize(engine.Scheduler);
 
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
 
                 // Take checkpoint with stream.
                 Checkpoint(engine, checkpointWithEntities);
@@ -134,7 +134,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(1);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 reactive.GetObservable<int, int>(observableUri)(1)
                     .Subscribe(
@@ -164,7 +164,7 @@ namespace Tests.Reaqtor.QueryEngine
                 }
 
                 Assert.IsTrue(noStream);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 var noDefinitions = false;
                 try
@@ -374,7 +374,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(4);
             in2s.OnNext(10);
 
-            AssertResultSequence(out1, new int[] { 7, 13 });
+            AssertResultSequence(out1, [7, 13]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -410,7 +410,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(2);
             in2s.OnNext(5);
 
-            AssertResultSequence(out1, new int[] { 8 });
+            AssertResultSequence(out1, [8]);
 
             in1s.OnNext(10);
 
@@ -418,13 +418,13 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(6);
 
             Assert.IsTrue(out1.WaitForCount(2, Timeout));
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             in2s.OnNext(11);
 
             Assert.IsTrue(out1.WaitForCount(4, Timeout));
 
-            AssertResultSequence(out1, new int[] { 8, 9, 14, 21 });
+            AssertResultSequence(out1, [8, 9, 14, 21]);
 
             sub1.Dispose();
         }
@@ -465,7 +465,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -506,7 +506,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(49); // ignored
             in4s.OnNext(50);
 
-            AssertResultSequence(out1, new int[] { 48, 50 });
+            AssertResultSequence(out1, [48, 50]);
         }
 
         [TestMethod]
@@ -539,7 +539,7 @@ namespace Tests.Reaqtor.QueryEngine
             var in0 = GetObservable<int>("o0");
             var in0s = in0.Synchronize(qe1.Scheduler);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -582,7 +582,7 @@ namespace Tests.Reaqtor.QueryEngine
             in0s.OnNext(43); // ignored
             in2s.OnNext(44);
 
-            AssertResultSequence(out1, new int[] { 42, 44 });
+            AssertResultSequence(out1, [42, 44]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -625,7 +625,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(46); // ignored
             in3s.OnNext(47);
 
-            AssertResultSequence(out1, new int[] { 45, 47 });
+            AssertResultSequence(out1, [45, 47]);
         }
 
         [TestMethod]
@@ -662,7 +662,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             inls.OnNext(1); // CL(l = 1, r = ?)
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -695,7 +695,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             inrs.OnNext(2); // CL(l = 1, r = Quoted{o2}) & SM(Persisted{o2.Sub(b1)})
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -750,7 +750,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(45); // -> 1 + 45, 2 + 45
             in3s.OnNext(47); // -> 1 + 47, 2 + 47
 
-            AssertResultSequenceSet(out1, new int[] { 43, 44, 45, 46, 47, 48, 49 }); // SelectMany concurrent merge allows for different orderings
+            AssertResultSequenceSet(out1, [43, 44, 45, 46, 47, 48, 49]); // SelectMany concurrent merge allows for different orderings
 
             // Checkpoint -------------------------------------------------------------
 
@@ -794,7 +794,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(49); // -> 1 + 49
             in3s.OnNext(50); // -> 1 + 50, 2 + 50
 
-            AssertResultSequenceSet(out1, new int[] { 50, 51, 52 }); // SelectMany concurrent merge allows for different orderings
+            AssertResultSequenceSet(out1, [50, 51, 52]); // SelectMany concurrent merge allows for different orderings
 
             in2s.OnCompleted();
             in3s.OnCompleted();
@@ -841,7 +841,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(3);
             in1s.OnNext(4);
 
-            AssertResultSequence(out1, new int[] { 6 });
+            AssertResultSequence(out1, [6]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -882,7 +882,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(5);
             in1s.OnNext(6);
 
-            AssertResultSequence(out1, new int[] { 15 });
+            AssertResultSequence(out1, [15]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -924,7 +924,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(8);
             in1s.OnNext(9);
 
-            AssertResultSequence(out1, new int[] { 24 });
+            AssertResultSequence(out1, [24]);
 
             in1s.OnNext(10);
 
@@ -958,7 +958,7 @@ namespace Tests.Reaqtor.QueryEngine
                 }
             }
 
-            return new GentleDictionary<string, IEnumerable<string>>(res, () => Array.Empty<string>());
+            return new GentleDictionary<string, IEnumerable<string>>(res, () => []);
         }
 
         private sealed class GentleDictionary<K, T>
@@ -1018,7 +1018,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in5s.OnNext(17); // 2 + 3 * 17
 
-            AssertResultSequence(out1, new int[] { 2 + 3 * 17 });
+            AssertResultSequence(out1, [2 + 3 * 17]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1053,7 +1053,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in6s.OnNext(24); // 2 + 4 * 24
 
-            AssertResultSequence(out1, new int[] { 2 + 4 * 24 });
+            AssertResultSequence(out1, [2 + 4 * 24]);
         }
 
         [TestMethod]
@@ -1202,80 +1202,6 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void RestoreInDifferentDomains()
-        {
-            var checkpoint = RunInDifferentDomain(
-                (CheckpointingTests test) =>
-                {
-                    var store = new InMemoryStateStore("someId");
-                    var sourceUri = new Uri("reactor:/source");
-                    var subscriptionUri = new Uri("reactor:/subscription");
-
-                    var engine = test.CreateQueryEngine();
-                    var reactive = GetQueryEngineReactiveService(engine);
-
-                    var sourceStream = reactive.CreateStream<int>(sourceUri);
-                    Assert.IsNotNull(sourceStream);
-
-                    var source = reactive.GetObservable<int>(sourceUri);
-                    Assert.IsNotNull(source);
-
-                    source.Take(2).Subscribe(reactive.GetObserver<string, int>(MockObserverUri)("result"), subscriptionUri, null);
-
-                    var res = MockObserver.Get<int>("result");
-                    Assert.IsNotNull(res);
-
-                    var o1 = reactive.GetObserver<int>(sourceUri);
-
-                    var o1s = o1.Synchronize(engine.Scheduler);
-
-                    o1s.OnNext(0);
-                    Assert.IsFalse(res.Completed);
-                    Assert.IsFalse(res.Error);
-
-                    using (var stateWriter = new InMemoryStateWriter(store, CheckpointKind.Full))
-                    {
-                        engine.CheckpointAsync(stateWriter).Wait();
-                    }
-
-                    return store;
-                });
-
-            RunInDifferentDomain(
-                (CheckpointingTests test, InMemoryStateStore store) =>
-                {
-                    var sourceUri = new Uri("reactor:/source");
-
-                    var engine = test.CreateQueryEngine();
-                    var reactive = GetQueryEngineReactiveService(engine);
-
-                    using (var stateReader = new InMemoryStateReader(store))
-                    {
-                        engine.RecoverAsync(stateReader).Wait();
-                    }
-
-                    var o1 = reactive.GetObserver<int>(sourceUri);
-
-                    var o1s = o1.Synchronize(engine.Scheduler);
-
-                    var res = MockObserver.Get<int>("result");
-                    Assert.IsNotNull(res);
-
-                    o1s.OnNext(1);
-                    Assert.IsTrue(res.Completed);
-                    Assert.IsFalse(res.Error);
-
-                    o1s.OnNext(2);
-
-                    // Resulting observer does not preserve the state, but take operator does.
-                    // Only the last one should arrive.
-                    AssertResult(res, 1, (i, v) => Assert.AreEqual(i + 1, v));
-                },
-                checkpoint);
-        }
-#endif
 
         [TestMethod]
         public void DifferentialSavesNewEntities()
@@ -1297,13 +1223,13 @@ namespace Tests.Reaqtor.QueryEngine
                 // Create entities.
                 var source = reactive.CreateStream<int>(sourceUri);
                 var observable = reactive.GetObservable<int>(sourceUri);
-                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(value, 1)).AsQbserver(), null);
+                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(1, value)).AsQbserver(), null);
                 reactive.DefineObservable<int, int>(observableUri, (value) => Observable.Return(value).AsQbservable(), null);
                 observable.Subscribe(reactive.GetObserver<string, int>(MockObserverUri)("result"), subscriptionUri, null);
 
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
 
                 Checkpoint(engine, checkpoint, CheckpointKind.Differential);
 
@@ -1320,7 +1246,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var source = reactive.GetStream<int, int>(sourceUri);
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(1);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 reactive.GetObservable<int, int>(observableUri)(1)
                     .Subscribe(
@@ -1430,7 +1356,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsNotNull(res);
 
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
                 RemoveQueryEngine(engine);
             }
         }
@@ -1596,7 +1522,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var out1 = GetMockObserver<int>("v1", validate: false);
 
-            AssertResultSequence(out1, new int[] { 42 });
+            AssertResultSequence(out1, [42]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1710,14 +1636,14 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             Assert.IsTrue(LockManager.Wait(l, 1000));
-            Assert.IsTrue(mv2.Values.SequenceEqual(new[] { 1, 2, 3, 4 }));
+            Assert.IsTrue(mv2.Values.SequenceEqual([1, 2, 3, 4]));
         }
 
         private sealed class MySubscribable : SubscribableBase<int>
         {
-            public static readonly Dictionary<string, bool> _fail = new();
-            public static readonly Dictionary<string, int> _start = new();
-            public static readonly Dictionary<string, int> _state = new();
+            public static readonly Dictionary<string, bool> _fail = [];
+            public static readonly Dictionary<string, int> _start = [];
+            public static readonly Dictionary<string, int> _state = [];
             private readonly string _id;
 
             public MySubscribable(string s)
@@ -1870,7 +1796,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1909,7 +1835,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(100);
             in4s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -1954,7 +1880,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1993,7 +1919,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(100);
             in4s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -2038,7 +1964,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2084,7 +2010,7 @@ namespace Tests.Reaqtor.QueryEngine
             in4s.OnNext(100);
             in5s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -2210,7 +2136,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(2);
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2244,7 +2170,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 3 });
+            AssertResultSequence(out1, [3]);
 
             sub1.Dispose();
         }
@@ -2277,7 +2203,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in1s.OnNext(2);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2309,7 +2235,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             sub1.Dispose();
         }
@@ -2352,7 +2278,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(99);
             in1s.OnNext(3);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2385,7 +2311,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(4);
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 4 });
+            AssertResultSequence(out1, [4]);
 
             sub1.Dispose();
         }
@@ -2418,7 +2344,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in1s.OnNext(2);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2449,7 +2375,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             sub1.Dispose();
         }
@@ -2528,7 +2454,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             sub1.Dispose();
         }
@@ -2569,7 +2495,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             s2s.OnNext(95);
 
-            AssertResultSequence(out1, new int[] { 95 });
+            AssertResultSequence(out1, [95]);
 
             s1s.OnNext(3);
 
@@ -2582,7 +2508,7 @@ namespace Tests.Reaqtor.QueryEngine
             s2s.OnNext(96);
             s3s.OnNext(97);
 
-            AssertResultSequence(out1, new int[] { 95, 96, 97 });
+            AssertResultSequence(out1, [95, 96, 97]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2630,7 +2556,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(99);
             in4s.OnNext(100);
 
-            AssertResultSequence(out1, new int[] { 98, 99, 100 });
+            AssertResultSequence(out1, [98, 99, 100]);
 
             sub1.Dispose();
         }
@@ -2664,7 +2590,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(4);
             in2s.OnNext(10);
 
-            AssertResultSequence(out1, new int[] { 7, 13 });
+            AssertResultSequence(out1, [7, 13]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3211,7 +3137,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 private readonly AutoResetEvent _onSubscribe = new(false);
 
-                private readonly object _subjectGate = new();
+                private readonly Lock _subjectGate = new();
                 private object _subject;
 
                 public U(Action onDispose)
@@ -3501,7 +3427,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Recover(qe3, newState);
 
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 42 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([42]));
         }
 
         #endregion
@@ -3580,7 +3506,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3602,7 +3528,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(7);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9, 10, 11 });
+            AssertResultSequence(out1, [8, 9, 10, 11]);
 
             sub1 = ctx3.GetSubscription(sub1uri);
             sub1.Dispose();
@@ -3686,7 +3612,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3708,7 +3634,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(7);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9, 10, 11 });
+            AssertResultSequence(out1, [8, 9, 10, 11]);
 
             sub1 = ctx3.GetSubscription(sub1uri);
             sub1.Dispose();
@@ -3771,7 +3697,7 @@ namespace Tests.Reaqtor.QueryEngine
             var failedCount = 0;
 
             store.TryGetItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), out var bytes);
-            store.AddOrUpdateItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), bytes.Take(bytes.Length - 50).ToArray());
+            store.AddOrUpdateItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), [.. bytes.Take(bytes.Length - 50)]);
 
             qe = CreateQueryEngine();
             ctx = GetQueryEngineReactiveService(qe);
@@ -3812,7 +3738,7 @@ namespace Tests.Reaqtor.QueryEngine
             var failedCount = 0;
 
             store.TryGetItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), out var bytes);
-            store.AddOrUpdateItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), bytes.Take(bytes.Length - 50).ToArray());
+            store.AddOrUpdateItem("SubscriptionsRuntimeState", subId.ToCanonicalString(), [.. bytes.Take(bytes.Length - 50)]);
 
             qe = CreateQueryEngine();
             ctx = GetQueryEngineReactiveService(qe);
@@ -3833,7 +3759,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsTrue(LockManager.Wait(l));
             var mv1 = GetObserver<int>("v1");
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 1, 1 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([1, 1]));
         }
 
         [TestMethod]
@@ -3883,12 +3809,12 @@ namespace Tests.Reaqtor.QueryEngine
             //
             // The second callback will occur when the parent subscription is
             // started and cannot find the bridge instance.
-            Assert.AreEqual(failedCount, 2);
+            Assert.AreEqual(2, failedCount);
 
             Assert.IsFalse(ctx.Subscriptions.ContainsKey(subId));
 
             var mv1 = GetObserver<int>("v1");
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 1 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([1]));
 
             Checkpoint(qe, store);
 
@@ -4047,15 +3973,15 @@ namespace Tests.Reaqtor.QueryEngine
             store.AddOrUpdateItem("Observables", intReturnUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Observers", intNopUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Observers", intNopUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subjects", intStreamUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subjects", intStreamUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subscriptions", subUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subscriptions", subUri.ToCanonicalString(), modifiedBytes);
 
             // Recover query engine from modified state
@@ -4198,23 +4124,23 @@ namespace Tests.Reaqtor.QueryEngine
             store.AddOrUpdateItem("Observables", intReturnUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Observers", intNopUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Observers", intNopUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subjects", intStreamUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subjects", intStreamUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("SubjectsRuntimeState", intStream2Uri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subjects", intStream2Uri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subscriptions", subUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subscriptions", subUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("SubscriptionsRuntimeState", sub2Uri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("SubscriptionsRuntimeState", sub2Uri.ToCanonicalString(), modifiedBytes);
 
             // Recover query engine from modified state
@@ -4395,15 +4321,15 @@ namespace Tests.Reaqtor.QueryEngine
             store.AddOrUpdateItem("Observables", intReturnUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Observers", intNopUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Observers", intNopUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subjects", intStreamUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subjects", intStreamUri.ToCanonicalString(), modifiedBytes);
 
             Assert.IsTrue(store.TryGetItem("Subscriptions", subUri.ToCanonicalString(), out bytes));
-            modifiedBytes = bytes.Take(50).Concat(bytes.Skip(55)).ToArray();
+            modifiedBytes = [.. bytes.Take(50), .. bytes.Skip(55)];
             store.AddOrUpdateItem("Subscriptions", subUri.ToCanonicalString(), modifiedBytes);
 
             // Recover query engine from modified state
@@ -4504,7 +4430,7 @@ namespace Tests.Reaqtor.QueryEngine
             var store = Checkpoint(qe);
             RemoveQueryEngine(qe);
 
-            var summaryRegex = new Regex("Recovery summary for");
+            var summaryRegex = RecoverySummaryRegex();
             var summaries = 0;
             var onWrite = new Action<string>(trace =>
             {
@@ -4525,7 +4451,7 @@ namespace Tests.Reaqtor.QueryEngine
             Recover(qe, store);
 
             {
-                var blobLogPattern = new Regex(@"blobs_.*\.log", RegexOptions.Compiled);
+                var blobLogPattern = BlobLogFileRegex();
                 var blobLog = Directory.EnumerateFiles(qePath).SingleOrDefault(f => blobLogPattern.IsMatch(f));
                 Assert.IsNotNull(blobLog);
 
@@ -5001,85 +4927,14 @@ namespace Tests.Reaqtor.QueryEngine
 
         #endregion
 
+        [GeneratedRegex("Recovery summary for")]
+        private static partial Regex RecoverySummaryRegex();
+
+        [GeneratedRegex(@"blobs_.*\.log")]
+        private static partial Regex BlobLogFileRegex();
+
         #region Helper methods
 
-#if NETFRAMEWORK
-        private static TReturn RunInDifferentDomain<TTestClass, TState, TReturn>(Func<TTestClass, TState, TReturn> func, TState state)
-        {
-            AppDomain domain = AppDomain.CreateDomain(
-                "Function Executor " + func.GetHashCode(),
-                null,
-                new AppDomainSetup
-                {
-                    ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
-                    PrivateBinPath = AppDomain.CurrentDomain.RelativeSearchPath,
-                    DisallowBindingRedirects = true, // Disable the test agent's config to be picked up, e.g. causing Newtonsoft.Json to be redirected.
-                });
-
-            try
-            {
-                domain.SetData("toInvoke", func);
-                domain.SetData("state", state);
-                domain.DoCallBack(() =>
-                {
-                    var testObjest = Activator.CreateInstance<TTestClass>();
-                    var classInitialization =
-                        typeof(TTestClass)
-                            .GetMethods()
-                            .Single(m => m.GetCustomAttribute<ClassInitializeAttribute>() != null);
-                    classInitialization.Invoke(null, new object[] { null });
-
-                    var testInitialization = typeof(TTestClass)
-                            .GetMethods()
-                            .Single(m => m.GetCustomAttribute<TestInitializeAttribute>() != null);
-                    testInitialization.Invoke(testObjest, Array.Empty<object>());
-
-                    var f = AppDomain.CurrentDomain.GetData("toInvoke") as Func<TTestClass, TState, TReturn>;
-                    var result = f(testObjest, (TState)AppDomain.CurrentDomain.GetData("state"));
-                    AppDomain.CurrentDomain.SetData("result", result);
-                });
-
-                return (TReturn)domain.GetData("result");
-            }
-            finally
-            {
-                AppDomain.Unload(domain);
-            }
-        }
-
-        private static TReturn RunInDifferentDomain<TTestClass, TReturn>(Func<TTestClass, TReturn> func)
-        {
-            return RunInDifferentDomain<TTestClass, object, TReturn>(new SerializableFunction<TTestClass, TReturn> { Function = func }.Invoke, null);
-        }
-
-        private static void RunInDifferentDomain<TTestClass, TState>(Action<TTestClass, TState> action, TState state)
-        {
-            RunInDifferentDomain<TTestClass, TState, int>(new SerializableAction<TTestClass, TState> { Action = action }.Invoke, state);
-        }
-
-        [Serializable]
-        private class SerializableFunction<TTestClass, TReturn>
-        {
-            public Func<TTestClass, TReturn> Function { get; set; }
-
-            public TReturn Invoke(TTestClass testClass, object _)
-            {
-                return Function(testClass);
-            }
-        }
-
-        [Serializable]
-        private class SerializableAction<TTestClass, TState>
-        {
-            public Action<TTestClass, TState> Action { get; set; }
-
-            public int Invoke(TTestClass testClass, TState state)
-            {
-                Action(testClass, state);
-                return 0;
-            }
-        }
-#endif
 
         #endregion
     }

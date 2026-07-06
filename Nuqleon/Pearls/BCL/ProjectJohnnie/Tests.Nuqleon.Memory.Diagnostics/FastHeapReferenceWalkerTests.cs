@@ -19,7 +19,7 @@ namespace Tests
         {
             var w = new FastHeapReferenceWalker();
 
-            Assert.ThrowsException<ArgumentNullException>(() => w.Walk(new object(), fence: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => w.Walk(new object(), fence: null));
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace Tests
         {
             var w = new FastHeapReferenceWalker();
 
-            var xs = new object[] { new object(), "bar", 42 };
+            var xs = new object[] { new(), "bar", 42 };
 
             var set = new HashSet<object>(ReferenceEqualityComparer<object>.Instance);
 
@@ -101,7 +101,7 @@ namespace Tests
 
             w.Walk(xs, set.Add);
 
-            AssertSetEquals(set, new object[] { xs });
+            AssertSetEquals(set, [xs]);
         }
 
         [TestMethod]
@@ -164,8 +164,8 @@ namespace Tests
                     {
                         A = 2,
                         B = "qux",
-                        C = new[]
-                        {
+                        C =
+                        [
                             new Qux
                             {
                                 I = 3,
@@ -174,11 +174,11 @@ namespace Tests
                                 {
                                     N = 4,
                                     O = "baz",
-                                    P = new[]
-                                    {
+                                    P =
+                                    [
                                         "abc",
                                         new object()
-                                    }
+                                    ]
                                 }
                             },
                             new Qux
@@ -189,14 +189,14 @@ namespace Tests
                                 {
                                     N = 6,
                                     O = "BAZ",
-                                    P = new[]
-                                    {
+                                    P =
+                                    [
                                         "xyz",
                                         new object()
-                                    }
+                                    ]
                                 }
                             }
-                        }
+                        ]
                     }
                 };
 
@@ -204,8 +204,8 @@ namespace Tests
 
             w.Walk(bar, set.Add);
 
-            AssertSetEquals(set, new object[]
-            {
+            AssertSetEquals(set,
+            [
                 bar,
                 bar.Y,
                 bar.Z.B,
@@ -220,10 +220,10 @@ namespace Tests
                 bar.Z.C[1].K.P,
                 bar.Z.C[1].K.P[0],
                 bar.Z.C[1].K.P[1],
-            });
+            ]);
         }
 
-        private static void AssertSetEquals(HashSet<object> set, IEnumerable<object> objects) => AssertSetEquals(set, objects.ToArray());
+        private static void AssertSetEquals(HashSet<object> set, IEnumerable<object> objects) => AssertSetEquals(set, [.. objects]);
 
         private static void AssertSetEquals(HashSet<object> set, params object[] objects)
         {

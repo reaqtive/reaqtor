@@ -27,7 +27,7 @@ namespace Tests
             {
                 var vals = Enumerable.Range(0, i);
 
-                var res = Bundle.Create(vals.Select(v => (object)v).ToArray());
+                var res = Bundle.Create([.. vals.Select(v => (object)v)]);
 
                 for (var j = 0; j < i; j++)
                 {
@@ -60,7 +60,7 @@ namespace Tests
         public void Bundles_List()
         {
             var vals = Enumerable.Range(0, 10);
-            var res = Bundle.Create((IEnumerable<object>)vals.Select(v => (object)v).ToList());
+            var res = Bundle.Create((IEnumerable<object>)[.. vals.Select(v => (object)v)]);
 
             for (var i = 0; i < 10; i++)
             {
@@ -79,10 +79,10 @@ namespace Tests
             {
                 var vals = Enumerable.Range(0, i);
 
-                var res = Bundle.Create(vals.Select(v => (object)v).ToArray());
+                var res = Bundle.Create([.. vals.Select(v => (object)v)]);
 
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => res[-1]);
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => res[i]);
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => res[-1]);
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => res[i]);
             }
         }
 
@@ -90,8 +90,8 @@ namespace Tests
         public void Bundles_Create_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => Bundle.Create(default(object[])));
-            Assert.ThrowsException<ArgumentNullException>(() => Bundle.Create(default(IEnumerable<object>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Bundle.Create(default(object[])));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Bundle.Create(default(IEnumerable<object>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -106,11 +106,11 @@ namespace Tests
         [TestMethod]
         public void Bundles_Create_Empty()
         {
-            var empty = Bundle.Create(Array.Empty<object>());
+            var empty = Bundle.Create([]);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => empty[-1]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => empty[0]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => empty[1]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => empty[-1]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => empty[0]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => empty[1]);
         }
     }
 }

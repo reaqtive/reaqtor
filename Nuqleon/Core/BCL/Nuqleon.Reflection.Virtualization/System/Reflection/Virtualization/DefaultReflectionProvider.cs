@@ -15,10 +15,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-#if NET472
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Policy;
-#endif
 
 namespace System.Reflection
 {
@@ -52,16 +48,6 @@ namespace System.Reflection
         /// <returns>The loaded assembly.</returns>
         public override Assembly Load(AssemblyName assemblyRef) => Assembly.Load(assemblyRef);
 
-#if NET472
-        /// <summary>
-        /// Loads the assembly with a common object file format (COFF)-based image containing an emitted assembly, optionally including symbols and specifying the source for the security context. The assembly is loaded into the application domain of the caller.
-        /// </summary>
-        /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
-        /// <param name="rawSymbolStore">A byte array that contains the raw bytes representing the symbols for the assembly.</param>
-        /// <param name="securityContextSource">The source of the security context.</param>
-        /// <returns>The loaded assembly.</returns>
-        public override Assembly Load(byte[] rawAssembly, byte[] rawSymbolStore, SecurityContextSource securityContextSource) => Assembly.Load(rawAssembly, rawSymbolStore, securityContextSource);
-#endif
 
         /// <summary>
         /// Loads the contents of an assembly file on the specified path.
@@ -77,40 +63,30 @@ namespace System.Reflection
         /// <param name="hashValue">The value of the computed hash code.</param>
         /// <param name="hashAlgorithm">The hash algorithm used for hashing files and for generating the strong name.</param>
         /// <returns>The loaded assembly.</returns>
+#pragma warning disable SYSLIB0056 // 'LoadFrom with a custom AssemblyHashAlgorithm is obsolete.' (Mirror image of the reflection API surface, including its obsolete members.)
         public override Assembly LoadFrom(string assemblyFile, byte[] hashValue, System.Configuration.Assemblies.AssemblyHashAlgorithm hashAlgorithm) => Assembly.LoadFrom(assemblyFile, hashValue, hashAlgorithm);
+#pragma warning restore SYSLIB0056
 
         /// <summary>
         /// Loads an assembly into the reflection-only context, given its display name.
         /// </summary>
         /// <param name="assemblyString">The display name of the assembly, as returned by the <see cref="AssemblyName.FullName" /> property.</param>
         /// <returns>The loaded assembly.</returns>
-#if NETFRAMEWORK
-        public override Assembly ReflectionOnlyLoad(string assemblyString) => Assembly.ReflectionOnlyLoad(assemblyString);
-#else
         public override Assembly ReflectionOnlyLoad(string assemblyString) => throw new PlatformNotSupportedException();
-#endif
 
         /// <summary>
         /// Loads the assembly from a common object file format (COFF)-based image containing an emitted assembly. The assembly is loaded into the reflection-only context of the caller's application domain.
         /// </summary>
         /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
         /// <returns>The loaded assembly.</returns>
-#if NETFRAMEWORK
-        public override Assembly ReflectionOnlyLoad(byte[] rawAssembly) => Assembly.ReflectionOnlyLoad(rawAssembly);
-#else
         public override Assembly ReflectionOnlyLoad(byte[] rawAssembly) => throw new PlatformNotSupportedException();
-#endif
 
         /// <summary>
         /// Loads an assembly into the reflection-only context, given its path.
         /// </summary>
         /// <param name="assemblyFile">The path of the file that contains the manifest of the assembly.</param>
         /// <returns>The loaded assembly.</returns>
-#if NETFRAMEWORK
-        public override Assembly ReflectionOnlyLoadFrom(string assemblyFile) => Assembly.ReflectionOnlyLoadFrom(assemblyFile);
-#else
         public override Assembly ReflectionOnlyLoadFrom(string assemblyFile) => throw new PlatformNotSupportedException();
-#endif
 
         /// <summary>
         /// Loads an assembly into the load-from context, bypassing some security checks.
@@ -156,11 +132,7 @@ namespace System.Reflection
         /// <param name="throwIfNotFound">true to throw a <see cref="TypeLoadException" /> if the type cannot be found; false to return null if the type cannot be found. Specifying false also suppresses some other exception conditions, but not all of them. See the Exceptions section.</param>
         /// <param name="ignoreCase">true to perform a case-insensitive search for <paramref name="typeName" />; false to perform a case-sensitive search for <paramref name="typeName" />. </param>
         /// <returns>The type with the specified name, if found; otherwise, null. If the type is not found, the <paramref name="throwIfNotFound" /> parameter specifies whether null is returned or an exception is thrown. In some cases, an exception is thrown regardless of the value of <paramref name="throwIfNotFound" />. See the Exceptions section.</returns>
-#if NETFRAMEWORK
-        public override Type ReflectionOnlyGetType(string typeName, bool throwIfNotFound, bool ignoreCase) => Type.ReflectionOnlyGetType(typeName, throwIfNotFound, ignoreCase);
-#else
         public override Type ReflectionOnlyGetType(string typeName, bool throwIfNotFound, bool ignoreCase) => throw new PlatformNotSupportedException();
-#endif
 
         /// <summary>
         /// Gets the type associated with the specified class identifier (CLSID) from the specified server, specifying whether to throw an exception if an error occurs while loading the type.
@@ -217,15 +189,6 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public override MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType) => MethodBase.GetMethodFromHandle(handle, declaringType);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        public override string GetCodeBase(Assembly assembly) => assembly.CodeBase;
-#endif
-
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
         /// </summary>
@@ -240,23 +203,6 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public override MethodInfo GetEntryPoint(Assembly assembly) => assembly.EntryPoint;
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        public override string GetEscapedCodeBase(Assembly assembly) => assembly.EscapedCodeBase;
-#endif
-
-#if NET472
-        /// <summary>
-        /// Gets the evidence for the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get evidence for.</param>
-        /// <returns>The evidence for the specified <paramref name="assembly"/>.</returns>
-        public override Evidence GetEvidence(Assembly assembly) => assembly.Evidence;
-#endif
 
         /// <summary>
         /// Gets the display name of the assembly.
@@ -264,15 +210,6 @@ namespace System.Reflection
         /// <param name="assembly">The assembly to get the display name for.</param>
         /// <returns>The display name of the assembly.</returns>
         public override string GetFullName(Assembly assembly) => assembly.FullName;
-
-#if !NET6_0
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        public override bool GetGlobalAssemblyCache(Assembly assembly) => assembly.GlobalAssemblyCache;
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -316,14 +253,6 @@ namespace System.Reflection
         /// <returns>The module that contains the manifest for the assembly.</returns>
         public override Module GetManifestModule(Assembly assembly) => assembly.ManifestModule;
 
-#if NET472
-        /// <summary>
-        /// Gets the grant set of the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the grant set for.</param>
-        /// <returns>The grant set of the specified <paramref name="assembly"/>.</returns>
-        public override PermissionSet GetPermissionSet(Assembly assembly) => assembly.PermissionSet;
-#endif
 
         /// <summary>
         /// Gets a <see cref="bool" /> value indicating whether specified <paramref name="assembly"/> was loaded into the reflection-only context.
@@ -670,14 +599,6 @@ namespace System.Reflection
         /// <param name="machine">When this method returns, one of the <see cref="ImageFileMachine" /> values indicating the platform targeted by the module.</param>
         public override void GetPEKind(Module module, out PortableExecutableKinds peKind, out ImageFileMachine machine) => module.GetPEKind(out peKind, out machine);
 
-#if NET472
-        /// <summary>
-        /// Returns an X509Certificate object corresponding to the certificate included in the Authenticode signature of the assembly which this module belongs to. If the assembly has not been Authenticode signed, null is returned.
-        /// </summary>
-        /// <param name="module">The module to get the signer certificate for.</param>
-        /// <returns>An X509Certificate object, or null if the assembly to which this module belongs has not been Authenticode signed.</returns>
-        public override X509Certificate GetSignerCertificate(Module module) => module.GetSignerCertificate();
-#endif
 
         /// <summary>
         /// Returns the specified type, specifying whether to make a case-sensitive search of the module and whether to throw an exception if the type cannot be found.
@@ -998,7 +919,9 @@ namespace System.Reflection
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>true if the specified <paramref name="type"/> is serializable; otherwise, false.</returns>
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Mirror image of the reflection API surface, including its obsolete members.)
         public override bool IsSerializable(Type type) => type.IsSerializable;
+#pragma warning restore SYSLIB0050
 
         /// <summary>
         /// Gets the module in which the specified <paramref name="type"/> is defined.
@@ -1637,7 +1560,6 @@ namespace System.Reflection
         /// <returns>An array of <see cref="MemberInfo" /> objects representing all members defined for the specified type that match the specified binding constraints.-or- An empty array of type <see cref="MemberInfo" />, if no members are defined for the specified type, or if none of the defined members match the binding constraints.</returns>
         public override IReadOnlyList<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr) => type.GetMembers(bindingAttr);
 
-#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>
@@ -1651,7 +1573,6 @@ namespace System.Reflection
         /// <param name="modifiers">An array of <see cref="ParameterModifier" /> objects representing the attributes associated with the corresponding element in the <paramref name="types" /> array. The default binder does not process this parameter.</param>
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public override MethodInfo GetMethod(Type type, string name, int genericParameterCount, BindingFlags bindingAttr, Binder binder, CallingConventions callConvention, Type[] types, ParameterModifier[] modifiers) => type.GetMethod(name, genericParameterCount, bindingAttr, binder, callConvention, types, modifiers);
-#endif
 
         /// <summary>
         /// Searches for the specified method whose parameters match the specified argument types and modifiers, using the specified binding constraints and the specified calling convention.

@@ -61,8 +61,7 @@ generating the code for:
         /// <returns>Task returning a subscription object that can be used to send and receive data on the subscription, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubscription> CreateAsync(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state = null, CancellationToken token = default)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, arg1, arg2, state, token);
         }
@@ -78,8 +77,7 @@ generating the code for:
         /// <returns>Task returning a subscription object that can be used to send and receive data on the subscription, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubscription> IAsyncReactiveSubscriptionFactory<TArg1, TArg2>.CreateAsync(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state, CancellationToken token)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, arg1, arg2, state, token).ContinueWith(t => (IAsyncReactiveSubscription)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }
@@ -156,8 +154,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task returning a subscription object that can be used to send and receive data on the subscription, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubscription> CreateAsync(Uri subscriptionUri, <#=parameters#>, object state = null, CancellationToken token = default)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, <#=arguments#>, state, token);
         }
@@ -177,8 +174,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task returning a subscription object that can be used to send and receive data on the subscription, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubscription> IAsyncReactiveSubscriptionFactory<<#=typeArgs#>>.CreateAsync(Uri subscriptionUri, <#=parameters#>, object state, CancellationToken token)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, <#=arguments#>, state, token).ContinueWith(t => (IAsyncReactiveSubscription)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }

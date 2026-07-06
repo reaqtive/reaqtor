@@ -66,7 +66,7 @@ for (var j = 1; j <= i; j++)
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
 <#
 for (var j = 0; j < i; j++)
@@ -168,7 +168,7 @@ for (var j = 1; j <= i; j++)
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
 <#
 for (var j = 0; j < i + 1; j++)

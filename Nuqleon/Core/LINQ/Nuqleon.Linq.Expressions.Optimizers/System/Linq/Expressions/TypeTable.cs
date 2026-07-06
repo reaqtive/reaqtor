@@ -26,7 +26,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of types.
         /// </summary>
-        private readonly HashSet<Type> Types = new();
+        private readonly HashSet<Type> Types = [];
 
         /// <summary>
         /// Marks the current type table as read-only, preventing subsequent mutation.
@@ -44,8 +44,7 @@ namespace System.Linq.Expressions
         /// <param name="table">The type table whose entries to copy.</param>
         public void Add(TypeTable table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             CheckReadOnly();
 
@@ -61,8 +60,7 @@ namespace System.Linq.Expressions
         /// <param name="type">The type to add to the table.</param>
         public void Add(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             CheckReadOnly();
 
@@ -88,8 +86,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified <paramref name="type"/> is present in the table; otherwise, <c>false</c>.</returns>
         public bool Contains(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (Types.Contains(type))
             {

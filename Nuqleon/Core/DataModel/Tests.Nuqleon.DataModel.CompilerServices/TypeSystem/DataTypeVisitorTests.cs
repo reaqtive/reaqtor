@@ -28,15 +28,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         [TestMethod]
         public void DataTypeVisitor_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null), ex => Assert.AreEqual("elementVisitor", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x));
+            Assert.AreEqual("nodes", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null));
+            Assert.AreEqual("elementVisitor", ex2.ParamName);
         }
 
         [TestMethod]
         public void DataTypeVisitor_InconsistentRewrite()
         {
             var v = new BrokenQuotationVisitor();
-            Assert.ThrowsException<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
+            Assert.ThrowsExactly<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
         }
 
         [TestMethod]
@@ -76,7 +78,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var d = new MyDataType();
             var e = v.Visit(d);
 
-            Assert.ThrowsException<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
+            Assert.ThrowsExactly<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
 
             Assert.AreSame(d, e);
             Assert.AreEqual(d.ToString(), e.ToString());
@@ -88,19 +90,19 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var v = new IncompleteVisitor();
 
             var d1 = DataType.FromType(typeof(int[]));
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d1));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d1));
 
             var d2 = DataType.FromType(typeof(bool[]));
             Assert.AreSame(d2, v.Visit(d2));
 
             var d3 = DataType.FromType(new { a = 1 }.GetType());
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d3));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d3));
 
             var d4 = DataType.FromType(new { a = true }.GetType());
             Assert.AreSame(d4, v.Visit(d4));
 
             var d5 = new StructuralDataType(typeof(Foo), new[] { new DataProperty(typeof(Foo).GetField("Bar"), "Bar", DataType.FromType(typeof(int))) }.ToReadOnly(), StructuralDataTypeKinds.Entity);
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d5));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d5));
         }
 
         private class Foo
@@ -238,7 +240,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 
             protected override Type MakeFunction(FunctionDataType type, ReadOnlyCollection<Type> parameterTypes, Type returnType)
             {
-                return Expression.GetFuncType(parameterTypes.Concat(new[] { returnType }).ToArray()); // don't care about actions here for testing
+                return Expression.GetFuncType([.. parameterTypes, returnType]); // don't care about actions here for testing
             }
 
             protected override Type VisitOpenGenericParameter(OpenGenericParameterDataType type)

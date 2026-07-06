@@ -24,8 +24,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override IReliableReactiveObserver<T> GetObserverCore<T>(IReliableQbserver<T> observer)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(observer);
 
             var observerUri = GetObserverUri(observer);
             return _provider.GetObserver<T>(observerUri);
@@ -37,8 +36,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void CreateSubscriptionCore(IReliableQubscription subscription, object state)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out var uri))
             {
@@ -50,8 +48,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void DeleteSubscriptionCore(IReliableQubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out var uri))
             {
@@ -63,8 +60,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void StartSubscriptionCore(IReliableQubscription subscription, long sequenceId)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out var uri))
             {
@@ -76,8 +72,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void AcknowledgeRangeCore(IReliableQubscription subscription, long sequenceId)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out var uri))
             {
@@ -89,8 +84,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override Uri GetSubscriptionResubscribeUriCore(IReliableQubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out var uri))
             {
@@ -106,8 +100,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void CreateStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream, object state)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!TryGetUriFromKnownResource(stream, out var uri))
             {
@@ -119,8 +112,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override void DeleteStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!TryGetUriFromKnownResource(stream, out var uri))
             {
@@ -132,8 +124,7 @@ namespace Reaqtor.Reliable.Service
 
         protected override IReliableQbserver<TInput> CreateObserverCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!TryGetUriFromKnownResource(stream, out var uri))
             {

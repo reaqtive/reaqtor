@@ -49,7 +49,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// to serialize and deserialize expressions and data model-compliant objects.
         /// </summary>
         public SerializationHelpers()
-            : this(Array.Empty<DataConverter>())
+            : this([])
         {
         }
 
@@ -75,10 +75,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <remarks>The use of a generic type parameter allows for "typed nulls".</remarks>
         public void Serialize<T>(T value, Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             CreateDataSerializer().Serialize<T>(value, stream);
         }
@@ -102,10 +99,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// if a JsonException was thrown during deserialization of <c>json</c></exception>
         public T Deserialize<T>(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             return CreateDataSerializer().Deserialize<T>(stream);
         }
@@ -138,7 +132,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
             // PERF: Consider adding early-bound helpers and runtime compiled dispatchers.
 
             var method = _serializeToMethod.MakeGenericMethod(type);
-            method.Invoke(serializer, new object[] { value, jsonWriter });
+            method.Invoke(serializer, [value, jsonWriter]);
 
             return jsonWriter.Expression;
         }
@@ -150,7 +144,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
             // PERF: Consider adding early-bound helpers and runtime compiled dispatchers.
 
             var method = _deserializeFromMethod.MakeGenericMethod(type);
-            var res = method.Invoke(serializer, new object[] { jsonReader });
+            var res = method.Invoke(serializer, [jsonReader]);
 
             return res;
         }
@@ -167,9 +161,6 @@ namespace Reaqtor.Hosting.Shared.Serialization
         {
             private readonly SerializationHelpers _parent;
 
-            private ExpressionToExpressionSlimConverter _lifter;
-            private ExpressionSlimToExpressionConverter _reducer;
-
             /// <summary>
             /// Instantiate the expression serializer.
             /// </summary>
@@ -184,9 +175,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
             /// </summary>
             internal JsonDataSerializer DataSerializer { get; set; }
 
-            private ExpressionToExpressionSlimConverter Lifter => _lifter ??= CreateLifter();
+            private ExpressionToExpressionSlimConverter Lifter => field ??= CreateLifter();
 
-            private ExpressionSlimToExpressionConverter Reducer => _reducer ??= CreateReducer();
+            private ExpressionSlimToExpressionConverter Reducer => field ??= CreateReducer();
 
             /// <summary>
             /// Method to reduce a slim expression to an expression.

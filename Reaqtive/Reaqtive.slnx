@@ -1,0 +1,37 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/Nuqleon/" />
+  <Folder Name="/deps/Nuqleon/BCL/">
+    <Project Path="../Nuqleon/Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../Nuqleon/Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../Nuqleon/Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/JSON/">
+    <Project Path="../Nuqleon/Core/JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/LINQ/">
+    <Project Path="../Nuqleon/Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="../Nuqleon/Core/LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="../Nuqleon/Core/LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Core/">
+    <Project Path="Core/Reaqtive.Core/Reaqtive.Core.csproj" />
+    <Project Path="Core/Reaqtive.Interfaces/Reaqtive.Interfaces.csproj" />
+    <Project Path="Core/Reaqtive.Linq/Reaqtive.Linq.csproj" />
+    <Project Path="Core/Reaqtive.Quotation/Reaqtive.Quotation.csproj" />
+    <Project Path="Core/Reaqtive.Scheduler/Reaqtive.Scheduler.csproj" />
+    <Project Path="Core/Reaqtive.Testing/Reaqtive.Testing.csproj" />
+    <Project Path="Core/Reaqtive.TestingFramework/Reaqtive.TestingFramework.csproj" />
+  </Folder>
+  <Folder Name="/src/Pearls/">
+    <Project Path="Pearls/Rxcel/Reaqtive.Pearls.Rxcel.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/Core/">
+    <Project Path="Core/Tests.Reaqtive.Core/Tests.Reaqtive.Core.csproj" />
+    <Project Path="Core/Tests.Reaqtive.Linq/Tests.Reaqtive.Linq.csproj" />
+    <Project Path="Core/Tests.Reaqtive.Quotation/Tests.Reaqtive.Quotation.csproj" />
+    <Project Path="Core/Tests.Reaqtive.Scheduler/Tests.Reaqtive.Scheduler.csproj" />
+  </Folder>
+</Solution>

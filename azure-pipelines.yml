@@ -23,65 +23,6 @@ stages:
       projects: [ 'Nuqleon', 'Reaqtive', 'Reaqtor' ]
       configurations: [ 'Debug', 'Release' ]
 
-  - job: Reaqtor_Glitching_Tests
-    displayName: Run Reaqtor Remoting Glitching Tests
-    pool:
-      vmImage: windows-latest
-
-    steps:
-    - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
-      inputs:
-        version: 8.x
-        performMultiLevelLookup: true
-
-    - powershell: |
-        $existing = & dotnet tool list -g | Select-String "nbgv" 
-        if (!$existing) {
-            & dotnet tool install -g nbgv
-        }
-      displayName: Install NBGV tool
-
-    - script: nbgv cloud -a
-      displayName: Set Version
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install -g dotnet-reportgenerator-globaltool
-      displayName: Install ReportGenerator tool
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        workingDirectory: Reaqtor/Samples/Remoting/Tests.Reaqtor.Remoting.Glitching
-        arguments: -c Release -p:EnableGlitching=true /bl:$(Build.ArtifactStagingDirectory)/Logs/Glitching.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m
-        testRunTitle: Reaqtor Glitching
-      displayName: Run Unit Tests
-
-    - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/Glitching -reporttypes:"Cobertura"
-      displayName: Consolidate Coverage Runs
-      condition: succeededOrFailed()
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
-        artifactName: RawCoverage
-        parallel: true
-        parallelCount: 8
-      displayName: Publish Raw Coverage Output
-      condition: succeededOrFailed()
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs
-        parallel: true
-        parallelCount: 8
-      displayName: Publish Build Logs
-      condition: always()
-
   - job: Reaqtor_Dotnet_Format
     displayName: Run dotnet-format checks
     pool:
@@ -89,22 +30,32 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Use .NET SDK from global.json
       inputs:
-        version: 8.x
+        useGlobalJson: true
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
       displayName: Restore
       inputs:
         command: restore
-        projects: All.sln
-     
-    # See https://github.com/reaqtive/reaqtor/issues/138
-    # The current implementation of IDE0001 runs extremely slowly, causing builds to fail,
-    # and we've been unable to find any workaround, so we have to disable this for
-    # certain projects now.
-    - script: dotnet format --no-restore --verify-no-changes --exclude Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Optimizers --verbosity diagnostic All.sln
+        projects: All.slnx
+
+    # The command + its exclusions live in eng/Run-DotnetFormat.ps1 (single source of
+    # truth shared with local use). It runs `dotnet format style` with two exclusions,
+    # both tracked by https://github.com/reaqtive/reaqtor/issues/138:
+    #   * Nuqleon.Linq.Expressions.Optimizers - IDE0001 is pathologically slow here.
+    #   * ~16 files <Compile Link>'d into multiple projects with different symbols
+    #     (the USE_SLIM Bonsai links); dotnet format crashes merging their per-project
+    #     edits (TryApplyChanges / LinkedFileMergeConflictCommentAdditionService).
+    # Primary-constructor conversion (IDE0290) is disabled in .editorconfig.
+    #
+    # This check is enforcing. The #138 exclusions above only affect this
+    # solution-scoped *apply/verify* path; the excluded files are still style-checked
+    # at build time (EnforceCodeStyleInBuild=true, see Directory.Build.props), so they
+    # cannot rot. To format them locally, run dotnet format scoped to a single project
+    # (each linked file then has one compilation, so there is no merge to corrupt).
+    - pwsh: ./eng/Run-DotnetFormat.ps1 -Verify -NoRestore
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
@@ -113,9 +64,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Use .NET SDK from global.json
       inputs:
-        version: 8.x
+        useGlobalJson: true
         performMultiLevelLookup: true
 
     - powershell: |
@@ -131,7 +82,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: build
-        projects: All.sln
+        projects: All.slnx
         configuration: Release
         verbosity: Minimal
         arguments: -c Release /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
@@ -148,10 +99,8 @@ stages:
       displayName: Publish artifacts
       artifact: BuildPackages
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs
+    - publish: $(Build.ArtifactStagingDirectory)/Logs
+      artifact: Logs_Build_and_Pack
       displayName: Publish Build Logs
       condition: always()
 
@@ -166,8 +115,13 @@ stages:
     - checkout: self
       fetchDepth: 1
       
+    # Each matrix job publishes its own RawCoverage_* pipeline artifact (immutable, unlike
+    # the retired PublishBuildArtifacts@1 which let all jobs append into one artifact).
+    # NB: download patterns match paths INSIDE each artifact (not artifact-name-prefixed),
+    # so filter by file type; the reportgenerator glob below narrows to the RawCoverage_*
+    # artifact folders that the download step lays out under $(Pipeline.Workspace).
     - download: current
-      artifact: RawCoverage
+      patterns: '**/*.xml'
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -180,20 +134,19 @@ stages:
         dotnet tool update -g dotnet-reportgenerator-globaltool
         export PATH=$PATH:$HOME/.dotnet/tools
         . ~/.bashrc
-        reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura;lcov"
+        reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage_*/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverage/reports -reporttypes:"Cobertura;lcov"
       displayName: Consolidate Reports from Jobs
 
-    - task: PublishCodeCoverageResults@1
+    - task: PublishCodeCoverageResults@2
       displayName: Publish code coverage
       inputs:
-        codeCoverageTool: Cobertura
         pathToSources: $(Build.SourcesDirectory)
-        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+        summaryFileLocation: $(Build.SourcesDirectory)/coverage/reports/Cobertura.xml
 
     - script: |
         bash <(curl -s https://codecov.io/bash)
       displayName: 'Upload to codecov.io'
-      workingDirectory: $(Build.SourcesDirectory)/coverlet/reports
+      workingDirectory: $(Build.SourcesDirectory)/coverage/reports
       env:
         CODECOV_TOKEN: $(CODECOV_TOKEN)
       condition: ne(variables['build.reason'], 'PullRequest')

@@ -30,8 +30,7 @@ namespace System.Memory
         /// <returns>A memoization cache factory that wraps the specified <paramref name="factory"/> and adds thread-local isolation to it.</returns>
         public static IMemoizationCacheFactory WithThreadLocal(this IMemoizationCacheFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ThreadLocalFactory(factory);
         }
@@ -45,8 +44,7 @@ namespace System.Memory
         /// <returns>A memoization cache factory that wraps the specified <paramref name="factory"/> and adds thread-local isolation to it.</returns>
         public static IMemoizationCacheFactory WithThreadLocal(this IMemoizationCacheFactory factory, bool exposeThreadLocalView)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ThreadLocalFactory(factory, exposeThreadLocalView);
         }
@@ -59,8 +57,7 @@ namespace System.Memory
         /// <returns>A memoization cache factory that wraps the specified <paramref name="factory"/> and adds synchronized access behavior to it.</returns>
         public static IMemoizationCacheFactory Synchronized(this IMemoizationCacheFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new SynchronizedFactory(factory);
         }
@@ -81,8 +78,7 @@ namespace System.Memory
 
             public IMemoizationCache<T, R> Create<T, R>(Func<T, R> function, MemoizationOptions options, IEqualityComparer<T> comparer)
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 if (_exposeGlobalView)
                 {
@@ -138,7 +134,7 @@ namespace System.Memory
                 {
                 }
 
-                protected override int CountCore => _cache.Values.Select(v => v.Count).Sum();
+                protected override int CountCore => _cache.Values.Sum(v => v.Count);
 
                 protected override string DebugViewCore
                 {
@@ -173,7 +169,7 @@ namespace System.Memory
                     if (serviceType != null && serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(ITrimmable<>))
                     {
                         var union = typeof(UnionTrimmable<>).MakeGenericType(serviceType.GetGenericArguments());
-                        res = Activator.CreateInstance(union, new object[] { Values });
+                        res = Activator.CreateInstance(union, [Values]);
                     }
 
                     return res;
@@ -223,8 +219,7 @@ namespace System.Memory
 
             public IMemoizationCache<T, R> Create<T, R>(Func<T, R> function, MemoizationOptions options, IEqualityComparer<T> comparer)
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 var gate = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
 
@@ -337,11 +332,22 @@ namespace System.Memory
                         if (res != null)
                         {
                             var synchronized = typeof(SynchronizedTrimmable<>).MakeGenericType(serviceType.GetGenericArguments());
-                            res = Activator.CreateInstance(synchronized, new object[] { res, _gate });
+                            res = Activator.CreateInstance(synchronized, [res, _gate]);
                         }
                     }
 
                     return res;
+                }
+
+                protected override void DisposeCore()
+                {
+                    //
+                    // This synchronized wrapper owns both the underlying cache and the gate it
+                    // created (see SynchronizedFactory.Create), so it is responsible for disposing
+                    // them. (The sibling ImplBase<T, R> follows the same pattern for its cache.)
+                    //
+                    _cache.Dispose();
+                    _gate.Dispose();
                 }
             }
 

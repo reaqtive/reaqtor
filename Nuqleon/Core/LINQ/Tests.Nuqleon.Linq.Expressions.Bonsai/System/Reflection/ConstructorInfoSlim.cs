@@ -23,8 +23,10 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void ConstructorInfoSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Empty), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetConstructor(parameterTypes: null), ex => Assert.AreEqual("parameterTypes", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Empty));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetConstructor(parameterTypes: null));
+            Assert.AreEqual("parameterTypes", ex2.ParamName);
         }
     }
 }

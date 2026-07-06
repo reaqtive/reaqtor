@@ -19,13 +19,13 @@ namespace Tests
     [TestClass]
     public class PooledStringBuilderTests : TestBase
     {
-        private static readonly string[] words = new string[] { "bar", "foo", "qux", "baz" };
+        private static readonly string[] words = ["bar", "foo", "qux", "baz"];
 
         [TestMethod]
         public void PooledStringBuilder_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, 16, -1));
         }
 
         [TestMethod]

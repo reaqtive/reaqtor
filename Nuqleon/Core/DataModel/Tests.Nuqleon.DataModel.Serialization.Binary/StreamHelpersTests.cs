@@ -17,27 +17,27 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         [TestMethod]
         public void StreamHelpers_EmptyArray()
         {
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadSByte(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadByte(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadInt16(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadUInt16(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadInt32(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadUInt32(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadInt64(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadUInt64(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadSingle(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadDouble(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadDecimal(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadChar(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadBoolean(new MemoryStream()));
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadGuid(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadSByte(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadByte(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadInt16(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadUInt16(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadInt32(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadUInt32(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadInt64(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadUInt64(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadSingle(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadDouble(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadDecimal(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadChar(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadBoolean(new MemoryStream()));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadGuid(new MemoryStream()));
 
             using var stream = new MemoryStream();
 
             stream.WriteUInt32Compact(42u);
             stream.Position = 0;
 
-            Assert.ThrowsException<EndOfStreamException>(() => StreamHelpers.ReadString(stream));
+            Assert.ThrowsExactly<EndOfStreamException>(() => StreamHelpers.ReadString(stream));
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             using var stream = new MemoryStream();
 
-            var bigString = new string(Enumerable.Repeat('a', StreamHelpers.MAX_POOLED_STRING_BYTES * 2).ToArray());
+            var bigString = new string([.. Enumerable.Repeat('a', StreamHelpers.MAX_POOLED_STRING_BYTES * 2)]);
 
             stream.WriteString(bigString);
             stream.Position = 0;

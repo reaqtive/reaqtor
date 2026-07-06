@@ -68,8 +68,7 @@ namespace System
         public static T GetTarget<T>(this WeakReference<T> weakReference)
             where T : class
         {
-            if (weakReference == null)
-                throw new ArgumentNullException(nameof(weakReference));
+            ArgumentNullException.ThrowIfNull(weakReference);
 
             if (weakReference == Holder<T>.Null)
             {
@@ -97,10 +96,8 @@ namespace System
         public static T GetOrSetTarget<T>(this WeakReference<T> weakReference, Func<T> targetFactory)
             where T : class
         {
-            if (weakReference == null)
-                throw new ArgumentNullException(nameof(weakReference));
-            if (targetFactory == null)
-                throw new ArgumentNullException(nameof(targetFactory));
+            ArgumentNullException.ThrowIfNull(weakReference);
+            ArgumentNullException.ThrowIfNull(targetFactory);
 
             if (weakReference == Holder<T>.Null)
             {

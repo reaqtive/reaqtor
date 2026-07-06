@@ -28,7 +28,7 @@ namespace System.Memory.Diagnostics
         /// <summary>
         /// The partitions managed by the analyzer.
         /// </summary>
-        private readonly Dictionary<string, HeapPartition> _partitions = new();
+        private readonly Dictionary<string, HeapPartition> _partitions = [];
 
         /// <summary>
         /// Adds a heap partition to the analyzer.
@@ -38,10 +38,8 @@ namespace System.Memory.Diagnostics
         /// <returns>A new heap partition instance.</returns>
         public HeapPartition AddPartition(string name, params object[] roots)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
-            if (roots == null)
-                throw new ArgumentNullException(nameof(roots));
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(roots);
 
             var p = new HeapPartition(name, roots);
             _partitions.Add(name, p);
@@ -54,8 +52,7 @@ namespace System.Memory.Diagnostics
         /// <param name="name">The name of the partition to remove.</param>
         public void RemovePartition(string name)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(name);
 
             _partitions.Remove(name);
         }
@@ -85,8 +82,7 @@ namespace System.Memory.Diagnostics
         /// </remarks>
         public HeapUsageAnalysis Analyze(HeapAnalysisOptions options, CancellationToken token)
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             //
             // Create a set of all roots which will be used to avoid traversing from one partition into another

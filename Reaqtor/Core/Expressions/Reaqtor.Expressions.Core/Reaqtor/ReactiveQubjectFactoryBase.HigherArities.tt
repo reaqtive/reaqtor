@@ -52,8 +52,7 @@ generating the code for:
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubject<TInput, TOutput> Create(Uri streamUri, TArg1 arg1, TArg2 arg2, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, arg1, arg2, state);
         }
@@ -68,8 +67,7 @@ generating the code for:
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubject<TInput, TOutput> IReactiveSubjectFactory<TInput, TOutput, TArg1, TArg2>.Create(Uri streamUri, TArg1 arg1, TArg2 arg2, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, arg1, arg2, state);
         }
@@ -155,8 +153,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubject<TInput, TOutput> Create(Uri streamUri, <#=parameters#>, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, <#=arguments#>, state);
         }
@@ -175,8 +172,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubject<TInput, TOutput> IReactiveSubjectFactory<TInput, TOutput, <#=typeArgs#>>.Create(Uri streamUri, <#=parameters#>, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, <#=arguments#>, state);
         }

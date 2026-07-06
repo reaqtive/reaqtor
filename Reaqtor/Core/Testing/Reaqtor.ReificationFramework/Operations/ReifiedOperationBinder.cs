@@ -115,7 +115,7 @@ namespace Reaqtor.ReificationFramework
             var param = Expression.Parameter(typeof(long), "i");
 
             var loop = Expression.Block(
-                new[] { param },
+                [param],
                 Expression.Assign(
                     param,
                     Expression.Constant(0L, typeof(long))

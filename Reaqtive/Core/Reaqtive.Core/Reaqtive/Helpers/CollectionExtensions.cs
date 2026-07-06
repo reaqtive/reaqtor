@@ -8,8 +8,6 @@
 // BD - June 2014 - Created this file.
 //
 
-using System.Linq;
-
 namespace System.Collections.Generic
 {
     /// <summary>
@@ -31,7 +29,7 @@ namespace System.Collections.Generic
             {
                 null => Array.Empty<T>(),
                 ICollection<T> collection => collection,
-                _ => enumerable.ToList(),
+                _ => [.. enumerable],
             };
         }
     }

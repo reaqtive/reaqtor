@@ -628,7 +628,7 @@ namespace Reaqtive
                     _parent._refCount.OnNext(false);
                 }
 
-                public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+                public IEnumerable<ISubscription> Inputs => [];
 
                 public void Subscribe()
                 {

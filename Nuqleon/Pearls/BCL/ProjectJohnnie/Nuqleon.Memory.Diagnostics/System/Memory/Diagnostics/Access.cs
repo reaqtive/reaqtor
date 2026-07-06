@@ -42,8 +42,7 @@ namespace System.Memory.Diagnostics
         /// </example>
         public static FieldAccess Field(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
             return new FieldAccess(field);
         }
@@ -65,8 +64,7 @@ namespace System.Memory.Diagnostics
         /// </example>
         public static VectorElementAccess VectorElement(int index)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new VectorElementAccess(index);
         }
@@ -88,8 +86,7 @@ namespace System.Memory.Diagnostics
         /// </example>
         public static MultidimensionalArrayElementAccess MultidimensionalArrayElement(params int[] indexes)
         {
-            if (indexes == null)
-                throw new ArgumentNullException(nameof(indexes));
+            ArgumentNullException.ThrowIfNull(indexes);
             if (indexes.Length == 0)
                 throw new ArgumentException("Indexes should not be empty.", nameof(indexes));
 
@@ -127,8 +124,7 @@ namespace System.Memory.Diagnostics
         /// </example>
         public static CompositeAccess Composite(params Access[] accesses)
         {
-            if (accesses == null)
-                throw new ArgumentNullException(nameof(accesses));
+            ArgumentNullException.ThrowIfNull(accesses);
             if (accesses.Length == 0)
                 throw new ArgumentException("Accesses should not be empty.", nameof(accesses));
 

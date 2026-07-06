@@ -35,8 +35,7 @@ namespace Reaqtive
         /// <returns><c>true</c> if any operator has state changes; otherwise, <c>false</c>.</returns>
         public static bool HasStateChanged(ISubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             return HasStateChangedCore(subscription);
         }
@@ -63,16 +62,14 @@ namespace Reaqtive
         /// <param name="factory">State writer factory to obtain state writers for operators from.</param>
         public static void SaveState(ISubscription subscription, IOperatorStateWriterFactory factory)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             SaveStateCore(subscription, factory);
         }
 
         internal static void SaveStateCore(ISubscription subscription, IOperatorStateWriterFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             subscription.Accept(new SaveStateVisitor(factory));
         }
@@ -90,16 +87,14 @@ namespace Reaqtive
         /// <param name="factory">State reader factory to obtain state readers for operators from.</param>
         public static void LoadState(ISubscription subscription, IOperatorStateReaderFactory factory)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             LoadStateCore(subscription, factory);
         }
 
         internal static void LoadStateCore(ISubscription subscription, IOperatorStateReaderFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             subscription.Accept(new LoadStateVisitor(factory));
         }
@@ -115,8 +110,7 @@ namespace Reaqtive
         /// <param name="subscription">The subscription to send state save notifications to.</param>
         public static void OnStateSaved(ISubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             OnStateSavedCore(subscription);
         }

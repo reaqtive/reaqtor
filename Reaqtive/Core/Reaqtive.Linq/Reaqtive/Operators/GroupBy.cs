@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 
 namespace Reaqtive
 {
@@ -88,7 +89,7 @@ namespace Reaqtive
             private const string MAXGROUPCOUNTSETTING = "rx://operators/groupBy/settings/maxGroupCount";
             private int _maxGroupCount;
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private Entry _nullGroup;
             private readonly IDictionary<TKey, Entry> _groups;
             private readonly IDictionary<Uri, TKey> _tunnels;

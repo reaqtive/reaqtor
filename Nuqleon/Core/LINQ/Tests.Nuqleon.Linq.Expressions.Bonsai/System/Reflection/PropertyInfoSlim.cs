@@ -23,10 +23,14 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void PropertyInfoSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetProperty(type: null, "bar", propertyType: null, indexParameterTypes: null, canWrite: false), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetProperty(name: null, propertyType: null, indexParameterTypes: null, canWrite: false), ex => Assert.AreEqual("name", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => SlimType.GetProperty("", propertyType: null, indexParameterTypes: null, canWrite: false), ex => Assert.AreEqual("name", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetProperty("foo", propertyType: null, indexParameterTypes: null, canWrite: false), ex => Assert.AreEqual("indexParameterTypes", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetProperty(type: null, "bar", propertyType: null, indexParameterTypes: null, canWrite: false));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetProperty(name: null, propertyType: null, indexParameterTypes: null, canWrite: false));
+            Assert.AreEqual("name", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => SlimType.GetProperty("", propertyType: null, indexParameterTypes: null, canWrite: false));
+            Assert.AreEqual("name", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetProperty("foo", propertyType: null, indexParameterTypes: null, canWrite: false));
+            Assert.AreEqual("indexParameterTypes", ex4.ParamName);
         }
     }
 }

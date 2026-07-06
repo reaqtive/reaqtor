@@ -80,16 +80,16 @@ namespace Nuqleon.Json.Serialization
             private static readonly MethodInfo s_createArrayEmitter = typeof(EmitterStringBuilder).GetMethod(nameof(CreateArrayEmitter), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             private static readonly MethodInfo s_createListEmitter = typeof(EmitterStringBuilder).GetMethod(nameof(CreateListEmitter), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             private static readonly MethodInfo s_nullOr = typeof(EmitterStringBuilder).GetMethod(nameof(NullOr), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-            private static readonly MethodInfo s_appendChar = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(char) });
-            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(string) });
+            private static readonly MethodInfo s_appendChar = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(char)]);
+            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(string)]);
 
             //
             // NB: The following members and expression are used for runtime object reference cycle detection.
             //
 
             private static readonly FieldInfo s_cycles = typeof(EmitterContext).GetField(nameof(EmitterContext.Cycles));
-            private static readonly MethodInfo s_hashSetAdd = typeof(HashSet<object>).GetMethod(nameof(HashSet<object>.Add), new[] { typeof(object) });
-            private static readonly MethodInfo s_hashSetRemove = typeof(HashSet<object>).GetMethod(nameof(HashSet<object>.Remove), new[] { typeof(object) });
+            private static readonly MethodInfo s_hashSetAdd = typeof(HashSet<object>).GetMethod(nameof(HashSet<>.Add), [typeof(object)]);
+            private static readonly MethodInfo s_hashSetRemove = typeof(HashSet<object>).GetMethod(nameof(HashSet<>.Remove), [typeof(object)]);
             private static Expression s_throwCycle;
 
             //
@@ -104,7 +104,7 @@ namespace Nuqleon.Json.Serialization
             // THREADING: This type is thread-safe.
             //
 
-            private readonly ConditionalWeakTable<Type, StrongBox<object>> _emitters = new();
+            private readonly ConditionalWeakTable<Type, StrongBox<object>> _emitters = [];
 
             //
             // NB: Builder contexts are stateful but we don't want to allocate them for every late bound serializer site or even
@@ -214,7 +214,7 @@ namespace Nuqleon.Json.Serialization
                     //
                     var emitter = default(EmitStringAction<T>);
 
-                    var forwarder = new EmitStringAction<T>((StringBuilder builder, T value, EmitterContext ctx) => emitter(builder, value, ctx));
+                    var forwarder = new EmitStringAction<T>((builder, value, ctx) => emitter(builder, value, ctx));
                     res.Value = forwarder;
 
                     emitter = CreateEmitter<T>(type, state);
@@ -257,7 +257,7 @@ namespace Nuqleon.Json.Serialization
                         throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Creating a JSON serializer for type '{0}' is not supported. Only single-dimensional arrays are supported.", type));
                     }
 
-                    return (EmitStringAction<T>)s_createArrayEmitter.MakeGenericMethod(elem).Invoke(this, new[] { state });
+                    return (EmitStringAction<T>)s_createArrayEmitter.MakeGenericMethod(elem).Invoke(this, [state]);
                 }
                 else if (type.IsConstructedGenericType)
                 {
@@ -306,8 +306,8 @@ namespace Nuqleon.Json.Serialization
                             return EmitterAs<DateTimeOffset?, T>(s_emitNullableDateTimeOffset ??= Emitter.EmitNullableDateTimeOffset);
                         }
 
-                        var nonNullEmitter = s_createObjectEmitter.MakeGenericMethod(type).Invoke(this, new[] { state });
-                        var nullableEmitter = s_nullOr.MakeGenericMethod(type).Invoke(obj: null, new object[] { nonNullEmitter });
+                        var nonNullEmitter = s_createObjectEmitter.MakeGenericMethod(type).Invoke(this, [state]);
+                        var nullableEmitter = s_nullOr.MakeGenericMethod(type).Invoke(obj: null, [nonNullEmitter]);
                         return (EmitStringAction<T>)nullableEmitter;
                     }
                     else if (def == typeof(List<>) || def == typeof(IList<>) || def == typeof(IReadOnlyList<>) || def == typeof(IEnumerable<>))
@@ -324,7 +324,7 @@ namespace Nuqleon.Json.Serialization
                         //
 
                         var elem = type.GetGenericArguments()[0];
-                        return (EmitStringAction<T>)s_createListEmitter.MakeGenericMethod(elem, type).Invoke(this, new[] { state });
+                        return (EmitStringAction<T>)s_createListEmitter.MakeGenericMethod(elem, type).Invoke(this, [state]);
                     }
                     else if (def == typeof(Dictionary<,>) || def == typeof(IDictionary<,>) || def == typeof(IReadOnlyDictionary<,>))
                     {
@@ -344,7 +344,7 @@ namespace Nuqleon.Json.Serialization
                         }
 
                         var valueType = args[1];
-                        return (EmitStringAction<T>)s_createAnyObjectEmitter.MakeGenericMethod(valueType, type).Invoke(this, new[] { state });
+                        return (EmitStringAction<T>)s_createAnyObjectEmitter.MakeGenericMethod(valueType, type).Invoke(this, [state]);
                     }
                     else
                     {
@@ -415,7 +415,7 @@ namespace Nuqleon.Json.Serialization
             {
                 var elementEmitter = Create<TElement>(state);
 
-                return (StringBuilder builder, TElement[] value, EmitterContext ctx) =>
+                return (builder, value, ctx) =>
                 {
                     if (value == null)
                     {
@@ -457,7 +457,7 @@ namespace Nuqleon.Json.Serialization
             {
                 var elementEmitter = Create<TElement>(state);
 
-                return (StringBuilder builder, TCollection value, EmitterContext ctx) =>
+                return (builder, value, ctx) =>
                 {
                     if (value == null)
                     {
@@ -513,7 +513,7 @@ namespace Nuqleon.Json.Serialization
 
                 if (!type.IsValueType)
                 {
-                    var defaultCtor = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, ArrayBuilder<Type>.Empty, modifiers: null);
+                    var defaultCtor = type.GetConstructor(BindingFlags.Public | BindingFlags.Instance, binder: null, [], modifiers: null);
 
                     if (defaultCtor == null)
                         throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Serialization of type '{0}' is not supported. The type does not have a default constructor.", type));
@@ -525,7 +525,7 @@ namespace Nuqleon.Json.Serialization
 
                 var compiledEmitter = CompileObjectEmitter<T>(type, state);
 
-                return (StringBuilder builder, T value, EmitterContext ctx) =>
+                return (builder, value, ctx) =>
                 {
                     if (value == null)
                     {
@@ -602,7 +602,7 @@ namespace Nuqleon.Json.Serialization
                                     Expression.Call(Expression.Field(ctx, s_cycles), s_hashSetAdd, val)
                                 )
                             ),
-                            s_throwCycle ??= Expression.Throw(Expression.New(typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) }), Expression.Constant("An object reference cycle was detected."))))
+                            s_throwCycle ??= Expression.Throw(Expression.New(typeof(InvalidOperationException).GetConstructor([typeof(string)]), Expression.Constant("An object reference cycle was detected."))))
                     );
                 }
 
@@ -671,7 +671,7 @@ namespace Nuqleon.Json.Serialization
             /// <returns>An expression containing the logic to read and serialize the specified member.</returns>
             private Expression GetReadAndEmitAction<T>(Type elementType, MemberInfo member, ParameterExpression builder, ParameterExpression value, ParameterExpression context, BuilderContext builderContext)
             {
-                var emitter = s_create.MakeGenericMethod(elementType).Invoke(this, new[] { builderContext });
+                var emitter = s_create.MakeGenericMethod(elementType).Invoke(this, [builderContext]);
 
                 var memberValue = Expression.MakeMemberAccess(value, member);
                 var body = Expression.Invoke(Expression.Constant(emitter, typeof(EmitStringAction<>).MakeGenericType(elementType)), builder, memberValue, context);
@@ -690,7 +690,7 @@ namespace Nuqleon.Json.Serialization
                 where TDictionary : IEnumerable<KeyValuePair<string, TValue>>
             {
                 var emitValue = Create<TValue>(state);
-                return (StringBuilder builder, TDictionary value, EmitterContext ctx) => Emitter.EmitAnyObject(builder, value, ctx, emitValue);
+                return (builder, value, ctx) => Emitter.EmitAnyObject(builder, value, ctx, emitValue);
             }
 
             /// <summary>
@@ -702,7 +702,7 @@ namespace Nuqleon.Json.Serialization
             private static EmitStringAction<T?> NullOr<T>(EmitStringAction<T> emitter)
                 where T : struct
             {
-                return (StringBuilder builder, T? value, EmitterContext ctx) =>
+                return (builder, value, ctx) =>
                 {
                     if (value == null)
                     {
@@ -735,7 +735,7 @@ namespace Nuqleon.Json.Serialization
                 //     throw during serialization when an object cycle is detected.
                 //
 
-                public readonly Dictionary<Type, bool> HasCycle = new();
+                public readonly Dictionary<Type, bool> HasCycle = [];
 
                 /// <summary>
                 /// Used to clear the state upon returning the instance to the pool.

@@ -44,7 +44,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                return new[] { Params._source.Subscribe(this) };
+                return [Params._source.Subscribe(this)];
             }
         }
     }

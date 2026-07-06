@@ -100,7 +100,7 @@ namespace Tests
                             fy
                         ),
                         Expression.New(
-                            typeof(StrongBox<string>).GetConstructor(new[] { typeof(string) }),
+                            typeof(StrongBox<string>).GetConstructor([typeof(string)]),
                             Expression.Constant("bar")
                         )
                     )

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 
 #pragma warning disable CA1716 // Operator is a reserved language keyword.
@@ -42,7 +41,7 @@ namespace Reaqtive
         /// <summary>
         /// Gets a list of upstream subscriptions established by the operator.
         /// </summary>
-        public IEnumerable<ISubscription> Inputs { get; private set; } = Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs { get; private set; } = [];
 
         /// <summary>
         /// Gets the parameters used by the operator. These parameters may include
@@ -173,7 +172,7 @@ namespace Reaqtive
             // NB: See remarks on Inputs property about use of Enumerable.Empty<T>() versus Array.Empty<T>().
             //
 
-            return Enumerable.Empty<ISubscription>();
+            return [];
         }
 
         /// <summary>

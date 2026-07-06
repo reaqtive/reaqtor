@@ -35,19 +35,19 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [ClassCleanup]
-        public static new void ClassCleanup()
+        public static void ClassTeardown()
         {
             PhysicalTimeEngineTest.ClassCleanup();
         }
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.Setup();
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             base.Cleanup();
         }
@@ -81,7 +81,7 @@ namespace Tests.Reaqtor.QueryEngine
                 engines.Add(engine);
                 tasks.Add(new TaskFactory().StartNew(() => AddSubscriptions(engine, sources, NumberOfSubscriptions)));
             }
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll([.. tasks]);
             stopwatch.Stop();
 
             Trace.WriteLine(
@@ -144,10 +144,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/subscribeonscheduler")]
         public static IReactiveQbservable<T> SubscribeOnScheduler<T>(this IReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -167,10 +164,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         public static ISubscribable<TSource> SubscribeOnInternalScheduler<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SubscribableOnScheduler<TSource>(source);
         }

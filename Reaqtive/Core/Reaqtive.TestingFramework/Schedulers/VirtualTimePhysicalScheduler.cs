@@ -38,7 +38,7 @@ namespace Reaqtive.TestingFramework
             : base(comparer, initialClock)
         {
             _ready = new HeapBasedPriorityQueue<IWorkItem<TAbsolute>>(Comparer<IWorkItem<TAbsolute>>.Create(Compare));
-            _notReady = new List<IWorkItem<TAbsolute>>();
+            _notReady = [];
         }
 
         /// <summary>
@@ -50,10 +50,8 @@ namespace Reaqtive.TestingFramework
         /// <returns>A scheduled work item.</returns>
         public override IWorkItem<TAbsolute> ScheduleAbsolute(TAbsolute dueTime, ISchedulerTask task, IScheduler scheduler)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
-            if (scheduler == null)
-                throw new ArgumentNullException(nameof(scheduler));
+            ArgumentNullException.ThrowIfNull(task);
+            ArgumentNullException.ThrowIfNull(scheduler);
 
             var item = new WorkItemBase<TAbsolute>(scheduler, task, dueTime, Disposable.Empty);
 
@@ -78,8 +76,7 @@ namespace Reaqtive.TestingFramework
         /// <returns>A pause task.</returns>
         public override Task PauseAsync(IWorkItem<TAbsolute> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
 
             item.IsPaused = true;
 
@@ -98,14 +95,12 @@ namespace Reaqtive.TestingFramework
         /// <param name="item">The item.</param>
         public override void Continue(IWorkItem<TAbsolute> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
 
             item.IsPaused = false;
 
-            if (_notReady.Contains(item))
+            if (_notReady.Remove(item))
             {
-                _notReady.Remove(item);
                 _ready.Enqueue(item);
             }
         }
@@ -116,8 +111,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="item">The item.</param>
         public override void Cancel(IWorkItem<TAbsolute> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
 
             _ready.Remove(item);
             _notReady.Remove(item);
@@ -129,14 +123,12 @@ namespace Reaqtive.TestingFramework
         /// <param name="item">The item.</param>
         public override void RecalculatePriority(IWorkItem<TAbsolute> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
 
             item.RecalculatePriority();
 
-            if (_notReady.Contains(item))
+            if (_notReady.Remove(item))
             {
-                _notReady.Remove(item);
                 _ready.Enqueue(item);
             }
             else if (_ready.Contains(item))

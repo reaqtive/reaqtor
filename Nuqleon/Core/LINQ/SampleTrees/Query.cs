@@ -192,7 +192,7 @@ namespace SampleTrees.Query
     public abstract class UnaryQueryExpr : QueryExpr
     {
         public UnaryQueryExpr(QueryNodeType nodeType, QueryExpr source, params QueryExpr[] arguments)
-            : base(nodeType, new[] { source }.Concat(arguments).ToArray())
+            : base(nodeType, [source, .. arguments])
         {
             Source = source;
         }

@@ -119,8 +119,7 @@ namespace System.Memory
         /// <exception cref="ObjectDisposedException">Thrown if the instance has been disposed.</exception>
         protected void CheckDisposed()
         {
-            if (_disposed)
-                throw new ObjectDisposedException(GetType().FullName);
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
     }
 }

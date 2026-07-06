@@ -9,7 +9,6 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
@@ -45,7 +44,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         )
                     ),
                     Expression.Block(
-                        new[] { x },
+                        [x],
                         x
                     ),
                     Expression.Lambda(
@@ -57,7 +56,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                     )
                 );
 
-            var subst = new VariableDefaultValueSubstitutor(new HashSet<ParameterExpression> { x, ex });
+            var subst = new VariableDefaultValueSubstitutor([x, ex]);
 
             var res = subst.Visit(e);
 
@@ -79,7 +78,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         )
                     ),
                     Expression.Block(
-                        new[] { x },
+                        [x],
                         x
                     ),
                     Expression.Lambda(

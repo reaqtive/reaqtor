@@ -355,16 +355,12 @@ namespace Nuqleon.DataModel.TypeSystem
         /// </remarks>
         protected virtual int GetHashCodeStructural(object obj, StructuralDataType dataType)
         {
-            if (_recursiveSet.Contains(obj))
+            if (!_recursiveSet.Add(obj))
             {
                 unchecked
                 {
                     return (int)Prime;
                 }
-            }
-            else
-            {
-                _recursiveSet.Add(obj);
             }
 
             var orderedProperties = dataType.Properties.OrderBy(p => p.Name); // CONSIDER: should we sort properties earlier?
@@ -384,11 +380,7 @@ namespace Nuqleon.DataModel.TypeSystem
                     }
 #else
                     hash = (int)(hash * Prime) +
-#if NET6_0 || NETSTANDARD2_1
                         property.Name.GetHashCode(StringComparison.Ordinal)
-#else
-                        property.Name.GetHashCode()
-#endif
                         ;
                     hash = (int)(hash * Prime) + GetHashCode(property.GetValue(obj));
 #endif

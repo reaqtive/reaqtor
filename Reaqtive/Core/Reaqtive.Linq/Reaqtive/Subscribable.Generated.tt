@@ -63,18 +63,12 @@ for (int i = 2; i <= highestSupportedArity; i++)
     for (int j = 1; j <= i; j++)
     {
 #>
-            if (source<#=j#> == null)
-            {
-                throw new ArgumentNullException(nameof(source<#=j#>));
-            }
+            ArgumentNullException.ThrowIfNull(source<#=j#>);
 
 <#
     }
 #>
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<#=typeParams#>(<#=actualParams#>);
         }

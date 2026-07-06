@@ -54,7 +54,7 @@ namespace Tests.System.Linq.CompilerServices
             map.Merge(map1_0);
             map.Merge(map1_1);
 
-            Assert.ThrowsException<InvalidOperationException>(() => map.Merge(map1_0));
+            Assert.ThrowsExactly<InvalidOperationException>(() => map.Merge(map1_0));
 
             Assert.AreEqual("{ qux: 1 -> 0, xuq: 1 -> 1 }", map.ToString());
 

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -23,7 +24,7 @@ namespace Reaqtive.Operators
 
         private sealed class _ : HigherOrderInputStatefulOperator<Switch<TSource>, TSource>, IObserver<ISubscribable<TSource>>
         {
-            private object _lock;
+            private Lock _lock;
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _subscription;
             private SerialSubscription _innerSubscription;
@@ -44,18 +45,18 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                _lock = new object();
+                _lock = new Lock();
                 _innerSubscription = new SerialSubscription();
                 _isStopped = false;
                 _latest = 0UL;
                 _hasLatest = false;
                 _subscription = Params._sources.Subscribe(this);
 
-                return new ISubscription[]
-                {
+                return
+                [
                     _subscription,
                     _innerSubscription
-                };
+                ];
             }
 
             public override void SetContext(IOperatorContext context)

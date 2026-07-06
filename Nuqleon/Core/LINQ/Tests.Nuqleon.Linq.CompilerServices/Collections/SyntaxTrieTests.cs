@@ -23,9 +23,12 @@ namespace Tests.System.Linq.CompilerServices
         {
             var st = new SyntaxTrie();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => st.Add(identifier: null), ex => Assert.AreEqual("identifier", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => st.Contains(identifier: null), ex => Assert.AreEqual("identifier", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => st.Remove(identifier: null), ex => Assert.AreEqual("identifier", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => st.Add(identifier: null));
+            Assert.AreEqual("identifier", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Contains(identifier: null));
+            Assert.AreEqual("identifier", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Remove(identifier: null));
+            Assert.AreEqual("identifier", ex3.ParamName);
         }
 
         [TestMethod]

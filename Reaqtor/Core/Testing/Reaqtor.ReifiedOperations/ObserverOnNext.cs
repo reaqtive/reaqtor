@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ObserverOnNext : ObserverOperation
     {
         public ObserverOnNext(Uri observerUri, object value)
@@ -26,7 +25,6 @@ namespace Reaqtor.TestingFramework
         public override string ToString() => base.ToString() + " - " + Value;
     }
 
-    [Serializable]
     public class ObserverOnNext<T> : ObserverOnNext
     {
         public ObserverOnNext(Uri observerUri, T value)

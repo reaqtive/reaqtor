@@ -288,7 +288,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             var variable = default(Json.Expression);
             if (node.Variable != null)
             {
-                variable = Push(new[] { node.Variable })[0];
+                variable = Push([node.Variable])[0];
             }
 
             var body = Visit(node.Body);

@@ -33,7 +33,7 @@ namespace System.Collections.Specialized
                 throw new EnumSizeResolutionException(EnumSizeResolutionError.UnderlyingTypeIsNotIntOrSmaller);
             }
 
-            if (typ.GetCustomAttributes(typeof(FlagsAttribute), inherit: false).Any())
+            if (typ.GetCustomAttributes(typeof(FlagsAttribute), inherit: false).Length > 0)
             {
                 throw new EnumSizeResolutionException(EnumSizeResolutionError.EnumHasFlagAttribute);
             }

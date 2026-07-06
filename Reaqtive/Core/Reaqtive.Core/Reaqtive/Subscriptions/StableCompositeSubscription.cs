@@ -5,7 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 
 namespace Reaqtive
 {
@@ -20,7 +20,7 @@ namespace Reaqtive
     /// </remarks>
     public sealed class StableCompositeSubscription : ICompositeSubscription
     {
-        private readonly object _syncLock = new();
+        private readonly Lock _syncLock = new();
         private ISubscription[] _subscriptions;
         private bool _disposed;
 
@@ -39,12 +39,9 @@ namespace Reaqtive
         /// <param name="subscriptions">Inner subscriptions.</param>
         public StableCompositeSubscription(IEnumerable<ISubscription> subscriptions)
         {
-            if (subscriptions == null)
-            {
-                throw new ArgumentNullException(nameof(subscriptions));
-            }
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
-            _subscriptions = subscriptions.ToArray();
+            _subscriptions = [.. subscriptions];
         }
 
         /// <summary>
@@ -60,10 +57,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to add.</param>
         public void Add(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool shouldDispose = false;
             lock (_syncLock)
@@ -92,10 +86,7 @@ namespace Reaqtive
         /// <param name="subscriptions">Subscriptions to add.</param>
         public void AddRange(IEnumerable<ISubscription> subscriptions)
         {
-            if (subscriptions == null)
-            {
-                throw new ArgumentNullException(nameof(subscriptions));
-            }
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
             bool shouldDispose = false;
             lock (_syncLock)
@@ -136,10 +127,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to remove.</param>
         public void Remove(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool subscriptionFound = false;
             lock (_syncLock)
@@ -160,7 +148,7 @@ namespace Reaqtive
                     }
                     else
                     {
-                        _subscriptions = Array.Empty<ISubscription>();
+                        _subscriptions = [];
                     }
                 }
             }
@@ -220,7 +208,7 @@ namespace Reaqtive
                     snapshot = _subscriptions;
 
                     // clear the internal list so that we can't alter its references through Remove calls
-                    _subscriptions = Array.Empty<ISubscription>();
+                    _subscriptions = [];
 
                     // mark the instance as disposed right now so that any new Add will dispose the subscription to add
                     _disposed = true;

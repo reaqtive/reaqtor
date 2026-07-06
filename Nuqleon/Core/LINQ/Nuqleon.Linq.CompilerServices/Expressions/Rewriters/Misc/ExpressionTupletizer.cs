@@ -57,8 +57,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression representing the creation of a tuple of the given expressions.</returns>
         public static Expression Pack(IEnumerable<Expression> expressions, bool setNewExpressionMembers = true)
         {
-            if (expressions == null)
-                throw new ArgumentNullException(nameof(expressions));
+            ArgumentNullException.ThrowIfNull(expressions);
 
             var exprs = expressions.AsArray();
 
@@ -88,8 +87,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expressions representing the components of the tuple represented by the given expression.</returns>
         public static IEnumerable<Expression> Unpack(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return UnpackImpl(expression);
         }
@@ -103,8 +101,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters packed as a tuple.</returns>
         public static LambdaExpression Pack(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return PackImpl(expression, voidType: null);
         }
@@ -119,10 +116,8 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters packed as a tuple.</returns>
         public static LambdaExpression Pack(LambdaExpression expression, Type voidType)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (voidType == null)
-                throw new ArgumentNullException(nameof(voidType));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(voidType);
 
             return PackImpl(expression, voidType);
         }
@@ -137,10 +132,8 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters packed as a tuple.</returns>
         public static LambdaExpression Pack(Expression body, IEnumerable<ParameterExpression> parameters)
         {
-            if (body == null)
-                throw new ArgumentNullException(nameof(body));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(body);
+            ArgumentNullException.ThrowIfNull(parameters);
 
             return PackImpl(body, parameters.AsArray(), voidType: null);
         }
@@ -156,12 +149,9 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters packed as a tuple.</returns>
         public static LambdaExpression Pack(Expression body, IEnumerable<ParameterExpression> parameters, Type voidType)
         {
-            if (body == null)
-                throw new ArgumentNullException(nameof(body));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
-            if (voidType == null)
-                throw new ArgumentNullException(nameof(voidType));
+            ArgumentNullException.ThrowIfNull(body);
+            ArgumentNullException.ThrowIfNull(parameters);
+            ArgumentNullException.ThrowIfNull(voidType);
 
             return PackImpl(body, parameters.AsArray(), voidType);
         }
@@ -174,8 +164,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters unpacked from the tuple-based parameter.</returns>
         public static LambdaExpression Unpack(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return UnpackImpl(expression, voidType: null);
         }
@@ -190,10 +179,8 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression with parameters unpacked from the tuple-based parameter.</returns>
         public static LambdaExpression Unpack(LambdaExpression expression, Type voidType)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (voidType == null)
-                throw new ArgumentNullException(nameof(voidType));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(voidType);
 
             return UnpackImpl(expression, voidType);
         }
@@ -206,8 +193,7 @@ namespace System.Linq.CompilerServices
         /// <param name="parameters">The set of parameters that occur in the lambda body.</param>
         public static void Unpack(LambdaExpression expression, out Expression body, out IEnumerable<ParameterExpression> parameters)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             UnpackImpl(expression, voidType: null, out body, out parameters);
         }
@@ -221,10 +207,8 @@ namespace System.Linq.CompilerServices
         /// <param name="parameters">The set of parameters that occur in the lambda body.</param>
         public static void Unpack(LambdaExpression expression, Type voidType, out Expression body, out IEnumerable<ParameterExpression> parameters)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (voidType == null)
-                throw new ArgumentNullException(nameof(voidType));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(voidType);
 
             UnpackImpl(expression, voidType, out body, out parameters);
         }
@@ -236,8 +220,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the specified type is a tuple; otherwise, false.</returns>
         public static bool IsTuple(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (!type.IsGenericType() || type.IsGenericTypeDefinition())
             {
@@ -405,7 +388,7 @@ namespace System.Linq.CompilerServices
                 }
 
                 body = expression.Body;
-                parameters = Array.Empty<ParameterExpression>();
+                parameters = [];
                 return;
             }
 
@@ -753,8 +736,8 @@ namespace System.Linq.CompilerServices
 
         internal const int TupleTypeCount = 9; // NB: Keep this in sync with the arrays below
 
-        internal static readonly Type[] TupleTypes = new Type[]
-        {
+        internal static readonly Type[] TupleTypes =
+        [
 #if USE_SLIM
             typeof(Placeholder).ToTypeSlim(), // Placeholder for the user-supplied unit type
             typeof(Tuple<>).ToTypeSlim(),
@@ -776,10 +759,11 @@ namespace System.Linq.CompilerServices
             typeof(Tuple<,,,,,,>),
             typeof(Tuple<,,,,,,,>),
 #endif
-        };
+        ];
 
-        internal static readonly string[] ItemNames = new string[] // NB: Ensure that this matches the last tuple type's size
-        {
+        internal static readonly string[] ItemNames =
+        // NB: Ensure that this matches the last tuple type's size
+        [
             null,
             "Item1",
             "Item2",
@@ -788,7 +772,7 @@ namespace System.Linq.CompilerServices
             "Item5",
             "Item6",
             "Item7",
-        };
+        ];
 
         private sealed class Placeholder
         {

@@ -26,16 +26,6 @@ namespace Tests
             var a = g.GetGenericArguments();
             Assert.AreEqual(4, a.Length);
 
-            //
-            // REVIEW: Something's not quite right on Mono. The GenericParameterAttributes below run on the builder type,
-            //         rather than the result of creating the type (i.e. through CreateType) and throw NotSupportedExeption.
-            //         Similar issues occur for accesses to GetGenericParameterConstraints, throwing InvalidOperationException.
-            //
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
             Assert.AreEqual(GenericParameterAttributes.NotNullableValueTypeConstraint | GenericParameterAttributes.DefaultConstructorConstraint, a[1].GenericParameterAttributes);
             var c1 = a[1].GetGenericParameterConstraints();
             Assert.AreEqual(1, c1.Length);
@@ -116,13 +106,6 @@ namespace Tests
         {
             AssertThunkType(ThunkFactory.Compiled, delegateType, values);
             AssertThunkType(ThunkFactory.Interpreted, delegateType, values);
-
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                // REVIEW: Tiered compilation has issues on Mono.
-                return;
-            }
-
             AssertThunkType(ThunkFactory.TieredCompilation, delegateType, values);
         }
 
@@ -238,7 +221,7 @@ namespace Tests
             // Invoke CreateDelegate with an "assertive closure" instance.
             //
             var closure = new AssertiveClosure();
-            var del = (Delegate)createDelegate.Invoke(o, new object[] { closure });
+            var del = (Delegate)createDelegate.Invoke(o, [closure]);
 
             //
             // Prior to invoking the delegate, check we haven't triggered JIT compilation yet.
@@ -324,7 +307,7 @@ namespace Tests
 
     internal sealed class AssertiveClosure
     {
-        private readonly List<object> _args = new();
+        private readonly List<object> _args = [];
         private bool _flag;
 
         public void Add(object arg)

@@ -91,7 +91,7 @@ namespace Tests.Reaqtor
         {
             var rebinder = new UriToReactiveProxyBinder();
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Parameter(typeof(int)),
@@ -101,7 +101,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -114,7 +114,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -129,7 +129,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -147,7 +147,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -161,7 +161,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -174,7 +174,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -187,7 +187,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -200,13 +200,13 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<Tuple<int, int>, Task<IAsyncReactiveQubscription>>), "rx://observable/subscribe"),
                         Expression.New(
-                            typeof(Tuple<int, int>).GetConstructor(new[] { typeof(int), typeof(int) }),
+                            typeof(Tuple<int, int>).GetConstructor([typeof(int), typeof(int)]),
                             Expression.Default(typeof(int)),
                             Expression.Default(typeof(int))
                         )
@@ -217,13 +217,13 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<Tuple<List<int>, IAsyncReactiveQbserver<int>>, Task<IAsyncReactiveQubscription>>), "rx://observable/subscribe"),
                         Expression.New(
-                            typeof(Tuple<List<int>, IAsyncReactiveQbserver<int>>).GetConstructor(new[] { typeof(List<int>), typeof(IAsyncReactiveQbserver<int>) }),
+                            typeof(Tuple<List<int>, IAsyncReactiveQbserver<int>>).GetConstructor([typeof(List<int>), typeof(IAsyncReactiveQbserver<int>)]),
                             Expression.Default(typeof(List<int>)),
                             Expression.Default(typeof(IAsyncReactiveQbserver<int>))
                         )
@@ -234,13 +234,13 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<Tuple<IAsyncReactiveQbservable<int>, List<int>>, Task<IAsyncReactiveQubscription>>), "rx://observable/subscribe"),
                         Expression.New(
-                            typeof(Tuple<IAsyncReactiveQbservable<int>, List<int>>).GetConstructor(new[] { typeof(IAsyncReactiveQbservable<int>), typeof(List<int>) }),
+                            typeof(Tuple<IAsyncReactiveQbservable<int>, List<int>>).GetConstructor([typeof(IAsyncReactiveQbservable<int>), typeof(List<int>)]),
                             Expression.Default(typeof(IAsyncReactiveQbservable<int>)),
                             Expression.Default(typeof(List<int>))
                         )
@@ -251,13 +251,13 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<Tuple<IAsyncReactiveQbservable<int>, int>, Task<IAsyncReactiveQubscription>>), "rx://observable/subscribe"),
                         Expression.New(
-                            typeof(Tuple<IAsyncReactiveQbservable<int>, int>).GetConstructor(new[] { typeof(IAsyncReactiveQbservable<int>), typeof(int) }),
+                            typeof(Tuple<IAsyncReactiveQbservable<int>, int>).GetConstructor([typeof(IAsyncReactiveQbservable<int>), typeof(int)]),
                             Expression.Default(typeof(IAsyncReactiveQbservable<int>)),
                             Expression.Default(typeof(int))
                         )
@@ -268,7 +268,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -282,7 +282,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindSubscription(
                     Expression.Invoke(
@@ -304,7 +304,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(_subscribeType, Constants.SubscribeUri),
                     Expression.New(
-                        _subscribeArgumentType.GetConstructor(new[] { _observableType, _observerType }),
+                        _subscribeArgumentType.GetConstructor([_observableType, _observerType]),
                         Expression.Parameter(_observableType, "bing://xs"),
                         Expression.Parameter(_observerType, "bing://observer")
                     )
@@ -340,7 +340,7 @@ namespace Tests.Reaqtor
                 Expression.Invoke(
                     Expression.Parameter(_subscribeType, Constants.SubscribeUri),
                     Expression.New(
-                        _subscribeArgumentType.GetConstructor(new[] { _observableType, _observerType }),
+                        _subscribeArgumentType.GetConstructor([_observableType, _observerType]),
                         Expression.Invoke(
                             Expression.Parameter(typeof(Func<,>).MakeGenericType(_elementType, _observableType), "bing://xs"),
                             Expression.Default(_elementType)
@@ -386,7 +386,7 @@ namespace Tests.Reaqtor
         {
             var rebinder = new UriToReactiveProxyBinder();
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Parameter(typeof(int)),
@@ -396,7 +396,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -409,7 +409,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -422,7 +422,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -437,7 +437,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -455,7 +455,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -471,7 +471,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindStream(
                     Expression.Invoke(
@@ -598,7 +598,7 @@ namespace Tests.Reaqtor
         {
             var rebinder = new UriToReactiveProxyBinder();
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObservable(
                     Expression.Parameter(typeof(int)),
@@ -608,7 +608,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObservable(
                     Expression.Parameter(typeof(Func<int, int>)),
@@ -618,7 +618,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObservable(
                     Expression.Parameter(typeof(List<int>)),
@@ -628,7 +628,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObservable(
                     Expression.Parameter(typeof(Func<int, List<int>>)),
@@ -731,7 +731,7 @@ namespace Tests.Reaqtor
         {
             var rebinder = new UriToReactiveProxyBinder();
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObserver(
                     Expression.Parameter(typeof(int)),
@@ -741,7 +741,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObserver(
                     Expression.Parameter(typeof(Func<int, int>)),
@@ -751,7 +751,7 @@ namespace Tests.Reaqtor
                 );
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObserver(
                     Expression.Parameter(typeof(List<int>)),
@@ -762,7 +762,7 @@ namespace Tests.Reaqtor
             });
 
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 rebinder.BindObserver(
                     Expression.Parameter(typeof(Func<int, List<int>>)),
@@ -934,7 +934,7 @@ namespace Tests.Reaqtor
         public void UriToReactiveBinder_LookupOther_ThrowsInvalidOperation()
         {
             var binder = new UriToReactiveProxyBinder();
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
                 binder.BindObservable(
                     Expression.Invoke(
                         Expression.Parameter(_observableOtherParamType, _fooId),

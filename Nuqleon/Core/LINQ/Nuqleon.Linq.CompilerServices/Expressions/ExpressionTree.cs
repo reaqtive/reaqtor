@@ -113,8 +113,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ExpressionTree Update(IEnumerable<ExpressionTree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (ExpressionTree)base.Update(children);
         }
@@ -126,8 +125,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ExpressionTree Update(params ExpressionTree[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (ExpressionTree)base.Update(children);
         }
@@ -197,8 +195,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ElementInitExpressionTree Update(IEnumerable<ExpressionTree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (ElementInitExpressionTree)base.Update(children);
         }
@@ -210,8 +207,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ElementInitExpressionTree Update(params ExpressionTree[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (ElementInitExpressionTree)base.Update(children);
         }
@@ -258,7 +254,7 @@ namespace System.Linq.Expressions
     public sealed class MemberAssignmentExpressionTree : MemberBindingExpressionTree
     {
         internal MemberAssignmentExpressionTree(MemberAssignment memberAssignment, ExpressionTree expression)
-            : base(new MemberAssignmentExpressionTreeNode(memberAssignment), new[] { expression })
+            : base(new MemberAssignmentExpressionTreeNode(memberAssignment), [expression])
         {
         }
 
@@ -280,8 +276,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberAssignmentExpressionTree Update(IEnumerable<ExpressionTree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberAssignmentExpressionTree)base.Update(children);
         }
@@ -293,8 +288,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberAssignmentExpressionTree Update(params ExpressionTree[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberAssignmentExpressionTree)base.Update(children);
         }
@@ -335,8 +329,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberListBindingExpressionTree Update(IEnumerable<ElementInitExpressionTree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberListBindingExpressionTree)base.Update(children);
         }
@@ -348,8 +341,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberListBindingExpressionTree Update(params ElementInitExpressionTree[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberListBindingExpressionTree)base.Update(children);
         }
@@ -390,8 +382,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberMemberBindingExpressionTree Update(IEnumerable<MemberBindingExpressionTree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberMemberBindingExpressionTree)base.Update(children);
         }
@@ -403,8 +394,7 @@ namespace System.Linq.Expressions
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public MemberMemberBindingExpressionTree Update(params MemberBindingExpressionTree[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return (MemberMemberBindingExpressionTree)base.Update(children);
         }
@@ -423,7 +413,7 @@ namespace System.Linq.Expressions
 
         public ExpressionTreeUpdate(IEnumerable<ITree<ExpressionTreeNode>> children)
         {
-            _children = children.Cast<ExpressionTreeBase>().ToArray();
+            _children = [.. children.Cast<ExpressionTreeBase>()];
         }
 
         protected override ExpressionTree VisitBinary(BinaryExpression node)

@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
@@ -15,7 +16,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     {
         private volatile CheckpointInfo _latestFullCheckpoint;
         private volatile CheckpointInfo _currentCheckpoint;
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
         /// <summary>
         /// Start a new (full) checkpoint with the provided identifier.

@@ -26,11 +26,16 @@ namespace Tests.System.Memory
         public void LruCacheStorage_ArgumentChecks()
         {
             var cacheStorage = new LruCacheStorage<string>(1);
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => new LruCacheStorage<string>(-1), ex => Assert.AreEqual("size", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new LruCacheStorage<string>(1, comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cacheStorage.GetEntry(value: null), ex => Assert.AreEqual("value", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cacheStorage.ReleaseEntry(entry: null), ex => Assert.AreEqual("entry", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => cacheStorage.ReleaseEntry(new NullEntry()), ex => Assert.AreEqual("entry", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new LruCacheStorage<string>(-1));
+            Assert.AreEqual("size", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new LruCacheStorage<string>(1, comparer: null));
+            Assert.AreEqual("comparer", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cacheStorage.GetEntry(value: null));
+            Assert.AreEqual("value", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cacheStorage.ReleaseEntry(entry: null));
+            Assert.AreEqual("entry", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentException>(() => cacheStorage.ReleaseEntry(new NullEntry()));
+            Assert.AreEqual("entry", ex5.ParamName);
         }
 
         [TestMethod]
@@ -136,7 +141,7 @@ namespace Tests.System.Memory
             var entry = storage.GetEntry(42);
             storage.ReleaseEntry(entry);
             storage.Dispose();
-            Assert.ThrowsException<ObjectDisposedException>(() => storage.GetEntry(42));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => storage.GetEntry(42));
             storage.Dispose();
         }
 

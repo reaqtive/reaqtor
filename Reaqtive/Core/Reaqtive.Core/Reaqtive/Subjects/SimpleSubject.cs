@@ -31,18 +31,14 @@ namespace Reaqtive
         /// <returns>Subscription handle representing the observer's subscription to the subject.</returns>
         public virtual ISubscription Subscribe(IObserver<T> observer)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(observer);
 
             IObserver<T> old, @new;
             do
             {
                 old = _observer;
 
-                if (old == Sentinels<T>.Disposed)
-                {
-                    throw new ObjectDisposedException("this");
-                }
+                ObjectDisposedException.ThrowIf(old == Sentinels<T>.Disposed, this);
 
                 if (old == Sentinels<T>.Nop)
                 {

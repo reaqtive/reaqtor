@@ -40,7 +40,7 @@ namespace System.Memory.Diagnostics
         /// A <see cref="ConditionalWeakTable{TKey, TValue}"/> is used to ensure we don't keep collectible
         /// types alive when an editor for such a type exists.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, EditorInfo> s_editors = new();
+        private static readonly ConditionalWeakTable<Type, EditorInfo> s_editors = [];
 
         /// <summary>
         /// A pool for <see cref="Queue{T}"/> instances that can be used to maintain the work list for
@@ -56,7 +56,7 @@ namespace System.Memory.Diagnostics
         /// A pool for <see cref="ObjectSet"/> instances that can be used to perform cycle detection during
         /// heap walking in<see cref="Walk"/>.
         /// </summary>
-        private static readonly ObjectPool<ObjectSet> s_setPool = new(() => new ObjectSet(), size: Environment.ProcessorCount);
+        private static readonly ObjectPool<ObjectSet> s_setPool = new(() => [], size: Environment.ProcessorCount);
 
         /// <summary>
         /// A pool for <see cref="Dictionary{Type, Editor}"/> instances that can be used to maintain a local
@@ -88,8 +88,7 @@ namespace System.Memory.Diagnostics
         /// </param>
         public void Walk(object obj, Func<object, bool> fence)
         {
-            if (fence == null)
-                throw new ArgumentNullException(nameof(fence));
+            ArgumentNullException.ThrowIfNull(fence);
 
             if (obj == null)
                 return;
@@ -438,7 +437,7 @@ namespace System.Memory.Diagnostics
                                     assign =
                                         Expression.Block(
                                             typeof(void),
-                                            new[] { boxedTarget },
+                                            [boxedTarget],
                                             Expression.Assign(
                                                 boxedTarget,
                                                 Expression.Convert(
@@ -495,7 +494,7 @@ namespace System.Memory.Diagnostics
                         }
                     }
 
-                    return Expression.Block(typeof(void), new[] { Expressions.s_objBefore, Expressions.s_objEdited }, exprs);
+                    return Expression.Block(typeof(void), [Expressions.s_objBefore, Expressions.s_objEdited], exprs);
                 });
 
                 //
@@ -518,7 +517,7 @@ namespace System.Memory.Diagnostics
                 bodyExprs[0] = convert;
                 fieldWalker.Expressions.CopyTo(bodyExprs, 1);
 
-                var body = Expression.Block(typeof(void), new[] { converted, Expressions.s_objBefore, Expressions.s_objEdited }, bodyExprs);
+                var body = Expression.Block(typeof(void), [converted, Expressions.s_objBefore, Expressions.s_objEdited], bodyExprs);
 
                 //
                 // Finally, build a lambda expression representing the Editor delegate, compile it, and
@@ -764,7 +763,7 @@ namespace System.Memory.Diagnostics
 #if USE_LOCAL
                 new[] { arr, i, len, elem, Expressions.s_objBefore, Expressions.s_objEdited },
 #else
-                new[] { arr, i, len, Expressions.s_objBefore, Expressions.s_objEdited },
+                [arr, i, len, Expressions.s_objBefore, Expressions.s_objEdited],
 #endif
                 exprs
             );
@@ -1231,7 +1230,7 @@ namespace System.Memory.Diagnostics
             /// <returns>A setter delegate for the specified field.</returns>
             public static ByRefFieldSetter GetFieldSetterByRef(FieldInfo field)
             {
-                return (ref object obj, object value) => field.SetValue(obj, value);
+                return (ref obj, value) => field.SetValue(obj, value);
             }
         }
 

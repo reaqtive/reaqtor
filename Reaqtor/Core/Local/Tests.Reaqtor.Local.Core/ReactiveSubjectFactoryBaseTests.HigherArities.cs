@@ -18,7 +18,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, new object()));
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, new object()));
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, new object()));
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, new object()));
         }
 
         [TestMethod]
@@ -176,7 +176,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, new object()));
         }
 
         [TestMethod]
@@ -218,7 +218,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, new object()));
         }
 
         [TestMethod]
@@ -261,7 +261,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, new object()));
         }
 
         [TestMethod]
@@ -305,7 +305,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, new object()));
         }
 
         [TestMethod]
@@ -350,7 +350,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, new object()));
         }
 
         [TestMethod]
@@ -396,7 +396,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, new object()));
         }
 
         [TestMethod]
@@ -443,7 +443,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, new object()));
         }
 
         [TestMethod]
@@ -491,7 +491,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, new object()));
         }
 
         [TestMethod]
@@ -540,7 +540,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, new object()));
         }
 
         [TestMethod]
@@ -590,7 +590,7 @@ namespace Tests
         {
             var s = new MyReactiveSubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new object()));
         }
 
         [TestMethod]

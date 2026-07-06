@@ -34,10 +34,7 @@ namespace Reaqtive
         /// <returns>Handle to the newly created subscription.</returns>
         public ISubscription Subscribe(IObserver<TResult> observer)
         {
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            ArgumentNullException.ThrowIfNull(observer);
 
 #if DEBUG
             var assert = new AssertObserver(observer);
@@ -197,7 +194,7 @@ namespace Reaqtive
                 Subscription.Dispose();
             }
 
-            public IEnumerable<ISubscription> Inputs => new[] { Subscription };
+            public IEnumerable<ISubscription> Inputs => [Subscription];
 
             public void Subscribe()
             {

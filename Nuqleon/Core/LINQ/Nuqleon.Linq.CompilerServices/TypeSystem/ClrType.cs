@@ -8,6 +8,8 @@
 // BD - January 2011
 //
 
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations. (Equals deliberately rejects comparisons across type systems.)
+
 namespace System.Linq.CompilerServices
 {
     internal class ClrType : IType

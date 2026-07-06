@@ -17,8 +17,6 @@ namespace System.Linq.CompilerServices
     /// </summary>
     public class StructuralTypeEqualityComparer : IEqualityComparer<Type>
     {
-        private static StructuralTypeEqualityComparer _instance;
-
         private readonly Func<StructuralTypeEqualityComparator> _comparatorFactory;
 
         /// <summary>
@@ -38,7 +36,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// A default instance of the equality comparer.
         /// </summary>
-        public static StructuralTypeEqualityComparer Default => _instance ??= new StructuralTypeEqualityComparer();
+        public static StructuralTypeEqualityComparer Default => field ??= new StructuralTypeEqualityComparer();
 
         /// <summary>
         /// Checks whether two given types are equal.

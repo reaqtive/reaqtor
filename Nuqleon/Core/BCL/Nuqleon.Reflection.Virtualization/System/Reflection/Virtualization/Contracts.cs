@@ -17,8 +17,7 @@ namespace System.Reflection
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T NotNull<T>(T provider)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            ArgumentNullException.ThrowIfNull(provider);
 
             return provider;
         }

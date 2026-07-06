@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly List<Fallback<TSource, TTarget>> _fallbacks;
 
-        internal FallbackCollection() => _fallbacks = new List<Fallback<TSource, TTarget>>();
+        internal FallbackCollection() => _fallbacks = [];
 
         /// <summary>
         /// Adds a new fallback rule.
@@ -32,10 +32,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource, TTarget>> convert, int cost)
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, node => true, cost);
         }
@@ -48,12 +46,9 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource, TTarget>> convert, Expression<Func<TSource, bool>> predicate, int cost)
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentNullException.ThrowIfNull(predicate);
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }

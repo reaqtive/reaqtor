@@ -23,7 +23,7 @@ namespace Tests.System.Collections.Specialized
         {
             // i = 0 is hoisted out
             var arr = BitArrayFactory.Create(0);
-            Assert.AreEqual(arr.Count, 0);
+            Assert.AreEqual(0, arr.Count);
 
             for (int i = 1; i < 100; i++)
             {
@@ -138,14 +138,14 @@ namespace Tests.System.Collections.Specialized
 
                     for (var j = 0; j < capacity; j++)
                     {
-                        Assert.AreEqual(arr[j], true);
+                        Assert.AreEqual(true, arr[j]);
                     }
 
                     arr.SetAll(false);
 
                     for (var j = 0; j < capacity; j++)
                     {
-                        Assert.AreEqual(arr[j], false);
+                        Assert.AreEqual(false, arr[j]);
                     }
 
                     // The difference from above is that we set all to false first then set to true
@@ -154,14 +154,14 @@ namespace Tests.System.Collections.Specialized
 
                     for (var j = 0; j < capacity; j++)
                     {
-                        Assert.AreEqual(arr[j], false);
+                        Assert.AreEqual(false, arr[j]);
                     }
 
                     arr.SetAll(true);
 
                     for (var j = 0; j < capacity; j++)
                     {
-                        Assert.AreEqual(arr[j], true);
+                        Assert.AreEqual(true, arr[j]);
                     }
                 }
             }

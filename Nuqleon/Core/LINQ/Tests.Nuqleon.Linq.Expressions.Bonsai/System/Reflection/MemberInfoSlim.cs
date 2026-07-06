@@ -26,7 +26,8 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void MemberInfoSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((TypeSlim)null).GetField(name: null, fieldType: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ((TypeSlim)null).GetField(name: null, fieldType: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]

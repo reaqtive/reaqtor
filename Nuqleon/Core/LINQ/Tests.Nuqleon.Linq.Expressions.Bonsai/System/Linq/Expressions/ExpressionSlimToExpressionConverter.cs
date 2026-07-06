@@ -24,8 +24,10 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlimToExpressionConverter_NullArgument()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(typeSpace: null), ex => Assert.AreEqual("typeSpace", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(), factory: null), ex => Assert.AreEqual("factory", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(typeSpace: null));
+            Assert.AreEqual("typeSpace", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(), factory: null));
+            Assert.AreEqual("factory", ex2.ParamName);
         }
 
         [TestMethod]

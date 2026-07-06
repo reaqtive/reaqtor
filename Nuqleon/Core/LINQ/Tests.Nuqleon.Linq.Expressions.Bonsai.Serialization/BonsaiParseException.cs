@@ -8,16 +8,12 @@
 // BD - December 2016 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System.Linq.Expressions.Bonsai.Serialization;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Json = Nuqleon.Json.Expressions;
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 namespace Tests
 {
@@ -34,19 +30,6 @@ namespace Tests
             Assert.AreEqual("foo", ex.Message);
             Assert.AreSame(json, ex.Node);
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-            var f = new BinaryFormatter();
-
-            var ms = new MemoryStream();
-            f.Serialize(ms, ex);
-
-            ms.Position = 0;
-            var res = (BonsaiParseException)f.Deserialize(ms);
-
-            Assert.AreEqual("foo", res.Message);
-            Assert.IsTrue(res.Node is Json.ConstantExpression);
-            Assert.AreEqual(json.ToString(), res.Node.ToString());
-#endif
         }
     }
 }

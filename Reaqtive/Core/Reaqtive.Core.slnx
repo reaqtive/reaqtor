@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/Nuqleon/" />
+  <Folder Name="/deps/Nuqleon/BCL/">
+    <Project Path="../../Nuqleon/Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../Nuqleon/Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../../Nuqleon/Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/LINQ/">
+    <Project Path="../../Nuqleon/Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Reaqtive.Core/Reaqtive.Core.csproj" />
+    <Project Path="Reaqtive.Interfaces/Reaqtive.Interfaces.csproj" />
+    <Project Path="Reaqtive.Linq/Reaqtive.Linq.csproj" />
+    <Project Path="Reaqtive.Quotation/Reaqtive.Quotation.csproj" />
+    <Project Path="Reaqtive.Scheduler/Reaqtive.Scheduler.csproj" />
+    <Project Path="Reaqtive.Testing/Reaqtive.Testing.csproj" />
+    <Project Path="Reaqtive.TestingFramework/Reaqtive.TestingFramework.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Reaqtive.Core/Tests.Reaqtive.Core.csproj" />
+    <Project Path="Tests.Reaqtive.Linq/Tests.Reaqtive.Linq.csproj" />
+    <Project Path="Tests.Reaqtive.Quotation/Tests.Reaqtive.Quotation.csproj" />
+    <Project Path="Tests.Reaqtive.Scheduler/Tests.Reaqtive.Scheduler.csproj" />
+  </Folder>
+</Solution>

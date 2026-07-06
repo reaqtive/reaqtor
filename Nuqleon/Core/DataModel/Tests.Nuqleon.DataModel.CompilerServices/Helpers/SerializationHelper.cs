@@ -109,8 +109,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 stream = null;
 
-                var serialize = _genericSerialize.MakeGenericMethod(new[] { type });
-                serialize.Invoke(_dataSerializer, new[] { obj, reader.BaseStream as MemoryStream });
+                var serialize = _genericSerialize.MakeGenericMethod([type]);
+                serialize.Invoke(_dataSerializer, [obj, reader.BaseStream as MemoryStream]);
 
                 ((MemoryStream)reader.BaseStream).Position = 0;
 
@@ -141,14 +141,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 stream = null;
 
-                var deserialize = _genericDeserialize.MakeGenericMethod(new[] { type });
+                var deserialize = _genericDeserialize.MakeGenericMethod([type]);
 
                 writer.Write(json.ToString());
                 writer.Flush();
 
                 ((MemoryStream)writer.BaseStream).Position = 0;
 
-                result = deserialize.Invoke(_dataSerializer, new[] { writer.BaseStream as MemoryStream });
+                result = deserialize.Invoke(_dataSerializer, [writer.BaseStream as MemoryStream]);
             }
             finally
             {

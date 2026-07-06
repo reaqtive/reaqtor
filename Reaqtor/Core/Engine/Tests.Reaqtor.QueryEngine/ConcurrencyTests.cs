@@ -35,19 +35,19 @@ namespace Tests.Reaqtor.QueryEngine
 #pragma warning restore IDE0060 // Remove unused parameter
 
         [ClassCleanup]
-        public static new void ClassCleanup()
+        public static void ClassTeardown()
         {
             PhysicalTimeEngineTest.ClassCleanup();
         }
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.Setup();
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             base.Cleanup();
         }
@@ -281,17 +281,17 @@ namespace Tests.Reaqtor.QueryEngine
             var stores = Enumerable.Range(0, QeCount).Select(_ => new InMemoryStateStore(Guid.NewGuid().ToString())).ToList();
             var chkptTasks = Enumerable.Range(0, QeCount).Select(i => qes[i].CheckpointAsync(new InMemoryStateWriter(stores[i], CheckpointKind.Full)));
 
-            Task.WaitAll(chkptTasks.ToArray());
+            Task.WaitAll([.. chkptTasks]);
 
             RemoveAllQueryEngines();
 
-            qes = Enumerable.Range(0, QeCount).Select(_ => CreateQueryEngine()).ToList();
-            ctxs = qes.Select(qe => GetQueryEngineReactiveService(qe)).ToList();
+            qes = [.. Enumerable.Range(0, QeCount).Select(_ => CreateQueryEngine())];
+            ctxs = [.. qes.Select(qe => GetQueryEngineReactiveService(qe))];
             qes.ForEach(qe => qe.Options.RecoveryDegreeOfParallelism = Parallelism);
 
             var rcvryTasks = Enumerable.Range(0, QeCount).Select(i => qes[i].RecoverAsync(new InMemoryStateReader(stores[i])));
 
-            Task.WaitAll(rcvryTasks.ToArray());
+            Task.WaitAll([.. rcvryTasks]);
 
             foreach (var qe in qes)
             {

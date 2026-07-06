@@ -31,12 +31,18 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void Test()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitBinary(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitIndex(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitMember(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitMethodCall(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitNew(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitUnary(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBinary(node: null));
+                Assert.AreEqual("node", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitIndex(node: null));
+                Assert.AreEqual("node", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMember(node: null));
+                Assert.AreEqual("node", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMethodCall(node: null));
+                Assert.AreEqual("node", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitNew(node: null));
+                Assert.AreEqual("node", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitUnary(node: null));
+                Assert.AreEqual("node", ex6.ParamName);
             }
         }
 
@@ -162,7 +168,7 @@ namespace Tests.System.Linq.CompilerServices
             var cv = new CooperativeExpressionVisitor();
 
             var p1 = Expression.Parameter(typeof(List<string>));
-            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(List<string>).GetProperty("Item"), new[] { Expression.Constant(42) }), p1);
+            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(List<string>).GetProperty("Item"), [Expression.Constant(42)]), p1);
             Assert.AreSame(i1, cv.Visit(i1));
         }
 
@@ -172,7 +178,7 @@ namespace Tests.System.Linq.CompilerServices
             var cv = new CooperativeExpressionVisitor();
 
             var p1 = Expression.Parameter(typeof(IndOp));
-            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(IndOp).GetProperty("Item"), new[] { Expression.Constant(42) }), p1);
+            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(IndOp).GetProperty("Item"), [Expression.Constant(42)]), p1);
 
             var res = cv.Visit(i1.Body);
             var ir = res as MethodCallExpression;
@@ -474,9 +480,9 @@ namespace Tests.System.Linq.CompilerServices
 
                     Assert.IsNotNull(ne);
 
-                    if (ne.Constructor.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(int), typeof(string) }))
+                    if (ne.Constructor.GetParameters().Select(p => p.ParameterType).SequenceEqual([typeof(int), typeof(string)]))
                     {
-                        result = Expression.New(typeof(NewOp).GetConstructor(new[] { typeof(string), typeof(int) }), visit(ne.Arguments[1]), visit(ne.Arguments[0]));
+                        result = Expression.New(typeof(NewOp).GetConstructor([typeof(string), typeof(int)]), visit(ne.Arguments[1]), visit(ne.Arguments[0]));
                     }
                     else
                     {

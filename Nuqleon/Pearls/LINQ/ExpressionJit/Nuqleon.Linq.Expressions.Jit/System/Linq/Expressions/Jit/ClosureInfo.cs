@@ -103,7 +103,7 @@ namespace System.Linq.Expressions.Jit
             //
             if ((field.Kind & StorageKind.Boxed) != 0)
             {
-                rhs = Expression.New(typeof(StrongBox<>).MakeGenericType(variable.Type).GetConstructor(new[] { variable.Type }), value);
+                rhs = Expression.New(typeof(StrongBox<>).MakeGenericType(variable.Type).GetConstructor([variable.Type]), value);
             }
 
             //

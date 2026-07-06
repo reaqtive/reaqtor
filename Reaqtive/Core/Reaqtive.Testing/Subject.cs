@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using Reaqtive.Disposables;
 
@@ -19,8 +20,8 @@ namespace Reaqtive.Subjects
     /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
     public sealed class Subject<T> : IObservable<T>, IObserver<T>, IDisposable
     {
-        private readonly object _lock = new();
-        private readonly List<IObserver<T>> _observers = new();
+        private readonly Lock _lock = new();
+        private readonly List<IObserver<T>> _observers = [];
         private bool _done;
         private Exception _error;
         private bool _disposed;
@@ -112,7 +113,7 @@ namespace Reaqtive.Subjects
         /// <returns>A disposable object used to unsubscribe the observer from the subject.</returns>
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer is null) { throw new ArgumentNullException(nameof(observer)); }
+            ArgumentNullException.ThrowIfNull(observer);
 
             lock (_lock)
             {
@@ -150,8 +151,7 @@ namespace Reaqtive.Subjects
 
         private void CheckDisposed()
         {
-            if (_disposed)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
     }
 }

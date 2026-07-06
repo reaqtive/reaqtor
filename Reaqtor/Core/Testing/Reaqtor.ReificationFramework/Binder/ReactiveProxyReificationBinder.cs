@@ -43,8 +43,7 @@ namespace Reaqtor.ReificationFramework
         /// </returns>
         public Expression<Action<IReactiveClientEnvironment>> Bind(ServiceOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             var binder = new ReactiveProxyServiceOperationBinder();
             var clientBound = binder.Visit(operation);
@@ -75,8 +74,7 @@ namespace Reaqtor.ReificationFramework
         /// </returns>
         public Expression<Action<IReactiveClientEnvironment>> Bind(QueryEngineOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {
@@ -97,8 +95,7 @@ namespace Reaqtor.ReificationFramework
         /// </remarks>
         public Expression<Action<IReactiveClientEnvironment>> Optimize(Expression<Action<IReactiveClientEnvironment>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var envParam = expression.Parameters[0];
             var ctxParam = Expression.Parameter(typeof(IReactiveProxy), "ctx");
@@ -108,7 +105,7 @@ namespace Reaqtor.ReificationFramework
             {
                 expression = Expression.Lambda<Action<IReactiveClientEnvironment>>(
                     Expression.Block(
-                        new[] { ctxParam },
+                        [ctxParam],
                         Expression.Assign(ctxParam, Expression.MakeMemberAccess(envParam, s_getContextProperty)),
                         optimized.Body
                     ),
@@ -155,7 +152,7 @@ namespace Reaqtor.ReificationFramework
                 _envParam = envParam;
                 _ctxParam = ctxParam;
 
-                _ctxReplacements = new List<ParameterExpression>();
+                _ctxReplacements = [];
             }
 
             protected override Expression VisitBinary(BinaryExpression node)
@@ -181,7 +178,7 @@ namespace Reaqtor.ReificationFramework
                 {
                     return Expression.Block(
                         result.Type,
-                        result.Variables.Except(new[] { _ctxParam }),
+                        result.Variables.Except([_ctxParam]),
                         result.Expressions
                     );
                 }

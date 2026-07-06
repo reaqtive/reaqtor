@@ -20,9 +20,7 @@ namespace Reaqtor.Shebang.Service
 {
     public static class QueryEngineFactory
     {
-        private static PhysicalScheduler s_scheduler;
-
-        internal static PhysicalScheduler Scheduler => s_scheduler ??= PhysicalScheduler.Create();
+        internal static PhysicalScheduler Scheduler => field ??= PhysicalScheduler.Create();
 
         public static async Task<SimplerCheckpointingQueryEngine> CreateNewAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, IIngressEgressManager ingressEgressManager = null, TraceSource traceSource = null)
         {

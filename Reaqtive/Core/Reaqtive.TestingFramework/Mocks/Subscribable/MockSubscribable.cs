@@ -14,7 +14,7 @@ namespace Reaqtive.TestingFramework.Mocks
         protected MockSubscribable(IClockable<long> clock)
         {
             Clock = clock ?? throw new ArgumentNullException(nameof(clock));
-            Subscriptions = new List<Subscription>();
+            Subscriptions = [];
             TheObserver = NopObserver<T>.Instance;
         }
 

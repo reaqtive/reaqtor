@@ -51,10 +51,10 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         {
             _domain = new SerializationDomain(version);
             _params = new Stack<Dictionary<ParameterExpression, int>>();
-            _globals = new Dictionary<ParameterExpression, int>();
-            _globalsDef = new List<ParameterExpression>();
-            _labelTargets = new Dictionary<LabelTarget, int>();
-            _labelTargetsDef = new List<LabelTarget>();
+            _globals = [];
+            _globalsDef = [];
+            _labelTargets = [];
+            _labelTargetsDef = [];
         }
 
         #endregion
@@ -79,8 +79,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public Json.Expression AddLabelTarget(LabelTarget labelTarget)
         {
-            if (labelTarget == null)
-                throw new ArgumentNullException(nameof(labelTarget));
+            ArgumentNullException.ThrowIfNull(labelTarget);
 
             if (!_labelTargets.TryGetValue(labelTarget, out int index))
             {

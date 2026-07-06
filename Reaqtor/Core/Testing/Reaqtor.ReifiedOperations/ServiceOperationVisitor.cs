@@ -20,10 +20,7 @@ namespace Reaqtor.TestingFramework
 
         public virtual ServiceOperation Visit(ServiceOperation operation)
         {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation));
-            }
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {
@@ -475,7 +472,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onNextGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (ServiceOperation)method.Invoke(this, new object[] { operation });
+                return (ServiceOperation)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnNextCore(operation);
@@ -509,7 +506,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onErrorGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (ServiceOperation)method.Invoke(this, new object[] { operation });
+                return (ServiceOperation)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnErrorCore(operation);
@@ -543,7 +540,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onCompletedGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (ServiceOperation)method.Invoke(this, new object[] { operation });
+                return (ServiceOperation)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnCompletedCore(operation);

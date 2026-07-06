@@ -248,7 +248,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<string>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Select(m => m.Value.Value).Max()),
+                    OnNext<string>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Max(m => m.Value.Value)),
                     OnCompleted<string>(250)
                 );
 
@@ -276,7 +276,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<TimeSpan>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Select(m => m.Value.Value).Max()),
+                    OnNext<TimeSpan>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Max(m => m.Value.Value)),
                     OnCompleted<TimeSpan>(250)
                 );
 

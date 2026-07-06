@@ -24,8 +24,8 @@ namespace Tests
             var uri = new Uri("foo://bar");
             var state = "qux";
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state).Wait());
-            Assert.ThrowsException<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state).Wait());
         }
 
         [TestMethod]

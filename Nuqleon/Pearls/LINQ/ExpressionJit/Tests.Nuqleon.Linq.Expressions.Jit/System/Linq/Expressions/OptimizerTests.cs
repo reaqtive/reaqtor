@@ -46,9 +46,9 @@ namespace Tests
             var z = Expression.Parameter(typeof(int));
 
             var e =
-                Expression.Block(new[] { x },
-                    Expression.Block(new[] { y },
-                        Expression.Block(new[] { z },
+                Expression.Block([x],
+                    Expression.Block([y],
+                        Expression.Block([z],
                             Expression.Add(x, Expression.Multiply(y, z))
                         )
                     )
@@ -60,7 +60,7 @@ namespace Tests
 
                 Assert.IsTrue(
                     eq.Equals(o,
-                        Expression.Block(new[] { x, y, z },
+                        Expression.Block([x, y, z],
                             Expression.Add(x, Expression.Multiply(y, z))
                         )
                     )
@@ -78,9 +78,9 @@ namespace Tests
             var z = Expression.Parameter(typeof(int));
 
             var e =
-                Expression.Block(new[] { x },
-                    Expression.Block(new[] { y },
-                        Expression.Block(new[] { z },
+                Expression.Block([x],
+                    Expression.Block([y],
+                        Expression.Block([z],
                             Expression.Add(x, Expression.Multiply(y, z))
                         ),
                         Expression.Empty()
@@ -93,8 +93,8 @@ namespace Tests
 
                 Assert.IsTrue(
                     eq.Equals(o,
-                        Expression.Block(new[] { x, y },
-                            Expression.Block(new[] { z },
+                        Expression.Block([x, y],
+                            Expression.Block([z],
                                 Expression.Add(x, Expression.Multiply(y, z))
                             ),
                             Expression.Empty() // NB: Flattening would be valid here, but we don't analyze this case.
@@ -123,7 +123,7 @@ namespace Tests
 
                 Assert.IsTrue(
                     eq.Equals(o,
-                        Expression.Block(new[] { x },
+                        Expression.Block([x],
                             Expression.Assign(x, Expression.Constant(1)),
                             x
                         )
@@ -153,7 +153,7 @@ namespace Tests
 
                 Assert.IsTrue(
                     eq.Equals(o,
-                        Expression.Block(new[] { x, y },
+                        Expression.Block([x, y],
                             Expression.Assign(x, Expression.Constant(1)),
                             Expression.Assign(y, Expression.Constant(2)),
                             Expression.Add(x, y)
@@ -175,7 +175,7 @@ namespace Tests
 
             var e =
                 Expression.Block(
-                    new[] { a, b, c, x },
+                    [a, b, c, x],
                     Expression.Invoke(
                         Expression.Lambda(Expression.Add(a, Expression.Multiply(b, c)), a, b, c),
                         Expression.Add(Expression.Constant(1), a),
@@ -194,14 +194,14 @@ namespace Tests
                 Assert.IsTrue(
                     eq.Equals(o,
                         Expression.Block(
-                            new[] { a, b, c, x },
+                            [a, b, c, x],
                             Expression.Block(
-                                new[] { t1, t2, c },
+                                [t1, t2, c],
                                 Expression.Assign(t1, Expression.Add(Expression.Constant(1), a)),
                                 Expression.Assign(t2, Expression.Multiply(Expression.Constant(2), b)),
                                 Expression.Assign(c, Expression.Subtract(x, Expression.Constant(3))),
                                 Expression.Block(
-                                    new[] { a, b },
+                                    [a, b],
                                     Expression.Assign(a, t1),
                                     Expression.Assign(b, t2),
                                     Expression.Add(a, Expression.Multiply(b, c))

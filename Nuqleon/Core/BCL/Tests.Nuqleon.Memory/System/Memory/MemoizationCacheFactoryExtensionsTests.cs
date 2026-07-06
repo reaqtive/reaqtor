@@ -23,9 +23,9 @@ namespace Tests
         [TestMethod]
         public void MemoizationCacheFactoryExtensions_WithThreadLocal_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(factory: null, exposeThreadLocalView: false));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(MemoizationCacheFactory.Unbounded).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(factory: null, exposeThreadLocalView: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.WithThreadLocal(MemoizationCacheFactory.Unbounded).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         [TestMethod]
@@ -583,7 +583,7 @@ namespace Tests
 
                 c.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => c.GetOrAdd(2));
+                Assert.ThrowsExactly<ObjectDisposedException>(() => c.GetOrAdd(2));
             }
 
             {
@@ -593,15 +593,15 @@ namespace Tests
 
                 c.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => c.GetOrAdd(2));
+                Assert.ThrowsExactly<ObjectDisposedException>(() => c.GetOrAdd(2));
             }
         }
 
         [TestMethod]
         public void MemoizationCacheFactoryExtensions_Synchronized_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.Synchronized(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.Synchronized(MemoizationCacheFactory.Unbounded).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.Synchronized(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheFactoryExtensions.Synchronized(MemoizationCacheFactory.Unbounded).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         [TestMethod]

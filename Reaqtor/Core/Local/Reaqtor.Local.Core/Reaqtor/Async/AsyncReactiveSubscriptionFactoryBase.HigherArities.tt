@@ -66,8 +66,7 @@ for (int j = 1; j <= i; j++) {
         /// <returns>Task returning a  subscription object, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveSubscription> CreateAsync(Uri subscriptionUri, <#=parameters#>, object state = null, CancellationToken token = default)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, <#=arguments#>, state, token);
         }

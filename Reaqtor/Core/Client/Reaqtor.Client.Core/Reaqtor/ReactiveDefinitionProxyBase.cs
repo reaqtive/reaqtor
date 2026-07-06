@@ -34,10 +34,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the stream factory definition.</returns>
         public Task DefineStreamFactoryAsync<TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput> streamFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             return DefineStreamFactoryAsyncCore<TInput, TOutput>(uri, streamFactory, state, token);
         }
@@ -67,10 +65,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the stream factory definition.</returns>
         public Task DefineStreamFactoryAsync<TArgs, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs> streamFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             return DefineStreamFactoryAsyncCore<TArgs, TInput, TOutput>(uri, streamFactory, state, token);
         }
@@ -96,8 +92,7 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the stream factory undefinition.</returns>
         public Task UndefineStreamFactoryAsync(Uri uri, CancellationToken token)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return UndefineStreamFactoryAsyncCore(uri, token);
         }
@@ -125,10 +120,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observable definition.</returns>
         public Task DefineObservableAsync<T>(Uri uri, IAsyncReactiveQbservable<T> observable, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             return DefineObservableAsyncCore<T>(uri, observable, state, token);
         }
@@ -156,10 +149,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observable definition.</returns>
         public Task DefineObservableAsync<TArgs, TResult>(Uri uri, Expression<Func<TArgs, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             return DefineObservableAsyncCore<TArgs, TResult>(uri, observable, state, token);
         }
@@ -184,8 +175,7 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observable undefinition.</returns>
         public Task UndefineObservableAsync(Uri uri, CancellationToken token)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return UndefineObservableAsyncCore(uri, token);
         }
@@ -213,10 +203,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observer definition.</returns>
         public Task DefineObserverAsync<T>(Uri uri, IAsyncReactiveQbserver<T> observer, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return DefineObserverAsyncCore<T>(uri, observer, state, token);
         }
@@ -244,10 +232,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observer definition.</returns>
         public Task DefineObserverAsync<TArgs, TResult>(Uri uri, Expression<Func<TArgs, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return DefineObserverAsyncCore<TArgs, TResult>(uri, observer, state, token);
         }
@@ -272,8 +258,7 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the observer undefinition.</returns>
         public Task UndefineObserverAsync(Uri uri, CancellationToken token)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return UndefineObserverAsyncCore(uri, token);
         }
@@ -300,10 +285,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync(Uri uri, IAsyncReactiveQubscriptionFactory subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsyncCore(uri, subscriptionFactory, state, token);
         }
@@ -329,10 +312,8 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArgs>(Uri uri, IAsyncReactiveQubscriptionFactory<TArgs> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsyncCore<TArgs>(uri, subscriptionFactory, state, token);
         }
@@ -356,8 +337,7 @@ namespace Reaqtor
         /// <returns>Task to await the completion of the subscription factory undefinition.</returns>
         public Task UndefineSubscriptionFactoryAsync(Uri uri, CancellationToken token)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return UndefineSubscriptionFactoryAsyncCore(uri, token);
         }

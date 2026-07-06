@@ -40,12 +40,11 @@ namespace System.Linq.CompilerServices
         /// <param name="symbolComparer">Equality comparer to compare symbols. A symbol table can only contain distinct symbols.</param>
         public SymbolTable(SymbolTable<TSymbol, TValue> parent, IEqualityComparer<TSymbol> symbolComparer)
         {
-            if (symbolComparer == null)
-                throw new ArgumentNullException(nameof(symbolComparer));
+            ArgumentNullException.ThrowIfNull(symbolComparer);
 
             Parent = parent;
             _table = new Dictionary<TSymbol, Indexed<TValue>>(symbolComparer);
-            _ordered = new List<KeyValuePair<TSymbol, TValue>>();
+            _ordered = [];
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Gets the symbols defined in the symbol table, in order of definition.
         /// </summary>
-        public IEnumerable<TSymbol> Symbols => _ordered.Select(kv => kv.Key).ToArray();
+        public IEnumerable<TSymbol> Symbols => [.. _ordered.Select(kv => kv.Key)];
 
         /// <summary>
         /// Gets the value associated with the specified symbol.

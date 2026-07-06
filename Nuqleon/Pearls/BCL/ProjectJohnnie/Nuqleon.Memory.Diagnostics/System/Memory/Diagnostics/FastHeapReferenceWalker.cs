@@ -50,7 +50,7 @@ namespace System.Memory.Diagnostics
         /// A <see cref="ConditionalWeakTable{TKey, TValue}"/> is used to ensure we don't keep collectible
         /// types alive when a walker for such a type exists.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, WalkerInfo> s_walkers = new();
+        private static readonly ConditionalWeakTable<Type, WalkerInfo> s_walkers = [];
 
         /// <summary>
         /// A pool for <see cref="Queue{T}"/> instances that can be used to maintain the work list for
@@ -92,8 +92,7 @@ namespace System.Memory.Diagnostics
         /// </param>
         public void Walk(object obj, Func<object, bool> fence)
         {
-            if (fence == null)
-                throw new ArgumentNullException(nameof(fence));
+            ArgumentNullException.ThrowIfNull(fence);
 
             if (obj == null)
                 return;
@@ -374,7 +373,7 @@ namespace System.Memory.Diagnostics
                 bodyExprs[0] = convert;
                 fieldWalker.Expressions.CopyTo(bodyExprs, 1);
 
-                var body = Expression.Block(typeof(void), new[] { converted }, bodyExprs);
+                var body = Expression.Block(typeof(void), [converted], bodyExprs);
 
                 //
                 // Finally, build a lambda expression representing the FastWalker delegate, compile it, and
@@ -581,7 +580,7 @@ namespace System.Memory.Diagnostics
 #if USE_LOCAL
                 new[] { arr, i, len, elem },
 #else
-                new[] { arr, i, len },
+                [arr, i, len],
 #endif
                 exprs
             );

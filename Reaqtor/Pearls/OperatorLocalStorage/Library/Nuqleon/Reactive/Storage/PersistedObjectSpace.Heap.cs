@@ -83,7 +83,7 @@ namespace Reaqtive.Storage
                 // Prepare the storage for eventual objects.
                 //
 
-                _data = new List<(long key, EventualObject data)>();
+                _data = [];
 
                 //
                 // Perform the core load operations, which will result in calls to TryGetItemKeysCore and LoadItemCore.

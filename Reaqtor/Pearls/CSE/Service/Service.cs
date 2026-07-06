@@ -202,7 +202,7 @@ namespace Pearls.Reaqtor.CSE
             /// <summary>
             /// List of hot artifacts that were used in the rewritten expression. Upon disposal of the subscription, these resources need to be released.
             /// </summary>
-            private readonly List<HotArtifact> _artifacts = new();
+            private readonly List<HotArtifact> _artifacts = [];
 
             /// <summary>
             /// Creates a new scanner for expressions.
@@ -259,7 +259,7 @@ namespace Pearls.Reaqtor.CSE
                             var obvType = typeof(IObserver<>).MakeGenericType(elemType);
 
                             var subType = typeof(Subject<>).MakeGenericType(elemType);
-                            var sub = Activator.CreateInstance(subType, new[] { id });
+                            var sub = Activator.CreateInstance(subType, [id]);
 
                             entry = new HotArtifact();
                             entry.RefCount++;

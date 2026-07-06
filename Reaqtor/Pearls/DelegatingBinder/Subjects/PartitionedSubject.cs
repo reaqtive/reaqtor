@@ -20,7 +20,7 @@ namespace DelegatingBinder
         public PartitionedSubject()
         {
             _subject = new Subject<T>();
-            _partitions = new Dictionary<MemberInfo, Partition>();
+            _partitions = [];
         }
 
         public void OnCompleted()
@@ -118,7 +118,7 @@ namespace DelegatingBinder
                                 {
                                     if (member.Expression == predicate.Parameters[0])
                                     {
-                                        var newPartition = (Expression<Func<MemberInfo, object, PartitionObservable>>)((MemberInfo key, object value) => new PartitionObservable(this, key, value));
+                                        var newPartition = (Expression<Func<MemberInfo, object, PartitionObservable>>)((key, value) => new PartitionObservable(this, key, value));
                                         var partition = BetaReducer.Reduce(Expression.Invoke(newPartition, Expression.Constant(member.Member), Expression.Constant(constant.Value, typeof(object))));
                                         return partition;
                                     }
@@ -170,7 +170,7 @@ namespace DelegatingBinder
             public Partition(Func<T, K> keySelector)
             {
                 _keySelector = keySelector;
-                _null = new List<IObserver<T>>();
+                _null = [];
                 _keys = new Dictionary<K, List<IObserver<T>>>();
             }
 
@@ -248,7 +248,7 @@ namespace DelegatingBinder
                 {
                     if (!_keys.TryGetValue(key, out var k))
                     {
-                        k = new List<IObserver<T>>();
+                        k = [];
                         _keys[key] = k;
                     }
 

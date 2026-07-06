@@ -86,10 +86,7 @@ namespace Nuqleon.DataModel.CompilerServices
                     dataType = new PrimitiveDataType(type, PrimitiveDataTypeKinds.EntityEnum);
                 }
 
-                if (!enumerations.ContainsKey(type))
-                {
-                    enumerations.Add(type, dataType);
-                }
+                enumerations.TryAdd(type, dataType);
             }
 
             entityInfo.Entities = entities;
@@ -118,8 +115,8 @@ namespace Nuqleon.DataModel.CompilerServices
 
             public Impl()
             {
-                Entities = new Dictionary<Type, StructuralDataType>();
-                Enumerations = new Dictionary<Type, PrimitiveDataType>();
+                Entities = [];
+                Enumerations = [];
                 _findEntityDataTypes = new FindEntityDataTypes(this);
             }
 
@@ -225,7 +222,7 @@ namespace Nuqleon.DataModel.CompilerServices
             {
                 _enqueue = enqueue;
                 _addEnumeration = addEnumeration;
-                _processed = new HashSet<Type>();
+                _processed = [];
             }
 
             protected override DataType VisitStructural(StructuralDataType type)

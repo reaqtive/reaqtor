@@ -62,11 +62,9 @@ namespace System.Linq.CompilerServices.Optimizers
         /// <returns>Collection of visited input elements.</returns>
         protected ReadOnlyCollection<TResult> Visit<TSource, TResult>(ReadOnlyCollection<TSource> nodes, Func<TSource, TResult> visitor)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
+            ArgumentNullException.ThrowIfNull(nodes);
 
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
+            ArgumentNullException.ThrowIfNull(visitor);
 
             var n = nodes.Count;
 

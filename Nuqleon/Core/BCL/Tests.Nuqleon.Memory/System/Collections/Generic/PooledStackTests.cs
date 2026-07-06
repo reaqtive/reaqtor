@@ -19,13 +19,13 @@ namespace Tests
     [TestClass]
     public class PooledStackTests : TestBase
     {
-        private static readonly string[] exp = new[] { "qux", "foo", "bar", "baz" }.Reverse().ToArray();
+        private static readonly string[] exp = [.. new[] { "qux", "foo", "bar", "baz" }.Reverse()];
 
         [TestMethod]
         public void PooledStack_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StackPool<int>.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StackPool<int>.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StackPool<int>.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StackPool<int>.Create(4, 16, -1));
         }
 
         [TestMethod]

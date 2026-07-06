@@ -164,7 +164,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsTrue(
                 eq.Equals(
-                    ((NewExpression)expr.Body).Update(new[] { Expression.Constant(42) }),
+                    ((NewExpression)expr.Body).Update([Expression.Constant(42)]),
                     quote
                 )
             );
@@ -193,10 +193,9 @@ namespace Tests.Reaqtor.QueryEngine
                 eq.Equals(
                     mi.Update(
                         mi.NewExpression,
-                        new[]
-                        {
+                        [
                             b.Update(Expression.Constant(42))
-                        }
+                        ]
                     ),
                     quote
                 )
@@ -221,7 +220,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsTrue(
                 eq.Equals(
-                    ((MethodCallExpression)expr.Body).Update(null, new[] { Expression.Constant(42) }),
+                    ((MethodCallExpression)expr.Body).Update(null, [Expression.Constant(42)]),
                     quote
                 )
             );

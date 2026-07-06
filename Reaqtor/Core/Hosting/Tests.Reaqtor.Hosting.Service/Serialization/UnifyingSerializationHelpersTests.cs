@@ -132,7 +132,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             structuralType.AddProperty(structuralType.GetProperty("eg://enum", typeof(int).ToTypeSlim(), EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true));
             var observerableType = TypeSlim.Generic(((GenericDefinitionTypeSlim)typeof(IAsyncReactiveQbservable<>).ToTypeSlim()), new TypeSlim[] { structuralType }.ToReadOnly());
             var parameter = ExpressionSlim.Parameter(observerableType, uri.ToCanonicalString());
-            Assert.ThrowsException<InvalidOperationException>(() => UnifyingSerializationHelpers.FindAndUnify(parameter, metadata));
+            Assert.ThrowsExactly<InvalidOperationException>(() => UnifyingSerializationHelpers.FindAndUnify(parameter, metadata));
         }
 
         [TestMethod]

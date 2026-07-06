@@ -42,7 +42,6 @@ namespace Reaqtive
     /// Represents a notification to an observer.
     /// </summary>
     /// <typeparam name="T">The type of the elements received by the observer.</typeparam>
-    [Serializable]
     public abstract class Notification<T> : IEquatable<Notification<T>>
     {
         /// <summary>
@@ -76,7 +75,6 @@ namespace Reaqtive
         /// Represents an OnNext notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnNext({Value})")]
-        [Serializable]
         internal sealed class OnNextNotification : Notification<T>
         {
             /// <summary>
@@ -138,8 +136,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnNext(Value);
             }
@@ -149,7 +146,6 @@ namespace Reaqtive
         /// Represents an OnError notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnError({Exception})")]
-        [Serializable]
         internal sealed class OnErrorNotification : Notification<T>
         {
             /// <summary>
@@ -211,8 +207,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnError(Exception);
             }
@@ -222,7 +217,6 @@ namespace Reaqtive
         /// Represents an OnCompleted notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnCompleted()")]
-        [Serializable]
         internal sealed class OnCompletedNotification : Notification<T>
         {
             /// <summary>
@@ -281,8 +275,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnCompleted();
             }
@@ -379,8 +372,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is null.</exception>
         public static Notification<T> CreateOnError<T>(Exception error)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             return new Notification<T>.OnErrorNotification(error);
         }

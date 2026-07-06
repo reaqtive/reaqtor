@@ -52,7 +52,7 @@ namespace System.Reflection
         public TypeSlimCSharpPrinter()
         {
             _revisited = 0;
-            _visited = new Dictionary<StructuralTypeSlim, string>();
+            _visited = [];
         }
 
         protected override string VisitSimple(SimpleTypeSlim type)
@@ -148,16 +148,12 @@ namespace System.Reflection
             var i = type.Name.LastIndexOf('`');
             if (i >= 0)
             {
-                name = type.Name.Substring(0, i);
+                name = type.Name[..i];
             }
 
             if (i + 1 < type.Name.Length)
             {
-#if NET6_0 || NETSTANDARD2_1
                 arity = int.Parse(type.Name[(i + 1)..], CultureInfo.InvariantCulture);
-#else
-                arity = int.Parse(type.Name.Substring(i + 1), CultureInfo.InvariantCulture);
-#endif
             }
         }
 
@@ -168,7 +164,7 @@ namespace System.Reflection
             var i = name.LastIndexOf('`');
             if (i >= 0)
             {
-                name = name.Substring(0, i);
+                name = name[..i];
             }
 
             return name;

@@ -92,7 +92,6 @@ generating the code for:
         /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
         /// <param name="uri">URI identifying the observable.</param>
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Func<*> should be excluded from this rule.")]
         public Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TResult>(Uri uri) => Client.GetObservable<TArg1, TArg2, TResult>(uri);
 
 */#>
@@ -119,7 +118,6 @@ for (int j = 1; j <= i; j++)
         /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
         /// <param name="uri">URI identifying the observable.</param>
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Func<*> should be excluded from this rule.")]
         public Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>> GetObservable<<#=typeArgs#>, TResult>(Uri uri) => Client.GetObservable<<#=typeArgs#>, TResult>(uri);
 
 <#}#>
@@ -139,7 +137,6 @@ generating the code for:
         /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
         /// <param name="uri">URI identifying the observer.</param>
         /// <returns>Observer object that can be used to send data.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Func<*> should be excluded from this rule.")]
         public Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TResult>(Uri uri) => Client.GetObserver<TArg1, TArg2, TResult>(uri);
 
 */#>
@@ -166,7 +163,6 @@ for (int j = 1; j <= i; j++)
         /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
         /// <param name="uri">URI identifying the observer.</param>
         /// <returns>Observer object that can be used to send data.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Func<*> should be excluded from this rule.")]
         public Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>> GetObserver<<#=typeArgs#>, TResult>(Uri uri) => Client.GetObserver<<#=typeArgs#>, TResult>(uri);
 
 <#}#>
@@ -289,7 +285,6 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         /// <param name="token">Token to observe for cancellation of the request.</param>
         /// <returns>Task to await the completion of the observable definition.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Expression<T> should be excluded from this rule.")]
         public Task DefineObservableAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default) => Definition.DefineObservableAsync(uri, observable, state, token);
 
 */#>
@@ -319,7 +314,6 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         /// <param name="token">Token to observe for cancellation of the request.</param>
         /// <returns>Task to await the completion of the observable definition.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Expression<T> should be excluded from this rule.")]
         public Task DefineObservableAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default) => Definition.DefineObservableAsync(uri, observable, state, token);
 
 <#}#>
@@ -342,7 +336,6 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         /// <param name="token">Token to observe for cancellation of the request.</param>
         /// <returns>Task to await the completion of the observer definition.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Expression<T> should be excluded from this rule.")]
         public Task DefineObserverAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default) => Definition.DefineObserverAsync(uri, observer, state, token);
 
 */#>
@@ -372,7 +365,6 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         /// <param name="token">Token to observe for cancellation of the request.</param>
         /// <returns>Task to await the completion of the observer definition.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Expression<T> should be excluded from this rule.")]
         public Task DefineObserverAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default) => Definition.DefineObserverAsync(uri, observer, state, token);
 
 <#}#>
@@ -446,10 +438,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<<#=typeArgs#>>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<<#=typeArgs#>>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<<#=typeArgs#>>(subscriptionFactory), state, token);
         }

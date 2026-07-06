@@ -22,7 +22,7 @@ namespace Tests
     {
         protected static void Nop_ArgumentChecking(IMemoizationCacheFactory mcf)
         {
-            Assert.ThrowsException<ArgumentNullException>(() => mcf.Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mcf.Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         protected static void Nop_Simple(IMemoizationCacheFactory mcf)
@@ -70,7 +70,7 @@ namespace Tests
 
         protected static void Unbounded_ArgumentChecking(IMemoizationCacheFactory mcf)
         {
-            Assert.ThrowsException<ArgumentNullException>(() => mcf.Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mcf.Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         protected static void Unbounded_Simple(IMemoizationCacheFactory mcf)
@@ -126,7 +126,7 @@ namespace Tests
 
             for (var i = 1; i <= 3; i++)
             {
-                Assert.ThrowsException<NullReferenceException>(() => cache.GetOrAdd(argument: null));
+                Assert.ThrowsExactly<NullReferenceException>(() => cache.GetOrAdd(argument: null));
                 Assert.AreEqual(0, cache.Count);
                 Assert.AreEqual(i, n);
             }
@@ -142,7 +142,7 @@ namespace Tests
 
             for (var i = 1; i <= 3; i++)
             {
-                Assert.ThrowsException<NullReferenceException>(() => cache.GetOrAdd(argument: null));
+                Assert.ThrowsExactly<NullReferenceException>(() => cache.GetOrAdd(argument: null));
                 Assert.AreEqual(1, cache.Count);
                 Assert.AreEqual(1, n);
             }
@@ -178,7 +178,7 @@ namespace Tests
         {
             var res = mcf.Create<int, int>(x => 100 / x, MemoizationOptions.CacheException, EqualityComparer<int>.Default);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));
@@ -199,7 +199,7 @@ namespace Tests
             trimErr.Trim(kv => kv.Key % 3 == 0);
             Assert.AreEqual(0, res.Count);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));
@@ -208,9 +208,9 @@ namespace Tests
 
         protected static void Lru_ArgumentChecking(Func<int, IMemoizationCacheFactory> createFactory)
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createFactory(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createFactory(0));
-            Assert.ThrowsException<ArgumentNullException>(() => createFactory(1).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createFactory(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createFactory(0));
+            Assert.ThrowsExactly<ArgumentNullException>(() => createFactory(1).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         protected static void Lru_NoError_Simple(Func<int, IMemoizationCacheFactory> createFactory)
@@ -378,11 +378,11 @@ namespace Tests
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(2, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(0));
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(3, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(0));
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(4, n);
 
@@ -409,11 +409,11 @@ namespace Tests
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(2, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(0));
             Assert.AreEqual(3, cache.Count);
             Assert.AreEqual(3, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(0));
             Assert.AreEqual(3, cache.Count);
             Assert.AreEqual(3, n);
 
@@ -454,7 +454,7 @@ namespace Tests
             var mcf = createFactory(10);
             var res = mcf.Create<int, int>(x => 100 / x, MemoizationOptions.CacheException, EqualityComparer<int>.Default);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));
@@ -475,7 +475,7 @@ namespace Tests
             trimErr.Trim(kv => kv.Key % 3 == 0);
             Assert.AreEqual(0, res.Count);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));
@@ -564,22 +564,22 @@ namespace Tests
 
         protected static void Evict_ArgumentChecking(Func<Func<IMemoizationCacheEntryMetrics, int>, int, double, IStopwatchFactory, IMemoizationCacheFactory> createEvictedByHighest, Func<Func<IMemoizationCacheEntryMetrics, int>, int, double, IStopwatchFactory, IMemoizationCacheFactory> createEvictedByLowest)
         {
-            Assert.ThrowsException<ArgumentNullException>(() => createEvictedByHighest(null, 1, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, -1, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 0, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, 0.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, -0.1, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, 1.1, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => createEvictedByHighest(null, 1, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, -1, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 0, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, 0.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, -0.1, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByHighest(e => 0, 1, 1.1, null));
 
-            Assert.ThrowsException<ArgumentNullException>(() => createEvictedByLowest(null, 1, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, -1, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 0, 1.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, 0.0, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, -0.1, null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, 1.1, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => createEvictedByLowest(null, 1, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, -1, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 0, 1.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, 0.0, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, -0.1, null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => createEvictedByLowest(e => 0, 1, 1.1, null));
 
-            Assert.ThrowsException<ArgumentNullException>(() => createEvictedByHighest(e => 0, 1, 1.0, null).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
-            Assert.ThrowsException<ArgumentNullException>(() => createEvictedByLowest(e => 0, 1, 1.0, null).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => createEvictedByHighest(e => 0, 1, 1.0, null).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => createEvictedByLowest(e => 0, 1, 1.0, null).Create(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
         }
 
         protected static void Evict_Lowest_HitCount(Func<Func<IMemoizationCacheEntryMetrics, int>, int, double, IStopwatchFactory, IMemoizationCacheFactory> createEvictedByLowest)
@@ -794,10 +794,10 @@ namespace Tests
             Assert.AreEqual(10, f.GetOrAdd(100));
             Assert.AreEqual(4, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd(0));
             Assert.AreEqual(5, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd(0));
             Assert.AreEqual(6, n);
 
             Assert.AreEqual(100, f.GetOrAdd(10));
@@ -826,10 +826,10 @@ namespace Tests
             Assert.AreEqual(10, f.GetOrAdd(100));
             Assert.AreEqual(4, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd(0));
             Assert.AreEqual(5, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd(0));
             Assert.AreEqual(5, n);
 
             Assert.AreEqual(100, f.GetOrAdd(10));
@@ -868,7 +868,7 @@ namespace Tests
             var mcf = createEvictedByLowest(e => e.HitCount, 10, 0.9, null);
             var res = mcf.Create<int, int>(x => 100 / x, MemoizationOptions.CacheException, EqualityComparer<int>.Default);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));
@@ -889,7 +889,7 @@ namespace Tests
             trimErr.Trim(kv => kv.Key % 3 == 0);
             Assert.AreEqual(0, res.Count);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd(0));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd(0));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual(50, res.GetOrAdd(2));

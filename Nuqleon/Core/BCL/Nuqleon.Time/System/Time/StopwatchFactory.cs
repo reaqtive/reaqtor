@@ -29,8 +29,7 @@ namespace System.Time
         /// <returns>Stopwatch factory to create stopwatches based on the specified clock.</returns>
         public static IStopwatchFactory FromClock(IClock clock)
         {
-            if (clock == null)
-                throw new ArgumentNullException(nameof(clock));
+            ArgumentNullException.ThrowIfNull(clock);
 
             return new ClockStopwatchFactory(clock);
         }

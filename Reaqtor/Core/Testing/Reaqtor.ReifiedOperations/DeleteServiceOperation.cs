@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class DeleteServiceOperation : ServiceOperation
     {
         public DeleteServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)

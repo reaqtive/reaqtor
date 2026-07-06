@@ -10,14 +10,12 @@
 //   BD - 01/25/2019 - Leverage ReadOnlySpan<char> based parsing.
 //
 
-using Nuqleon.Json.Parser;
-
-#if USE_SPAN
 using System;
-#endif
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+
+using Nuqleon.Json.Parser;
 
 namespace Nuqleon.Json.Serialization
 {
@@ -475,13 +473,9 @@ namespace Nuqleon.Json.Serialization
         /// <param name="str">The string to lex a JSON Number literal from.</param>
         /// <param name="len">The length of the string.</param>
         /// <param name="i">The index in the string to start lexing from. This value gets updated to the first index position after the Number literal, if found.</param>
-        /// <param name="res">A string containing the lexed number.</param>
+        /// <param name="res">A span of characters containing the lexed number.</param>
         /// <returns>true if a Number literal was found; otherwise, false.</returns>
-#if USE_SPAN
         private static bool TryLexNumber(string str, int len, ref int i, out ReadOnlySpan<char> res)
-#else
-        private static bool TryLexNumber(string str, int len, ref int i, out string res)
-#endif
         {
             res = null;
 
@@ -580,13 +574,7 @@ namespace Nuqleon.Json.Serialization
                                 } while (c is >= '0' and <= '9');
                             }
 
-#if USE_SPAN
                             res = str.AsSpan(b, i - b);
-#elif NET6_0 || NETSTANDARD2_1
-                            res = str[b..i];
-#else
-                            res = str.Substring(b, i - b);
-#endif
                             return true;
                         }
                 }
@@ -723,7 +711,7 @@ namespace Nuqleon.Json.Serialization
             //         remainder =          t": 42
             //
 
-            return value.IndexOfAny(new char[] { '\\', '"' }) < 0;
+            return value.IndexOfAny(['\\', '"']) < 0;
         }
 
         /// <summary>
@@ -735,11 +723,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>true if the specified string starts with the specified value at the specified index; otherwise, false.</returns>
         internal static bool StartsWithFast(string str, ref int i, string value)
         {
-#if NET6_0 || NETSTANDARD2_1
             Debug.Assert(value.IndexOf('\\', System.StringComparison.Ordinal) < 0 && value.IndexOf('"', System.StringComparison.Ordinal) < 0);
-#else
-            Debug.Assert(value.IndexOf('\\') < 0 && value.IndexOf('"') < 0);
-#endif
 
             if (string.CompareOrdinal(str, i, value, 0, value.Length) == 0)
             {

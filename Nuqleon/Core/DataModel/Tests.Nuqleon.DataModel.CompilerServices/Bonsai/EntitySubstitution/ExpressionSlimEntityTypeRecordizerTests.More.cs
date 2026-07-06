@@ -20,12 +20,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices;
 
-#if NETFRAMEWORK
-using System.IO;
-using System.Reflection.Emit;
-
-using Nuqleon.DataModel.CompilerServices.Bonsai;
-#endif
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {
@@ -66,7 +60,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public ListPropertyTest()
             {
-                List = new List<int>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -83,7 +77,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public RecordListPropertyTest()
             {
-                List = new List<SimplePropertyTest>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -177,14 +171,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public Star()
             {
-                List = new List<int>();
-                Planets = new List<Planet>();
+                List = [];
+                Planets = [];
             }
 
             public Star([Mapping("contoso://list")] List<int> list)
             {
                 List = list;
-                Planets = new List<Planet>();
+                Planets = [];
             }
 
             [Mapping("contoso://list")]
@@ -344,7 +338,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void RecordizeSlim_WithConstantArrayType_Success()
         {
-            var obj = new SimplePropertyTest[] { new SimplePropertyTest(1) };
+            var obj = new SimplePropertyTest[] { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetElementType();
             AssertRecordizationFromConstant(obj, getRecord);
@@ -353,7 +347,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void RecordizeSlim_WithConstantEnumerableType_Success()
         {
-            var obj = new List<SimplePropertyTest> { new SimplePropertyTest(1) };
+            var obj = new List<SimplePropertyTest> { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetGenericArguments()[0];
             AssertRecordizationFromConstant(obj, getRecord);
@@ -392,7 +386,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void RecordizeSlim_MemberMemberBindingWithNewList_Success()
         {
-            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new SimplePropertyTest(1) } } });
+            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } });
 
             AssertRecordizationFromExpression(exp, expr => ((LambdaExpression)expr).ReturnType);
         }
@@ -402,7 +396,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             var exp = (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } });
 
-            AssertRecordizationFromExpression(exp, expr => ((LambdaExpression)expr).ReturnType, new List<SimplePropertyTest> { new SimplePropertyTest(1) });
+            AssertRecordizationFromExpression(exp, expr => ((LambdaExpression)expr).ReturnType, new List<SimplePropertyTest> { new(1) });
         }
 
         [TestMethod]
@@ -418,7 +412,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             Expression exp = Expression.Lambda(Expression.New(
                 (ConstructorInfo)ReflectionHelpers.InfoOf(() => new SimplePropertyTest(0)),
-                new Expression[] { Expression.Constant(42) },
+                [Expression.Constant(42)],
                 ReflectionHelpers.InfoOf((SimplePropertyTest test) => test.Foo)));
 
             AssertRecordizationFromExpression(exp, expr => ((LambdaExpression)expr).ReturnType);
@@ -530,63 +524,6 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         #region Regression Tests
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void RecordizeSlim_UsingTypesFromLoadedAssembly()
-        {
-            var assemblyName = "Test.dll";
-            var assemblyBase = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            var assemblyPath = Path.Combine(assemblyBase, assemblyName);
-
-            try
-            {
-                Directory.CreateDirectory(assemblyBase);
-
-                // Emit dynamic assembly.
-                var dynamicAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(assemblyName)), AssemblyBuilderAccess.RunAndSave, assemblyBase);
-                var module = dynamicAssembly.DefineDynamicModule("Test", assemblyName);
-                var type = module.DefineType("Test", TypeAttributes.Class | TypeAttributes.Public);
-                var prop = type.DefineProperty("Test", PropertyAttributes.None, typeof(int), Type.EmptyTypes);
-                var getter = type.DefineMethod("get_Test", MethodAttributes.Public);
-                var ilgen = getter.GetILGenerator();
-                ilgen.Emit(OpCodes.Ldc_I4_0);
-                ilgen.Emit(OpCodes.Ret);
-                prop.SetGetMethod(getter);
-                prop.SetCustomAttribute(new CustomAttributeBuilder((ConstructorInfo)ReflectionHelpers.InfoOf(() => new MappingAttribute(null)), new object[] { "foo" }));
-                var res = type.CreateType();
-                dynamicAssembly.Save("Test.dll");
-
-                // Execute test logic in separate AppDomain so binary can be cleaned up.
-                var domain = AppDomain.CreateDomain(MethodBase.GetCurrentMethod().Name, null, new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory });
-                domain.SetData("AssemblyPath", assemblyPath);
-                domain.DoCallBack(() =>
-                {
-                    var remotedAssemblyPath = (string)AppDomain.CurrentDomain.GetData("AssemblyPath");
-                    var assembly = Assembly.LoadFrom(remotedAssemblyPath);
-                    var types = assembly.GetTypes();
-
-                    foreach (var t in types)
-                    {
-                        var expr = Expression.New(t);
-                        var lifter = new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
-                        var slimExpr = lifter.Visit(expr);
-                        var recordizer = new ExpressionSlimEntityTypeRecordizer();
-
-                        // Test fails if `Apply` throws.
-                        recordizer.Apply(slimExpr);
-                    }
-                });
-                AppDomain.Unload(domain);
-            }
-            finally
-            {
-                try { if (File.Exists(assemblyPath)) File.Delete(assemblyPath); }
-                catch { }
-                try { if (Directory.Exists(assemblyBase)) Directory.Delete(assemblyBase); }
-                catch { }
-            }
-        }
-#endif
 
         #endregion
 
@@ -598,7 +535,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             where T : Exception
         {
             var etr = new ExpressionEntityTypeRecordizer();
-            Assert.ThrowsException<T>(() => Roundtrip(exp));
+            Assert.ThrowsExactly<T>(() => Roundtrip(exp));
         }
 
         private static void AssertRecordizationFromExpression(Expression exp, Func<Expression, Type> getRecordType, params object[] args)

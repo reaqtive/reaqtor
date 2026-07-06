@@ -26,7 +26,7 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Nop_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.Nop.Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.Nop.Create(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Unbounded_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.Unbounded.Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.Unbounded.Create(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]
@@ -136,7 +136,7 @@ namespace Tests
 
             for (var i = 1; i <= 3; i++)
             {
-                Assert.ThrowsException<NullReferenceException>(() => cache.GetOrAdd(argument: null));
+                Assert.ThrowsExactly<NullReferenceException>(() => cache.GetOrAdd(argument: null));
                 Assert.AreEqual(0, cache.Count);
                 Assert.AreEqual(i, n);
             }
@@ -155,7 +155,7 @@ namespace Tests
 
             for (var i = 1; i <= 3; i++)
             {
-                Assert.ThrowsException<NullReferenceException>(() => cache.GetOrAdd(argument: null));
+                Assert.ThrowsExactly<NullReferenceException>(() => cache.GetOrAdd(argument: null));
                 Assert.AreEqual(1, cache.Count);
                 Assert.AreEqual(1, n);
             }
@@ -164,12 +164,6 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Unbounded_Lifetime()
         {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -196,9 +190,9 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Lru_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateLru(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateLru(0));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateLru(1).Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateLru(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateLru(0));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateLru(1).Create(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]
@@ -373,11 +367,11 @@ namespace Tests
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(2, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(""));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(""));
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(3, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(""));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(""));
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(4, n);
 
@@ -405,11 +399,11 @@ namespace Tests
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(2, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(""));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(""));
             Assert.AreEqual(3, cache.Count);
             Assert.AreEqual(3, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => cache.GetOrAdd(""));
+            Assert.ThrowsExactly<DivideByZeroException>(() => cache.GetOrAdd(""));
             Assert.AreEqual(3, cache.Count);
             Assert.AreEqual(3, n);
 
@@ -452,7 +446,7 @@ namespace Tests
             var mcf = WeakMemoizationCacheFactory.CreateLru(10);
             var res = mcf.Create<string, string>(s => (100 / int.Parse(s)).ToString(), MemoizationOptions.CacheException);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd("0"));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual("50", res.GetOrAdd("2"));
@@ -473,7 +467,7 @@ namespace Tests
             trimErr.Trim(kv => int.Parse(kv.Key) % 3 == 0);
             Assert.AreEqual(0, res.Count);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd("0"));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual("50", res.GetOrAdd("2"));
@@ -566,12 +560,6 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Lru_Lifetime()
         {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -609,12 +597,6 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Lru_Lifetime_Trim()
         {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -661,28 +643,28 @@ namespace Tests
 
             res.Dispose();
 
-            Assert.ThrowsException<ObjectDisposedException>(() => res.GetOrAdd("1"));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => res.GetOrAdd("1"));
         }
 
         [TestMethod]
         public void WeakMemoizationCacheFactory_Evict_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(default(Func<IMemoizationCacheEntryMetrics, int>), 1, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, -1, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 0, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, 0.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, -0.1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, 1.1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(default(Func<IMemoizationCacheEntryMetrics, int>), 1, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, -1, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 0, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, 0.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, -0.1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1, 1.1));
 
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(default(Func<IMemoizationCacheEntryMetrics, int>), 1, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, -1, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 0, 1.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, 0.0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, -0.1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, 1.1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(default(Func<IMemoizationCacheEntryMetrics, int>), 1, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, -1, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 0, 1.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, 0.0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, -0.1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1, 1.1));
 
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1).Create(default(Func<string, string>), MemoizationOptions.None));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1).Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByHighest(e => 0, 1).Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactory.CreateEvictedByLowest(e => 0, 1).Create(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]
@@ -913,10 +895,10 @@ namespace Tests
             Assert.AreEqual("10", f.GetOrAdd("100"));
             Assert.AreEqual(4, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd("0"));
             Assert.AreEqual(5, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd("0"));
             Assert.AreEqual(6, n);
 
             Assert.AreEqual("100", f.GetOrAdd("10"));
@@ -946,10 +928,10 @@ namespace Tests
             Assert.AreEqual("10", f.GetOrAdd("100"));
             Assert.AreEqual(4, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd("0"));
             Assert.AreEqual(5, n);
 
-            Assert.ThrowsException<DivideByZeroException>(() => f.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => f.GetOrAdd("0"));
             Assert.AreEqual(5, n);
 
             Assert.AreEqual("100", f.GetOrAdd("10"));
@@ -990,7 +972,7 @@ namespace Tests
             var mcf = WeakMemoizationCacheFactory.CreateEvictedByLowest(e => e.HitCount, 10, 0.9, stopwatchFactory: null);
             var res = mcf.Create<string, string>(s => (100 / int.Parse(s)).ToString(), MemoizationOptions.CacheException);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd("0"));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual("50", res.GetOrAdd("2"));
@@ -1011,7 +993,7 @@ namespace Tests
             trimErr.Trim(kv => int.Parse(kv.Key) % 3 == 0);
             Assert.AreEqual(0, res.Count);
 
-            Assert.ThrowsException<DivideByZeroException>(() => res.GetOrAdd("0"));
+            Assert.ThrowsExactly<DivideByZeroException>(() => res.GetOrAdd("0"));
             Assert.AreEqual(1, res.Count);
 
             Assert.AreEqual("50", res.GetOrAdd("2"));
@@ -1046,12 +1028,6 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Evict_Lifetime_Trim()
         {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -1098,7 +1074,7 @@ namespace Tests
 
             res.Dispose();
 
-            Assert.ThrowsException<ObjectDisposedException>(() => res.GetOrAdd("1"));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => res.GetOrAdd("1"));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

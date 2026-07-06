@@ -512,7 +512,7 @@ namespace Reaqtor.QueryEngine
             {
                 try
                 {
-                    var tmp = (IDisposable)method.MakeGenericMethod(elementType).Invoke(this, new object[] { edge });
+                    var tmp = (IDisposable)method.MakeGenericMethod(elementType).Invoke(this, [edge]);
                 }
                 catch (TargetInvocationException e) when (e.InnerException != null)
                 {
@@ -611,10 +611,7 @@ namespace Reaqtor.QueryEngine
 
             public IReliableObserver<T> GetObserver<T>(Uri observerUri)
             {
-                if (observerUri == null)
-                {
-                    throw new ArgumentNullException(nameof(observerUri));
-                }
+                ArgumentNullException.ThrowIfNull(observerUri);
 
                 return (IReliableObserver<T>)GetObserver(observerUri);
             }
@@ -637,7 +634,7 @@ namespace Reaqtor.QueryEngine
                 var inputType = subjectType.GetGenericArguments()[0];
                 var outputType = subjectType.GetGenericArguments()[1];
 
-                return s_createObserverForSubjectMethod.MakeGenericMethod(inputType, outputType).Invoke(null, new object[] { subjectEntity.Instance });
+                return s_createObserverForSubjectMethod.MakeGenericMethod(inputType, outputType).Invoke(null, [subjectEntity.Instance]);
             }
 
             private static IReliableObserver<TInput> CreateObserverForSubject<TInput, TOutput>(IReliableMultiSubject<TInput, TOutput> subject)

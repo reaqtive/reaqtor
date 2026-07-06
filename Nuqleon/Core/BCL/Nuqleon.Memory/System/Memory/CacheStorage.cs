@@ -11,6 +11,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace System.Memory
 {
@@ -36,10 +37,7 @@ namespace System.Memory
         /// <param name="comparer">The equality comparer used to compare cached objects.</param>
         public CacheStorage(IEqualityComparer<T> comparer)
         {
-            if (comparer == null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
+            ArgumentNullException.ThrowIfNull(comparer);
 
             _cache = new ConcurrentDictionary<T, Entry>(comparer);
         }
@@ -59,10 +57,7 @@ namespace System.Memory
         /// </exception>
         public IReference<T> GetEntry(T value)
         {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            ArgumentNullException.ThrowIfNull(value);
 
             Entry entry;
 
@@ -97,10 +92,7 @@ namespace System.Memory
         /// </exception>
         public void ReleaseEntry(IReference<T> entry)
         {
-            if (entry == null)
-            {
-                throw new ArgumentNullException(nameof(entry));
-            }
+            ArgumentNullException.ThrowIfNull(entry);
             if (entry.Value == null)
             {
                 throw new ArgumentException("Value contained in the entry cannot be null.", nameof(entry));
@@ -130,7 +122,7 @@ namespace System.Memory
 
         private sealed class Entry : IReference<T>
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private int _count;
 
 #if DEBUG

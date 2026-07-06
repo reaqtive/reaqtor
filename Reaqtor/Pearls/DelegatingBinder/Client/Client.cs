@@ -201,7 +201,7 @@ namespace DelegatingBinder
                         }
 
                         var args = Visit(node.Arguments);
-                        var func = Expression.GetFuncType(node.Method.GetParameters().Select(p => p.ParameterType).Concat(new[] { node.Method.ReturnType }).ToArray()); // NOTE: breaks down on > 16 args; IRP deals with this with tuples
+                        var func = Expression.GetFuncType([.. node.Method.GetParameters().Select(p => p.ParameterType), node.Method.ReturnType]); // NOTE: breaks down on > 16 args; IRP deals with this with tuples
                         return Expression.Invoke(Expression.Parameter(func, res.Id), args);
                     }
 

@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Nuqleon.Collections.Specialized/Nuqleon.Collections.Specialized.csproj" />
+    <Project Path="Nuqleon.Documentation/Nuqleon.Documentation.csproj" />
+    <Project Path="Nuqleon.IO.StreamSegment/Nuqleon.IO.StreamSegment.csproj" />
+    <Project Path="Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="Nuqleon.StringSegment/Nuqleon.StringSegment.csproj" />
+    <Project Path="Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Nuqleon.Collections.Specialized/Tests.Nuqleon.Collections.Specialized.csproj" />
+    <Project Path="Tests.Nuqleon.Documentation/Tests.Nuqleon.Documentation.csproj" />
+    <Project Path="Tests.Nuqleon.IO.StreamSegment/Tests.Nuqleon.IO.StreamSegment.csproj" />
+    <Project Path="Tests.Nuqleon.Memory/Tests.Nuqleon.Memory.csproj" />
+    <Project Path="Tests.Nuqleon.Reflection.Virtualization/Tests.Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="Tests.Nuqleon.StringSegment/Tests.Nuqleon.StringSegment.csproj" />
+    <Project Path="Tests.Nuqleon.Time/Tests.Nuqleon.Time.csproj" />
+  </Folder>
+</Solution>
