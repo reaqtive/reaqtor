@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>In-memory (single-process) Reaqtor remoting platform — the live net10.0 oracle for the gRPC spike (ported from the archived Reaqtor.Remoting.Platform.InMemory + the in-memory StateStore + the platform client driver). Hosts the ported QC/QE engine in-process with no transport.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Core\Reaqtor.Remoting.Platform.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Core\Reaqtor.Remoting.Client.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Engine\Reaqtor.Remoting.Engine.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.KeyValueStore.InMemory\Reaqtor.QueryEngine.KeyValueStore.InMemory.csproj" />
+  </ItemGroup>
+
+</Project>

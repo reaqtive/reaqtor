@@ -18,6 +18,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- gRPC stack for the remoting spike (code-first via protobuf-net.Grpc). Only the
+         Reaqtor/Samples/Grpc/Reaqtor.Remoting.Grpc.* projects reference these. -->
+    <PackageVersion Include="protobuf-net.Grpc" Version="1.2.2" />
+    <PackageVersion Include="protobuf-net.Grpc.AspNetCore" Version="1.2.2" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.71.0" />
+    <PackageVersion Include="Grpc.AspNetCore" Version="2.71.0" />
+    <!-- StreamJsonRpc prototype (alternative RPC transport demo): bidirectional JSON-RPC over a duplex pipe with
+         marshaled callback objects, IProgress<T>, IAsyncEnumerable<T> and CancellationToken. Only the
+         Reaqtor/Samples/Grpc/Tests.Reaqtor.Remoting.StreamJsonRpc project references these. -->
+    <PackageVersion Include="StreamJsonRpc" Version="2.25.28" />
+    <PackageVersion Include="Nerdbank.Streams" Version="2.13.16" />
+    <!-- MagicOnion prototype (gRPC-native bidirectional RPC + StreamingHub): the production-grade, transport-uniform
+         alternative for the callback/duplex legs. Only the Reaqtor/Samples/Grpc/Tests.Reaqtor.Remoting.MagicOnion
+         project references these. -->
+    <PackageVersion Include="MagicOnion.Server" Version="7.10.1" />
+    <PackageVersion Include="MagicOnion.Client" Version="7.10.1" />
+    <!-- Pin MessagePack above the version MagicOnion 7.10.1 pulls transitively (3.1.4), which the NuGet audit flags
+         (NU1903, GHSA-hv8m-jj95-wg3x). -->
+    <PackageVersion Include="MessagePack" Version="3.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Test stack: MSTest on Microsoft.Testing.Platform (MTP). No Microsoft.NET.Test.Sdk
          (VSTest host) and no coverlet; coverage/trx/hangdump are MTP extensions. -->
     <!-- All Microsoft.Testing.* packages must share a Microsoft.Testing.Platform major version.

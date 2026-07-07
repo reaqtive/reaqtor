@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>End-to-end smoke test for the net10.0 in-process oracle (Milestone 0a): boots InMemoryReactivePlatform with TestDeployable and asserts a reactive query runs client -> QC -> QE -> observer entirely in-process, with no transport.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.TestingFramework.Core\Reaqtor.Remoting.TestingFramework.Core.csproj" />
+  </ItemGroup>
+
+</Project>

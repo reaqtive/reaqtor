@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Client-side gRPC adapters for the Reaqtor remoting spike: the h2c channel factory, the command-channel client (GrpcReactiveServiceConnection — the gRPC peer of the in-proc InProcessReactiveServiceConnection), and (Milestone 1) the four synchronous store adapters. See GRPC-REMOTING-SPIKE-PLAN.md §4.4/§4.7.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- gRPC's public surface (GrpcChannel, CallContext, protobuf-net types, ...) is not CLS-compliant,
+         so this assembly cannot be. Opt out of the repo-wide synthesized [assembly: CLSCompliant(true)]
+         (Directory.Build.props) and declare it non-CLS-compliant, as the archived Remoting sample did. -->
+    <AssemblyAttribute Remove="System.CLSCompliantAttribute" />
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>false</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net.Grpc" />
+    <PackageReference Include="Grpc.Net.Client" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Contracts\Reaqtor.Remoting.Grpc.Contracts.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Protocol\Reaqtor.Remoting.Grpc.Protocol.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+  </ItemGroup>
+
+</Project>

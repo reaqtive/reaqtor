@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Transport tests for the gRPC remoting spike. Milestone 0b: launch the QueryEvaluatorHost exe out-of-process and assert ReactiveServiceControl.Ping (and Configure/Start) over h2c.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Grpc\Reaqtor.Remoting.Platform.Grpc.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Client\Reaqtor.Remoting.Grpc.Client.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Contracts\Reaqtor.Remoting.Grpc.Contracts.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Core\Reaqtor.Remoting.Client.Core.csproj" />
+    <!-- M1.c parity: run the same scenario against the in-proc oracle (InMemoryReactivePlatform + CoreDeployable). -->
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.InMemory.Core\Reaqtor.Remoting.Platform.InMemory.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <!-- Build-order only: ensures the host exes are built; the test launches them out-of-process by path. -->
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.QueryEvaluatorHost\Reaqtor.Remoting.Grpc.QueryEvaluatorHost.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.MessagingHost\Reaqtor.Remoting.Grpc.MessagingHost.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!-- Bake the built host assembly paths (absolute, config-specific) into the test assembly so it can launch them. -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>GrpcHostAssembly</_Parameter1>
+      <_Parameter2>$(MSBuildThisFileDirectory)..\Reaqtor.Remoting.Grpc.QueryEvaluatorHost\bin\$(Configuration)\net10.0\Reaqtor.Remoting.Grpc.QueryEvaluatorHost.dll</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>GrpcMessagingHostAssembly</_Parameter1>
+      <_Parameter2>$(MSBuildThisFileDirectory)..\Reaqtor.Remoting.Grpc.MessagingHost\bin\$(Configuration)\net10.0\Reaqtor.Remoting.Grpc.MessagingHost.dll</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>

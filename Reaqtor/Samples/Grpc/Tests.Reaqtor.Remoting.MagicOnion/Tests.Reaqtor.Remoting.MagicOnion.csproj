@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Prototype + demos of MagicOnion (gRPC-native RPC + bidirectional StreamingHub) as the production-grade, transport-uniform alternative for the callback/duplex legs of the remoting spike. Hosts an in-process Kestrel/h2c MagicOnion server and exercises a unary service plus a StreamingHub where the server pushes back into the client. See GRPC-REMOTING-SPIKE-PLAN.md §13.10.</Description>
+  </PropertyGroup>
+
+  <!-- Hosts ASP.NET Core (Kestrel + gRPC) in-process for the demo. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MagicOnion.Server" />
+    <PackageReference Include="MagicOnion.Client" />
+  </ItemGroup>
+
+</Project>
