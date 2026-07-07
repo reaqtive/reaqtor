@@ -113,7 +113,7 @@ public class UnifyingSerializationHelpersTests
         var observerableType = TypeSlim.Generic(((GenericDefinitionTypeSlim)typeof(IAsyncReactiveQbservable<>).ToTypeSlim()), new TypeSlim[] { structuralType }.ToReadOnly());
         var parameter = ExpressionSlim.Parameter(observerableType, uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(1, mappings.Count());
+        Assert.HasCount(1, mappings);
     }
 
     [TestMethod]
