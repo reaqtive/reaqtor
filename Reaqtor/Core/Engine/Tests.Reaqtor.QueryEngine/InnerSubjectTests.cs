@@ -120,11 +120,8 @@ public class InnerSubjectTests
 
         subject.Seal();
 
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-        {
-            var ctx = CreateOperatorContext(new Uri("tests://qux/1"), svc, new MiniScheduler());
-            new SubscriptionInitializeVisitor(s1).Initialize(ctx);
-        });
+        var ctx = CreateOperatorContext(new Uri("tests://qux/1"), svc, new MiniScheduler());
+        Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(s1).Initialize(ctx));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
     }

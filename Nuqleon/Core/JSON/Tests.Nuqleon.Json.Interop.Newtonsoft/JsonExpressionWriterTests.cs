@@ -603,34 +603,19 @@ public class JsonExpressionWriterTests
         AssertNotSupported(w => w.WriteEndConstructor());
         AssertNotSupported(w => w.WriteUndefined());
 
-        Assert.ThrowsExactly<NotSupportedException>(() =>
-        {
-            var w = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
-            w.WriteValue(DateTime.Now);
-        });
+        Assert.ThrowsExactly<NotSupportedException>(() => new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat }.WriteValue(DateTime.Now));
 
-        Assert.ThrowsExactly<NotSupportedException>(() =>
-        {
-            var w = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
-            w.WriteValue(DateTimeOffset.Now);
-        });
+        Assert.ThrowsExactly<NotSupportedException>(() => new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat }.WriteValue(DateTimeOffset.Now));
     }
 
     [TestMethod]
     public void JsonExpressionWriter_InvalidOperation_EndArray()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-        {
-            var w = new JsonExpressionWriter();
-            w.WriteEndArray();
-        });
+        Assert.ThrowsExactly<InvalidOperationException>(() => new JsonExpressionWriter().WriteEndArray());
 
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-        {
-            var w = new JsonExpressionWriter();
-            w.WriteValue(1);
-            w.WriteEndArray();
-        });
+        var w = new JsonExpressionWriter();
+        w.WriteValue(1);
+        Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndArray());
     }
 
     [TestMethod]
@@ -642,31 +627,21 @@ public class JsonExpressionWriterTests
             w => w.WriteStartObject(),
         })
         {
-            Assert.ThrowsExactly<InvalidOperationException>(() =>
-            {
-                var w = new JsonExpressionWriter();
-                w.WriteStartArray();
-                write(w);
-                w.WriteEndArray();
-            });
+            var w = new JsonExpressionWriter();
+            w.WriteStartArray();
+            write(w);
+            Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndArray());
         }
     }
 
     [TestMethod]
     public void JsonExpressionWriter_InvalidOperation_EndObject()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-        {
-            var w = new JsonExpressionWriter();
-            w.WriteEndObject();
-        });
+        Assert.ThrowsExactly<InvalidOperationException>(() => new JsonExpressionWriter().WriteEndObject());
 
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-        {
-            var w = new JsonExpressionWriter();
-            w.WriteValue(1);
-            w.WriteEndObject();
-        });
+        var w = new JsonExpressionWriter();
+        w.WriteValue(1);
+        Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndObject());
     }
 
     [TestMethod]
@@ -678,14 +653,11 @@ public class JsonExpressionWriterTests
             w => w.WriteValue(1),
         })
         {
-            Assert.ThrowsExactly<InvalidOperationException>(() =>
-            {
-                var w = new JsonExpressionWriter();
-                w.WriteStartObject();
-                write(w);
-                w.WriteValue(1);
-                w.WriteEndObject();
-            });
+            var w = new JsonExpressionWriter();
+            w.WriteStartObject();
+            write(w);
+            w.WriteValue(1);
+            Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndObject());
         }
     }
 
@@ -698,14 +670,11 @@ public class JsonExpressionWriterTests
             w => w.WriteStartArray(),
         })
         {
-            Assert.ThrowsExactly<InvalidOperationException>(() =>
-            {
-                var w = new JsonExpressionWriter();
-                w.WriteStartObject();
-                w.WritePropertyName("foo");
-                write(w);
-                w.WriteEndObject();
-            });
+            var w = new JsonExpressionWriter();
+            w.WriteStartObject();
+            w.WritePropertyName("foo");
+            write(w);
+            Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndObject());
         }
     }
 
