@@ -105,6 +105,15 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
+  <!--
+    CA1861 (prefer 'static readonly' fields over constant array arguments) targets hot-path performance;
+    in unit test projects the constant arrays are one-shot test data, so the rule is noise there. It is
+    excluded for test projects but stays active for shipping code, where hoisting is worth acting on.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <NoWarn>$(NoWarn);CA1861</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <!--
       NB: These belong here rather than in a ProjectReference'd .csproj. Cross-referencing test

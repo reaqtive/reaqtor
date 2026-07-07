@@ -17,7 +17,6 @@ using Utilities;
 namespace Tests;
 
 [TestClass]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "Not needed for this test suite.")]
 public class SortedSetTests : PersistedTestBase
 {
     [TestMethod]
