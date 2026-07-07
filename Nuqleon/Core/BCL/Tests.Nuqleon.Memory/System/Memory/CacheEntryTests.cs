@@ -13,6 +13,11 @@ using System.Text;
 
 namespace Tests;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: these tests deliberately
+// throw and catch to obtain a real exception instance (with a stack trace) to use as test data; the
+// assertions run legitimately on the caught exception, not as exception-expectation checks.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public class CacheEntryTests
 {

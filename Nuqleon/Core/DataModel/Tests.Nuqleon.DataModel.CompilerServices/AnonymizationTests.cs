@@ -13,6 +13,10 @@ using Nuqleon.DataModel.TypeSystem;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive here: the catch's Assert.Fail reports an
+// *unexpected* exception with context; the test expects the anonymization checker not to throw.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public class AnonymizationTests
 {

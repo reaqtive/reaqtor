@@ -23,6 +23,10 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace Tests;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive here: the catch's Assert.Fail reports a
+// regression if the roundtrip unexpectedly throws; the test expects it not to throw.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public partial class Tests
 {

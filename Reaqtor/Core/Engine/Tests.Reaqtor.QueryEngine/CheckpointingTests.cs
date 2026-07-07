@@ -29,6 +29,11 @@ using Reaqtor.Reliable;
 
 namespace Tests.Reaqtor.QueryEngine;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: the expected-exception
+// tests use a 'failed' flag with Assert.IsTrue(failed) after the try, so the catch-block asserts (on
+// ex.Message) run only on the expected throw and the test still fails if no exception is thrown.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public partial class CheckpointingTests : PhysicalTimeEngineTest
 {

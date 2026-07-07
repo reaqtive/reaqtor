@@ -16,6 +16,10 @@ using System.Text.RegularExpressions;
 
 namespace Tests.System.Linq.Expressions.Optimizers;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive here: the catch's Assert.Fail reports an
+// *unexpected* exception with context; the test expects the member access not to throw.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public class PureMemberCatalogTests
 {
