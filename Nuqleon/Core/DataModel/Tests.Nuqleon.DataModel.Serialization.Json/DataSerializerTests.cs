@@ -897,7 +897,7 @@ public partial class DataSerializerTests
         var reader = new StreamReader(memoryStream);
         memoryStream.Position = 0;
         var json = reader.ReadToEnd();
-        Assert.AreEqual(2, json.Split(["\"Context\""], 10, StringSplitOptions.None).Length);
+        Assert.HasCount(2, json.Split(["\"Context\""], 10, StringSplitOptions.None));
 
         memoryStream.Position = 0;
 

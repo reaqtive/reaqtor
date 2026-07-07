@@ -152,10 +152,10 @@ public class EnumDictionaryTests
         enumDictionary.Clear();
 
         Assert.IsEmpty(enumDictionary);
-        Assert.IsFalse(enumDictionary.Keys.Any());
-        Assert.IsFalse(enumDictionary.Values.Any());
-        Assert.IsFalse(enumDictionary.Any());
-        Assert.IsFalse(enumDictionary.Keys.Any());
+        Assert.IsEmpty(enumDictionary.Keys);
+        Assert.IsEmpty(enumDictionary.Values);
+        Assert.IsEmpty(enumDictionary);
+        Assert.IsEmpty(enumDictionary.Keys);
     }
 
     [TestMethod]
@@ -381,8 +381,8 @@ public class EnumDictionaryTests
 
             foreach (var value in values.Where(val => !systemDictionary.ContainsKey(val)))
             {
-                Assert.IsFalse(enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>(value, true)));
-                Assert.IsFalse(enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>(value, false)));
+                Assert.DoesNotContain(new KeyValuePair<ExpressionType, bool>(value, true), enumDictionary);
+                Assert.DoesNotContain(new KeyValuePair<ExpressionType, bool>(value, false), enumDictionary);
             }
 
             Assert.AreEqual(systemDictionary.Count, count);
@@ -510,8 +510,8 @@ public class EnumDictionaryTests
         Assert.IsTrue(EnumByteDictionary.Remove(EnumByte.Z));
         EnumByteDictionary.Add(new KeyValuePair<EnumByte, bool>(EnumByte.A, true));
         EnumByteDictionary.Add(new KeyValuePair<EnumByte, bool>(EnumByte.Z, true));
-        Assert.IsTrue(EnumByteDictionary.Contains(new KeyValuePair<EnumByte, bool>(EnumByte.A, true)));
-        Assert.IsTrue(EnumByteDictionary.Contains(new KeyValuePair<EnumByte, bool>(EnumByte.Z, true)));
+        Assert.Contains(new KeyValuePair<EnumByte, bool>(EnumByte.A, true), EnumByteDictionary);
+        Assert.Contains(new KeyValuePair<EnumByte, bool>(EnumByte.Z, true), EnumByteDictionary);
         Assert.IsTrue(EnumByteDictionary.Remove(new KeyValuePair<EnumByte, bool>(EnumByte.A, true)));
         Assert.IsTrue(EnumByteDictionary.Remove(new KeyValuePair<EnumByte, bool>(EnumByte.Z, true)));
 
@@ -526,8 +526,8 @@ public class EnumDictionaryTests
         Assert.IsTrue(EnumShortDictionary.Remove(EnumShort.Z));
         EnumShortDictionary.Add(new KeyValuePair<EnumShort, bool>(EnumShort.A, true));
         EnumShortDictionary.Add(new KeyValuePair<EnumShort, bool>(EnumShort.Z, true));
-        Assert.IsTrue(EnumShortDictionary.Contains(new KeyValuePair<EnumShort, bool>(EnumShort.A, true)));
-        Assert.IsTrue(EnumShortDictionary.Contains(new KeyValuePair<EnumShort, bool>(EnumShort.Z, true)));
+        Assert.Contains(new KeyValuePair<EnumShort, bool>(EnumShort.A, true), EnumShortDictionary);
+        Assert.Contains(new KeyValuePair<EnumShort, bool>(EnumShort.Z, true), EnumShortDictionary);
         Assert.IsTrue(EnumShortDictionary.Remove(new KeyValuePair<EnumShort, bool>(EnumShort.A, true)));
         Assert.IsTrue(EnumShortDictionary.Remove(new KeyValuePair<EnumShort, bool>(EnumShort.Z, true)));
 
@@ -542,8 +542,8 @@ public class EnumDictionaryTests
         Assert.IsTrue(EnumUShortDictionary.Remove(EnumUShort.Z));
         EnumUShortDictionary.Add(new KeyValuePair<EnumUShort, bool>(EnumUShort.A, true));
         EnumUShortDictionary.Add(new KeyValuePair<EnumUShort, bool>(EnumUShort.Z, true));
-        Assert.IsTrue(EnumUShortDictionary.Contains(new KeyValuePair<EnumUShort, bool>(EnumUShort.A, true)));
-        Assert.IsTrue(EnumUShortDictionary.Contains(new KeyValuePair<EnumUShort, bool>(EnumUShort.Z, true)));
+        Assert.Contains(new KeyValuePair<EnumUShort, bool>(EnumUShort.A, true), EnumUShortDictionary);
+        Assert.Contains(new KeyValuePair<EnumUShort, bool>(EnumUShort.Z, true), EnumUShortDictionary);
         Assert.IsTrue(EnumUShortDictionary.Remove(new KeyValuePair<EnumUShort, bool>(EnumUShort.A, true)));
         Assert.IsTrue(EnumUShortDictionary.Remove(new KeyValuePair<EnumUShort, bool>(EnumUShort.Z, true)));
 
@@ -558,8 +558,8 @@ public class EnumDictionaryTests
         Assert.IsTrue(EnumSByteDictionary.Remove(EnumSByte.Z));
         EnumSByteDictionary.Add(new KeyValuePair<EnumSByte, bool>(EnumSByte.A, true));
         EnumSByteDictionary.Add(new KeyValuePair<EnumSByte, bool>(EnumSByte.Z, true));
-        Assert.IsTrue(EnumSByteDictionary.Contains(new KeyValuePair<EnumSByte, bool>(EnumSByte.A, true)));
-        Assert.IsTrue(EnumSByteDictionary.Contains(new KeyValuePair<EnumSByte, bool>(EnumSByte.Z, true)));
+        Assert.Contains(new KeyValuePair<EnumSByte, bool>(EnumSByte.A, true), EnumSByteDictionary);
+        Assert.Contains(new KeyValuePair<EnumSByte, bool>(EnumSByte.Z, true), EnumSByteDictionary);
         Assert.IsTrue(EnumSByteDictionary.Remove(new KeyValuePair<EnumSByte, bool>(EnumSByte.A, true)));
         Assert.IsTrue(EnumSByteDictionary.Remove(new KeyValuePair<EnumSByte, bool>(EnumSByte.Z, true)));
     }
@@ -677,7 +677,7 @@ public class EnumDictionaryTests
 
     private static void DictionaryAssertAreEqual<TKey, TValue>(IDictionary<TKey, TValue> expected, IDictionary<TKey, TValue> actual)
     {
-        Assert.AreEqual(expected.Count, actual.Count);
+        Assert.HasCount(expected.Count, actual);
 
         var expectedElements = expected.OrderBy(kvp => kvp.Key);
         var actualElements = actual.OrderBy(kvp => kvp.Key);

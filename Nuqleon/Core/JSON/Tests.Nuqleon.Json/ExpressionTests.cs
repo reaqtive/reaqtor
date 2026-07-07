@@ -200,7 +200,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(1, arr.Elements.Count);
+            Assert.HasCount(1, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
 
             var i = arr.ToString();
@@ -228,7 +228,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(2, arr.Elements.Count);
+            Assert.HasCount(2, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
 
@@ -257,7 +257,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(3, arr.Elements.Count);
+            Assert.HasCount(3, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -287,7 +287,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(4, arr.Elements.Count);
+            Assert.HasCount(4, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -318,7 +318,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(5, arr.Elements.Count);
+            Assert.HasCount(5, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -350,7 +350,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.AreEqual(6, arr.Elements.Count);
+            Assert.HasCount(6, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -383,7 +383,7 @@ public class ExpressionTests
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements));
             }
 
-            Assert.AreEqual(7, arr.Elements.Count);
+            Assert.HasCount(7, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -405,10 +405,10 @@ public class ExpressionTests
         var o = Json.Expression.Parse(j);
         Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
         var arr = (Json.ArrayExpression)o;
-        Assert.AreEqual(1, arr.Elements.Count);
+        Assert.HasCount(1, arr.Elements);
         Assert.AreEqual(Json.ExpressionType.Array, arr.Elements[0].NodeType);
         var nst = (Json.ArrayExpression)arr.Elements[0];
-        Assert.AreEqual(1, nst.Elements.Count);
+        Assert.HasCount(1, nst.Elements);
         Assert.IsTrue(nst.Elements[0].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)nst.Elements[0]).Value == true);
     }
 
@@ -459,7 +459,7 @@ public class ExpressionTests
             Assert.AreEqual(n, arr.ElementCount);
             Assert.IsTrue(exprs.SequenceEqual(Enumerable.Range(0, n).Select(i => arr.GetElement(i))));
 
-            Assert.AreEqual(n, arr.Elements.Count);
+            Assert.HasCount(n, arr.Elements);
             Assert.IsTrue(exprs.SequenceEqual(arr.Elements));
 
             Assert.Contains("ArrayExpression" + n, arr.GetType().Name);
@@ -479,10 +479,10 @@ public class ExpressionTests
         var o = Json.Expression.Parse(j);
         Assert.AreEqual(Json.ExpressionType.Object, o.NodeType);
         var obj = (Json.ObjectExpression)o;
-        Assert.AreEqual(3, obj.Members.Keys.Count());
+        Assert.HasCount(3, obj.Members.Keys);
         Assert.AreEqual("Bart", (string)((Json.ConstantExpression)obj.Members["Name"]).Value);
         Assert.AreEqual("21", (string)((Json.ConstantExpression)obj.Members["Age"]).Value);
-        Assert.AreEqual(true, (bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value);
+        Assert.IsTrue((bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value);
     }
 
     [TestMethod]

@@ -98,7 +98,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(Func<int, IAsyncReactiveQbservable<int>>).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
