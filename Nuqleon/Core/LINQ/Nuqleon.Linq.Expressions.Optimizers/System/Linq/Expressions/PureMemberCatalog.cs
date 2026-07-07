@@ -63,365 +63,320 @@ public static class PureMemberCatalog
     /// </summary>
     public static class System
     {
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Boolean" />.
-        /// </summary>
-        public static MemberTable Boolean { get; } = new MemberTable
+        static System()
         {
-            () => bool.FalseString,
-            () => bool.TrueString,
+            // This file used to use collection initializers for each property, but this turned
+            // out to bring Roslyn analyzers to a grinding halt. It turns out that the combination
+            // of lambda expressions and collection initializers is handled very badly by one
+            // particular analyzer (IDE0001), and it used to take about 15 minutes to process
+            // this file!
+            // The problem is that Roslyn's semantic analyzer caching works at a per-statement
+            // level, meaning that if a single expression ends up needing the same information
+            // multiple times, it will be recomputed each time. This can make initializer
+            // expressions much slower than equivalent code that expresses the Add calls
+            // explicitly as a series of statements.
+            // It seems that lambda expressions are particularly expensive, so it's the specific
+            // combination of lambda expressions inside initializers that is known to be
+            // particularly bad (and also a sufficiently unusual thing to do that the Roslyn team
+            // does not want to completely overhaul their caching architecture to fix it).
+#pragma warning disable IDE0028 // Simplify collection initialization
+            MemberTable booleanMembers = new();
+            booleanMembers.Add(() => bool.FalseString);
+            booleanMembers.Add(() => bool.TrueString);
+            booleanMembers.Add((bool i, bool j) => i.Equals(j));
+            booleanMembers.Add((bool i, bool j) => i.CompareTo(j));
+            Boolean = booleanMembers.ToReadOnly();
 
-            (bool i, bool j) => i.Equals(j),
-            (bool i, bool j) => i.CompareTo(j),
-        }.ToReadOnly();
+            MemberTable charMembers = new();
+            charMembers.Add((string s) => char.Parse(s));
+            charMembers.Add((char c) => char.ToString(c));
+            charMembers.Add((char c) => char.IsDigit(c));
+            charMembers.Add((char c) => char.IsLetter(c));
+            charMembers.Add((char c) => char.IsWhiteSpace(c));
+            charMembers.Add((char c) => char.IsUpper(c));
+            charMembers.Add((char c) => char.IsLower(c));
+            charMembers.Add((char c) => char.IsPunctuation(c));
+            charMembers.Add((char c) => char.IsLetterOrDigit(c));
+            charMembers.Add((char c) => char.ToUpperInvariant(c));
+            charMembers.Add((char c) => char.ToLowerInvariant(c));
+            charMembers.Add((char c) => char.IsControl(c));
+            charMembers.Add((char c) => char.IsNumber(c));
+            charMembers.Add((char c) => char.IsSeparator(c));
+            charMembers.Add((char c) => char.IsSurrogate(c));
+            charMembers.Add((char c) => char.IsSymbol(c));
+            charMembers.Add((char c) => char.GetUnicodeCategory(c));
+            charMembers.Add((char c) => char.GetNumericValue(c));
+            charMembers.Add((char c) => char.IsHighSurrogate(c));
+            charMembers.Add((char c) => char.IsLowSurrogate(c));
+            charMembers.Add((int utf32) => char.ConvertFromUtf32(utf32));
+            charMembers.Add((string s, int index) => char.IsControl(s, index));
+            charMembers.Add((string s, int index) => char.IsDigit(s, index));
+            charMembers.Add((string s, int index) => char.IsLetter(s, index));
+            charMembers.Add((string s, int index) => char.IsLetterOrDigit(s, index));
+            charMembers.Add((string s, int index) => char.IsLower(s, index));
+            charMembers.Add((string s, int index) => char.IsNumber(s, index));
+            charMembers.Add((string s, int index) => char.IsPunctuation(s, index));
+            charMembers.Add((string s, int index) => char.IsSeparator(s, index));
+            charMembers.Add((string s, int index) => char.IsSurrogate(s, index));
+            charMembers.Add((string s, int index) => char.IsSymbol(s, index));
+            charMembers.Add((string s, int index) => char.IsUpper(s, index));
+            charMembers.Add((string s, int index) => char.IsWhiteSpace(s, index));
+            charMembers.Add((string s, int index) => char.GetUnicodeCategory(s, index));
+            charMembers.Add((string s, int index) => char.GetNumericValue(s, index));
+            charMembers.Add((string s, int index) => char.IsHighSurrogate(s, index));
+            charMembers.Add((string s, int index) => char.IsLowSurrogate(s, index));
+            charMembers.Add((string s, int index) => char.IsSurrogatePair(s, index));
+            charMembers.Add((string s, int index) => char.ConvertToUtf32(s, index));
+            charMembers.Add((char highSurrogate, char lowSurrogate) => char.IsSurrogatePair(highSurrogate, lowSurrogate));
+            charMembers.Add((char highSurrogate, char lowSurrogate) => char.ConvertToUtf32(highSurrogate, lowSurrogate));
+            charMembers.Add((char i, char j) => i.CompareTo(j));
+            charMembers.Add((char i, char j) => i.Equals(j));
+            charMembers.Add((char c) => c.ToString());
+            Char = charMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Char" />.
-        /// </summary>
-        public static MemberTable Char { get; } = new MemberTable
-        {
-            (string s) => char.Parse(s),
-            (char c) => char.ToString(c),
-            (char c) => char.IsDigit(c),
-            (char c) => char.IsLetter(c),
-            (char c) => char.IsWhiteSpace(c),
-            (char c) => char.IsUpper(c),
-            (char c) => char.IsLower(c),
-            (char c) => char.IsPunctuation(c),
-            (char c) => char.IsLetterOrDigit(c),
-            (char c) => char.ToUpperInvariant(c),
-            (char c) => char.ToLowerInvariant(c),
-            (char c) => char.IsControl(c),
-            (char c) => char.IsNumber(c),
-            (char c) => char.IsSeparator(c),
-            (char c) => char.IsSurrogate(c),
-            (char c) => char.IsSymbol(c),
-            (char c) => char.GetUnicodeCategory(c),
-            (char c) => char.GetNumericValue(c),
-            (char c) => char.IsHighSurrogate(c),
-            (char c) => char.IsLowSurrogate(c),
-            (int utf32) => char.ConvertFromUtf32(utf32),
-            (string s, int index) => char.IsControl(s, index),
-            (string s, int index) => char.IsDigit(s, index),
-            (string s, int index) => char.IsLetter(s, index),
-            (string s, int index) => char.IsLetterOrDigit(s, index),
-            (string s, int index) => char.IsLower(s, index),
-            (string s, int index) => char.IsNumber(s, index),
-            (string s, int index) => char.IsPunctuation(s, index),
-            (string s, int index) => char.IsSeparator(s, index),
-            (string s, int index) => char.IsSurrogate(s, index),
-            (string s, int index) => char.IsSymbol(s, index),
-            (string s, int index) => char.IsUpper(s, index),
-            (string s, int index) => char.IsWhiteSpace(s, index),
-            (string s, int index) => char.GetUnicodeCategory(s, index),
-            (string s, int index) => char.GetNumericValue(s, index),
-            (string s, int index) => char.IsHighSurrogate(s, index),
-            (string s, int index) => char.IsLowSurrogate(s, index),
-            (string s, int index) => char.IsSurrogatePair(s, index),
-            (string s, int index) => char.ConvertToUtf32(s, index),
-            (char highSurrogate, char lowSurrogate) => char.IsSurrogatePair(highSurrogate, lowSurrogate),
-            (char highSurrogate, char lowSurrogate) => char.ConvertToUtf32(highSurrogate, lowSurrogate),
+            MemberTable sByteMembers = new();
+            sByteMembers.Add((sbyte i, sbyte j) => i.CompareTo(j));
+            sByteMembers.Add((sbyte i, sbyte j) => i.Equals(j));
+            SByte = sByteMembers.ToReadOnly();
 
-            (char i, char j) => i.CompareTo(j),
-            (char i, char j) => i.Equals(j),
-            (char c) => c.ToString(),
-        }.ToReadOnly();
+            MemberTable byteMembers = new();
+            byteMembers.Add((byte i, byte j) => i.CompareTo(j));
+            byteMembers.Add((byte i, byte j) => i.Equals(j));
+            Byte = byteMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.SByte" />.
-        /// </summary>
-        public static MemberTable SByte { get; } = new MemberTable
-        {
-            (sbyte i, sbyte j) => i.CompareTo(j),
-            (sbyte i, sbyte j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable int16Members = new();
+            int16Members.Add((short i, short j) => i.CompareTo(j));
+            int16Members.Add((short i, short j) => i.Equals(j));
+            Int16 = int16Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Byte" />.
-        /// </summary>
-        public static MemberTable Byte { get; } = new MemberTable
-        {
-            (byte i, byte j) => i.CompareTo(j),
-            (byte i, byte j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable uInt16Members = new();
+            uInt16Members.Add((ushort i, ushort j) => i.CompareTo(j));
+            uInt16Members.Add((ushort i, ushort j) => i.Equals(j));
+            UInt16 = uInt16Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Int16" />.
-        /// </summary>
-        public static MemberTable Int16 { get; } = new MemberTable
-        {
-            (short i, short j) => i.CompareTo(j),
-            (short i, short j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable int32Members = new();
+            int32Members.Add((int i, int j) => i.CompareTo(j));
+            int32Members.Add((int i, int j) => i.Equals(j));
+            Int32 = int32Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.UInt16" />.
-        /// </summary>
-        public static MemberTable UInt16 { get; } = new MemberTable
-        {
-            (ushort i, ushort j) => i.CompareTo(j),
-            (ushort i, ushort j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable uInt32Members = new();
+            uInt32Members.Add((uint i, uint j) => i.CompareTo(j));
+            uInt32Members.Add((uint i, uint j) => i.Equals(j));
+            UInt32 = uInt32Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Int32" />.
-        /// </summary>
-        public static MemberTable Int32 { get; } = new MemberTable
-        {
-            (int i, int j) => i.CompareTo(j),
-            (int i, int j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable int64Members = new();
+            int64Members.Add((long i, long j) => i.CompareTo(j));
+            int64Members.Add((long i, long j) => i.Equals(j));
+            Int64 = int64Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.UInt32" />.
-        /// </summary>
-        public static MemberTable UInt32 { get; } = new MemberTable
-        {
-            (uint i, uint j) => i.CompareTo(j),
-            (uint i, uint j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable uInt64Members = new();
+            uInt64Members.Add((ulong i, ulong j) => i.CompareTo(j));
+            uInt64Members.Add((ulong i, ulong j) => i.Equals(j));
+            UInt64 = uInt64Members.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Int64" />.
-        /// </summary>
-        public static MemberTable Int64 { get; } = new MemberTable
-        {
-            (long i, long j) => i.CompareTo(j),
-            (long i, long j) => i.Equals(j),
-        }.ToReadOnly();
+            MemberTable halfMembers = new();
+            halfMembers.Add(() => global::System.Half.Epsilon);
+            halfMembers.Add(() => global::System.Half.MaxValue);
+            halfMembers.Add(() => global::System.Half.MinValue);
+            halfMembers.Add(() => global::System.Half.NaN);
+            halfMembers.Add(() => global::System.Half.NegativeInfinity);
+            halfMembers.Add(() => global::System.Half.PositiveInfinity);
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.UInt64" />.
-        /// </summary>
-        public static MemberTable UInt64 { get; } = new MemberTable
-        {
-            (ulong i, ulong j) => i.CompareTo(j),
-            (ulong i, ulong j) => i.Equals(j),
-        }.ToReadOnly();
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsFinite(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsInfinity(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsNaN(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsNegative(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsNegativeInfinity(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsNormal(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsPositiveInfinity(i));
+            halfMembers.Add((global::System.Half i) => global::System.Half.IsSubnormal(i));
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Half" />.
-        /// </summary>
-        public static MemberTable Half { get; } = new MemberTable
-        {
-            () => global::System.Half.Epsilon,
-            () => global::System.Half.MaxValue,
-            () => global::System.Half.MinValue,
-            () => global::System.Half.NaN,
-            () => global::System.Half.NegativeInfinity,
-            () => global::System.Half.PositiveInfinity,
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i.CompareTo(j));
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i.Equals(j));
 
-            (global::System.Half i) => global::System.Half.IsFinite(i),
-            (global::System.Half i) => global::System.Half.IsInfinity(i),
-            (global::System.Half i) => global::System.Half.IsNaN(i),
-            (global::System.Half i) => global::System.Half.IsNegative(i),
-            (global::System.Half i) => global::System.Half.IsNegativeInfinity(i),
-            (global::System.Half i) => global::System.Half.IsNormal(i),
-            (global::System.Half i) => global::System.Half.IsPositiveInfinity(i),
-            (global::System.Half i) => global::System.Half.IsSubnormal(i),
+            halfMembers.Add((global::System.Half i) => (float)i);
+            halfMembers.Add((global::System.Half i) => (double)i);
+            halfMembers.Add((float i) => (global::System.Half)i);
+            halfMembers.Add((double i) => (global::System.Half)i);
 
-            (global::System.Half i, global::System.Half j) => i.CompareTo(j),
-            (global::System.Half i, global::System.Half j) => i.Equals(j),
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i == j);
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i != j);
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i < j);
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i <= j);
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i > j);
+            halfMembers.Add((global::System.Half i, global::System.Half j) => i >= j);
+            Half = halfMembers.ToReadOnly();
 
-            (global::System.Half i) => (float)i,
-            (global::System.Half i) => (double)i,
-            (float i) => (global::System.Half)i,
-            (double i) => (global::System.Half)i,
+            MemberTable singleMembers = new();
+            singleMembers.Add((float i) => float.IsInfinity(i));
+            singleMembers.Add((float i) => float.IsNaN(i));
+            singleMembers.Add((float i) => float.IsNegativeInfinity(i));
+            singleMembers.Add((float i) => float.IsPositiveInfinity(i));
 
-            (global::System.Half i, global::System.Half j) => i == j,
-            (global::System.Half i, global::System.Half j) => i != j,
-            (global::System.Half i, global::System.Half j) => i < j,
-            (global::System.Half i, global::System.Half j) => i <= j,
-            (global::System.Half i, global::System.Half j) => i > j,
-            (global::System.Half i, global::System.Half j) => i >= j,
-        }.ToReadOnly();
+            singleMembers.Add((float i, float j) => i.CompareTo(j));
+            singleMembers.Add((float i, float j) => i.Equals(j));
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Single" />.
-        /// </summary>
-        public static MemberTable Single { get; } = new MemberTable
-        {
-            (float i) => float.IsInfinity(i),
-            (float i) => float.IsNaN(i),
-            (float i) => float.IsNegativeInfinity(i),
-            (float i) => float.IsPositiveInfinity(i),
+            singleMembers.Add((float i) => float.IsFinite(i));
+            singleMembers.Add((float i) => float.IsNegative(i));
+            singleMembers.Add((float i) => float.IsNormal(i));
+            singleMembers.Add((float i) => float.IsSubnormal(i));
+            Single = singleMembers.ToReadOnly();
 
-            (float i, float j) => i.CompareTo(j),
-            (float i, float j) => i.Equals(j),
+            MemberTable doubleMembers = new();
+            doubleMembers.Add((double i) => double.IsInfinity(i));
+            doubleMembers.Add((double i) => double.IsNaN(i));
+            doubleMembers.Add((double i) => double.IsNegativeInfinity(i));
+            doubleMembers.Add((double i) => double.IsPositiveInfinity(i));
 
-            (float i) => float.IsFinite(i),
-            (float i) => float.IsNegative(i),
-            (float i) => float.IsNormal(i),
-            (float i) => float.IsSubnormal(i),
-        }.ToReadOnly();
+            doubleMembers.Add((double i, double j) => i.CompareTo(j));
+            doubleMembers.Add((double i, double j) => i.Equals(j));
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Double" />.
-        /// </summary>
-        public static MemberTable Double { get; } = new MemberTable
-        {
-            (double i) => double.IsInfinity(i),
-            (double i) => double.IsNaN(i),
-            (double i) => double.IsNegativeInfinity(i),
-            (double i) => double.IsPositiveInfinity(i),
+            doubleMembers.Add((double i) => double.IsFinite(i));
+            doubleMembers.Add((double i) => double.IsNegative(i));
+            doubleMembers.Add((double i) => double.IsNormal(i));
+            doubleMembers.Add((double i) => double.IsSubnormal(i));
+            Double = doubleMembers.ToReadOnly();
 
-            (double i, double j) => i.CompareTo(j),
-            (double i, double j) => i.Equals(j),
+            MemberTable decimalMembers = new();
+            decimalMembers.Add((decimal i) => decimal.Ceiling(i));
+            decimalMembers.Add((decimal i) => decimal.Floor(i));
+            decimalMembers.Add((decimal i) => decimal.Negate(i));
+            decimalMembers.Add((decimal i) => decimal.Round(i));
+            decimalMembers.Add((decimal i) => decimal.ToByte(i));
+            decimalMembers.Add((decimal i) => decimal.ToDouble(i));
+            decimalMembers.Add((decimal i) => decimal.ToInt16(i));
+            decimalMembers.Add((decimal i) => decimal.ToInt32(i));
+            decimalMembers.Add((decimal i) => decimal.ToInt64(i));
+            decimalMembers.Add((decimal i) => decimal.ToSByte(i));
+            decimalMembers.Add((decimal i) => decimal.ToSingle(i));
+            decimalMembers.Add((decimal i) => decimal.ToUInt16(i));
+            decimalMembers.Add((decimal i) => decimal.ToUInt32(i));
+            decimalMembers.Add((decimal i) => decimal.ToUInt64(i));
+            decimalMembers.Add((decimal i) => decimal.ToOACurrency(i));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Add(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Compare(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Divide(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Equals(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Multiply(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Remainder(i, j));
+            decimalMembers.Add((decimal i, decimal j) => decimal.Subtract(i, j));
 
-            (double i) => double.IsFinite(i),
-            (double i) => double.IsNegative(i),
-            (double i) => double.IsNormal(i),
-            (double i) => double.IsSubnormal(i),
-        }.ToReadOnly();
+            decimalMembers.Add((sbyte i) => (decimal)i);
+            decimalMembers.Add((byte i) => (decimal)i);
+            decimalMembers.Add((short i) => (decimal)i);
+            decimalMembers.Add((ushort i) => (decimal)i);
+            decimalMembers.Add((int i) => (decimal)i);
+            decimalMembers.Add((uint i) => (decimal)i);
+            decimalMembers.Add((long i) => (decimal)i);
+            decimalMembers.Add((ulong i) => (decimal)i);
+            decimalMembers.Add((char i) => (decimal)i);
+            decimalMembers.Add((float i) => (decimal)i);
+            decimalMembers.Add((double i) => (decimal)i);
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Decimal" />.
-        /// </summary>
-        public static MemberTable Decimal { get; } = new MemberTable
-        {
-            (decimal i) => decimal.Ceiling(i),
-            (decimal i) => decimal.Floor(i),
-            (decimal i) => decimal.Negate(i),
-            (decimal i) => decimal.Round(i),
-            (decimal i) => decimal.ToByte(i),
-            (decimal i) => decimal.ToDouble(i),
-            (decimal i) => decimal.ToInt16(i),
-            (decimal i) => decimal.ToInt32(i),
-            (decimal i) => decimal.ToInt64(i),
-            (decimal i) => decimal.ToSByte(i),
-            (decimal i) => decimal.ToSingle(i),
-            (decimal i) => decimal.ToUInt16(i),
-            (decimal i) => decimal.ToUInt32(i),
-            (decimal i) => decimal.ToUInt64(i),
-            (decimal i) => decimal.ToOACurrency(i),
-            (decimal i, decimal j) => decimal.Add(i, j),
-            (decimal i, decimal j) => decimal.Compare(i, j),
-            (decimal i, decimal j) => decimal.Divide(i, j),
-            (decimal i, decimal j) => decimal.Equals(i, j),
-            (decimal i, decimal j) => decimal.Multiply(i, j),
-            (decimal i, decimal j) => decimal.Remainder(i, j),
-            (decimal i, decimal j) => decimal.Subtract(i, j),
+            decimalMembers.Add((decimal i) => -i);
+            decimalMembers.Add((decimal i) => (sbyte)i);
+            decimalMembers.Add((decimal i) => (byte)i);
+            decimalMembers.Add((decimal i) => (short)i);
+            decimalMembers.Add((decimal i) => (ushort)i);
+            decimalMembers.Add((decimal i) => (int)i);
+            decimalMembers.Add((decimal i) => (uint)i);
+            decimalMembers.Add((decimal i) => (long)i);
+            decimalMembers.Add((decimal i) => (ulong)i);
+            decimalMembers.Add((decimal i) => (char)i);
+            decimalMembers.Add((decimal i) => (float)i);
+            decimalMembers.Add((decimal i) => (double)i);
 
-            (sbyte i) => (decimal)i,
-            (byte i) => (decimal)i,
-            (short i) => (decimal)i,
-            (ushort i) => (decimal)i,
-            (int i) => (decimal)i,
-            (uint i) => (decimal)i,
-            (long i) => (decimal)i,
-            (ulong i) => (decimal)i,
-            (char i) => (decimal)i,
-            (float i) => (decimal)i,
-            (double i) => (decimal)i,
+            decimalMembers.Add((decimal i, decimal j) => i + j);
+            decimalMembers.Add((decimal i, decimal j) => i - j);
+            decimalMembers.Add((decimal i, decimal j) => i * j);
+            decimalMembers.Add((decimal i, decimal j) => i / j);
+            decimalMembers.Add((decimal i, decimal j) => i % j);
+            decimalMembers.Add((decimal i, decimal j) => i == j);
+            decimalMembers.Add((decimal i, decimal j) => i != j);
+            decimalMembers.Add((decimal i, decimal j) => i < j);
+            decimalMembers.Add((decimal i, decimal j) => i <= j);
+            decimalMembers.Add((decimal i, decimal j) => i > j);
+            decimalMembers.Add((decimal i, decimal j) => i >= j);
 
-            (decimal i) => -i,
-            (decimal i) => (sbyte)i,
-            (decimal i) => (byte)i,
-            (decimal i) => (short)i,
-            (decimal i) => (ushort)i,
-            (decimal i) => (int)i,
-            (decimal i) => (uint)i,
-            (decimal i) => (long)i,
-            (decimal i) => (ulong)i,
-            (decimal i) => (char)i,
-            (decimal i) => (float)i,
-            (decimal i) => (double)i,
+            decimalMembers.Add((decimal i, decimal j) => i.CompareTo(j));
+            decimalMembers.Add((decimal i, decimal j) => i.Equals(j));
+            Decimal = decimalMembers.ToReadOnly();
 
-            (decimal i, decimal j) => i + j,
-            (decimal i, decimal j) => i - j,
-            (decimal i, decimal j) => i * j,
-            (decimal i, decimal j) => i / j,
-            (decimal i, decimal j) => i % j,
-            (decimal i, decimal j) => i == j,
-            (decimal i, decimal j) => i != j,
-            (decimal i, decimal j) => i < j,
-            (decimal i, decimal j) => i <= j,
-            (decimal i, decimal j) => i > j,
-            (decimal i, decimal j) => i >= j,
+            MemberTable stringMembers = new();
+            stringMembers.Add((char[] value) => new string(value));
+            stringMembers.Add((char[] value, int startIndex, int length) => new string(value, startIndex, length));
+            stringMembers.Add((char c, int count) => new string(c, count));
 
-            (decimal i, decimal j) => i.CompareTo(j),
-            (decimal i, decimal j) => i.Equals(j),
-        }.ToReadOnly();
+            stringMembers.Add(() => string.Empty);
+            stringMembers.Add((string s) => s.Length);
+            stringMembers.Add((string s, int index) => s[index]);
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.String" />.
-        /// </summary>
-        public static MemberTable String { get; } = new MemberTable
-        {
-            (char[] value) => new string(value),
-            (char[] value, int startIndex, int length) => new string(value, startIndex, length),
-            (char c, int count) => new string(c, count),
+            stringMembers.Add((string value) => string.IsNullOrEmpty(value));
+            stringMembers.Add((string value) => string.IsNullOrWhiteSpace(value));
 
-            () => string.Empty,
-            (string s) => s.Length,
-            (string s, int index) => s[index],
+            stringMembers.Add((string strA, string strB) => string.CompareOrdinal(strA, strB));
+            stringMembers.Add((string strA, int indexA, string strB, int indexB, int length) => string.CompareOrdinal(strA, indexA, strB, indexB, length));
 
-            (string value) => string.IsNullOrEmpty(value),
-            (string value) => string.IsNullOrWhiteSpace(value),
+            stringMembers.Add((string str0, string str1) => string.Concat(str0, str1));
+            stringMembers.Add((string str0, string str1, string str2) => string.Concat(str0, str1, str2));
+            stringMembers.Add((string str0, string str1, string str2, string str3) => string.Concat(str0, str1, str2, str3));
+            stringMembers.Add((string[] values) => string.Concat(values));
 
-            (string strA, string strB) => string.CompareOrdinal(strA, strB),
-            (string strA, int indexA, string strB, int indexB, int length) => string.CompareOrdinal(strA, indexA, strB, indexB, length),
+            stringMembers.Add((string s, string value) => s.Contains(value)); // NB: This uses ordinal comparison
 
-            (string str0, string str1) => string.Concat(str0, str1),
-            (string str0, string str1, string str2) => string.Concat(str0, str1, str2),
-            (string str0, string str1, string str2, string str3) => string.Concat(str0, str1, str2, str3),
-            (string[] values) => string.Concat(values),
+            stringMembers.Add((string s, string value) => s.Equals(value));
+            stringMembers.Add((string a, string b) => string.Equals(a, b));
 
-            (string s, string value) => s.Contains(value), // NB: This uses ordinal comparison
+            stringMembers.Add((string s, char value) => s.IndexOf(value));
+            stringMembers.Add((string s, char value, int startIndex) => s.IndexOf(value, startIndex));
+            stringMembers.Add((string s, char value, int startIndex, int count) => s.IndexOf(value, startIndex, count));
 
-            (string s, string value) => s.Equals(value),
-            (string a, string b) => string.Equals(a, b),
+            stringMembers.Add((string s, char[] anyOf) => s.IndexOfAny(anyOf));
+            stringMembers.Add((string s, char[] anyOf, int startIndex) => s.IndexOfAny(anyOf, startIndex));
+            stringMembers.Add((string s, char[] anyOf, int startIndex, int count) => s.IndexOfAny(anyOf, startIndex, count));
 
-            (string s, char value) => s.IndexOf(value),
-            (string s, char value, int startIndex) => s.IndexOf(value, startIndex),
-            (string s, char value, int startIndex, int count) => s.IndexOf(value, startIndex, count),
+            stringMembers.Add((string s, char value) => s.LastIndexOf(value));
+            stringMembers.Add((string s, char value, int startIndex) => s.LastIndexOf(value, startIndex));
+            stringMembers.Add((string s, char value, int startIndex, int count) => s.LastIndexOf(value, startIndex, count));
 
-            (string s, char[] anyOf) => s.IndexOfAny(anyOf),
-            (string s, char[] anyOf, int startIndex) => s.IndexOfAny(anyOf, startIndex),
-            (string s, char[] anyOf, int startIndex, int count) => s.IndexOfAny(anyOf, startIndex, count),
+            stringMembers.Add((string s, char[] anyOf) => s.LastIndexOfAny(anyOf));
+            stringMembers.Add((string s, char[] anyOf, int startIndex) => s.LastIndexOfAny(anyOf, startIndex));
+            stringMembers.Add((string s, char[] anyOf, int startIndex, int count) => s.LastIndexOfAny(anyOf, startIndex, count));
 
-            (string s, char value) => s.LastIndexOf(value),
-            (string s, char value, int startIndex) => s.LastIndexOf(value, startIndex),
-            (string s, char value, int startIndex, int count) => s.LastIndexOf(value, startIndex, count),
+            stringMembers.Add((string s, int startIndex, string value) => s.Insert(startIndex, value));
 
-            (string s, char[] anyOf) => s.LastIndexOfAny(anyOf),
-            (string s, char[] anyOf, int startIndex) => s.LastIndexOfAny(anyOf, startIndex),
-            (string s, char[] anyOf, int startIndex, int count) => s.LastIndexOfAny(anyOf, startIndex, count),
+            stringMembers.Add((string s) => s.IsNormalized());
+            stringMembers.Add((string s) => s.Normalize());
+            stringMembers.Add((string s, global::System.Text.NormalizationForm normalizationForm) => s.Normalize(normalizationForm));
+            stringMembers.Add((string s, global::System.Text.NormalizationForm normalizationForm) => s.IsNormalized(normalizationForm));
 
-            (string s, int startIndex, string value) => s.Insert(startIndex, value),
+            stringMembers.Add((string separator, string[] value) => string.Join(separator, value));
+            stringMembers.Add((string separator, string[] value, int startIndex, int count) => string.Join(separator, value, startIndex, count));
 
-            (string s) => s.IsNormalized(),
-            (string s) => s.Normalize(),
-            (string s, global::System.Text.NormalizationForm normalizationForm) => s.Normalize(normalizationForm),
-            (string s, global::System.Text.NormalizationForm normalizationForm) => s.IsNormalized(normalizationForm),
+            stringMembers.Add((string s, int totalWidth) => s.PadLeft(totalWidth));
+            stringMembers.Add((string s, int totalWidth) => s.PadRight(totalWidth));
+            stringMembers.Add((string s, int totalWidth, char paddingChar) => s.PadLeft(totalWidth, paddingChar));
+            stringMembers.Add((string s, int totalWidth, char paddingChar) => s.PadRight(totalWidth, paddingChar));
 
-            (string separator, string[] value) => string.Join(separator, value),
-            (string separator, string[] value, int startIndex, int count) => string.Join(separator, value, startIndex, count),
+            stringMembers.Add((string s, int startIndex) => s.Remove(startIndex));
+            stringMembers.Add((string s, int startIndex, int count) => s.Remove(startIndex, count));
 
-            (string s, int totalWidth) => s.PadLeft(totalWidth),
-            (string s, int totalWidth) => s.PadRight(totalWidth),
-            (string s, int totalWidth, char paddingChar) => s.PadLeft(totalWidth, paddingChar),
-            (string s, int totalWidth, char paddingChar) => s.PadRight(totalWidth, paddingChar),
-
-            (string s, int startIndex) => s.Remove(startIndex),
-            (string s, int startIndex, int count) => s.Remove(startIndex, count),
-
-            (string s, char oldChar, char newChar) => s.Replace(oldChar, newChar),
-            (string s, string oldValue, string newValue) => s.Replace(oldValue, newValue),
+            stringMembers.Add((string s, char oldChar, char newChar) => s.Replace(oldChar, newChar));
+            stringMembers.Add((string s, string oldValue, string newValue) => s.Replace(oldValue, newValue));
 
             // NB: Omitting Split which returns a mutable array.
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5.0)
 #pragma warning disable IDE0057 // Substring can be simplified (not in expression trees)
-            (string s, int startIndex) => s.Substring(startIndex),
-            (string s, int startIndex, int length) => s.Substring(startIndex, length),
+            stringMembers.Add((string s, int startIndex) => s.Substring(startIndex));
+            stringMembers.Add((string s, int startIndex, int length) => s.Substring(startIndex, length));
 #pragma warning restore IDE0057
 #pragma warning restore IDE0079
 
             // NB: Omitting ToCharArray which returns a mutable array.
 
-            (string s) => s.ToLowerInvariant(),
-            (string s) => s.ToUpperInvariant(),
+            stringMembers.Add((string s) => s.ToLowerInvariant());
+            stringMembers.Add((string s) => s.ToUpperInvariant());
 
             // REVIEW: Test issue; we use MethodInfo.DeclaringType to find an instance value, so end up with System.Object here.
             //(string s) => s.ToString(),
@@ -429,245 +384,228 @@ public static class PureMemberCatalog
             // REVIEW: Should we add format providers sample values to tests just for this?
             //(string s, IFormatProvider provider) => s.ToString(provider /* NB: this parameter is always ignored */),
 
-            (string s) => s.Trim(),
-            (string s, char[] trimChars) => s.Trim(trimChars),
-            (string s, char[] trimChars) => s.TrimEnd(trimChars),
-            (string s, char[] trimChars) => s.TrimStart(trimChars),
+            stringMembers.Add((string s) => s.Trim());
+            stringMembers.Add((string s, char[] trimChars) => s.Trim(trimChars));
+            stringMembers.Add((string s, char[] trimChars) => s.TrimEnd(trimChars));
+            stringMembers.Add((string s, char[] trimChars) => s.TrimStart(trimChars));
 
-            (string s1, string s2) => s1 == s2,
-            (string s1, string s2) => s1 != s2,
+            stringMembers.Add((string s1, string s2) => s1 == s2);
+            stringMembers.Add((string s1, string s2) => s1 != s2);
 
-            (string s, char c) => s.Contains(c),
-            (string s, char c) => s.StartsWith(c),
-            (string s, char c) => s.EndsWith(c),
-        }.ToReadOnly();
+            stringMembers.Add((string s, char c) => s.Contains(c));
+            stringMembers.Add((string s, char c) => s.StartsWith(c));
+            stringMembers.Add((string s, char c) => s.EndsWith(c));
+            String = stringMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.DateTime" />.
-        /// </summary>
-        public static MemberTable DateTime { get; } = new MemberTable
-        {
-            (long ticks) => new global::System.DateTime(ticks),
-            (long ticks, DateTimeKind kind) => new global::System.DateTime(ticks, kind),
-            (int year, int month, int day) => new global::System.DateTime(year, month, day),
-            (int year, int month, int day, int hour, int minute, int second) => new global::System.DateTime(year, month, day, hour, minute, second),
-            (int year, int month, int day, int hour, int minute, int second, DateTimeKind kind) => new global::System.DateTime(year, month, day, hour, minute, second, kind),
-            (int year, int month, int day, int hour, int minute, int second, int millisecond) => new global::System.DateTime(year, month, day, hour, minute, second, millisecond),
-            (int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeKind kind) => new global::System.DateTime(year, month, day, hour, minute, second, millisecond, kind),
+            MemberTable dateTimeMembers = new();
+            dateTimeMembers.Add((long ticks) => new global::System.DateTime(ticks));
+            dateTimeMembers.Add((long ticks, DateTimeKind kind) => new global::System.DateTime(ticks, kind));
+            dateTimeMembers.Add((int year, int month, int day) => new global::System.DateTime(year, month, day));
+            dateTimeMembers.Add((int year, int month, int day, int hour, int minute, int second) => new global::System.DateTime(year, month, day, hour, minute, second));
+            dateTimeMembers.Add((int year, int month, int day, int hour, int minute, int second, DateTimeKind kind) => new global::System.DateTime(year, month, day, hour, minute, second, kind));
+            dateTimeMembers.Add((int year, int month, int day, int hour, int minute, int second, int millisecond) => new global::System.DateTime(year, month, day, hour, minute, second, millisecond));
+            dateTimeMembers.Add((int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeKind kind) => new global::System.DateTime(year, month, day, hour, minute, second, millisecond, kind));
 
-            () => global::System.DateTime.MaxValue,
-            () => global::System.DateTime.MinValue,
+            dateTimeMembers.Add(() => global::System.DateTime.MaxValue);
+            dateTimeMembers.Add(() => global::System.DateTime.MinValue);
 
-            (global::System.DateTime dt) => dt.Date,
-            (global::System.DateTime dt) => dt.Day,
-            (global::System.DateTime dt) => dt.DayOfWeek,
-            (global::System.DateTime dt) => dt.DayOfYear,
-            (global::System.DateTime dt) => dt.Hour,
-            (global::System.DateTime dt) => dt.Kind,
-            (global::System.DateTime dt) => dt.Millisecond,
-            (global::System.DateTime dt) => dt.Minute,
-            (global::System.DateTime dt) => dt.Month,
-            (global::System.DateTime dt) => dt.Second,
-            (global::System.DateTime dt) => dt.Ticks,
-            (global::System.DateTime dt) => dt.TimeOfDay,
-            (global::System.DateTime dt) => dt.Year,
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Date);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Day);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.DayOfWeek);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.DayOfYear);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Hour);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Kind);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Millisecond);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Minute);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Month);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Second);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Ticks);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.TimeOfDay);
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.Year);
 
-            (global::System.DateTime t1, global::System.DateTime t2) => global::System.DateTime.Compare(t1, t2),
-            (global::System.DateTime t1, global::System.DateTime t2) => global::System.DateTime.Equals(t1, t2),
+            dateTimeMembers.Add((global::System.DateTime t1, global::System.DateTime t2) => global::System.DateTime.Compare(t1, t2));
+            dateTimeMembers.Add((global::System.DateTime t1, global::System.DateTime t2) => global::System.DateTime.Equals(t1, t2));
 
-            (double d) => global::System.DateTime.FromOADate(d),
-            (long fileTime) => global::System.DateTime.FromFileTimeUtc(fileTime),
-            (int year) => global::System.DateTime.IsLeapYear(year),
-            (int year, int month) => global::System.DateTime.DaysInMonth(year, month),
-            (global::System.DateTime value, global::System.DateTimeKind kind) => global::System.DateTime.SpecifyKind(value, kind),
+            dateTimeMembers.Add((double d) => global::System.DateTime.FromOADate(d));
+            dateTimeMembers.Add((long fileTime) => global::System.DateTime.FromFileTimeUtc(fileTime));
+            dateTimeMembers.Add((int year) => global::System.DateTime.IsLeapYear(year));
+            dateTimeMembers.Add((int year, int month) => global::System.DateTime.DaysInMonth(year, month));
+            dateTimeMembers.Add((global::System.DateTime value, global::System.DateTimeKind kind) => global::System.DateTime.SpecifyKind(value, kind));
 
-            (global::System.DateTime dt) => dt.ToOADate(),
+            dateTimeMembers.Add((global::System.DateTime dt) => dt.ToOADate());
 
-            (global::System.DateTime dt, global::System.TimeSpan value) => dt.Add(value),
-            (global::System.DateTime dt, double value) => dt.AddDays(value),
-            (global::System.DateTime dt, double value) => dt.AddHours(value),
-            (global::System.DateTime dt, double value) => dt.AddMilliseconds(value),
-            (global::System.DateTime dt, double value) => dt.AddMinutes(value),
-            (global::System.DateTime dt, int months) => dt.AddMonths(months),
-            (global::System.DateTime dt, double value) => dt.AddSeconds(value),
-            (global::System.DateTime dt, long value) => dt.AddTicks(value),
-            (global::System.DateTime dt, int value) => dt.AddYears(value),
-            (global::System.DateTime dt, global::System.DateTime value) => dt.Subtract(value),
-            (global::System.DateTime dt, global::System.TimeSpan value) => dt.Subtract(value),
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.TimeSpan value) => dt.Add(value));
+            dateTimeMembers.Add((global::System.DateTime dt, double value) => dt.AddDays(value));
+            dateTimeMembers.Add((global::System.DateTime dt, double value) => dt.AddHours(value));
+            dateTimeMembers.Add((global::System.DateTime dt, double value) => dt.AddMilliseconds(value));
+            dateTimeMembers.Add((global::System.DateTime dt, double value) => dt.AddMinutes(value));
+            dateTimeMembers.Add((global::System.DateTime dt, int months) => dt.AddMonths(months));
+            dateTimeMembers.Add((global::System.DateTime dt, double value) => dt.AddSeconds(value));
+            dateTimeMembers.Add((global::System.DateTime dt, long value) => dt.AddTicks(value));
+            dateTimeMembers.Add((global::System.DateTime dt, int value) => dt.AddYears(value));
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.DateTime value) => dt.Subtract(value));
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.TimeSpan value) => dt.Subtract(value));
 
-            (global::System.DateTime dt, global::System.DateTime value) => dt.CompareTo(value),
-            (global::System.DateTime dt, global::System.DateTime value) => dt.Equals(value),
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.DateTime value) => dt.CompareTo(value));
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.DateTime value) => dt.Equals(value));
 
-            (global::System.DateTime dt, global::System.TimeSpan ts) => dt + ts,
-            (global::System.DateTime dt, global::System.TimeSpan ts) => dt - ts,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 - dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 == dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 != dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 < dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 <= dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 > dt2,
-            (global::System.DateTime dt1, global::System.DateTime dt2) => dt1 >= dt2,
-        }.ToReadOnly();
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.TimeSpan ts) => dt + ts);
+            dateTimeMembers.Add((global::System.DateTime dt, global::System.TimeSpan ts) => dt - ts);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 - dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 == dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 != dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 < dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 <= dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 > dt2);
+            dateTimeMembers.Add((global::System.DateTime dt1, global::System.DateTime dt2) => dt1 >= dt2);
+            DateTime = dateTimeMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="System.DateTimeOffset" />.
-        /// </summary>
-        public static MemberTable DateTimeOffset { get; } = new MemberTable
-        {
-            (long ticks, global::System.TimeSpan offset) => new global::System.DateTimeOffset(ticks, offset),
-            (int year, int month, int day, int hour, int minute, int second, global::System.TimeSpan offset) => new global::System.DateTimeOffset(year, month, day, hour, minute, second, offset),
-            (int year, int month, int day, int hour, int minute, int second, int millisecond, global::System.TimeSpan offset) => new global::System.DateTimeOffset(year, month, day, hour, minute, second, millisecond, offset),
+            MemberTable dateTimeOffsetMembers = new();
+            dateTimeOffsetMembers.Add((long ticks, global::System.TimeSpan offset) => new global::System.DateTimeOffset(ticks, offset));
+            dateTimeOffsetMembers.Add((int year, int month, int day, int hour, int minute, int second, global::System.TimeSpan offset) => new global::System.DateTimeOffset(year, month, day, hour, minute, second, offset));
+            dateTimeOffsetMembers.Add((int year, int month, int day, int hour, int minute, int second, int millisecond, global::System.TimeSpan offset) => new global::System.DateTimeOffset(year, month, day, hour, minute, second, millisecond, offset));
 
-            () => global::System.DateTimeOffset.MaxValue,
-            () => global::System.DateTimeOffset.MinValue,
+            dateTimeOffsetMembers.Add(() => global::System.DateTimeOffset.MaxValue);
+            dateTimeOffsetMembers.Add(() => global::System.DateTimeOffset.MinValue);
 
-            (global::System.DateTimeOffset dto) => dto.Date,
-            (global::System.DateTimeOffset dto) => dto.DateTime,
-            (global::System.DateTimeOffset dto) => dto.Day,
-            (global::System.DateTimeOffset dto) => dto.DayOfWeek,
-            (global::System.DateTimeOffset dto) => dto.DayOfYear,
-            (global::System.DateTimeOffset dto) => dto.Hour,
-            (global::System.DateTimeOffset dto) => dto.LocalDateTime,
-            (global::System.DateTimeOffset dto) => dto.Millisecond,
-            (global::System.DateTimeOffset dto) => dto.Minute,
-            (global::System.DateTimeOffset dto) => dto.Month,
-            (global::System.DateTimeOffset dto) => dto.Offset,
-            (global::System.DateTimeOffset dto) => dto.Second,
-            (global::System.DateTimeOffset dto) => dto.Ticks,
-            (global::System.DateTimeOffset dto) => dto.TimeOfDay,
-            (global::System.DateTimeOffset dto) => dto.UtcDateTime,
-            (global::System.DateTimeOffset dto) => dto.UtcTicks,
-            (global::System.DateTimeOffset dto) => dto.Year,
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Date);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.DateTime);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Day);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.DayOfWeek);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.DayOfYear);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Hour);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.LocalDateTime);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Millisecond);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Minute);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Month);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Offset);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Second);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Ticks);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.TimeOfDay);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.UtcDateTime);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.UtcTicks);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.Year);
 
-            (global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto.Add(ts),
-            (global::System.DateTimeOffset dto, double days) => dto.AddDays(days),
-            (global::System.DateTimeOffset dto, double hours) => dto.AddHours(hours),
-            (global::System.DateTimeOffset dto, double milliseconds) => dto.AddMilliseconds(milliseconds),
-            (global::System.DateTimeOffset dto, double minutes) => dto.AddMinutes(minutes),
-            (global::System.DateTimeOffset dto, int months) => dto.AddMonths(months),
-            (global::System.DateTimeOffset dto, double seconds) => dto.AddSeconds(seconds),
-            (global::System.DateTimeOffset dto, long ticks) => dto.AddTicks(ticks),
-            (global::System.DateTimeOffset dto, int years) => dto.AddYears(years),
-            (global::System.DateTimeOffset dto, global::System.DateTimeOffset value) => dto.Subtract(value),
-            (global::System.DateTimeOffset dto, global::System.TimeSpan value) => dto.Subtract(value),
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto.Add(ts));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, double days) => dto.AddDays(days));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, double hours) => dto.AddHours(hours));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, double milliseconds) => dto.AddMilliseconds(milliseconds));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, double minutes) => dto.AddMinutes(minutes));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, int months) => dto.AddMonths(months));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, double seconds) => dto.AddSeconds(seconds));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, long ticks) => dto.AddTicks(ticks));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, int years) => dto.AddYears(years));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.DateTimeOffset value) => dto.Subtract(value));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.TimeSpan value) => dto.Subtract(value));
 
-            (long fileTime) => global::System.DateTimeOffset.FromFileTime(fileTime),
+            dateTimeOffsetMembers.Add((long fileTime) => global::System.DateTimeOffset.FromFileTime(fileTime));
 
-            (global::System.DateTimeOffset first, global::System.DateTimeOffset second) => global::System.DateTimeOffset.Compare(first, second),
-            (global::System.DateTimeOffset first, global::System.DateTimeOffset second) => global::System.DateTimeOffset.Equals(first, second),
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset first, global::System.DateTimeOffset second) => global::System.DateTimeOffset.Compare(first, second));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset first, global::System.DateTimeOffset second) => global::System.DateTimeOffset.Equals(first, second));
 
-            (global::System.DateTimeOffset dto) => dto.ToFileTime(),
-            (global::System.DateTimeOffset dto) => dto.ToUniversalTime(),
-            (global::System.DateTimeOffset dto, global::System.TimeSpan offset) => dto.ToOffset(offset),
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.ToFileTime());
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.ToUniversalTime());
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.TimeSpan offset) => dto.ToOffset(offset));
 
-            (global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.CompareTo(other),
-            (global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.Equals(other),
-            (global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.EqualsExact(other),
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.CompareTo(other));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.Equals(other));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.DateTimeOffset other) => dto.EqualsExact(other));
 
-            (global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto + ts,
-            (global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto - ts,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 - dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 == dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 != dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 < dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 <= dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 > dto2,
-            (global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 >= dto2,
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto + ts);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto, global::System.TimeSpan ts) => dto - ts);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 - dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 == dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 != dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 < dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 <= dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 > dto2);
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto1, global::System.DateTimeOffset dto2) => dto1 >= dto2);
 
-            // REVIEW: these are not accessible
-            //(long seconds) => global::System.DateTimeOffset.FromUnixTimeSeconds(seconds),
-            //(long milliseconds) => global::System.DateTimeOffset.FromUnixTimeMilliseconds(milliseconds),
-            //(global::System.DateTimeOffset dto) => dto.ToUnixTimeSeconds(),
-            //(global::System.DateTimeOffset dto) => dto.ToUnixTimeMilliseconds(),
-        }.ToReadOnly();
+            dateTimeOffsetMembers.Add((long seconds) => global::System.DateTimeOffset.FromUnixTimeSeconds(seconds));
+            dateTimeOffsetMembers.Add((long milliseconds) => global::System.DateTimeOffset.FromUnixTimeMilliseconds(milliseconds));
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.ToUnixTimeSeconds());
+            dateTimeOffsetMembers.Add((global::System.DateTimeOffset dto) => dto.ToUnixTimeMilliseconds());
+            DateTimeOffset = dateTimeOffsetMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.TimeSpan" />.
-        /// </summary>
-        public static MemberTable TimeSpan { get; } = new MemberTable
-        {
-            (long ticks) => new global::System.TimeSpan(ticks),
-            (int hours, int minutes, int seconds) => new global::System.TimeSpan(hours, minutes, seconds),
-            (int days, int hours, int minutes, int seconds) => new global::System.TimeSpan(days, hours, minutes, seconds),
-            (int days, int hours, int minutes, int seconds, int milliseconds) => new global::System.TimeSpan(days, hours, minutes, seconds, milliseconds),
+            MemberTable timeSpanMembers = new();
+            timeSpanMembers.Add((long ticks) => new global::System.TimeSpan(ticks));
+            timeSpanMembers.Add((int hours, int minutes, int seconds) => new global::System.TimeSpan(hours, minutes, seconds));
+            timeSpanMembers.Add((int days, int hours, int minutes, int seconds) => new global::System.TimeSpan(days, hours, minutes, seconds));
+            timeSpanMembers.Add((int days, int hours, int minutes, int seconds, int milliseconds) => new global::System.TimeSpan(days, hours, minutes, seconds, milliseconds));
 
-            () => global::System.TimeSpan.MaxValue,
-            () => global::System.TimeSpan.MinValue,
-            () => global::System.TimeSpan.TicksPerDay,
-            () => global::System.TimeSpan.TicksPerHour,
-            () => global::System.TimeSpan.TicksPerMillisecond,
-            () => global::System.TimeSpan.TicksPerMinute,
-            () => global::System.TimeSpan.TicksPerSecond,
-            () => global::System.TimeSpan.Zero,
+            timeSpanMembers.Add(() => global::System.TimeSpan.MaxValue);
+            timeSpanMembers.Add(() => global::System.TimeSpan.MinValue);
+            timeSpanMembers.Add(() => global::System.TimeSpan.TicksPerDay);
+            timeSpanMembers.Add(() => global::System.TimeSpan.TicksPerHour);
+            timeSpanMembers.Add(() => global::System.TimeSpan.TicksPerMillisecond);
+            timeSpanMembers.Add(() => global::System.TimeSpan.TicksPerMinute);
+            timeSpanMembers.Add(() => global::System.TimeSpan.TicksPerSecond);
+            timeSpanMembers.Add(() => global::System.TimeSpan.Zero);
 
-            (global::System.TimeSpan t) => t.Days,
-            (global::System.TimeSpan t) => t.Hours,
-            (global::System.TimeSpan t) => t.Milliseconds,
-            (global::System.TimeSpan t) => t.Minutes,
-            (global::System.TimeSpan t) => t.Seconds,
-            (global::System.TimeSpan t) => t.Ticks,
-            (global::System.TimeSpan t) => t.TotalDays,
-            (global::System.TimeSpan t) => t.TotalHours,
-            (global::System.TimeSpan t) => t.TotalMilliseconds,
-            (global::System.TimeSpan t) => t.TotalMinutes,
-            (global::System.TimeSpan t) => t.TotalSeconds,
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Days);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Hours);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Milliseconds);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Minutes);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Seconds);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Ticks);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.TotalDays);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.TotalHours);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.TotalMilliseconds);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.TotalMinutes);
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.TotalSeconds);
 
-            (long value) => global::System.TimeSpan.FromTicks(value),
-            (double value) => global::System.TimeSpan.FromDays(value),
-            (double value) => global::System.TimeSpan.FromHours(value),
-            (double value) => global::System.TimeSpan.FromMilliseconds(value),
-            (double value) => global::System.TimeSpan.FromMinutes(value),
-            (double value) => global::System.TimeSpan.FromSeconds(value),
+            timeSpanMembers.Add((long value) => global::System.TimeSpan.FromTicks(value));
+            timeSpanMembers.Add((double value) => global::System.TimeSpan.FromDays(value));
+            timeSpanMembers.Add((double value) => global::System.TimeSpan.FromHours(value));
+            timeSpanMembers.Add((double value) => global::System.TimeSpan.FromMilliseconds(value));
+            timeSpanMembers.Add((double value) => global::System.TimeSpan.FromMinutes(value));
+            timeSpanMembers.Add((double value) => global::System.TimeSpan.FromSeconds(value));
 
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => global::System.TimeSpan.Compare(t1, t2),
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => global::System.TimeSpan.Equals(t1, t2),
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => global::System.TimeSpan.Compare(t1, t2));
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => global::System.TimeSpan.Equals(t1, t2));
 
-            (global::System.TimeSpan t) => t.Duration(),
-            (global::System.TimeSpan t) => t.Negate(),
-            (global::System.TimeSpan t, global::System.TimeSpan ts) => t.Add(ts),
-            (global::System.TimeSpan t, global::System.TimeSpan ts) => t.Subtract(ts),
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Duration());
+            timeSpanMembers.Add((global::System.TimeSpan t) => t.Negate());
+            timeSpanMembers.Add((global::System.TimeSpan t, global::System.TimeSpan ts) => t.Add(ts));
+            timeSpanMembers.Add((global::System.TimeSpan t, global::System.TimeSpan ts) => t.Subtract(ts));
 
-            (global::System.TimeSpan t, global::System.TimeSpan value) => t.CompareTo(value),
-            (global::System.TimeSpan t, global::System.TimeSpan obj) => t.Equals(obj),
+            timeSpanMembers.Add((global::System.TimeSpan t, global::System.TimeSpan value) => t.CompareTo(value));
+            timeSpanMembers.Add((global::System.TimeSpan t, global::System.TimeSpan obj) => t.Equals(obj));
 
-            (global::System.TimeSpan t) => -t,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 + t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 - t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 == t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 != t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 < t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 <= t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 > t2,
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 >= t2,
+            timeSpanMembers.Add((global::System.TimeSpan t) => -t);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 + t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 - t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 == t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 != t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 < t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 <= t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 > t2);
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 >= t2);
 
-            (global::System.TimeSpan t, double divisor) => t.Divide(divisor),
-            (global::System.TimeSpan t, global::System.TimeSpan ts) => t.Divide(ts),
-            (global::System.TimeSpan t, double factor) => t.Multiply(factor),
+            timeSpanMembers.Add((global::System.TimeSpan t, double divisor) => t.Divide(divisor));
+            timeSpanMembers.Add((global::System.TimeSpan t, global::System.TimeSpan ts) => t.Divide(ts));
+            timeSpanMembers.Add((global::System.TimeSpan t, double factor) => t.Multiply(factor));
 
-            (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 / t2,
-            (global::System.TimeSpan timeSpan, double divisor) => timeSpan / divisor,
-            (double factor, global::System.TimeSpan timeSpan) => factor * timeSpan,
-            (global::System.TimeSpan timeSpan, double factor) => timeSpan * factor,
-        }.ToReadOnly();
+            timeSpanMembers.Add((global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 / t2);
+            timeSpanMembers.Add((global::System.TimeSpan timeSpan, double divisor) => timeSpan / divisor);
+            timeSpanMembers.Add((double factor, global::System.TimeSpan timeSpan) => factor * timeSpan);
+            timeSpanMembers.Add((global::System.TimeSpan timeSpan, double factor) => timeSpan * factor);
+            TimeSpan = timeSpanMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Guid" />.
-        /// </summary>
-        public static MemberTable Guid { get; } = new MemberTable
-        {
-            (string input) => global::System.Guid.Parse(input),
-            (string input, string format) => global::System.Guid.ParseExact(input, format),
+            MemberTable guidMembers = new();
+            guidMembers.Add((string input) => global::System.Guid.Parse(input));
+            guidMembers.Add((string input, string format) => global::System.Guid.ParseExact(input, format));
 
-            (byte[] b) => new global::System.Guid(b),
-            (string g) => new global::System.Guid(g),
-            (uint a, ushort b, ushort c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k) => new global::System.Guid(a, b, c, d, e, f, g, h, i, j, k),
-            (int a, short b, short c, byte[] d) => new global::System.Guid(a, b, c, d),
-            (int a, short b, short c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k) => new global::System.Guid(a, b, c, d, e, f, g, h, i, j, k),
+            guidMembers.Add((byte[] b) => new global::System.Guid(b));
+            guidMembers.Add((string g) => new global::System.Guid(g));
+            guidMembers.Add((uint a, ushort b, ushort c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k) => new global::System.Guid(a, b, c, d, e, f, g, h, i, j, k));
+            guidMembers.Add((int a, short b, short c, byte[] d) => new global::System.Guid(a, b, c, d));
+            guidMembers.Add((int a, short b, short c, byte d, byte e, byte f, byte g, byte h, byte i, byte j, byte k) => new global::System.Guid(a, b, c, d, e, f, g, h, i, j, k));
 
-            () => global::System.Guid.Empty,
+            guidMembers.Add(() => global::System.Guid.Empty);
 
-            (global::System.Guid g, global::System.Guid value) => g.CompareTo(value),
-            (global::System.Guid g, global::System.Guid value) => g.Equals(value),
+            guidMembers.Add((global::System.Guid g, global::System.Guid value) => g.CompareTo(value));
+            guidMembers.Add((global::System.Guid g, global::System.Guid value) => g.Equals(value));
 
             // REVIEW: Test issue; we use MethodInfo.DeclaringType to find an instance value, so end up with global::System.Object here.
             //(global::System.Guid g) => g.ToString(),
@@ -675,788 +613,898 @@ public static class PureMemberCatalog
 
             // REVIEW: Should we add format providers sample values to tests just for this?
             //(global::System.Guid g, string format, IFormatProvider provider) => s.ToString(format, provider /* NB: this parameter is always ignored */),
-        }.ToReadOnly();
+            Guid = guidMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Uri" />.
-        /// </summary>
-        public static MemberTable Uri { get; } = new MemberTable
-        {
-            (string uriString) => new Uri(uriString),
-            (string uriString, UriKind uriKind) => new Uri(uriString, uriKind),
-            (Uri baseUri, string relativeUri) => new Uri(baseUri, relativeUri),
-            (Uri baseUri, Uri relativeUri) => new Uri(baseUri, relativeUri),
+            MemberTable uriMembers = new();
+            uriMembers.Add((string uriString) => new Uri(uriString));
+            uriMembers.Add((string uriString, UriKind uriKind) => new Uri(uriString, uriKind));
+            uriMembers.Add((Uri baseUri, string relativeUri) => new Uri(baseUri, relativeUri));
+            uriMembers.Add((Uri baseUri, Uri relativeUri) => new Uri(baseUri, relativeUri));
 
-            (string uriString) => new global::System.Uri(uriString),
-            (string uriString, global::System.UriKind uriKind) => new global::System.Uri(uriString, uriKind),
-            (global::System.Uri baseUri, string relativeUri) => new global::System.Uri(baseUri, relativeUri),
-            (global::System.Uri baseUri, global::System.Uri relativeUri) => new global::System.Uri(baseUri, relativeUri),
+            uriMembers.Add((string uriString) => new global::System.Uri(uriString));
+            uriMembers.Add((string uriString, global::System.UriKind uriKind) => new global::System.Uri(uriString, uriKind));
+            uriMembers.Add((global::System.Uri baseUri, string relativeUri) => new global::System.Uri(baseUri, relativeUri));
+            uriMembers.Add((global::System.Uri baseUri, global::System.Uri relativeUri) => new global::System.Uri(baseUri, relativeUri));
 
-            () => global::System.Uri.SchemeDelimiter,
-            () => global::System.Uri.UriSchemeFile,
-            () => global::System.Uri.UriSchemeFtp,
-            () => global::System.Uri.UriSchemeGopher,
-            () => global::System.Uri.UriSchemeHttp,
-            () => global::System.Uri.UriSchemeHttps,
-            () => global::System.Uri.UriSchemeMailto,
-            () => global::System.Uri.UriSchemeNetPipe,
-            () => global::System.Uri.UriSchemeNetTcp,
-            () => global::System.Uri.UriSchemeNews,
-            () => global::System.Uri.UriSchemeNntp,
+            uriMembers.Add(() => global::System.Uri.SchemeDelimiter);
+            uriMembers.Add(() => global::System.Uri.UriSchemeFile);
+            uriMembers.Add(() => global::System.Uri.UriSchemeFtp);
+            uriMembers.Add(() => global::System.Uri.UriSchemeGopher);
+            uriMembers.Add(() => global::System.Uri.UriSchemeHttp);
+            uriMembers.Add(() => global::System.Uri.UriSchemeHttps);
+            uriMembers.Add(() => global::System.Uri.UriSchemeMailto);
+            uriMembers.Add(() => global::System.Uri.UriSchemeNetPipe);
+            uriMembers.Add(() => global::System.Uri.UriSchemeNetTcp);
+            uriMembers.Add(() => global::System.Uri.UriSchemeNews);
+            uriMembers.Add(() => global::System.Uri.UriSchemeNntp);
 
-            (global::System.Uri u) => u.AbsolutePath,
-            (global::System.Uri u) => u.AbsoluteUri,
-            (global::System.Uri u) => u.Authority,
-            (global::System.Uri u) => u.DnsSafeHost,
-            (global::System.Uri u) => u.Fragment,
-            (global::System.Uri u) => u.Host,
-            (global::System.Uri u) => u.HostNameType,
-            //(global::System.Uri u) => u.IdnHost, // REVIEW: Not accessible
-            (global::System.Uri u) => u.IsAbsoluteUri,
-            (global::System.Uri u) => u.IsDefaultPort,
-            (global::System.Uri u) => u.IsFile,
-            (global::System.Uri u) => u.IsLoopback,
-            (global::System.Uri u) => u.IsUnc,
-            (global::System.Uri u) => u.LocalPath,
-            (global::System.Uri u) => u.OriginalString,
-            (global::System.Uri u) => u.PathAndQuery,
-            (global::System.Uri u) => u.Port,
-            (global::System.Uri u) => u.Query,
-            (global::System.Uri u) => u.Scheme,
-            (global::System.Uri u) => u.UserEscaped,
-            (global::System.Uri u) => u.UserInfo,
+            uriMembers.Add((global::System.Uri u) => u.AbsolutePath);
+            uriMembers.Add((global::System.Uri u) => u.AbsoluteUri);
+            uriMembers.Add((global::System.Uri u) => u.Authority);
+            uriMembers.Add((global::System.Uri u) => u.DnsSafeHost);
+            uriMembers.Add((global::System.Uri u) => u.Fragment);
+            uriMembers.Add((global::System.Uri u) => u.Host);
+            uriMembers.Add((global::System.Uri u) => u.HostNameType);
+            //uriMembers.Add((global::System.Uri u) => u.IdnHost); // REVIEW: Not accessible
+            uriMembers.Add((global::System.Uri u) => u.IsAbsoluteUri);
+            uriMembers.Add((global::System.Uri u) => u.IsDefaultPort);
+            uriMembers.Add((global::System.Uri u) => u.IsFile);
+            uriMembers.Add((global::System.Uri u) => u.IsLoopback);
+            uriMembers.Add((global::System.Uri u) => u.IsUnc);
+            uriMembers.Add((global::System.Uri u) => u.LocalPath);
+            uriMembers.Add((global::System.Uri u) => u.OriginalString);
+            uriMembers.Add((global::System.Uri u) => u.PathAndQuery);
+            uriMembers.Add((global::System.Uri u) => u.Port);
+            uriMembers.Add((global::System.Uri u) => u.Query);
+            uriMembers.Add((global::System.Uri u) => u.Scheme);
+            uriMembers.Add((global::System.Uri u) => u.UserEscaped);
+            uriMembers.Add((global::System.Uri u) => u.UserInfo);
 
-            (string name) => global::System.Uri.CheckHostName(name),
-            (string schemeName) => global::System.Uri.CheckSchemeName(schemeName),
-            (char digit) => global::System.Uri.FromHex(digit),
-            (char character) => global::System.Uri.HexEscape(character),
-            (char character) => global::System.Uri.IsHexDigit(character),
-            (string pattern, int index) => global::System.Uri.IsHexEncoding(pattern, index),
-            (string stringToEscape) => global::System.Uri.EscapeDataString(stringToEscape),
-            (string stringToUnescape) => global::System.Uri.UnescapeDataString(stringToUnescape),
-            (string uriString, global::System.UriKind uriKind) => global::System.Uri.IsWellFormedUriString(uriString, uriKind),
+            uriMembers.Add((string name) => global::System.Uri.CheckHostName(name));
+            uriMembers.Add((string schemeName) => global::System.Uri.CheckSchemeName(schemeName));
+            uriMembers.Add((char digit) => global::System.Uri.FromHex(digit));
+            uriMembers.Add((char character) => global::System.Uri.HexEscape(character));
+            uriMembers.Add((char character) => global::System.Uri.IsHexDigit(character));
+            uriMembers.Add((string pattern, int index) => global::System.Uri.IsHexEncoding(pattern, index));
+            uriMembers.Add((string stringToEscape) => global::System.Uri.EscapeDataString(stringToEscape));
+            uriMembers.Add((string stringToUnescape) => global::System.Uri.UnescapeDataString(stringToUnescape));
+            uriMembers.Add((string uriString, global::System.UriKind uriKind) => global::System.Uri.IsWellFormedUriString(uriString, uriKind));
 
-            (global::System.Uri u1, global::System.Uri u2) => u1 == u2,
-            (global::System.Uri u1, global::System.Uri u2) => u1 != u2,
+            uriMembers.Add((global::System.Uri u1, global::System.Uri u2) => u1 == u2);
+            uriMembers.Add((global::System.Uri u1, global::System.Uri u2) => u1 != u2);
 
             // REVIEW: Test issue; we use MethodInfo.DeclaringType to find an instance value, so end up with global::System.Object here.
             //(global::System.Uri u) => u.ToString(),
-            (global::System.Uri u, global::System.UriPartial part) => u.GetLeftPart(part),
-            (global::System.Uri u, global::System.Uri uri) => u.IsBaseOf(uri),
-            (global::System.Uri u) => u.IsWellFormedOriginalString(),
-            (global::System.Uri u, global::System.Uri uri) => u.MakeRelativeUri(uri),
-            (global::System.Uri u, global::System.UriComponents components, global::System.UriFormat format) => u.GetComponents(components, format),
-        }.ToReadOnly();
+            uriMembers.Add((global::System.Uri u, global::System.UriPartial part) => u.GetLeftPart(part));
+            uriMembers.Add((global::System.Uri u, global::System.Uri uri) => u.IsBaseOf(uri));
+            uriMembers.Add((global::System.Uri u) => u.IsWellFormedOriginalString());
+            uriMembers.Add((global::System.Uri u, global::System.Uri uri) => u.MakeRelativeUri(uri));
+            uriMembers.Add((global::System.Uri u, global::System.UriComponents components, global::System.UriFormat format) => u.GetComponents(components, format));
+            Uri = uriMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on <see cref="global::System.Version" />.
-        /// </summary>
-        public static MemberTable Version { get; } = new MemberTable
-        {
-            () => new global::System.Version(),
-            (int major, int minor) => new global::System.Version(major, minor),
-            (int major, int minor, int build) => new global::System.Version(major, minor, build),
-            (int major, int minor, int build, int revision) => new global::System.Version(major, minor, build, revision),
-            (string version) => new global::System.Version(version),
+            MemberTable versionMembers = new();
+            versionMembers.Add(() => new global::System.Version());
+            versionMembers.Add((int major, int minor) => new global::System.Version(major, minor));
+            versionMembers.Add((int major, int minor, int build) => new global::System.Version(major, minor, build));
+            versionMembers.Add((int major, int minor, int build, int revision) => new global::System.Version(major, minor, build, revision));
+            versionMembers.Add((string version) => new global::System.Version(version));
 
-            (global::System.Version v) => v.Build,
-            (global::System.Version v) => v.Major,
-            (global::System.Version v) => v.MajorRevision,
-            (global::System.Version v) => v.Minor,
-            (global::System.Version v) => v.MinorRevision,
-            (global::System.Version v) => v.Revision,
+            versionMembers.Add((global::System.Version v) => v.Build);
+            versionMembers.Add((global::System.Version v) => v.Major);
+            versionMembers.Add((global::System.Version v) => v.MajorRevision);
+            versionMembers.Add((global::System.Version v) => v.Minor);
+            versionMembers.Add((global::System.Version v) => v.MinorRevision);
+            versionMembers.Add((global::System.Version v) => v.Revision);
 
-            (string input) => global::System.Version.Parse(input),
+            versionMembers.Add((string input) => global::System.Version.Parse(input));
 
             // REVIEW: Test issue; we use MethodInfo.DeclaringType to find an instance value, so end up with global::System.Object here.
             //(global::System.Version v) => v.ToString(),
-            (global::System.Version v, int fieldCount) => v.ToString(fieldCount),
-            (global::System.Version v, global::System.Version value) => v.CompareTo(value),
-            (global::System.Version v, global::System.Version obj) => v.Equals(obj),
+            versionMembers.Add((global::System.Version v, int fieldCount) => v.ToString(fieldCount));
+            versionMembers.Add((global::System.Version v, global::System.Version value) => v.CompareTo(value));
+            versionMembers.Add((global::System.Version v, global::System.Version obj) => v.Equals(obj));
 
-            (global::System.Version v1, global::System.Version v2) => v1 == v2,
-            (global::System.Version v1, global::System.Version v2) => v1 != v2,
-            (global::System.Version v1, global::System.Version v2) => v1 < v2,
-            (global::System.Version v1, global::System.Version v2) => v1 <= v2,
-            (global::System.Version v1, global::System.Version v2) => v1 > v2,
-            (global::System.Version v1, global::System.Version v2) => v1 >= v2,
-        }.ToReadOnly();
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 == v2);
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 != v2);
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 < v2);
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 <= v2);
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 > v2);
+            versionMembers.Add((global::System.Version v1, global::System.Version v2) => v1 >= v2);
+            Version = versionMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on nullable types.
-        /// </summary>
-        public static MemberTable Nullable { get; } = new MemberTable
-        {
-            (Nullable<TValue> n) => n.HasValue,
-            (Nullable<TValue> n) => n.Value,
+            MemberTable nullableMembers = new();
+            nullableMembers.Add((Nullable<TValue> n) => n.HasValue);
+            nullableMembers.Add((Nullable<TValue> n) => n.Value);
 
-            (Nullable<TValue> n) => n.GetValueOrDefault(),
-            (Nullable<TValue> n, TValue defaultValue) => n.GetValueOrDefault(defaultValue),
-        }.ToReadOnly();
+            nullableMembers.Add((Nullable<TValue> n) => n.GetValueOrDefault());
+            nullableMembers.Add((Nullable<TValue> n, TValue defaultValue) => n.GetValueOrDefault(defaultValue));
+            Nullable = nullableMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on tuple types.
-        /// </summary>
-        public static MemberTable Tuple { get; } = new MemberTable
-        {
+            MemberTable tupleMembers = new();
             //
             // global::System.Tuple<>
             //
-            (T t1) => global::System.Tuple.Create(t1),
-            (T t1) => new Tuple<T>(t1),
-            (Tuple<T> t) => t.Item1,
+            tupleMembers.Add((T t1) => global::System.Tuple.Create(t1));
+            tupleMembers.Add((T t1) => new Tuple<T>(t1));
+            tupleMembers.Add((Tuple<T> t) => t.Item1);
 
             //
             // global::System.Tuple<,>
             //
-            (T t1, T t2) => global::System.Tuple.Create(t1, t2),
-            (T t1, T t2) => new Tuple<T, T>(t1, t2),
-            (Tuple<T, T> t) => t.Item1,
-            (Tuple<T, T> t) => t.Item2,
+            tupleMembers.Add((T t1, T t2) => global::System.Tuple.Create(t1, t2));
+            tupleMembers.Add((T t1, T t2) => new Tuple<T, T>(t1, t2));
+            tupleMembers.Add((Tuple<T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T> t) => t.Item2);
 
             //
             // global::System.Tuple<,,>
             //
-            (T t1, T t2, T t3) => global::System.Tuple.Create(t1, t2, t3),
-            (T t1, T t2, T t3) => new Tuple<T, T, T>(t1, t2, t3),
-            (Tuple<T, T, T> t) => t.Item1,
-            (Tuple<T, T, T> t) => t.Item2,
-            (Tuple<T, T, T> t) => t.Item3,
+            tupleMembers.Add((T t1, T t2, T t3) => global::System.Tuple.Create(t1, t2, t3));
+            tupleMembers.Add((T t1, T t2, T t3) => new Tuple<T, T, T>(t1, t2, t3));
+            tupleMembers.Add((Tuple<T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T> t) => t.Item3);
 
             //
             // global::System.Tuple<,,,>
             //
-            (T t1, T t2, T t3, T t4) => global::System.Tuple.Create(t1, t2, t3, t4),
-            (T t1, T t2, T t3, T t4) => new Tuple<T, T, T, T>(t1, t2, t3, t4),
-            (Tuple<T, T, T, T> t) => t.Item1,
-            (Tuple<T, T, T, T> t) => t.Item2,
-            (Tuple<T, T, T, T> t) => t.Item3,
-            (Tuple<T, T, T, T> t) => t.Item4,
+            tupleMembers.Add((T t1, T t2, T t3, T t4) => global::System.Tuple.Create(t1, t2, t3, t4));
+            tupleMembers.Add((T t1, T t2, T t3, T t4) => new Tuple<T, T, T, T>(t1, t2, t3, t4));
+            tupleMembers.Add((Tuple<T, T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T, T> t) => t.Item3);
+            tupleMembers.Add((Tuple<T, T, T, T> t) => t.Item4);
 
             //
             // global::System.Tuple<,,,,>
             //
-            (T t1, T t2, T t3, T t4, T t5) => global::System.Tuple.Create(t1, t2, t3, t4, t5),
-            (T t1, T t2, T t3, T t4, T t5) => new Tuple<T, T, T, T, T>(t1, t2, t3, t4, t5),
-            (Tuple<T, T, T, T, T> t) => t.Item1,
-            (Tuple<T, T, T, T, T> t) => t.Item2,
-            (Tuple<T, T, T, T, T> t) => t.Item3,
-            (Tuple<T, T, T, T, T> t) => t.Item4,
-            (Tuple<T, T, T, T, T> t) => t.Item5,
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5) => global::System.Tuple.Create(t1, t2, t3, t4, t5));
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5) => new Tuple<T, T, T, T, T>(t1, t2, t3, t4, t5));
+            tupleMembers.Add((Tuple<T, T, T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T, T, T> t) => t.Item3);
+            tupleMembers.Add((Tuple<T, T, T, T, T> t) => t.Item4);
+            tupleMembers.Add((Tuple<T, T, T, T, T> t) => t.Item5);
 
             //
             // global::System.Tuple<,,,,,>
             //
-            (T t1, T t2, T t3, T t4, T t5, T t6) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6),
-            (T t1, T t2, T t3, T t4, T t5, T t6) => new Tuple<T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6),
-            (Tuple<T, T, T, T, T, T> t) => t.Item1,
-            (Tuple<T, T, T, T, T, T> t) => t.Item2,
-            (Tuple<T, T, T, T, T, T> t) => t.Item3,
-            (Tuple<T, T, T, T, T, T> t) => t.Item4,
-            (Tuple<T, T, T, T, T, T> t) => t.Item5,
-            (Tuple<T, T, T, T, T, T> t) => t.Item6,
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6));
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6) => new Tuple<T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6));
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item3);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item4);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item5);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T> t) => t.Item6);
 
             //
             // global::System.Tuple<,,,,,,>
             //
-            (T t1, T t2, T t3, T t4, T t5, T t6, T t7) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6, t7),
-            (T t1, T t2, T t3, T t4, T t5, T t6, T t7) => new Tuple<T, T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6, t7),
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item1,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item2,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item3,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item4,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item5,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item6,
-            (Tuple<T, T, T, T, T, T, T> t) => t.Item7,
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6, T t7) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6, t7));
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6, T t7) => new Tuple<T, T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6, t7));
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item3);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item4);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item5);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item6);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T> t) => t.Item7);
 
             //
             // global::System.Tuple<,,,,,,,>
             //
-            (T t1, T t2, T t3, T t4, T t5, T t6, T t7, T r) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6, t7, r),
-            (T t1, T t2, T t3, T t4, T t5, T t6, T t7, T r) => new Tuple<T, T, T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6, t7, r),
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item1,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item2,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item3,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item4,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item5,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item6,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Item7,
-            (Tuple<T, T, T, T, T, T, T, T> t) => t.Rest,
-        }.ToReadOnly();
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6, T t7, T r) => global::System.Tuple.Create(t1, t2, t3, t4, t5, t6, t7, r));
+            tupleMembers.Add((T t1, T t2, T t3, T t4, T t5, T t6, T t7, T r) => new Tuple<T, T, T, T, T, T, T, T>(t1, t2, t3, t4, t5, t6, t7, r));
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item1);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item2);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item3);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item4);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item5);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item6);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Item7);
+            tupleMembers.Add((Tuple<T, T, T, T, T, T, T, T> t) => t.Rest);
+            Tuple = tupleMembers.ToReadOnly();
 
-        /// <summary>
-        /// Gets a table of pure members on value tuple types.
-        /// </summary>
-        public static MemberTable ValueTuple { get; } = new MemberTable
-        {
+            MemberTable valueTupleMembers = new();
             // NB: Value tuples are mutable, so constructors and Create factory calls are not listed here.
 
             //
             // global::System.ValueTuple<>
             //
-            (ValueTuple<T> t) => t.Item1,
+            valueTupleMembers.Add((ValueTuple<T> t) => t.Item1);
 
             //
             // global::System.ValueTuple<,>
             //
-            (ValueTuple<T, T> t) => t.Item1,
-            (ValueTuple<T, T> t) => t.Item2,
+            valueTupleMembers.Add((ValueTuple<T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T> t) => t.Item2);
 
             //
             // global::System.ValueTuple<,,>
             //
-            (ValueTuple<T, T, T> t) => t.Item1,
-            (ValueTuple<T, T, T> t) => t.Item2,
-            (ValueTuple<T, T, T> t) => t.Item3,
+            valueTupleMembers.Add((ValueTuple<T, T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T> t) => t.Item3);
 
             //
             // global::System.ValueTuple<,,,>
             //
-            (ValueTuple<T, T, T, T> t) => t.Item1,
-            (ValueTuple<T, T, T, T> t) => t.Item2,
-            (ValueTuple<T, T, T, T> t) => t.Item3,
-            (ValueTuple<T, T, T, T> t) => t.Item4,
+            valueTupleMembers.Add((ValueTuple<T, T, T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T> t) => t.Item3);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T> t) => t.Item4);
 
             //
             // global::System.ValueTuple<,,,,>
             //
-            (ValueTuple<T, T, T, T, T> t) => t.Item1,
-            (ValueTuple<T, T, T, T, T> t) => t.Item2,
-            (ValueTuple<T, T, T, T, T> t) => t.Item3,
-            (ValueTuple<T, T, T, T, T> t) => t.Item4,
-            (ValueTuple<T, T, T, T, T> t) => t.Item5,
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T> t) => t.Item3);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T> t) => t.Item4);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T> t) => t.Item5);
 
             //
             // global::System.ValueTuple<,,,,,>
             //
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item1,
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item2,
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item3,
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item4,
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item5,
-            (ValueTuple<T, T, T, T, T, T> t) => t.Item6,
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item3);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item4);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item5);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T> t) => t.Item6);
 
             //
             // global::System.ValueTuple<,,,,,,>
             //
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item1,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item2,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item3,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item4,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item5,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item6,
-            (ValueTuple<T, T, T, T, T, T, T> t) => t.Item7,
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item3);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item4);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item5);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item6);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T> t) => t.Item7);
 
             //
             // global::System.ValueTuple<,,,,,,,>
             //
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item1,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item2,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item3,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item4,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item5,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item6,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item7,
-            (ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Rest,
-        }.ToReadOnly();
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item1);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item2);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item3);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item4);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item5);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item6);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Item7);
+            valueTupleMembers.Add((ValueTuple<T, T, T, T, T, T, T, TValue> t) => t.Rest);
+            ValueTuple = valueTupleMembers.ToReadOnly();
+
+            MemberTable mathMembers = new();
+            mathMembers.Add(() => global::System.Math.E);
+            mathMembers.Add(() => global::System.Math.PI);
+            mathMembers.Add(() => global::System.Math.Tau);
+
+            mathMembers.Add((double d) => global::System.Math.Acos(d));
+            mathMembers.Add((double d) => global::System.Math.Asin(d));
+            mathMembers.Add((double d) => global::System.Math.Atan(d));
+            mathMembers.Add((double y, double x) => global::System.Math.Atan2(y, x));
+            mathMembers.Add((decimal d) => global::System.Math.Ceiling(d));
+            mathMembers.Add((double a) => global::System.Math.Ceiling(a));
+            mathMembers.Add((double d) => global::System.Math.Cos(d));
+            mathMembers.Add((double value) => global::System.Math.Cosh(value));
+            mathMembers.Add((decimal d) => global::System.Math.Floor(d));
+            mathMembers.Add((double d) => global::System.Math.Floor(d));
+            mathMembers.Add((double a) => global::System.Math.Sin(a));
+            mathMembers.Add((double a) => global::System.Math.Tan(a));
+            mathMembers.Add((double value) => global::System.Math.Sinh(value));
+            mathMembers.Add((double value) => global::System.Math.Tanh(value));
+            mathMembers.Add((double a) => global::System.Math.Round(a));
+            mathMembers.Add((double value, int digits) => global::System.Math.Round(value, digits));
+            mathMembers.Add((double value, MidpointRounding mode) => global::System.Math.Round(value, mode));
+            mathMembers.Add((double value, int digits, MidpointRounding mode) => global::System.Math.Round(value, digits, mode));
+            mathMembers.Add((decimal d) => global::System.Math.Round(d));
+            mathMembers.Add((decimal d, int decimals) => global::System.Math.Round(d, decimals));
+            mathMembers.Add((decimal d, MidpointRounding mode) => global::System.Math.Round(d, mode));
+            mathMembers.Add((decimal d, int decimals, MidpointRounding mode) => global::System.Math.Round(d, decimals, mode));
+            mathMembers.Add((decimal d) => global::System.Math.Truncate(d));
+            mathMembers.Add((double d) => global::System.Math.Truncate(d));
+            mathMembers.Add((double d) => global::System.Math.Sqrt(d));
+            mathMembers.Add((double d) => global::System.Math.Log(d));
+            mathMembers.Add((double d) => global::System.Math.Log10(d));
+            mathMembers.Add((double d) => global::System.Math.Exp(d));
+            mathMembers.Add((double x, double y) => global::System.Math.Pow(x, y));
+            mathMembers.Add((double x, double y) => global::System.Math.IEEERemainder(x, y));
+            mathMembers.Add((sbyte value) => global::System.Math.Abs(value));
+            mathMembers.Add((short value) => global::System.Math.Abs(value));
+            mathMembers.Add((int value) => global::System.Math.Abs(value));
+            mathMembers.Add((long value) => global::System.Math.Abs(value));
+            mathMembers.Add((float value) => global::System.Math.Abs(value));
+            mathMembers.Add((double value) => global::System.Math.Abs(value));
+            mathMembers.Add((decimal value) => global::System.Math.Abs(value));
+            mathMembers.Add((sbyte val1, sbyte val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((byte val1, byte val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((short val1, short val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((ushort val1, ushort val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((int val1, int val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((uint val1, uint val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((long val1, long val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((ulong val1, ulong val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((float val1, float val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((double val1, double val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((decimal val1, decimal val2) => global::System.Math.Max(val1, val2));
+            mathMembers.Add((sbyte val1, sbyte val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((byte val1, byte val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((short val1, short val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((ushort val1, ushort val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((int val1, int val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((uint val1, uint val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((long val1, long val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((ulong val1, ulong val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((float val1, float val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((double val1, double val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((decimal val1, decimal val2) => global::System.Math.Min(val1, val2));
+            mathMembers.Add((double a, double newBase) => global::System.Math.Log(a, newBase));
+            mathMembers.Add((sbyte value) => global::System.Math.Sign(value));
+            mathMembers.Add((short value) => global::System.Math.Sign(value));
+            mathMembers.Add((int value) => global::System.Math.Sign(value));
+            mathMembers.Add((long value) => global::System.Math.Sign(value));
+            mathMembers.Add((float value) => global::System.Math.Sign(value));
+            mathMembers.Add((double value) => global::System.Math.Sign(value));
+            mathMembers.Add((decimal value) => global::System.Math.Sign(value));
+            mathMembers.Add((int a, int b) => global::System.Math.BigMul(a, b));
+
+            mathMembers.Add((double d) => global::System.Math.Acosh(d));
+            mathMembers.Add((double d) => global::System.Math.Asinh(d));
+            mathMembers.Add((double d) => global::System.Math.Atanh(d));
+            mathMembers.Add((double d) => global::System.Math.Cbrt(d));
+            mathMembers.Add((ulong value, ulong min, ulong max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((uint value, uint min, uint max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((ushort value, ushort min, ushort max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((byte value, byte min, byte max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((long value, long min, long max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((int value, int min, int max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((short value, short min, short max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((sbyte value, sbyte min, sbyte max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((double value, double min, double max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((float value, float min, float max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((decimal value, decimal min, decimal max) => global::System.Math.Clamp(value, min, max));
+            mathMembers.Add((double x) => global::System.Math.BitDecrement(x));
+            mathMembers.Add((double x) => global::System.Math.BitIncrement(x));
+            mathMembers.Add((double x) => global::System.Math.ILogB(x));
+            mathMembers.Add((double x) => global::System.Math.Log2(x));
+            mathMembers.Add((double x, double y) => global::System.Math.CopySign(x, y));
+            mathMembers.Add((double x, double y) => global::System.Math.MaxMagnitude(x, y));
+            mathMembers.Add((double x, double y) => global::System.Math.MinMagnitude(x, y));
+            mathMembers.Add((double x, int n) => global::System.Math.ScaleB(x, n));
+            mathMembers.Add((double x, double y, double z) => global::System.Math.FusedMultiplyAdd(x, y, z));
+            Math = mathMembers.ToReadOnly();
+
+            MemberTable mathFMembers = new();
+            mathFMembers.Add(() => global::System.MathF.E);
+            mathFMembers.Add(() => global::System.MathF.PI);
+
+            mathFMembers.Add((float x) => global::System.MathF.Abs(x));
+            mathFMembers.Add((float x) => global::System.MathF.Acos(x));
+            mathFMembers.Add((float x) => global::System.MathF.Acosh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Asin(x));
+            mathFMembers.Add((float x) => global::System.MathF.Asinh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Atan(x));
+            mathFMembers.Add((float y, float x) => global::System.MathF.Atan2(y, x));
+            mathFMembers.Add((float x) => global::System.MathF.Atanh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Cbrt(x));
+            mathFMembers.Add((float x) => global::System.MathF.Ceiling(x));
+            mathFMembers.Add((float x) => global::System.MathF.Cos(x));
+            mathFMembers.Add((float x) => global::System.MathF.Cosh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Exp(x));
+            mathFMembers.Add((float x) => global::System.MathF.Floor(x));
+            mathFMembers.Add((float x, float y) => global::System.MathF.IEEERemainder(x, y));
+            mathFMembers.Add((float x) => global::System.MathF.Log(x));
+            mathFMembers.Add((float x, float y) => global::System.MathF.Log(x, y));
+            mathFMembers.Add((float x) => global::System.MathF.Log10(x));
+            mathFMembers.Add((float x, float y) => global::System.MathF.Max(x, y));
+            mathFMembers.Add((float x, float y) => global::System.MathF.Min(x, y));
+            mathFMembers.Add((float x, float y) => global::System.MathF.Pow(x, y));
+            mathFMembers.Add((float x) => global::System.MathF.Round(x));
+            mathFMembers.Add((float x, int digits) => global::System.MathF.Round(x, digits));
+            mathFMembers.Add((float x, MidpointRounding mode) => global::System.MathF.Round(x, mode));
+            mathFMembers.Add((float x, int digits, MidpointRounding mode) => global::System.MathF.Round(x, digits, mode));
+            mathFMembers.Add((float x) => global::System.MathF.Sign(x));
+            mathFMembers.Add((float x) => global::System.MathF.Sin(x));
+            mathFMembers.Add((float x) => global::System.MathF.Sinh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Sqrt(x));
+            mathFMembers.Add((float x) => global::System.MathF.Tan(x));
+            mathFMembers.Add((float x) => global::System.MathF.Tanh(x));
+            mathFMembers.Add((float x) => global::System.MathF.Truncate(x));
+
+            mathFMembers.Add(() => global::System.MathF.Tau);
+
+            mathFMembers.Add((float x) => global::System.MathF.BitDecrement(x));
+            mathFMembers.Add((float x) => global::System.MathF.BitIncrement(x));
+            mathFMembers.Add((float x, float y) => global::System.MathF.CopySign(x, y));
+            mathFMembers.Add((float x, float y, float z) => global::System.MathF.FusedMultiplyAdd(x, y, z));
+            mathFMembers.Add((float x) => global::System.MathF.ILogB(x));
+            mathFMembers.Add((float x) => global::System.MathF.Log2(x));
+            mathFMembers.Add((float x, float y) => global::System.MathF.MaxMagnitude(x, y));
+            mathFMembers.Add((float x, float y) => global::System.MathF.MinMagnitude(x, y));
+            mathFMembers.Add((float x, int n) => global::System.MathF.ScaleB(x, n));
+            MathF = mathFMembers.ToReadOnly();
+
+            MemberTable bitConverterMembers = new();
+            // NB: Omitting GetBytes overloads which return a mutable byte[].
+
+            bitConverterMembers.Add((double value) => global::System.BitConverter.DoubleToInt64Bits(value));
+            bitConverterMembers.Add((long value) => global::System.BitConverter.Int64BitsToDouble(value));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToBoolean(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToChar(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToDouble(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToInt16(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToInt32(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToInt64(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToSingle(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToUInt16(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToUInt32(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToUInt64(value, startIndex));
+            bitConverterMembers.Add((byte[] value) => global::System.BitConverter.ToString(value));
+            bitConverterMembers.Add((byte[] value, int startIndex) => global::System.BitConverter.ToString(value, startIndex));
+            bitConverterMembers.Add((byte[] value, int startIndex, int length) => global::System.BitConverter.ToString(value, startIndex, length));
+
+            bitConverterMembers.Add((float value) => global::System.BitConverter.SingleToInt32Bits(value));
+            bitConverterMembers.Add((int value) => global::System.BitConverter.Int32BitsToSingle(value));
+            BitConverter = bitConverterMembers.ToReadOnly();
+
+            MemberTable convertMembers = new();
+            convertMembers.Add((Object value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToBoolean(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToChar(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToSByte(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToByte(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToInt16(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToUInt16(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToInt32(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToUInt32(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToInt64(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToUInt64(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToSingle(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToDouble(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToDecimal(value));
+            convertMembers.Add((DateTime value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Object value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((SByte value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Byte value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Int16 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((UInt16 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Int32 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((UInt32 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Int64 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((UInt64 value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Boolean value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Char value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Single value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Double value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((Decimal value) => global::System.Convert.ToDateTime(value));
+            convertMembers.Add((String value) => global::System.Convert.ToString(value));
+            convertMembers.Add((byte[] inArray) => global::System.Convert.ToBase64String(inArray));
+            convertMembers.Add((byte[] inArray, int offset, int length) => global::System.Convert.ToBase64String(inArray, offset, length));
+            convertMembers.Add((byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options));
+            convertMembers.Add((byte[] inArray, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options));
+
+            convertMembers.Add((byte[] inArray) => global::System.Convert.ToHexString(inArray));
+            convertMembers.Add((byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length));
+            Convert = convertMembers.ToReadOnly();
+
+            MemberTable arrayMembers = new();
+            // NB: Array.Empty<T>() is omitted because the array return type is considered mutable.
+
+            arrayMembers.Add((global::System.Array array) => array.IsFixedSize);
+            arrayMembers.Add((global::System.Array array) => array.IsReadOnly);
+            arrayMembers.Add((global::System.Array array) => array.IsSynchronized);
+            arrayMembers.Add((global::System.Array array) => array.Length);
+            arrayMembers.Add((global::System.Array array) => array.LongLength);
+            arrayMembers.Add((global::System.Array array) => array.Rank);
+
+            arrayMembers.Add((global::System.Array array, object value) => global::System.Array.BinarySearch(array, value));
+            arrayMembers.Add((global::System.Array array, int index, int length, object value) => global::System.Array.BinarySearch(array, index, length, value));
+            arrayMembers.Add((T[] array, T value) => global::System.Array.BinarySearch(array, value));
+            arrayMembers.Add((T[] array, int index, int length, T value) => global::System.Array.BinarySearch(array, index, length, value));
+
+            arrayMembers.Add((global::System.Array array, int dimension) => array.GetLength(dimension));
+            arrayMembers.Add((global::System.Array array, int dimension) => array.GetLongLength(dimension));
+
+            arrayMembers.Add((global::System.Array array, int dimension) => array.GetLowerBound(dimension));
+            arrayMembers.Add((global::System.Array array, int dimension) => array.GetUpperBound(dimension));
+
+            // NB: GetValue methods are omitted because these return global::System.Object which is not immutable.
+
+            arrayMembers.Add((global::System.Array array, object value) => global::System.Array.IndexOf(array, value));
+            arrayMembers.Add((global::System.Array array, object value, int startIndex) => global::System.Array.IndexOf(array, value, startIndex));
+            arrayMembers.Add((global::System.Array array, object value, int startIndex, int count) => global::System.Array.IndexOf(array, value, startIndex, count));
+            arrayMembers.Add((T[] array, object value) => global::System.Array.IndexOf(array, value));
+            arrayMembers.Add((T[] array, object value, int startIndex) => global::System.Array.IndexOf(array, value, startIndex));
+            arrayMembers.Add((T[] array, object value, int startIndex, int count) => global::System.Array.IndexOf(array, value, startIndex, count));
+
+            arrayMembers.Add((global::System.Array array, object value) => global::System.Array.LastIndexOf(array, value));
+            arrayMembers.Add((global::System.Array array, object value, int startIndex) => global::System.Array.LastIndexOf(array, value, startIndex));
+            arrayMembers.Add((global::System.Array array, object value, int startIndex, int count) => global::System.Array.LastIndexOf(array, value, startIndex, count));
+            arrayMembers.Add((T[] array, object value) => global::System.Array.LastIndexOf(array, value));
+            arrayMembers.Add((T[] array, object value, int startIndex) => global::System.Array.LastIndexOf(array, value, startIndex));
+            arrayMembers.Add((T[] array, object value, int startIndex, int count) => global::System.Array.LastIndexOf(array, value, startIndex, count));
+
+            // NB: Methods with Predicate<T> parameters are ; the delegate may not be a pure function.
+            // REVIEW: In practice, it is assumed that predicates are pure. Should we provide a table including these members, so users can opt-in?
+            Array = arrayMembers.ToReadOnly();
+
+            MemberTable indexMembers = new();
+            indexMembers.Add(() => global::System.Index.End);
+            indexMembers.Add(() => global::System.Index.Start);
+
+            indexMembers.Add((global::System.Index i) => i.IsFromEnd);
+            indexMembers.Add((global::System.Index i) => i.Value);
+
+            indexMembers.Add((int value, bool fromEnd) => new global::System.Index(value, fromEnd));
+
+            indexMembers.Add((int value) => (global::System.Index)value);
+
+            indexMembers.Add((int value) => global::System.Index.FromEnd(value));
+            indexMembers.Add((int value) => global::System.Index.FromStart(value));
+
+            indexMembers.Add((global::System.Index i, int length) => i.GetOffset(length));
+
+            indexMembers.Add((global::System.Index i, global::System.Index other) => i.Equals(other));
+            Index = indexMembers.ToReadOnly();
+
+            MemberTable rangeMembers = new();
+            rangeMembers.Add(() => global::System.Range.All);
+
+            rangeMembers.Add((global::System.Index start, global::System.Index end) => new global::System.Range(start, end));
+
+            rangeMembers.Add((global::System.Index start) => global::System.Range.StartAt(start));
+            rangeMembers.Add((global::System.Index end) => global::System.Range.EndAt(end));
+
+            rangeMembers.Add((global::System.Range r) => r.End);
+            rangeMembers.Add((global::System.Range r) => r.Start);
+
+            // NB: GetOffsetAndLength is omitted because the ValueTuple<,> return type is not immutable.
+
+            rangeMembers.Add((global::System.Range r, global::System.Range other) => r.Equals(other));
+            Range = rangeMembers.ToReadOnly();
+#pragma warning restore IDE0028 // Simplify collection initialization
+        }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Boolean" />.
+        /// </summary>
+        public static MemberTable Boolean { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Char" />.
+        /// </summary>
+        public static MemberTable Char { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.SByte" />.
+        /// </summary>
+        public static MemberTable SByte { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Byte" />.
+        /// </summary>
+        public static MemberTable Byte { get; }
+
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Int16" />.
+        /// </summary>
+        public static MemberTable Int16 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.UInt16" />.
+        /// </summary>
+        public static MemberTable UInt16 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Int32" />.
+        /// </summary>
+        public static MemberTable Int32 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.UInt32" />.
+        /// </summary>
+        public static MemberTable UInt32 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Int64" />.
+        /// </summary>
+        public static MemberTable Int64 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.UInt64" />.
+        /// </summary>
+        public static MemberTable UInt64 { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Half" />.
+        /// </summary>
+        public static MemberTable Half { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Single" />.
+        /// </summary>
+        public static MemberTable Single { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Double" />.
+        /// </summary>
+        public static MemberTable Double { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Decimal" />.
+        /// </summary>
+        public static MemberTable Decimal { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.String" />.
+        /// </summary>
+        public static MemberTable String { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.DateTime" />.
+        /// </summary>
+        public static MemberTable DateTime { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="System.DateTimeOffset" />.
+        /// </summary>
+        public static MemberTable DateTimeOffset { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.TimeSpan" />.
+        /// </summary>
+        public static MemberTable TimeSpan { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Guid" />.
+        /// </summary>
+        public static MemberTable Guid { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Uri" />.
+        /// </summary>
+        public static MemberTable Uri { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on <see cref="global::System.Version" />.
+        /// </summary>
+        public static MemberTable Version { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on nullable types.
+        /// </summary>
+        public static MemberTable Nullable { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on tuple types.
+        /// </summary>
+        public static MemberTable Tuple { get; }
+
+        /// <summary>
+        /// Gets a table of pure members on value tuple types.
+        /// </summary>
+        public static MemberTable ValueTuple { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.Math" />.
         /// </summary>
-        public static MemberTable Math { get; } = new MemberTable
-        {
-            () => global::System.Math.E,
-            () => global::System.Math.PI,
-            () => global::System.Math.Tau,
-
-            (double d) => global::System.Math.Acos(d),
-            (double d) => global::System.Math.Asin(d),
-            (double d) => global::System.Math.Atan(d),
-            (double y, double x) => global::System.Math.Atan2(y, x),
-            (decimal d) => global::System.Math.Ceiling(d),
-            (double a) => global::System.Math.Ceiling(a),
-            (double d) => global::System.Math.Cos(d),
-            (double value) => global::System.Math.Cosh(value),
-            (decimal d) => global::System.Math.Floor(d),
-            (double d) => global::System.Math.Floor(d),
-            (double a) => global::System.Math.Sin(a),
-            (double a) => global::System.Math.Tan(a),
-            (double value) => global::System.Math.Sinh(value),
-            (double value) => global::System.Math.Tanh(value),
-            (double a) => global::System.Math.Round(a),
-            (double value, int digits) => global::System.Math.Round(value, digits),
-            (double value, MidpointRounding mode) => global::System.Math.Round(value, mode),
-            (double value, int digits, MidpointRounding mode) => global::System.Math.Round(value, digits, mode),
-            (decimal d) => global::System.Math.Round(d),
-            (decimal d, int decimals) => global::System.Math.Round(d, decimals),
-            (decimal d, MidpointRounding mode) => global::System.Math.Round(d, mode),
-            (decimal d, int decimals, MidpointRounding mode) => global::System.Math.Round(d, decimals, mode),
-            (decimal d) => global::System.Math.Truncate(d),
-            (double d) => global::System.Math.Truncate(d),
-            (double d) => global::System.Math.Sqrt(d),
-            (double d) => global::System.Math.Log(d),
-            (double d) => global::System.Math.Log10(d),
-            (double d) => global::System.Math.Exp(d),
-            (double x, double y) => global::System.Math.Pow(x, y),
-            (double x, double y) => global::System.Math.IEEERemainder(x, y),
-            (sbyte value) => global::System.Math.Abs(value),
-            (short value) => global::System.Math.Abs(value),
-            (int value) => global::System.Math.Abs(value),
-            (long value) => global::System.Math.Abs(value),
-            (float value) => global::System.Math.Abs(value),
-            (double value) => global::System.Math.Abs(value),
-            (decimal value) => global::System.Math.Abs(value),
-            (sbyte val1, sbyte val2) => global::System.Math.Max(val1, val2),
-            (byte val1, byte val2) => global::System.Math.Max(val1, val2),
-            (short val1, short val2) => global::System.Math.Max(val1, val2),
-            (ushort val1, ushort val2) => global::System.Math.Max(val1, val2),
-            (int val1, int val2) => global::System.Math.Max(val1, val2),
-            (uint val1, uint val2) => global::System.Math.Max(val1, val2),
-            (long val1, long val2) => global::System.Math.Max(val1, val2),
-            (ulong val1, ulong val2) => global::System.Math.Max(val1, val2),
-            (float val1, float val2) => global::System.Math.Max(val1, val2),
-            (double val1, double val2) => global::System.Math.Max(val1, val2),
-            (decimal val1, decimal val2) => global::System.Math.Max(val1, val2),
-            (sbyte val1, sbyte val2) => global::System.Math.Min(val1, val2),
-            (byte val1, byte val2) => global::System.Math.Min(val1, val2),
-            (short val1, short val2) => global::System.Math.Min(val1, val2),
-            (ushort val1, ushort val2) => global::System.Math.Min(val1, val2),
-            (int val1, int val2) => global::System.Math.Min(val1, val2),
-            (uint val1, uint val2) => global::System.Math.Min(val1, val2),
-            (long val1, long val2) => global::System.Math.Min(val1, val2),
-            (ulong val1, ulong val2) => global::System.Math.Min(val1, val2),
-            (float val1, float val2) => global::System.Math.Min(val1, val2),
-            (double val1, double val2) => global::System.Math.Min(val1, val2),
-            (decimal val1, decimal val2) => global::System.Math.Min(val1, val2),
-            (double a, double newBase) => global::System.Math.Log(a, newBase),
-            (sbyte value) => global::System.Math.Sign(value),
-            (short value) => global::System.Math.Sign(value),
-            (int value) => global::System.Math.Sign(value),
-            (long value) => global::System.Math.Sign(value),
-            (float value) => global::System.Math.Sign(value),
-            (double value) => global::System.Math.Sign(value),
-            (decimal value) => global::System.Math.Sign(value),
-            (int a, int b) => global::System.Math.BigMul(a, b),
-
-            (double d) => global::System.Math.Acosh(d),
-            (double d) => global::System.Math.Asinh(d),
-            (double d) => global::System.Math.Atanh(d),
-            (double d) => global::System.Math.Cbrt(d),
-            (ulong value, ulong min, ulong max) => global::System.Math.Clamp(value, min, max),
-            (uint value, uint min, uint max) => global::System.Math.Clamp(value, min, max),
-            (ushort value, ushort min, ushort max) => global::System.Math.Clamp(value, min, max),
-            (byte value, byte min, byte max) => global::System.Math.Clamp(value, min, max),
-            (long value, long min, long max) => global::System.Math.Clamp(value, min, max),
-            (int value, int min, int max) => global::System.Math.Clamp(value, min, max),
-            (short value, short min, short max) => global::System.Math.Clamp(value, min, max),
-            (sbyte value, sbyte min, sbyte max) => global::System.Math.Clamp(value, min, max),
-            (double value, double min, double max) => global::System.Math.Clamp(value, min, max),
-            (float value, float min, float max) => global::System.Math.Clamp(value, min, max),
-            (decimal value, decimal min, decimal max) => global::System.Math.Clamp(value, min, max),
-            (double x) => global::System.Math.BitDecrement(x),
-            (double x) => global::System.Math.BitIncrement(x),
-            (double x) => global::System.Math.ILogB(x),
-            (double x) => global::System.Math.Log2(x),
-            (double x, double y) => global::System.Math.CopySign(x, y),
-            (double x, double y) => global::System.Math.MaxMagnitude(x, y),
-            (double x, double y) => global::System.Math.MinMagnitude(x, y),
-            (double x, int n) => global::System.Math.ScaleB(x, n),
-            (double x, double y, double z) => global::System.Math.FusedMultiplyAdd(x, y, z),
-        }.ToReadOnly();
+        public static MemberTable Math { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.MathF" />.
         /// </summary>
-        public static MemberTable MathF { get; } = new MemberTable
-        {
-            () => global::System.MathF.E,
-            () => global::System.MathF.PI,
-
-            (float x) => global::System.MathF.Abs(x),
-            (float x) => global::System.MathF.Acos(x),
-            (float x) => global::System.MathF.Acosh(x),
-            (float x) => global::System.MathF.Asin(x),
-            (float x) => global::System.MathF.Asinh(x),
-            (float x) => global::System.MathF.Atan(x),
-            (float y, float x) => global::System.MathF.Atan2(y, x),
-            (float x) => global::System.MathF.Atanh(x),
-            (float x) => global::System.MathF.Cbrt(x),
-            (float x) => global::System.MathF.Ceiling(x),
-            (float x) => global::System.MathF.Cos(x),
-            (float x) => global::System.MathF.Cosh(x),
-            (float x) => global::System.MathF.Exp(x),
-            (float x) => global::System.MathF.Floor(x),
-            (float x, float y) => global::System.MathF.IEEERemainder(x, y),
-            (float x) => global::System.MathF.Log(x),
-            (float x, float y) => global::System.MathF.Log(x, y),
-            (float x) => global::System.MathF.Log10(x),
-            (float x, float y) => global::System.MathF.Max(x, y),
-            (float x, float y) => global::System.MathF.Min(x, y),
-            (float x, float y) => global::System.MathF.Pow(x, y),
-            (float x) => global::System.MathF.Round(x),
-            (float x, int digits) => global::System.MathF.Round(x, digits),
-            (float x, MidpointRounding mode) => global::System.MathF.Round(x, mode),
-            (float x, int digits, MidpointRounding mode) => global::System.MathF.Round(x, digits, mode),
-            (float x) => global::System.MathF.Sign(x),
-            (float x) => global::System.MathF.Sin(x),
-            (float x) => global::System.MathF.Sinh(x),
-            (float x) => global::System.MathF.Sqrt(x),
-            (float x) => global::System.MathF.Tan(x),
-            (float x) => global::System.MathF.Tanh(x),
-            (float x) => global::System.MathF.Truncate(x),
-
-            () => global::System.MathF.Tau,
-
-            (float x) => global::System.MathF.BitDecrement(x),
-            (float x) => global::System.MathF.BitIncrement(x),
-            (float x, float y) => global::System.MathF.CopySign(x, y),
-            (float x, float y, float z) => global::System.MathF.FusedMultiplyAdd(x, y, z),
-            (float x) => global::System.MathF.ILogB(x),
-            (float x) => global::System.MathF.Log2(x),
-            (float x, float y) => global::System.MathF.MaxMagnitude(x, y),
-            (float x, float y) => global::System.MathF.MinMagnitude(x, y),
-            (float x, int n) => global::System.MathF.ScaleB(x, n),
-        }.ToReadOnly();
+        public static MemberTable MathF { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.BitConverter" />.
         /// </summary>
-        public static MemberTable BitConverter { get; } = new MemberTable
-        {
-            // NB: Omitting GetBytes overloads which return a mutable byte[].
-
-            (double value) => global::System.BitConverter.DoubleToInt64Bits(value),
-            (long value) => global::System.BitConverter.Int64BitsToDouble(value),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToBoolean(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToChar(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToDouble(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToInt16(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToInt32(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToInt64(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToSingle(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToUInt16(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToUInt32(value, startIndex),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToUInt64(value, startIndex),
-            (byte[] value) => global::System.BitConverter.ToString(value),
-            (byte[] value, int startIndex) => global::System.BitConverter.ToString(value, startIndex),
-            (byte[] value, int startIndex, int length) => global::System.BitConverter.ToString(value, startIndex, length),
-
-            (float value) => global::System.BitConverter.SingleToInt32Bits(value),
-            (int value) => global::System.BitConverter.Int32BitsToSingle(value),
-        }.ToReadOnly();
+        public static MemberTable BitConverter { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.Convert" />.
         /// </summary>
-        public static MemberTable Convert { get; } = new MemberTable
-        {
-            (Object value) => global::System.Convert.ToBoolean(value),
-            (Boolean value) => global::System.Convert.ToBoolean(value),
-            (SByte value) => global::System.Convert.ToBoolean(value),
-            (Char value) => global::System.Convert.ToBoolean(value),
-            (Byte value) => global::System.Convert.ToBoolean(value),
-            (Int16 value) => global::System.Convert.ToBoolean(value),
-            (UInt16 value) => global::System.Convert.ToBoolean(value),
-            (Int32 value) => global::System.Convert.ToBoolean(value),
-            (UInt32 value) => global::System.Convert.ToBoolean(value),
-            (Int64 value) => global::System.Convert.ToBoolean(value),
-            (UInt64 value) => global::System.Convert.ToBoolean(value),
-            (Single value) => global::System.Convert.ToBoolean(value),
-            (Double value) => global::System.Convert.ToBoolean(value),
-            (Decimal value) => global::System.Convert.ToBoolean(value),
-            (DateTime value) => global::System.Convert.ToBoolean(value),
-            (Object value) => global::System.Convert.ToChar(value),
-            (Boolean value) => global::System.Convert.ToChar(value),
-            (Char value) => global::System.Convert.ToChar(value),
-            (SByte value) => global::System.Convert.ToChar(value),
-            (Byte value) => global::System.Convert.ToChar(value),
-            (Int16 value) => global::System.Convert.ToChar(value),
-            (UInt16 value) => global::System.Convert.ToChar(value),
-            (Int32 value) => global::System.Convert.ToChar(value),
-            (UInt32 value) => global::System.Convert.ToChar(value),
-            (Int64 value) => global::System.Convert.ToChar(value),
-            (UInt64 value) => global::System.Convert.ToChar(value),
-            (Single value) => global::System.Convert.ToChar(value),
-            (Double value) => global::System.Convert.ToChar(value),
-            (Decimal value) => global::System.Convert.ToChar(value),
-            (DateTime value) => global::System.Convert.ToChar(value),
-            (Object value) => global::System.Convert.ToSByte(value),
-            (Boolean value) => global::System.Convert.ToSByte(value),
-            (SByte value) => global::System.Convert.ToSByte(value),
-            (Char value) => global::System.Convert.ToSByte(value),
-            (Byte value) => global::System.Convert.ToSByte(value),
-            (Int16 value) => global::System.Convert.ToSByte(value),
-            (UInt16 value) => global::System.Convert.ToSByte(value),
-            (Int32 value) => global::System.Convert.ToSByte(value),
-            (UInt32 value) => global::System.Convert.ToSByte(value),
-            (Int64 value) => global::System.Convert.ToSByte(value),
-            (UInt64 value) => global::System.Convert.ToSByte(value),
-            (Single value) => global::System.Convert.ToSByte(value),
-            (Double value) => global::System.Convert.ToSByte(value),
-            (Decimal value) => global::System.Convert.ToSByte(value),
-            (DateTime value) => global::System.Convert.ToSByte(value),
-            (Object value) => global::System.Convert.ToByte(value),
-            (Boolean value) => global::System.Convert.ToByte(value),
-            (Byte value) => global::System.Convert.ToByte(value),
-            (Char value) => global::System.Convert.ToByte(value),
-            (SByte value) => global::System.Convert.ToByte(value),
-            (Int16 value) => global::System.Convert.ToByte(value),
-            (UInt16 value) => global::System.Convert.ToByte(value),
-            (Int32 value) => global::System.Convert.ToByte(value),
-            (UInt32 value) => global::System.Convert.ToByte(value),
-            (Int64 value) => global::System.Convert.ToByte(value),
-            (UInt64 value) => global::System.Convert.ToByte(value),
-            (Single value) => global::System.Convert.ToByte(value),
-            (Double value) => global::System.Convert.ToByte(value),
-            (Decimal value) => global::System.Convert.ToByte(value),
-            (DateTime value) => global::System.Convert.ToByte(value),
-            (Object value) => global::System.Convert.ToInt16(value),
-            (Boolean value) => global::System.Convert.ToInt16(value),
-            (Char value) => global::System.Convert.ToInt16(value),
-            (SByte value) => global::System.Convert.ToInt16(value),
-            (Byte value) => global::System.Convert.ToInt16(value),
-            (UInt16 value) => global::System.Convert.ToInt16(value),
-            (Int32 value) => global::System.Convert.ToInt16(value),
-            (UInt32 value) => global::System.Convert.ToInt16(value),
-            (Int16 value) => global::System.Convert.ToInt16(value),
-            (Int64 value) => global::System.Convert.ToInt16(value),
-            (UInt64 value) => global::System.Convert.ToInt16(value),
-            (Single value) => global::System.Convert.ToInt16(value),
-            (Double value) => global::System.Convert.ToInt16(value),
-            (Decimal value) => global::System.Convert.ToInt16(value),
-            (DateTime value) => global::System.Convert.ToInt16(value),
-            (Object value) => global::System.Convert.ToUInt16(value),
-            (Boolean value) => global::System.Convert.ToUInt16(value),
-            (Char value) => global::System.Convert.ToUInt16(value),
-            (SByte value) => global::System.Convert.ToUInt16(value),
-            (Byte value) => global::System.Convert.ToUInt16(value),
-            (Int16 value) => global::System.Convert.ToUInt16(value),
-            (Int32 value) => global::System.Convert.ToUInt16(value),
-            (UInt16 value) => global::System.Convert.ToUInt16(value),
-            (UInt32 value) => global::System.Convert.ToUInt16(value),
-            (Int64 value) => global::System.Convert.ToUInt16(value),
-            (UInt64 value) => global::System.Convert.ToUInt16(value),
-            (Single value) => global::System.Convert.ToUInt16(value),
-            (Double value) => global::System.Convert.ToUInt16(value),
-            (Decimal value) => global::System.Convert.ToUInt16(value),
-            (DateTime value) => global::System.Convert.ToUInt16(value),
-            (Object value) => global::System.Convert.ToInt32(value),
-            (Boolean value) => global::System.Convert.ToInt32(value),
-            (Char value) => global::System.Convert.ToInt32(value),
-            (SByte value) => global::System.Convert.ToInt32(value),
-            (Byte value) => global::System.Convert.ToInt32(value),
-            (Int16 value) => global::System.Convert.ToInt32(value),
-            (UInt16 value) => global::System.Convert.ToInt32(value),
-            (UInt32 value) => global::System.Convert.ToInt32(value),
-            (Int32 value) => global::System.Convert.ToInt32(value),
-            (Int64 value) => global::System.Convert.ToInt32(value),
-            (UInt64 value) => global::System.Convert.ToInt32(value),
-            (Single value) => global::System.Convert.ToInt32(value),
-            (Double value) => global::System.Convert.ToInt32(value),
-            (Decimal value) => global::System.Convert.ToInt32(value),
-            (DateTime value) => global::System.Convert.ToInt32(value),
-            (Object value) => global::System.Convert.ToUInt32(value),
-            (Boolean value) => global::System.Convert.ToUInt32(value),
-            (Char value) => global::System.Convert.ToUInt32(value),
-            (SByte value) => global::System.Convert.ToUInt32(value),
-            (Byte value) => global::System.Convert.ToUInt32(value),
-            (Int16 value) => global::System.Convert.ToUInt32(value),
-            (UInt16 value) => global::System.Convert.ToUInt32(value),
-            (Int32 value) => global::System.Convert.ToUInt32(value),
-            (UInt32 value) => global::System.Convert.ToUInt32(value),
-            (Int64 value) => global::System.Convert.ToUInt32(value),
-            (UInt64 value) => global::System.Convert.ToUInt32(value),
-            (Single value) => global::System.Convert.ToUInt32(value),
-            (Double value) => global::System.Convert.ToUInt32(value),
-            (Decimal value) => global::System.Convert.ToUInt32(value),
-            (DateTime value) => global::System.Convert.ToUInt32(value),
-            (Object value) => global::System.Convert.ToInt64(value),
-            (Boolean value) => global::System.Convert.ToInt64(value),
-            (Char value) => global::System.Convert.ToInt64(value),
-            (SByte value) => global::System.Convert.ToInt64(value),
-            (Byte value) => global::System.Convert.ToInt64(value),
-            (Int16 value) => global::System.Convert.ToInt64(value),
-            (UInt16 value) => global::System.Convert.ToInt64(value),
-            (Int32 value) => global::System.Convert.ToInt64(value),
-            (UInt32 value) => global::System.Convert.ToInt64(value),
-            (UInt64 value) => global::System.Convert.ToInt64(value),
-            (Int64 value) => global::System.Convert.ToInt64(value),
-            (Single value) => global::System.Convert.ToInt64(value),
-            (Double value) => global::System.Convert.ToInt64(value),
-            (Decimal value) => global::System.Convert.ToInt64(value),
-            (DateTime value) => global::System.Convert.ToInt64(value),
-            (Object value) => global::System.Convert.ToUInt64(value),
-            (Boolean value) => global::System.Convert.ToUInt64(value),
-            (Char value) => global::System.Convert.ToUInt64(value),
-            (SByte value) => global::System.Convert.ToUInt64(value),
-            (Byte value) => global::System.Convert.ToUInt64(value),
-            (Int16 value) => global::System.Convert.ToUInt64(value),
-            (UInt16 value) => global::System.Convert.ToUInt64(value),
-            (Int32 value) => global::System.Convert.ToUInt64(value),
-            (UInt32 value) => global::System.Convert.ToUInt64(value),
-            (Int64 value) => global::System.Convert.ToUInt64(value),
-            (UInt64 value) => global::System.Convert.ToUInt64(value),
-            (Single value) => global::System.Convert.ToUInt64(value),
-            (Double value) => global::System.Convert.ToUInt64(value),
-            (Decimal value) => global::System.Convert.ToUInt64(value),
-            (DateTime value) => global::System.Convert.ToUInt64(value),
-            (Object value) => global::System.Convert.ToSingle(value),
-            (SByte value) => global::System.Convert.ToSingle(value),
-            (Byte value) => global::System.Convert.ToSingle(value),
-            (Char value) => global::System.Convert.ToSingle(value),
-            (Int16 value) => global::System.Convert.ToSingle(value),
-            (UInt16 value) => global::System.Convert.ToSingle(value),
-            (Int32 value) => global::System.Convert.ToSingle(value),
-            (UInt32 value) => global::System.Convert.ToSingle(value),
-            (Int64 value) => global::System.Convert.ToSingle(value),
-            (UInt64 value) => global::System.Convert.ToSingle(value),
-            (Single value) => global::System.Convert.ToSingle(value),
-            (Double value) => global::System.Convert.ToSingle(value),
-            (Decimal value) => global::System.Convert.ToSingle(value),
-            (Boolean value) => global::System.Convert.ToSingle(value),
-            (DateTime value) => global::System.Convert.ToSingle(value),
-            (Object value) => global::System.Convert.ToDouble(value),
-            (SByte value) => global::System.Convert.ToDouble(value),
-            (Byte value) => global::System.Convert.ToDouble(value),
-            (Int16 value) => global::System.Convert.ToDouble(value),
-            (Char value) => global::System.Convert.ToDouble(value),
-            (UInt16 value) => global::System.Convert.ToDouble(value),
-            (Int32 value) => global::System.Convert.ToDouble(value),
-            (UInt32 value) => global::System.Convert.ToDouble(value),
-            (Int64 value) => global::System.Convert.ToDouble(value),
-            (UInt64 value) => global::System.Convert.ToDouble(value),
-            (Single value) => global::System.Convert.ToDouble(value),
-            (Double value) => global::System.Convert.ToDouble(value),
-            (Decimal value) => global::System.Convert.ToDouble(value),
-            (Boolean value) => global::System.Convert.ToDouble(value),
-            (DateTime value) => global::System.Convert.ToDouble(value),
-            (Object value) => global::System.Convert.ToDecimal(value),
-            (SByte value) => global::System.Convert.ToDecimal(value),
-            (Byte value) => global::System.Convert.ToDecimal(value),
-            (Char value) => global::System.Convert.ToDecimal(value),
-            (Int16 value) => global::System.Convert.ToDecimal(value),
-            (UInt16 value) => global::System.Convert.ToDecimal(value),
-            (Int32 value) => global::System.Convert.ToDecimal(value),
-            (UInt32 value) => global::System.Convert.ToDecimal(value),
-            (Int64 value) => global::System.Convert.ToDecimal(value),
-            (UInt64 value) => global::System.Convert.ToDecimal(value),
-            (Single value) => global::System.Convert.ToDecimal(value),
-            (Double value) => global::System.Convert.ToDecimal(value),
-            (Decimal value) => global::System.Convert.ToDecimal(value),
-            (Boolean value) => global::System.Convert.ToDecimal(value),
-            (DateTime value) => global::System.Convert.ToDecimal(value),
-            (DateTime value) => global::System.Convert.ToDateTime(value),
-            (Object value) => global::System.Convert.ToDateTime(value),
-            (SByte value) => global::System.Convert.ToDateTime(value),
-            (Byte value) => global::System.Convert.ToDateTime(value),
-            (Int16 value) => global::System.Convert.ToDateTime(value),
-            (UInt16 value) => global::System.Convert.ToDateTime(value),
-            (Int32 value) => global::System.Convert.ToDateTime(value),
-            (UInt32 value) => global::System.Convert.ToDateTime(value),
-            (Int64 value) => global::System.Convert.ToDateTime(value),
-            (UInt64 value) => global::System.Convert.ToDateTime(value),
-            (Boolean value) => global::System.Convert.ToDateTime(value),
-            (Char value) => global::System.Convert.ToDateTime(value),
-            (Single value) => global::System.Convert.ToDateTime(value),
-            (Double value) => global::System.Convert.ToDateTime(value),
-            (Decimal value) => global::System.Convert.ToDateTime(value),
-            (String value) => global::System.Convert.ToString(value),
-            (byte[] inArray) => global::System.Convert.ToBase64String(inArray),
-            (byte[] inArray, int offset, int length) => global::System.Convert.ToBase64String(inArray, offset, length),
-            (byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options),
-            (byte[] inArray, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options),
-
-            (byte[] inArray) => global::System.Convert.ToHexString(inArray),
-            (byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length),
-        }.ToReadOnly();
+        public static MemberTable Convert { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.Array" />.
         /// </summary>
-        public static MemberTable Array { get; } = new MemberTable
-        {
-            // NB: Array.Empty<T>() is omitted because the array return type is considered mutable.
-
-            (global::System.Array array) => array.IsFixedSize,
-            (global::System.Array array) => array.IsReadOnly,
-            (global::System.Array array) => array.IsSynchronized,
-            (global::System.Array array) => array.Length,
-            (global::System.Array array) => array.LongLength,
-            (global::System.Array array) => array.Rank,
-
-            (global::System.Array array, object value) => global::System.Array.BinarySearch(array, value),
-            (global::System.Array array, int index, int length, object value) => global::System.Array.BinarySearch(array, index, length, value),
-            (T[] array, T value) => global::System.Array.BinarySearch(array, value),
-            (T[] array, int index, int length, T value) => global::System.Array.BinarySearch(array, index, length, value),
-
-            (global::System.Array array, int dimension) => array.GetLength(dimension),
-            (global::System.Array array, int dimension) => array.GetLongLength(dimension),
-
-            (global::System.Array array, int dimension) => array.GetLowerBound(dimension),
-            (global::System.Array array, int dimension) => array.GetUpperBound(dimension),
-
-            // NB: GetValue methods are omitted because these return global::System.Object which is not immutable.
-
-            (global::System.Array array, object value) => global::System.Array.IndexOf(array, value),
-            (global::System.Array array, object value, int startIndex) => global::System.Array.IndexOf(array, value, startIndex),
-            (global::System.Array array, object value, int startIndex, int count) => global::System.Array.IndexOf(array, value, startIndex, count),
-            (T[] array, object value) => global::System.Array.IndexOf(array, value),
-            (T[] array, object value, int startIndex) => global::System.Array.IndexOf(array, value, startIndex),
-            (T[] array, object value, int startIndex, int count) => global::System.Array.IndexOf(array, value, startIndex, count),
-
-            (global::System.Array array, object value) => global::System.Array.LastIndexOf(array, value),
-            (global::System.Array array, object value, int startIndex) => global::System.Array.LastIndexOf(array, value, startIndex),
-            (global::System.Array array, object value, int startIndex, int count) => global::System.Array.LastIndexOf(array, value, startIndex, count),
-            (T[] array, object value) => global::System.Array.LastIndexOf(array, value),
-            (T[] array, object value, int startIndex) => global::System.Array.LastIndexOf(array, value, startIndex),
-            (T[] array, object value, int startIndex, int count) => global::System.Array.LastIndexOf(array, value, startIndex, count),
-
-            // NB: Methods with Predicate<T> parameters are ; the delegate may not be a pure function.
-            // REVIEW: In practice, it is assumed that predicates are pure. Should we provide a table including these members, so users can opt-in?
-        }.ToReadOnly();
+        public static MemberTable Array { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.Index" />.
         /// </summary>
-        public static MemberTable Index { get; } = new MemberTable
-        {
-            () => global::System.Index.End,
-            () => global::System.Index.Start,
-
-            (global::System.Index i) => i.IsFromEnd,
-            (global::System.Index i) => i.Value,
-
-            (int value, bool fromEnd) => new global::System.Index(value, fromEnd),
-
-            (int value) => (global::System.Index)value,
-
-            (int value) => global::System.Index.FromEnd(value),
-            (int value) => global::System.Index.FromStart(value),
-
-            (global::System.Index i, int length) => i.GetOffset(length),
-
-            (global::System.Index i, global::System.Index other) => i.Equals(other),
-        }.ToReadOnly();
+        public static MemberTable Index { get; }
 
         /// <summary>
         /// Gets a table of pure members on <see cref="global::System.Range" />.
         /// </summary>
-        public static MemberTable Range { get; } = new MemberTable
-        {
-            () => global::System.Range.All,
-
-            (global::System.Index start, global::System.Index end) => new global::System.Range(start, end),
-
-            (global::System.Index start) => global::System.Range.StartAt(start),
-            (global::System.Index end) => global::System.Range.EndAt(end),
-
-            (global::System.Range r) => r.End,
-            (global::System.Range r) => r.Start,
-
-            // NB: GetOffsetAndLength is omitted because the ValueTuple<,> return type is not immutable.
-
-            (global::System.Range r, global::System.Range other) => r.Equals(other),
-        }.ToReadOnly();
+        public static MemberTable Range { get; }
 
         /// <summary>
         /// Pure members in the System.Collections namespace.
@@ -1524,137 +1572,152 @@ public static class PureMemberCatalog
             /// </summary>
             public static class RegularExpressions
             {
-                /// <summary>
-                /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.Regex" />.
-                /// </summary>
-                public static MemberTable Regex { get; } = new MemberTable
+                static RegularExpressions()
                 {
-                    (string pattern) => new global::System.Text.RegularExpressions.Regex(pattern),
-                    (string pattern, global::System.Text.RegularExpressions.RegexOptions options) => new global::System.Text.RegularExpressions.Regex(pattern, options),
-                    (string pattern, global::System.Text.RegularExpressions.RegexOptions options, TimeSpan matchTimeout) => new global::System.Text.RegularExpressions.Regex(pattern, options, matchTimeout),
+                    // See comment in outer 'System' class static constructor for why we're not
+                    // using normal initializer expressions.
+#pragma warning disable IDE0028 // Simplify collection initialization
+                    MemberTable regexMembers = new();
+                    regexMembers.Add((string pattern) => new global::System.Text.RegularExpressions.Regex(pattern));
+                    regexMembers.Add((string pattern, global::System.Text.RegularExpressions.RegexOptions options) => new global::System.Text.RegularExpressions.Regex(pattern, options));
+                    regexMembers.Add((string pattern, global::System.Text.RegularExpressions.RegexOptions options, TimeSpan matchTimeout) => new global::System.Text.RegularExpressions.Regex(pattern, options, matchTimeout));
 
-                    (global::System.Text.RegularExpressions.Regex r) => r.MatchTimeout,
-                    (global::System.Text.RegularExpressions.Regex r) => r.Options,
-                    (global::System.Text.RegularExpressions.Regex r) => r.RightToLeft,
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r) => r.MatchTimeout);
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r) => r.Options);
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r) => r.RightToLeft);
 
-                    (string str) => global::System.Text.RegularExpressions.Regex.Escape(str),
+                    regexMembers.Add((string str) => global::System.Text.RegularExpressions.Regex.Escape(str));
 
                     // NB: GetGroupNames and GetGroupNumbers are omitted; these return mutable arrays.
 
-                    (global::System.Text.RegularExpressions.Regex r, int i) => r.GroupNameFromNumber(i),
-                    (global::System.Text.RegularExpressions.Regex r, string name) => r.GroupNumberFromName(name),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, int i) => r.GroupNameFromNumber(i));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string name) => r.GroupNumberFromName(name));
 
-                    (string input, string pattern) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern, options),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern, options, matchTimeout),
+                    regexMembers.Add((string input, string pattern) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern, options));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.IsMatch(input, pattern, options, matchTimeout));
 
-                    (global::System.Text.RegularExpressions.Regex r, string input) => r.IsMatch(input),
-                    (global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.IsMatch(input, startat),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input) => r.IsMatch(input));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.IsMatch(input, startat));
 
-                    (string input, string pattern) => global::System.Text.RegularExpressions.Regex.Match(input, pattern),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Match(input, pattern, options),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Match(input, pattern, options, matchTimeout),
+                    regexMembers.Add((string input, string pattern) => global::System.Text.RegularExpressions.Regex.Match(input, pattern));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Match(input, pattern, options));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Match(input, pattern, options, matchTimeout));
 
-                    (global::System.Text.RegularExpressions.Regex r, string input) => r.Match(input),
-                    (global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.Match(input, startat),
-                    (global::System.Text.RegularExpressions.Regex r, string input, int beginning, int length) => r.Match(input, beginning, length),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input) => r.Match(input));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.Match(input, startat));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, int beginning, int length) => r.Match(input, beginning, length));
 
-                    (string input, string pattern) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern, options),
-                    (string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern, options, matchTimeout),
+                    regexMembers.Add((string input, string pattern) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern, options));
+                    regexMembers.Add((string input, string pattern, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Matches(input, pattern, options, matchTimeout));
 
-                    (global::System.Text.RegularExpressions.Regex r, string input) => r.Matches(input),
-                    (global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.Matches(input, startat),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input) => r.Matches(input));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, int startat) => r.Matches(input, startat));
 
-                    (string input, string pattern, string replacement) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement),
-                    (string input, string pattern, string replacement, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement, options),
-                    (string input, string pattern, string replacement, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement, options, matchTimeout),
+                    regexMembers.Add((string input, string pattern, string replacement) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement));
+                    regexMembers.Add((string input, string pattern, string replacement, global::System.Text.RegularExpressions.RegexOptions options) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement, options));
+                    regexMembers.Add((string input, string pattern, string replacement, global::System.Text.RegularExpressions.RegexOptions options, global::System.TimeSpan matchTimeout) => global::System.Text.RegularExpressions.Regex.Replace(input, pattern, replacement, options, matchTimeout));
 
-                    (global::System.Text.RegularExpressions.Regex r, string input, string replacement) => r.Replace(input, replacement),
-                    (global::System.Text.RegularExpressions.Regex r, string input, string replacement, int count) => r.Replace(input, replacement, count),
-                    (global::System.Text.RegularExpressions.Regex r, string input, string replacement, int count, int startat) => r.Replace(input, replacement, count, startat),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, string replacement) => r.Replace(input, replacement));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, string replacement, int count) => r.Replace(input, replacement, count));
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r, string input, string replacement, int count, int startat) => r.Replace(input, replacement, count, startat));
 
                     // NB: Replace overloads with MatchEvaluator are omitted; the delegate may not be a pure function.
                     // REVIEW: In practice, it is assumed that the match evaluator is pure. Should we provide a table including these members, so users can opt-in?
 
                     // NB: Split overloads are omitted; these return mutable arrays.
 
-                    (global::System.Text.RegularExpressions.Regex r) => r.ToString(),
+                    regexMembers.Add((global::System.Text.RegularExpressions.Regex r) => r.ToString());
 
-                    (string str) => global::System.Text.RegularExpressions.Regex.Unescape(str),
-                }.ToReadOnly();
+                    regexMembers.Add((string str) => global::System.Text.RegularExpressions.Regex.Unescape(str));
+                    Regex = regexMembers.ToReadOnly();
+
+                    MemberTable matchCollectionMembers = new();
+                    matchCollectionMembers.Add((global::System.Text.RegularExpressions.MatchCollection c) => c.Count);
+                    matchCollectionMembers.Add((global::System.Text.RegularExpressions.MatchCollection c) => c.IsReadOnly);
+                    matchCollectionMembers.Add((global::System.Text.RegularExpressions.MatchCollection c) => c.IsSynchronized);
+
+                    matchCollectionMembers.Add((global::System.Text.RegularExpressions.MatchCollection c, int i) => c[i]);
+                    MatchCollection = matchCollectionMembers.ToReadOnly();
+
+                    MemberTable matchMembers = new();
+                    matchMembers.Add(() => global::System.Text.RegularExpressions.Match.Empty);
+
+                    matchMembers.Add((global::System.Text.RegularExpressions.Match m) => m.Groups);
+
+                    matchMembers.Add((global::System.Text.RegularExpressions.Match m) => m.NextMatch());
+                    matchMembers.Add((global::System.Text.RegularExpressions.Match m, string replacement) => m.Result(replacement)); // NB: Virtual but only internal derivees are allowed.
+                    Match = matchMembers.ToReadOnly();
+
+                    MemberTable groupCollectionMembers = new();
+                    groupCollectionMembers.Add((global::System.Text.RegularExpressions.GroupCollection g) => g.Count);
+                    groupCollectionMembers.Add((global::System.Text.RegularExpressions.GroupCollection g) => g.IsReadOnly);
+                    groupCollectionMembers.Add((global::System.Text.RegularExpressions.GroupCollection g) => g.IsSynchronized);
+
+                    groupCollectionMembers.Add((global::System.Text.RegularExpressions.GroupCollection g, int groupnum) => g[groupnum]);
+                    groupCollectionMembers.Add((global::System.Text.RegularExpressions.GroupCollection g, string groupname) => g[groupname]);
+                    GroupCollection = groupCollectionMembers.ToReadOnly();
+
+                    MemberTable groupMembers = new();
+                    groupMembers.Add((global::System.Text.RegularExpressions.Group g) => g.Name);
+                    groupMembers.Add((global::System.Text.RegularExpressions.Group g) => g.Success);
+                    groupMembers.Add((global::System.Text.RegularExpressions.Group g) => g.Captures);
+                    Group = groupMembers.ToReadOnly();
+
+                    MemberTable captureCollectionMembers = new();
+                    captureCollectionMembers.Add((global::System.Text.RegularExpressions.CaptureCollection c) => c.Count);
+                    captureCollectionMembers.Add((global::System.Text.RegularExpressions.CaptureCollection c) => c.IsReadOnly);
+                    captureCollectionMembers.Add((global::System.Text.RegularExpressions.CaptureCollection c) => c.IsSynchronized);
+
+                    captureCollectionMembers.Add((global::System.Text.RegularExpressions.CaptureCollection c, int i) => c[i]);
+                    CaptureCollection = captureCollectionMembers.ToReadOnly();
+
+                    MemberTable captureMembers = new();
+                    captureMembers.Add((global::System.Text.RegularExpressions.Capture c) => c.Index);
+                    captureMembers.Add((global::System.Text.RegularExpressions.Capture c) => c.Length);
+                    captureMembers.Add((global::System.Text.RegularExpressions.Capture c) => c.Value);
+
+                    captureMembers.Add((global::System.Text.RegularExpressions.Capture c) => c.ToString());
+                    Capture = captureMembers.ToReadOnly();
+
+#pragma warning restore IDE0028 // Simplify collection initialization
+
+                }
+                /// <summary>
+                /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.Regex" />.
+                /// </summary>
+                public static MemberTable Regex { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.MatchCollection" />.
                 /// </summary>
-                public static MemberTable MatchCollection { get; } = new MemberTable
-                {
-                    (global::System.Text.RegularExpressions.MatchCollection c) => c.Count,
-                    (global::System.Text.RegularExpressions.MatchCollection c) => c.IsReadOnly,
-                    (global::System.Text.RegularExpressions.MatchCollection c) => c.IsSynchronized,
-
-                    (global::System.Text.RegularExpressions.MatchCollection c, int i) => c[i],
-                }.ToReadOnly();
+                public static MemberTable MatchCollection { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.Match" />.
                 /// </summary>
-                public static MemberTable Match { get; } = new MemberTable
-                {
-                    () => global::System.Text.RegularExpressions.Match.Empty,
-
-                    (global::System.Text.RegularExpressions.Match m) => m.Groups,
-
-                    (global::System.Text.RegularExpressions.Match m) => m.NextMatch(),
-                    (global::System.Text.RegularExpressions.Match m, string replacement) => m.Result(replacement), // NB: Virtual but only internal derivees are allowed.
-                }.ToReadOnly();
+                public static MemberTable Match { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.GroupCollection" />.
                 /// </summary>
-                public static MemberTable GroupCollection { get; } = new MemberTable
-                {
-                    (global::System.Text.RegularExpressions.GroupCollection g) => g.Count,
-                    (global::System.Text.RegularExpressions.GroupCollection g) => g.IsReadOnly,
-                    (global::System.Text.RegularExpressions.GroupCollection g) => g.IsSynchronized,
-
-                    (global::System.Text.RegularExpressions.GroupCollection g, int groupnum) => g[groupnum],
-                    (global::System.Text.RegularExpressions.GroupCollection g, string groupname) => g[groupname],
-                }.ToReadOnly();
+                public static MemberTable GroupCollection { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.Group" />.
                 /// </summary>
-                public static MemberTable Group { get; } = new MemberTable
-                {
-                    // (global::System.Text.RegularExpressions.Group g) => g.Name, // NB: Not in .NET Standard 2.0.
-                    (global::System.Text.RegularExpressions.Group g) => g.Success,
-                    (global::System.Text.RegularExpressions.Group g) => g.Captures,
-                }.ToReadOnly();
+                public static MemberTable Group { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.CaptureCollection" />.
                 /// </summary>
-                public static MemberTable CaptureCollection { get; } = new MemberTable
-                {
-                    (global::System.Text.RegularExpressions.CaptureCollection c) => c.Count,
-                    (global::System.Text.RegularExpressions.CaptureCollection c) => c.IsReadOnly,
-                    (global::System.Text.RegularExpressions.CaptureCollection c) => c.IsSynchronized,
-
-                    (global::System.Text.RegularExpressions.CaptureCollection c, int i) => c[i],
-                }.ToReadOnly();
+                public static MemberTable CaptureCollection { get; }
 
                 /// <summary>
                 /// Gets a table of pure members on <see cref="global::System.Text.RegularExpressions.Capture" />.
                 /// </summary>
-                public static MemberTable Capture { get; } = new MemberTable
-                {
-                    (global::System.Text.RegularExpressions.Capture c) => c.Index,
-                    (global::System.Text.RegularExpressions.Capture c) => c.Length,
-                    (global::System.Text.RegularExpressions.Capture c) => c.Value,
-
-                    (global::System.Text.RegularExpressions.Capture c) => c.ToString(),
-                }.ToReadOnly();
+                public static MemberTable Capture { get; }
 
                 /// <summary>
                 /// Gets a table of pure members in the System.Text.RegularExpressions namespace.
