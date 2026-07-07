@@ -8,26 +8,23 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
+namespace System.Linq.CompilerServices;
 
-namespace System.Linq.CompilerServices
+internal sealed class Label<TValue>
 {
-    internal sealed class Label<TValue>
+    public Label(ITree<TValue> tree, IList<Match> labels)
     {
-        public Label(ITree<TValue> tree, IList<Match> labels)
-        {
-            Tree = tree;
-            Labels = labels;
-        }
-
-        public ITree<TValue> Tree { get; }
-
-        public TValue Value => Tree.Value;
-
-        public IList<Match> Labels { get; }
-
-        public override string ToString() => ToString(withValue: true);
-
-        public string ToString(bool withValue) => "[" + string.Join(", ", Labels) + "]" + (withValue ? " " + Value.ToString() : "");
+        Tree = tree;
+        Labels = labels;
     }
+
+    public ITree<TValue> Tree { get; }
+
+    public TValue Value => Tree.Value;
+
+    public IList<Match> Labels { get; }
+
+    public override string ToString() => ToString(withValue: true);
+
+    public string ToString(bool withValue) => "[" + string.Join(", ", Labels) + "]" + (withValue ? " " + Value.ToString() : "");
 }

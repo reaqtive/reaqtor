@@ -10,49 +10,48 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Eliminates compiler-generated names from expression trees (e.g. C# transparent identifier range variables).
+/// </summary>
+public static class CompilerGeneratedNameEliminator
 {
     /// <summary>
-    /// Eliminates compiler-generated names from expression trees (e.g. C# transparent identifier range variables).
+    /// Prettifies the specified expression by eliminating compiler-generated names.
     /// </summary>
-    public static class CompilerGeneratedNameEliminator
+    /// <param name="expression">Expression to prettify.</param>
+    /// <returns>Expression tree with compiler-generated names substituted for prettier names.</returns>
+    public static Expression Prettify(Expression expression)
     {
-        /// <summary>
-        /// Prettifies the specified expression by eliminating compiler-generated names.
-        /// </summary>
-        /// <param name="expression">Expression to prettify.</param>
-        /// <returns>Expression tree with compiler-generated names substituted for prettier names.</returns>
-        public static Expression Prettify(Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
-            var res = new Impl().Visit(expression);
-            res = AlphaRenamer.EliminateNameConflicts(res);
-            return res;
+        var res = new Impl().Visit(expression);
+        res = AlphaRenamer.EliminateNameConflicts(res);
+        return res;
+    }
+
+    private sealed class Impl : ScopedExpressionVisitor<ParameterExpression>
+    {
+        protected override ParameterExpression GetState(ParameterExpression parameter)
+        {
+            if (!string.IsNullOrEmpty(parameter.Name) && parameter.Name.StartsWith(Constants.CS_TRANSPARENTIDENTIFIER_PREFIX, StringComparison.Ordinal))
+            {
+                return Expression.Parameter(parameter.Type, "t");
+            }
+
+            return parameter;
         }
 
-        private sealed class Impl : ScopedExpressionVisitor<ParameterExpression>
+        protected override Expression VisitParameter(ParameterExpression node)
         {
-            protected override ParameterExpression GetState(ParameterExpression parameter)
+            if (!TryLookup(node, out ParameterExpression res))
             {
-                if (!string.IsNullOrEmpty(parameter.Name) && parameter.Name.StartsWith(Constants.CS_TRANSPARENTIDENTIFIER_PREFIX, StringComparison.Ordinal))
-                {
-                    return Expression.Parameter(parameter.Type, "t");
-                }
-
-                return parameter;
+                res = GetState(node);
+                GlobalScope.Add(node, res);
             }
 
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                if (!TryLookup(node, out ParameterExpression res))
-                {
-                    res = GetState(node);
-                    GlobalScope.Add(node, res);
-                }
-
-                return res;
-            }
+            return res;
         }
     }
 }

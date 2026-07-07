@@ -4,16 +4,15 @@
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Represents a query engine exposing a reliable reactive service, used for cross-engine communication.
+/// </summary>
+public interface IReliableQueryEngine : IQueryEngine
 {
     /// <summary>
-    /// Represents a query engine exposing a reliable reactive service, used for cross-engine communication.
+    /// Gets the reliable reactive service exposed by the engine.
     /// </summary>
-    public interface IReliableQueryEngine : IQueryEngine
-    {
-        /// <summary>
-        /// Gets the reliable reactive service exposed by the engine.
-        /// </summary>
-        IReliableReactive ReliableReactiveService { get; }
-    }
+    IReliableReactive ReliableReactiveService { get; }
 }

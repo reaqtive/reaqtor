@@ -8,220 +8,212 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor
+namespace Tests.Reaqtor;
+
+[TestClass]
+public class QbserverTests
 {
-    [TestClass]
-    public class QbserverTests
+    [TestMethod]
+    public void Qbserver_ReentrancyDuringInitialization_OnNext()
     {
-        [TestMethod]
-        public void Qbserver_ReentrancyDuringInitialization_OnNext()
+        Qbserver_ReentrancyDuringInitialization_Impl(
+            observer => observer.OnNextAsync(42, CancellationToken.None),
+            observer => observer.OnNextTask,
+            observer => Assert.IsTrue(observer.OnNextLog.SequenceEqual([42]))
+        );
+    }
+
+    [TestMethod]
+    public void Qbserver_ReentrancyDuringInitialization_OnError()
+    {
+        var ex = new Exception();
+
+        Qbserver_ReentrancyDuringInitialization_Impl(
+            observer => observer.OnErrorAsync(ex, CancellationToken.None),
+            observer => observer.OnErrorTask,
+            observer => Assert.AreSame(observer.OnErrorLog, ex)
+        );
+    }
+
+    [TestMethod]
+    public void Qbserver_ReentrancyDuringInitialization_OnCompleted()
+    {
+        Qbserver_ReentrancyDuringInitialization_Impl(
+            observer => observer.OnCompletedAsync(CancellationToken.None),
+            observer => observer.OnCompletedTask,
+            observer => Assert.IsTrue(observer.OnCompletedLog)
+        );
+    }
+
+    private static void Qbserver_ReentrancyDuringInitialization_Impl(Func<IAsyncReactiveQbserver<int>, Task> action, Func<MyObserver<int>, TaskCompletionSource<object>> complete, Action<MyObserver<int>> assert)
+    {
+        var provider = new MyProvider();
+        var observer = provider.CreateQbserver<int>(Expression.Default(typeof(IAsyncReactiveQbserver<int>)));
+
+        var opAsync = action(observer);
+
+        provider.Acquire.WaitOne();
+
+        var ex = Assert.ThrowsExactly<AggregateException>(() =>
+            {
+                observer.OnNextAsync(43, CancellationToken.None).Wait();
+            });
+        var ioe = ex.InnerException as InvalidOperationException;
+
+        Assert.IsNotNull(ioe);
+
+        Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
+
+        var ex2 = Assert.ThrowsExactly<AggregateException>(() =>
+            {
+                observer.OnErrorAsync(new Exception(), CancellationToken.None).Wait();
+            });
+        var ioe2 = ex2.InnerException as InvalidOperationException;
+
+        Assert.IsNotNull(ioe2);
+
+        Assert.IsTrue(ioe2.Message.Contains("Concurrent calls"));
+
+        var ex3 = Assert.ThrowsExactly<AggregateException>(() =>
+            {
+                observer.OnCompletedAsync(CancellationToken.None).Wait();
+            });
+        var ioe3 = ex3.InnerException as InvalidOperationException;
+
+        Assert.IsNotNull(ioe3);
+
+        Assert.IsTrue(ioe3.Message.Contains("Concurrent calls"));
+
+        var iv = new MyObserver<int>();
+
+        var tcs = provider.GetObserverAsyncCoreTask;
+        tcs.SetResult(iv);
+
+        complete(iv).SetResult(null);
+        opAsync.Wait();
+
+        assert(iv);
+    }
+
+    [TestMethod]
+    public void Qbserver_RegularFlow()
+    {
+        var provider = new MyProvider();
+        var observer = provider.CreateQbserver<int>(Expression.Default(typeof(IAsyncReactiveQbserver<int>)));
+
+        var iv = new MyObserver<int>();
+
+        provider.GetObserverAsyncCoreTask.SetResult(iv);
+
+        iv.OnNextTask.SetResult(null);
+        observer.OnNextAsync(42, CancellationToken.None).Wait();
+        observer.OnNextAsync(43, CancellationToken.None).Wait();
+        observer.OnNextAsync(44, CancellationToken.None).Wait();
+
+        iv.OnCompletedTask.SetResult(null);
+        observer.OnCompletedAsync(CancellationToken.None).Wait();
+
+        Assert.IsTrue(iv.OnNextLog.SequenceEqual([42, 43, 44]));
+        Assert.IsTrue(iv.OnCompletedLog);
+    }
+
+    private sealed class MyObserver<T> : IAsyncReactiveObserver<T>
+    {
+        public List<T> OnNextLog = [];
+        public Exception OnErrorLog;
+        public bool OnCompletedLog;
+
+        public TaskCompletionSource<object> OnNextTask = new();
+        public TaskCompletionSource<object> OnErrorTask = new();
+        public TaskCompletionSource<object> OnCompletedTask = new();
+
+        public Task OnNextAsync(T value, CancellationToken token)
         {
-            Qbserver_ReentrancyDuringInitialization_Impl(
-                observer => observer.OnNextAsync(42, CancellationToken.None),
-                observer => observer.OnNextTask,
-                observer => Assert.IsTrue(observer.OnNextLog.SequenceEqual([42]))
-            );
+            OnNextLog.Add(value);
+            return OnNextTask.Task;
         }
 
-        [TestMethod]
-        public void Qbserver_ReentrancyDuringInitialization_OnError()
+        public Task OnErrorAsync(Exception error, CancellationToken token)
         {
-            var ex = new Exception();
-
-            Qbserver_ReentrancyDuringInitialization_Impl(
-                observer => observer.OnErrorAsync(ex, CancellationToken.None),
-                observer => observer.OnErrorTask,
-                observer => Assert.AreSame(observer.OnErrorLog, ex)
-            );
+            OnErrorLog = error;
+            return OnErrorTask.Task;
         }
 
-        [TestMethod]
-        public void Qbserver_ReentrancyDuringInitialization_OnCompleted()
+        public Task OnCompletedAsync(CancellationToken token)
         {
-            Qbserver_ReentrancyDuringInitialization_Impl(
-                observer => observer.OnCompletedAsync(CancellationToken.None),
-                observer => observer.OnCompletedTask,
-                observer => Assert.IsTrue(observer.OnCompletedLog)
-            );
+            OnCompletedLog = true;
+            return OnCompletedTask.Task;
+        }
+    }
+
+    private sealed class MyProvider : AsyncReactiveQueryProviderBase
+    {
+        public MyProvider()
+            : base(new SimpleExpressionServices())
+        {
         }
 
-        private static void Qbserver_ReentrancyDuringInitialization_Impl(Func<IAsyncReactiveQbserver<int>, Task> action, Func<MyObserver<int>, TaskCompletionSource<object>> complete, Action<MyObserver<int>> assert)
+        private sealed class SimpleExpressionServices : IReactiveExpressionServices
         {
-            var provider = new MyProvider();
-            var observer = provider.CreateQbserver<int>(Expression.Default(typeof(IAsyncReactiveQbserver<int>)));
-
-            var opAsync = action(observer);
-
-            provider.Acquire.WaitOne();
-
-            var ex = Assert.ThrowsExactly<AggregateException>(() =>
-                {
-                    observer.OnNextAsync(43, CancellationToken.None).Wait();
-                });
-            var ioe = ex.InnerException as InvalidOperationException;
-
-            Assert.IsNotNull(ioe);
-
-            Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
-
-            var ex2 = Assert.ThrowsExactly<AggregateException>(() =>
-                {
-                    observer.OnErrorAsync(new Exception(), CancellationToken.None).Wait();
-                });
-            var ioe2 = ex2.InnerException as InvalidOperationException;
-
-            Assert.IsNotNull(ioe2);
-
-            Assert.IsTrue(ioe2.Message.Contains("Concurrent calls"));
-
-            var ex3 = Assert.ThrowsExactly<AggregateException>(() =>
-                {
-                    observer.OnCompletedAsync(CancellationToken.None).Wait();
-                });
-            var ioe3 = ex3.InnerException as InvalidOperationException;
-
-            Assert.IsNotNull(ioe3);
-
-            Assert.IsTrue(ioe3.Message.Contains("Concurrent calls"));
-
-            var iv = new MyObserver<int>();
-
-            var tcs = provider.GetObserverAsyncCoreTask;
-            tcs.SetResult(iv);
-
-            complete(iv).SetResult(null);
-            opAsync.Wait();
-
-            assert(iv);
-        }
-
-        [TestMethod]
-        public void Qbserver_RegularFlow()
-        {
-            var provider = new MyProvider();
-            var observer = provider.CreateQbserver<int>(Expression.Default(typeof(IAsyncReactiveQbserver<int>)));
-
-            var iv = new MyObserver<int>();
-
-            provider.GetObserverAsyncCoreTask.SetResult(iv);
-
-            iv.OnNextTask.SetResult(null);
-            observer.OnNextAsync(42, CancellationToken.None).Wait();
-            observer.OnNextAsync(43, CancellationToken.None).Wait();
-            observer.OnNextAsync(44, CancellationToken.None).Wait();
-
-            iv.OnCompletedTask.SetResult(null);
-            observer.OnCompletedAsync(CancellationToken.None).Wait();
-
-            Assert.IsTrue(iv.OnNextLog.SequenceEqual([42, 43, 44]));
-            Assert.IsTrue(iv.OnCompletedLog);
-        }
-
-        private sealed class MyObserver<T> : IAsyncReactiveObserver<T>
-        {
-            public List<T> OnNextLog = [];
-            public Exception OnErrorLog;
-            public bool OnCompletedLog;
-
-            public TaskCompletionSource<object> OnNextTask = new();
-            public TaskCompletionSource<object> OnErrorTask = new();
-            public TaskCompletionSource<object> OnCompletedTask = new();
-
-            public Task OnNextAsync(T value, CancellationToken token)
+            public void RegisterObject(object value, Expression expression)
             {
-                OnNextLog.Add(value);
-                return OnNextTask.Task;
             }
 
-            public Task OnErrorAsync(Exception error, CancellationToken token)
+            public bool TryGetObject(object value, out Expression expression)
             {
-                OnErrorLog = error;
-                return OnErrorTask.Task;
+                expression = null;
+                return false;
             }
 
-            public Task OnCompletedAsync(CancellationToken token)
+            public Expression Normalize(Expression expression)
             {
-                OnCompletedLog = true;
-                return OnCompletedTask.Task;
+                return expression;
+            }
+
+            public Expression GetNamedExpression(Type type, Uri uri)
+            {
+                return Expression.Parameter(type, uri.OriginalString);
+            }
+
+            public bool TryGetName(Expression expression, out Uri uri)
+            {
+                uri = null;
+                return false;
             }
         }
 
-        private sealed class MyProvider : AsyncReactiveQueryProviderBase
+        public ManualResetEvent Acquire = new(false);
+        public TaskCompletionSource<object> GetObserverAsyncCoreTask = new();
+
+        protected override async Task<IAsyncReactiveObserver<T>> GetObserverAsyncCore<T>(IAsyncReactiveQbserver<T> observer, System.Threading.CancellationToken token)
         {
-            public MyProvider()
-                : base(new SimpleExpressionServices())
-            {
-            }
+            Acquire.Set();
+            var res = await GetObserverAsyncCoreTask.Task;
+            return (IAsyncReactiveObserver<T>)res;
+        }
 
-            private sealed class SimpleExpressionServices : IReactiveExpressionServices
-            {
-                public void RegisterObject(object value, Expression expression)
-                {
-                }
+        protected override Task CreateSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, object state, System.Threading.CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
 
-                public bool TryGetObject(object value, out Expression expression)
-                {
-                    expression = null;
-                    return false;
-                }
+        protected override Task DeleteSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, System.Threading.CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
 
-                public Expression Normalize(Expression expression)
-                {
-                    return expression;
-                }
+        protected override Task CreateStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, object state, System.Threading.CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
 
-                public Expression GetNamedExpression(Type type, Uri uri)
-                {
-                    return Expression.Parameter(type, uri.OriginalString);
-                }
-
-                public bool TryGetName(Expression expression, out Uri uri)
-                {
-                    uri = null;
-                    return false;
-                }
-            }
-
-            public ManualResetEvent Acquire = new(false);
-            public TaskCompletionSource<object> GetObserverAsyncCoreTask = new();
-
-            protected override async Task<IAsyncReactiveObserver<T>> GetObserverAsyncCore<T>(IAsyncReactiveQbserver<T> observer, System.Threading.CancellationToken token)
-            {
-                Acquire.Set();
-                var res = await GetObserverAsyncCoreTask.Task;
-                return (IAsyncReactiveObserver<T>)res;
-            }
-
-            protected override Task CreateSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, object state, System.Threading.CancellationToken token)
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override Task DeleteSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, System.Threading.CancellationToken token)
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override Task CreateStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, object state, System.Threading.CancellationToken token)
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override Task DeleteStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, System.Threading.CancellationToken token)
-            {
-                throw new NotImplementedException();
-            }
+        protected override Task DeleteStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, System.Threading.CancellationToken token)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -8,45 +8,40 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.Expressions.Optimizers;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+[TestClass]
+public partial class FreeVariableFinderTests
 {
-    [TestClass]
-    public partial class FreeVariableFinderTests
+    [TestMethod]
+    public void FreeVariableFinder_Basics()
     {
-        [TestMethod]
-        public void FreeVariableFinder_Basics()
-        {
-            var finder = new FreeVariableFinder();
+        var finder = new FreeVariableFinder();
 
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var z = Expression.Parameter(typeof(int));
-            var ex = Expression.Parameter(typeof(Exception));
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var z = Expression.Parameter(typeof(int));
+        var ex = Expression.Parameter(typeof(Exception));
 
-            var e =
-                Expression.Block(
-                    [x],
-                    Expression.Lambda(
-                        Expression.TryCatch(
-                            Expression.Add(x, y),
-                            Expression.Catch(
-                                ex,
-                                z
-                            )
-                        ),
-                        y
-                    )
-                );
+        var e =
+            Expression.Block(
+                [x],
+                Expression.Lambda(
+                    Expression.TryCatch(
+                        Expression.Add(x, y),
+                        Expression.Catch(
+                            ex,
+                            z
+                        )
+                    ),
+                    y
+                )
+            );
 
-            finder.Visit(e);
+        finder.Visit(e);
 
-            CollectionAssert.AreEquivalent(new[] { z }, finder.FreeVariables.ToArray());
-        }
+        CollectionAssert.AreEquivalent(new[] { z }, finder.FreeVariables.ToArray());
     }
 }

@@ -8,18 +8,17 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Interface for a visitor over non-generic trees.
+/// </summary>
+public interface ITreeVisitor
 {
     /// <summary>
-    /// Interface for a visitor over non-generic trees.
+    /// Visits the specified tree.
     /// </summary>
-    public interface ITreeVisitor
-    {
-        /// <summary>
-        /// Visits the specified tree.
-        /// </summary>
-        /// <param name="node">Tree to visit.</param>
-        /// <returns>Result of the visit.</returns>
-        ITree Visit(ITree node);
-    }
+    /// <param name="node">Tree to visit.</param>
+    /// <returns>Result of the visit.</returns>
+    ITree Visit(ITree node);
 }

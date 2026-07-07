@@ -8,51 +8,48 @@
 // BD - May 2013 - Created this file.
 //
 
-using System.Collections.Generic;
+namespace System.Linq.CompilerServices;
 
-namespace System.Linq.CompilerServices
+/// <summary>
+/// Equality comparer for generic trees.
+/// </summary>
+/// <typeparam name="T">Tree node type.</typeparam>
+public class TreeEqualityComparer<T> : IEqualityComparer<ITree<T>>
 {
+    private readonly IEqualityComparer<T> _comparer;
+
     /// <summary>
-    /// Equality comparer for generic trees.
+    /// Creates a new tree equality comparer using the default comparer for tree node values.
     /// </summary>
-    /// <typeparam name="T">Tree node type.</typeparam>
-    public class TreeEqualityComparer<T> : IEqualityComparer<ITree<T>>
+    public TreeEqualityComparer() => _comparer = EqualityComparer<T>.Default;
+
+    /// <summary>
+    /// Creates a new tree equality comparer using the specified comparer for tree node values.
+    /// </summary>
+    /// <param name="comparer">Equality comparer for tree node values.</param>
+    public TreeEqualityComparer(IEqualityComparer<T> comparer) => _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+
+    /// <summary>
+    /// Checks whether two trees are equal.
+    /// </summary>
+    /// <param name="x">First tree to compare.</param>
+    /// <param name="y">Second tree to compare.</param>
+    /// <returns>true if both trees are equal; otherwise, false.</returns>
+    public bool Equals(ITree<T> x, ITree<T> y)
     {
-        private readonly IEqualityComparer<T> _comparer;
+        if (x == null && y == null)
+            return true;
 
-        /// <summary>
-        /// Creates a new tree equality comparer using the default comparer for tree node values.
-        /// </summary>
-        public TreeEqualityComparer() => _comparer = EqualityComparer<T>.Default;
+        if (x == null || y == null)
+            return false;
 
-        /// <summary>
-        /// Creates a new tree equality comparer using the specified comparer for tree node values.
-        /// </summary>
-        /// <param name="comparer">Equality comparer for tree node values.</param>
-        public TreeEqualityComparer(IEqualityComparer<T> comparer) => _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-
-        /// <summary>
-        /// Checks whether two trees are equal.
-        /// </summary>
-        /// <param name="x">First tree to compare.</param>
-        /// <param name="y">Second tree to compare.</param>
-        /// <returns>true if both trees are equal; otherwise, false.</returns>
-        public bool Equals(ITree<T> x, ITree<T> y)
-        {
-            if (x == null && y == null)
-                return true;
-
-            if (x == null || y == null)
-                return false;
-
-            return _comparer.Equals(x.Value, y.Value) && x.Children.SequenceEqual(y.Children, this);
-        }
-
-        /// <summary>
-        /// Gets a hash code representation of the specified tree.
-        /// </summary>
-        /// <param name="obj">Tree to get a hash code representation for.</param>
-        /// <returns>Hash code for the specified tree.</returns>
-        public int GetHashCode(ITree<T> obj) => obj == null ? 1979 : obj.Children.Aggregate(_comparer.GetHashCode(obj.Value), (h, c) => h * 23 + GetHashCode(c));
+        return _comparer.Equals(x.Value, y.Value) && x.Children.SequenceEqual(y.Children, this);
     }
+
+    /// <summary>
+    /// Gets a hash code representation of the specified tree.
+    /// </summary>
+    /// <param name="obj">Tree to get a hash code representation for.</param>
+    /// <returns>Hash code for the specified tree.</returns>
+    public int GetHashCode(ITree<T> obj) => obj == null ? 1979 : obj.Children.Aggregate(_comparer.GetHashCode(obj.Value), (h, c) => h * 23 + GetHashCode(c));
 }

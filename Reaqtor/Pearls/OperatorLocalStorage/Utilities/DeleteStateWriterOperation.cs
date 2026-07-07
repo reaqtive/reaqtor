@@ -8,29 +8,28 @@
 // BD - January 2018
 //
 
-namespace Utilities
+namespace Utilities;
+
+public sealed class DeleteStateWriterOperation : StateWriterOperation
 {
-    public sealed class DeleteStateWriterOperation : StateWriterOperation
+    public DeleteStateWriterOperation(string category, string key) : base(category, key)
     {
-        public DeleteStateWriterOperation(string category, string key) : base(category, key)
+    }
+
+    public override StateWriterOperationKind Kind => StateWriterOperationKind.Delete;
+
+    public override void Apply(Store store)
+    {
+        var success = false;
+
+        if (store.Data.TryGetValue(Category, out var table))
         {
+            success = table.Remove(Key);
         }
 
-        public override StateWriterOperationKind Kind => StateWriterOperationKind.Delete;
-
-        public override void Apply(Store store)
+        if (!success)
         {
-            var success = false;
-
-            if (store.Data.TryGetValue(Category, out var table))
-            {
-                success = table.Remove(Key);
-            }
-
-            if (!success)
-            {
-                // TODO: Implement ACID behavior.
-            }
+            // TODO: Implement ACID behavior.
         }
     }
 }

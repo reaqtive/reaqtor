@@ -8,49 +8,47 @@
 // ER, BD - July 2013 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices
+namespace Tests.Nuqleon.DataModel.CompilerServices;
+
+internal class ExpressionComparator : ExpressionEqualityComparator
 {
-    internal class ExpressionComparator : ExpressionEqualityComparator
+    private readonly IEqualityComparer<object> _objectComparer;
+
+    public ExpressionComparator(TypeComparator typeComparer, ObjectComparator objectComparer)
+        : base(typeComparer, typeComparer.MemberComparer, objectComparer, EqualityComparer<CallSiteBinder>.Default)
     {
-        private readonly IEqualityComparer<object> _objectComparer;
+        objectComparer.ExpressionComparator = this;
+        _objectComparer = objectComparer;
+    }
 
-        public ExpressionComparator(TypeComparator typeComparer, ObjectComparator objectComparer)
-            : base(typeComparer, typeComparer.MemberComparer, objectComparer, EqualityComparer<CallSiteBinder>.Default)
+    public static ExpressionComparator CreateInstance()
+    {
+        return new ExpressionComparator(new TypeComparator(), ObjectComparator.CreateInstance());
+    }
+
+    public override bool Equals(Expression x, Expression y)
+    {
+        if (x == null && y == null)
         {
-            objectComparer.ExpressionComparator = this;
-            _objectComparer = objectComparer;
+            return true;
         }
 
-        public static ExpressionComparator CreateInstance()
+        if (x == null || y == null)
         {
-            return new ExpressionComparator(new TypeComparator(), ObjectComparator.CreateInstance());
+            return false;
         }
 
-        public override bool Equals(Expression x, Expression y)
+        if (x.NodeType != y.NodeType)
         {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-
-            if (x == null || y == null)
-            {
-                return false;
-            }
-
-            if (x.NodeType != y.NodeType)
-            {
-                var xValue = x.Evaluate();
-                var yValue = y.Evaluate();
-                return _objectComparer.Equals(xValue, yValue);
-            }
-
-            return base.Equals(x, y);
+            var xValue = x.Evaluate();
+            var yValue = y.Evaluate();
+            return _objectComparer.Equals(xValue, yValue);
         }
+
+        return base.Equals(x, y);
     }
 }

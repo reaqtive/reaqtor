@@ -4,18 +4,17 @@
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.Tasks
+namespace Reaqtive.Tasks;
+
+/// <summary>
+/// Interface for item processor with yielding support.
+/// </summary>
+public interface IYieldableItemProcessor : IItemProcessor
 {
     /// <summary>
-    /// Interface for item processor with yielding support.
+    /// Processes the specified batch of items.
     /// </summary>
-    public interface IYieldableItemProcessor : IItemProcessor
-    {
-        /// <summary>
-        /// Processes the specified batch of items.
-        /// </summary>
-        /// <param name="batchSize">Size of the batch.</param>
-        /// <param name="yieldToken">Token to observe yield requests.</param>
-        void Process(int batchSize, YieldToken yieldToken);
-    }
+    /// <param name="batchSize">Size of the batch.</param>
+    /// <param name="yieldToken">Token to observe yield requests.</param>
+    void Process(int batchSize, YieldToken yieldToken);
 }

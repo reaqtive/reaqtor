@@ -8,95 +8,94 @@
 
 using System.Reflection;
 
-namespace System.Linq.Expressions.Tests
+namespace System.Linq.Expressions.Tests;
+
+public interface IILProvider
 {
-    public interface IILProvider
+    byte[] GetByteArray();
+    ExceptionInfo[] GetExceptionInfos();
+    byte[] GetLocalSignature();
+    int MaxStackSize { get; }
+}
+
+public sealed class ExceptionInfo
+{
+    private static readonly Type s_tyExceptionInfo = Type.GetType("System.Reflection.Emit.__ExceptionInfo", throwOnError: true);
+    private static readonly MethodInfo s_miGetStartAddress = GetMethodInfo(nameof(GetStartAddress));
+    private static readonly MethodInfo s_miGetEndAddress = GetMethodInfo(nameof(GetEndAddress));
+    private static readonly MethodInfo s_miGetNumberOfCatches = GetMethodInfo(nameof(GetNumberOfCatches));
+    private static readonly MethodInfo s_miGetCatchAddresses = GetMethodInfo(nameof(GetCatchAddresses));
+    private static readonly MethodInfo s_miGetCatchEndAddresses = GetMethodInfo(nameof(GetCatchEndAddresses));
+    private static readonly MethodInfo s_miGetCatchClass = GetMethodInfo(nameof(GetCatchClass));
+    private static readonly MethodInfo s_miGetExceptionTypes = GetMethodInfo(nameof(GetExceptionTypes));
+
+    public int GetStartAddress() => Invoke<int>(s_miGetStartAddress);
+    public int GetEndAddress() => Invoke<int>(s_miGetEndAddress);
+    public int GetNumberOfCatches() => Invoke<int>(s_miGetNumberOfCatches);
+    public int[] GetCatchAddresses() => Invoke<int[]>(s_miGetCatchAddresses);
+    public int[] GetCatchEndAddresses() => Invoke<int[]>(s_miGetCatchEndAddresses);
+    public Type[] GetCatchClass() => Invoke<Type[]>(s_miGetCatchClass);
+    public int[] GetExceptionTypes() => Invoke<int[]>(s_miGetExceptionTypes);
+
+    private readonly object _exceptionInfo;
+
+    public ExceptionInfo(object exceptionInfo)
     {
-        byte[] GetByteArray();
-        ExceptionInfo[] GetExceptionInfos();
-        byte[] GetLocalSignature();
-        int MaxStackSize { get; }
-    }
+        _exceptionInfo = exceptionInfo;
 
-    public sealed class ExceptionInfo
-    {
-        private static readonly Type s_tyExceptionInfo = Type.GetType("System.Reflection.Emit.__ExceptionInfo", throwOnError: true);
-        private static readonly MethodInfo s_miGetStartAddress = GetMethodInfo(nameof(GetStartAddress));
-        private static readonly MethodInfo s_miGetEndAddress = GetMethodInfo(nameof(GetEndAddress));
-        private static readonly MethodInfo s_miGetNumberOfCatches = GetMethodInfo(nameof(GetNumberOfCatches));
-        private static readonly MethodInfo s_miGetCatchAddresses = GetMethodInfo(nameof(GetCatchAddresses));
-        private static readonly MethodInfo s_miGetCatchEndAddresses = GetMethodInfo(nameof(GetCatchEndAddresses));
-        private static readonly MethodInfo s_miGetCatchClass = GetMethodInfo(nameof(GetCatchClass));
-        private static readonly MethodInfo s_miGetExceptionTypes = GetMethodInfo(nameof(GetExceptionTypes));
+        StartAddress = GetStartAddress();
+        EndAddress = GetEndAddress();
 
-        public int GetStartAddress() => Invoke<int>(s_miGetStartAddress);
-        public int GetEndAddress() => Invoke<int>(s_miGetEndAddress);
-        public int GetNumberOfCatches() => Invoke<int>(s_miGetNumberOfCatches);
-        public int[] GetCatchAddresses() => Invoke<int[]>(s_miGetCatchAddresses);
-        public int[] GetCatchEndAddresses() => Invoke<int[]>(s_miGetCatchEndAddresses);
-        public Type[] GetCatchClass() => Invoke<Type[]>(s_miGetCatchClass);
-        public int[] GetExceptionTypes() => Invoke<int[]>(s_miGetExceptionTypes);
-
-        private readonly object _exceptionInfo;
-
-        public ExceptionInfo(object exceptionInfo)
+        var n = GetNumberOfCatches();
+        if (n > 0)
         {
-            _exceptionInfo = exceptionInfo;
+            var handlerStart = GetCatchAddresses();
+            var handlerEnd = GetCatchEndAddresses();
+            var catchType = GetCatchClass();
+            var types = GetExceptionTypes();
 
-            StartAddress = GetStartAddress();
-            EndAddress = GetEndAddress();
+            Handlers = new HandlerInfo[n];
 
-            var n = GetNumberOfCatches();
-            if (n > 0)
+            for (var i = 0; i < n; i++)
             {
-                var handlerStart = GetCatchAddresses();
-                var handlerEnd = GetCatchEndAddresses();
-                var catchType = GetCatchClass();
-                var types = GetExceptionTypes();
-
-                Handlers = new HandlerInfo[n];
-
-                for (var i = 0; i < n; i++)
-                {
-                    Handlers[i] = new HandlerInfo(handlerStart[i], handlerEnd[i], catchType[i], types[i]);
-                }
-            }
-            else
-            {
-                Handlers = Array.Empty<HandlerInfo>();
+                Handlers[i] = new HandlerInfo(handlerStart[i], handlerEnd[i], catchType[i], types[i]);
             }
         }
-
-        public int StartAddress { get; }
-        public int EndAddress { get; }
-        public HandlerInfo[] Handlers { get; }
-
-        private static MethodInfo GetMethodInfo(string name) => s_tyExceptionInfo.GetMethodAssert(name);
-        private T Invoke<T>(MethodInfo method, params object[] args) => (T)method.Invoke(_exceptionInfo, args);
-    }
-
-    public sealed class HandlerInfo
-    {
-        public HandlerInfo(int startAddress, int endAddress, Type type, int kind)
+        else
         {
-            StartAddress = startAddress;
-            EndAddress = endAddress;
-            Type = type;
-            Kind = (HandlerKind)kind;
+            Handlers = Array.Empty<HandlerInfo>();
         }
-
-        public int StartAddress { get; }
-        public int EndAddress { get; }
-        public Type Type { get; }
-        public HandlerKind Kind { get; }
     }
 
-    public enum HandlerKind
+    public int StartAddress { get; }
+    public int EndAddress { get; }
+    public HandlerInfo[] Handlers { get; }
+
+    private static MethodInfo GetMethodInfo(string name) => s_tyExceptionInfo.GetMethodAssert(name);
+    private T Invoke<T>(MethodInfo method, params object[] args) => (T)method.Invoke(_exceptionInfo, args);
+}
+
+public sealed class HandlerInfo
+{
+    public HandlerInfo(int startAddress, int endAddress, Type type, int kind)
     {
-        None,
-        Filter,
-        Finally,
-        Fault,
-        PreserveStack
+        StartAddress = startAddress;
+        EndAddress = endAddress;
+        Type = type;
+        Kind = (HandlerKind)kind;
     }
+
+    public int StartAddress { get; }
+    public int EndAddress { get; }
+    public Type Type { get; }
+    public HandlerKind Kind { get; }
+}
+
+public enum HandlerKind
+{
+    None,
+    Filter,
+    Finally,
+    Fault,
+    PreserveStack
 }

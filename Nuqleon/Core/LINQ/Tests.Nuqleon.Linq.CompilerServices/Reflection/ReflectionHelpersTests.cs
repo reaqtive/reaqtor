@@ -8,86 +8,81 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.CompilerServices;
 
-namespace Tests.System.Linq.CompilerServices
+[TestClass]
+public class ReflectionHelpersTests
 {
-    [TestClass]
-    public class ReflectionHelpersTests
+    [TestMethod]
+    public void InfoOf_ArgumentChecking()
     {
-        [TestMethod]
-        public void InfoOf_ArgumentChecking()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression)));
-            Assert.AreEqual("expression", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action>)));
-            Assert.AreEqual("expression", ex2.ParamName);
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action<int>>)));
-            Assert.AreEqual("expression", ex3.ParamName);
-            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int>>)));
-            Assert.AreEqual("expression", ex4.ParamName);
-            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)));
-            Assert.AreEqual("expression", ex5.ParamName);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression)));
+        Assert.AreEqual("expression", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action>)));
+        Assert.AreEqual("expression", ex2.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Action<int>>)));
+        Assert.AreEqual("expression", ex3.ParamName);
+        var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int>>)));
+        Assert.AreEqual("expression", ex4.ParamName);
+        var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)));
+        Assert.AreEqual("expression", ex5.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
+    }
 
-        [TestMethod]
-        public void InfoOf_NoReflectionInfo()
-        {
-            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
-            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
-            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
-        }
+    [TestMethod]
+    public void InfoOf_NoReflectionInfo()
+    {
+        Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
+        Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
+        Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
+    }
 
-        [TestMethod]
-        public void InfoOf_MethodCall_MethodInfo1()
-        {
-            Assert.AreSame(typeof(Console).GetMethod("WriteLine", Type.EmptyTypes), ReflectionHelpers.InfoOf(() => Console.WriteLine()));
-        }
+    [TestMethod]
+    public void InfoOf_MethodCall_MethodInfo1()
+    {
+        Assert.AreSame(typeof(Console).GetMethod("WriteLine", Type.EmptyTypes), ReflectionHelpers.InfoOf(() => Console.WriteLine()));
+    }
 
-        [TestMethod]
-        public void InfoOf_MethodCall_MethodInfo2()
-        {
-            Assert.AreSame(typeof(Console).GetMethod("WriteLine", [typeof(string)]), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
-        }
+    [TestMethod]
+    public void InfoOf_MethodCall_MethodInfo2()
+    {
+        Assert.AreSame(typeof(Console).GetMethod("WriteLine", [typeof(string)]), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
+    }
 
-        [TestMethod]
-        public void InfoOf_Unary_Convert_MethodInfo()
-        {
-            var convert = typeof(DateTimeOffset).GetMethods().Single(m => m.Name == "op_Implicit" && m.GetParameters()[0].ParameterType == typeof(DateTime) && m.ReturnType == typeof(DateTimeOffset));
-            Assert.AreSame(convert, ReflectionHelpers.InfoOf<DateTime, DateTimeOffset>(dt => dt));
-        }
+    [TestMethod]
+    public void InfoOf_Unary_Convert_MethodInfo()
+    {
+        var convert = typeof(DateTimeOffset).GetMethods().Single(m => m.Name == "op_Implicit" && m.GetParameters()[0].ParameterType == typeof(DateTime) && m.ReturnType == typeof(DateTimeOffset));
+        Assert.AreSame(convert, ReflectionHelpers.InfoOf<DateTime, DateTimeOffset>(dt => dt));
+    }
 
-        [TestMethod]
-        public void InfoOf_Unary_Negate_MethodInfo()
-        {
-            var negate = typeof(TimeSpan).GetMethods().Single(m => m.Name == "op_UnaryNegation" && m.GetParameters()[0].ParameterType == typeof(TimeSpan) && m.ReturnType == typeof(TimeSpan));
-            Assert.AreSame(negate, ReflectionHelpers.InfoOf<TimeSpan, TimeSpan>(t => -t));
-        }
+    [TestMethod]
+    public void InfoOf_Unary_Negate_MethodInfo()
+    {
+        var negate = typeof(TimeSpan).GetMethods().Single(m => m.Name == "op_UnaryNegation" && m.GetParameters()[0].ParameterType == typeof(TimeSpan) && m.ReturnType == typeof(TimeSpan));
+        Assert.AreSame(negate, ReflectionHelpers.InfoOf<TimeSpan, TimeSpan>(t => -t));
+    }
 
-        [TestMethod]
-        public void InfoOf_Binary_Add_MethodInfo()
-        {
-            var add = typeof(DateTime).GetMethods().Single(m => m.Name == "op_Addition" && m.GetParameters()[0].ParameterType == typeof(DateTime) && m.GetParameters()[1].ParameterType == typeof(TimeSpan) && m.ReturnType == typeof(DateTime));
-            Assert.AreSame(add, ReflectionHelpers.InfoOf<DateTime, DateTime>(d => d + default(TimeSpan)));
-        }
+    [TestMethod]
+    public void InfoOf_Binary_Add_MethodInfo()
+    {
+        var add = typeof(DateTime).GetMethods().Single(m => m.Name == "op_Addition" && m.GetParameters()[0].ParameterType == typeof(DateTime) && m.GetParameters()[1].ParameterType == typeof(TimeSpan) && m.ReturnType == typeof(DateTime));
+        Assert.AreSame(add, ReflectionHelpers.InfoOf<DateTime, DateTime>(d => d + default(TimeSpan)));
+    }
 
-        [TestMethod]
-        public void InfoOf_Member_PropertyInfo()
-        {
-            Assert.AreSame(typeof(Console).GetProperty("ForegroundColor"), ReflectionHelpers.InfoOf(() => Console.ForegroundColor));
-        }
+    [TestMethod]
+    public void InfoOf_Member_PropertyInfo()
+    {
+        Assert.AreSame(typeof(Console).GetProperty("ForegroundColor"), ReflectionHelpers.InfoOf(() => Console.ForegroundColor));
+    }
 
-        [TestMethod]
-        public void InfoOf_New_ConstructorInfo()
-        {
-            Assert.AreSame(typeof(Exception).GetConstructor([typeof(string)]), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
-        }
+    [TestMethod]
+    public void InfoOf_New_ConstructorInfo()
+    {
+        Assert.AreSame(typeof(Exception).GetConstructor([typeof(string)]), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
     }
 }

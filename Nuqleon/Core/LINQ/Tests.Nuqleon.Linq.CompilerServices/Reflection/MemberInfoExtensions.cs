@@ -8,37 +8,33 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.CompilerServices;
 
-namespace Tests.System.Linq.CompilerServices
+[TestClass]
+public class MemberInfoExtensions
 {
-    [TestClass]
-    public class MemberInfoExtensions
+    [TestMethod]
+    public void MemberInfoExtensions_NonSupported()
     {
-        [TestMethod]
-        public void MemberInfoExtensions_NonSupported()
-        {
-            Assert.ThrowsExactly<NotSupportedException>(() => _ = new MyMemberInfo().ToCSharpString());
-        }
+        Assert.ThrowsExactly<NotSupportedException>(() => _ = new MyMemberInfo().ToCSharpString());
+    }
 
-        private sealed class MyMemberInfo : MemberInfo
-        {
-            public override Type DeclaringType => throw new NotImplementedException();
+    private sealed class MyMemberInfo : MemberInfo
+    {
+        public override Type DeclaringType => throw new NotImplementedException();
 
-            public override object[] GetCustomAttributes(Type attributeType, bool inherit) => throw new NotImplementedException();
+        public override object[] GetCustomAttributes(Type attributeType, bool inherit) => throw new NotImplementedException();
 
-            public override object[] GetCustomAttributes(bool inherit) => throw new NotImplementedException();
+        public override object[] GetCustomAttributes(bool inherit) => throw new NotImplementedException();
 
-            public override bool IsDefined(Type attributeType, bool inherit) => throw new NotImplementedException();
+        public override bool IsDefined(Type attributeType, bool inherit) => throw new NotImplementedException();
 
-            public override MemberTypes MemberType => MemberTypes.Custom;
+        public override MemberTypes MemberType => MemberTypes.Custom;
 
-            public override string Name => throw new NotImplementedException();
+        public override string Name => throw new NotImplementedException();
 
-            public override Type ReflectedType => throw new NotImplementedException();
-        }
+        public override Type ReflectedType => throw new NotImplementedException();
     }
 }

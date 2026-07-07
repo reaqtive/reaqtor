@@ -8,19 +8,17 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
-{
-    internal sealed class KnownQbservable<T> : Qbservable<T>, IKnownResource
-    {
-        public KnownQbservable(Expression expression, Uri observableUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = observableUri;
-        }
+namespace Reaqtor;
 
-        public Uri Uri { get; }
+internal sealed class KnownQbservable<T> : Qbservable<T>, IKnownResource
+{
+    public KnownQbservable(Expression expression, Uri observableUri, IReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = observableUri;
     }
+
+    public Uri Uri { get; }
 }

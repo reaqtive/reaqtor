@@ -7,61 +7,60 @@ using System;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework.Mocks;
 
-namespace Reaqtive.TestingFramework
+namespace Reaqtive.TestingFramework;
+
+public static class TestSubscribableExtensions
 {
-    public static class TestSubscribableExtensions
+    /// <summary>
+    /// Subscribes the specified source.
+    /// </summary>
+    /// <typeparam name="T">Type of events.</typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="res">The result observer.</param>
+    /// <param name="context">The context.</param>
+    /// <returns>Subscription.</returns>
+    public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context)
     {
-        /// <summary>
-        /// Subscribes the specified source.
-        /// </summary>
-        /// <typeparam name="T">Type of events.</typeparam>
-        /// <param name="source">The source.</param>
-        /// <param name="res">The result observer.</param>
-        /// <param name="context">The context.</param>
-        /// <returns>Subscription.</returns>
-        public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
-            ISubscription sub = source.Subscribe(res);
-            new SubscriptionInitializeVisitor(sub).Initialize(context);
-            return sub;
-        }
+        ISubscription sub = source.Subscribe(res);
+        new SubscriptionInitializeVisitor(sub).Initialize(context);
+        return sub;
+    }
 
-        /// <summary>
-        /// Subscribes the specified source.
-        /// </summary>
-        /// <typeparam name="T">Type of events.</typeparam>
-        /// <param name="source">The source.</param>
-        /// <param name="res">The result observer.</param>
-        /// <param name="context">The context.</param>
-        /// <param name="container">The container.</param>
-        /// <returns>Subscription.</returns>
-        public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context, IOperatorStateContainer container)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+    /// <summary>
+    /// Subscribes the specified source.
+    /// </summary>
+    /// <typeparam name="T">Type of events.</typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="res">The result observer.</param>
+    /// <param name="context">The context.</param>
+    /// <param name="container">The container.</param>
+    /// <returns>Subscription.</returns>
+    public static ISubscription Subscribe<T>(this ISubscribable<T> source, IObserver<T> res, IOperatorContext context, IOperatorStateContainer container)
+    {
+        ArgumentNullException.ThrowIfNull(source);
 
-            ArgumentNullException.ThrowIfNull(container);
+        ArgumentNullException.ThrowIfNull(container);
 
-            ISubscription sub = source.Subscribe(res);
-            new SubscriptionInitializeVisitor(sub).Initialize(context, container.CreateReader());
-            return sub;
-        }
+        ISubscription sub = source.Subscribe(res);
+        new SubscriptionInitializeVisitor(sub).Initialize(context, container.CreateReader());
+        return sub;
+    }
 
-        public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, params Recorded<SubscriptionAction>[] actions)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+    public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, params Recorded<SubscriptionAction>[] actions)
+    {
+        ArgumentNullException.ThrowIfNull(source);
 
-            ArgumentNullException.ThrowIfNull(actions);
+        ArgumentNullException.ThrowIfNull(actions);
 
-            ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(scheduler);
 
-            return new ApplySubscribable<T>(source, scheduler, actions);
-        }
+        return new ApplySubscribable<T>(source, scheduler, actions);
+    }
 
-        public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, Recorded<SubscriptionAction> action)
-        {
-            return Apply(source, scheduler, [action]);
-        }
+    public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, Recorded<SubscriptionAction> action)
+    {
+        return Apply(source, scheduler, [action]);
     }
 }

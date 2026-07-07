@@ -4,33 +4,32 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public partial class TestExecutionEnvironment
 {
-    public partial class TestExecutionEnvironment
+    private class SimpleTunnel<T> : NotSoSimpleSubject<T>
     {
-        private class SimpleTunnel<T> : NotSoSimpleSubject<T>
+        private readonly IObserver<bool> _refCount;
+
+        public SimpleTunnel(TestExecutionEnvironment parent, Uri streamUri, IObserver<bool> refCount)
+            : base(parent, streamUri)
         {
-            private readonly IObserver<bool> _refCount;
+            _refCount = refCount;
+        }
 
-            public SimpleTunnel(TestExecutionEnvironment parent, Uri streamUri, IObserver<bool> refCount)
-                : base(parent, streamUri)
-            {
-                _refCount = refCount;
-            }
+        protected override void AddRef()
+        {
+            base.AddRef();
 
-            protected override void AddRef()
-            {
-                base.AddRef();
+            _refCount.OnNext(true);
+        }
 
-                _refCount.OnNext(true);
-            }
+        protected override void Release()
+        {
+            base.Release();
 
-            protected override void Release()
-            {
-                base.Release();
-
-                _refCount.OnNext(false);
-            }
+            _refCount.OnNext(false);
         }
     }
 }

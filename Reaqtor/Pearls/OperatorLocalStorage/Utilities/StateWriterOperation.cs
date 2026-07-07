@@ -8,21 +8,20 @@
 // BD - January 2018
 //
 
-namespace Utilities
+namespace Utilities;
+
+public abstract class StateWriterOperation
 {
-    public abstract class StateWriterOperation
+    protected StateWriterOperation(string category, string key)
     {
-        protected StateWriterOperation(string category, string key)
-        {
-            Category = category;
-            Key = key;
-        }
-
-        public abstract StateWriterOperationKind Kind { get; }
-
-        public string Category { get; }
-        public string Key { get; }
-
-        public abstract void Apply(Store store);
+        Category = category;
+        Key = key;
     }
+
+    public abstract StateWriterOperationKind Kind { get; }
+
+    public string Category { get; }
+    public string Key { get; }
+
+    public abstract void Apply(Store store);
 }

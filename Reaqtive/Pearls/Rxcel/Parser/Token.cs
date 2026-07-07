@@ -13,17 +13,16 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
-{
-    internal sealed class Token
-    {
-        public TokenKind Kind { get; set; }
-        public string Value { get; set; }
-        public int Position { get; set; }
+namespace Rxcel;
 
-        public override string ToString()
-        {
-            return Kind + "[" + Value + "] @ " + Position;
-        }
+internal sealed class Token
+{
+    public TokenKind Kind { get; set; }
+    public string Value { get; set; }
+    public int Position { get; set; }
+
+    public override string ToString()
+    {
+        return Kind + "[" + Value + "] @ " + Position;
     }
 }

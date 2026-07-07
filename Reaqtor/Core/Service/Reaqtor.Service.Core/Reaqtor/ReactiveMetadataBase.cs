@@ -8,255 +8,251 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+using Metadata;
+
+/// <summary>
+/// Base class for reactive processing metadata discovery operations.
+/// </summary>
+public abstract class ReactiveMetadataBase : IReactiveMetadata
 {
-    using Metadata;
+    #region Constructor & fields
 
     /// <summary>
-    /// Base class for reactive processing metadata discovery operations.
+    /// Identifier for the collection of stream factory definitions.
     /// </summary>
-    public abstract class ReactiveMetadataBase : IReactiveMetadata
+    private const string StreamFactoriesIdentifier = "rx://metadata/streamFactories";
+
+    /// <summary>
+    /// Identifier for the collection of observable definitions.
+    /// </summary>
+    private const string ObservablesIdentifier = "rx://metadata/observables";
+
+    /// <summary>
+    /// Identifier for the collection of observer definitions.
+    /// </summary>
+    private const string ObserversIdentifier = "rx://metadata/observers";
+
+    /// <summary>
+    /// Identifier for the collection of streams.
+    /// </summary>
+    private const string StreamsIdentifier = "rx://metadata/streams";
+
+    /// <summary>
+    /// Identifier for the collection of subscription factory definitions.
+    /// </summary>
+    private const string SubscriptionFactoriesIdentifier = "rx://metadata/subscriptionFactories";
+
+    /// <summary>
+    /// Identifier for the collection of subscriptions.
+    /// </summary>
+    private const string SubscriptionsIdentifier = "rx://metadata/subscriptions";
+
+    /// <summary>
+    /// Metadata query provider.
+    /// </summary>
+    private readonly QueryProvider _provider;
+
+    /// <summary>
+    /// Creates a new instance of a reactive processing metadata discovery object.
+    /// </summary>
+    protected ReactiveMetadataBase()
     {
-        #region Constructor & fields
+        _provider = new QueryProvider(this);
+    }
 
-        /// <summary>
-        /// Identifier for the collection of stream factory definitions.
-        /// </summary>
-        private const string StreamFactoriesIdentifier = "rx://metadata/streamFactories";
+    #endregion
 
-        /// <summary>
-        /// Identifier for the collection of observable definitions.
-        /// </summary>
-        private const string ObservablesIdentifier = "rx://metadata/observables";
+    #region Properties
 
-        /// <summary>
-        /// Identifier for the collection of observer definitions.
-        /// </summary>
-        private const string ObserversIdentifier = "rx://metadata/observers";
+    /// <summary>
+    /// Gets a queryable dictionary of stream factory definition objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveStreamFactoryDefinition> StreamFactories => _provider.CreateSource<IReactiveStreamFactoryDefinition>(StreamFactoriesIdentifier);
 
-        /// <summary>
-        /// Identifier for the collection of streams.
-        /// </summary>
-        private const string StreamsIdentifier = "rx://metadata/streams";
+    /// <summary>
+    /// Gets a queryable dictionary of stream objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveStreamProcess> Streams => _provider.CreateSource<IReactiveStreamProcess>(StreamsIdentifier);
 
-        /// <summary>
-        /// Identifier for the collection of subscription factory definitions.
-        /// </summary>
-        private const string SubscriptionFactoriesIdentifier = "rx://metadata/subscriptionFactories";
+    /// <summary>
+    /// Gets a queryable dictionary of observable definition objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveObservableDefinition> Observables => _provider.CreateSource<IReactiveObservableDefinition>(ObservablesIdentifier);
 
-        /// <summary>
-        /// Identifier for the collection of subscriptions.
-        /// </summary>
-        private const string SubscriptionsIdentifier = "rx://metadata/subscriptions";
+    /// <summary>
+    /// Gets a queryable dictionary of observer definition objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveObserverDefinition> Observers => _provider.CreateSource<IReactiveObserverDefinition>(ObserversIdentifier);
 
-        /// <summary>
-        /// Metadata query provider.
-        /// </summary>
-        private readonly QueryProvider _provider;
+    /// <summary>
+    /// Gets a queryable dictionary of subscription factory definition objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveSubscriptionFactoryDefinition> SubscriptionFactories => _provider.CreateSource<IReactiveSubscriptionFactoryDefinition>(SubscriptionFactoriesIdentifier);
 
-        /// <summary>
-        /// Creates a new instance of a reactive processing metadata discovery object.
-        /// </summary>
-        protected ReactiveMetadataBase()
+    /// <summary>
+    /// Gets a queryable dictionary of subscription objects.
+    /// </summary>
+    public virtual IQueryableDictionary<Uri, IReactiveSubscriptionProcess> Subscriptions => _provider.CreateSource<IReactiveSubscriptionProcess>(SubscriptionsIdentifier);
+
+    #endregion
+
+    #region Methods
+
+    /// <summary>
+    /// Executes the specified expression.
+    /// </summary>
+    /// <typeparam name="TResult">Result type of the expression.</typeparam>
+    /// <param name="expression">Expression to execute.</param>
+    /// <returns>Result of executing the expression.</returns>
+    protected abstract TResult Execute<TResult>(Expression expression);
+
+    #endregion
+
+    #region Private implementation
+
+    private sealed class QueryableDictionary<T> : QueryableDictionaryBase<Uri, T>
+    {
+        public QueryableDictionary(IQueryProvider provider, Expression expression)
         {
-            _provider = new QueryProvider(this);
+            Provider = provider;
+            Expression = expression;
         }
 
-        #endregion
+        public override IEnumerator<KeyValuePair<Uri, T>> GetEnumerator() => Provider.Execute<IEnumerable<KeyValuePair<Uri, T>>>(Expression).GetEnumerator();
 
-        #region Properties
+        public override Expression Expression { get; }
 
-        /// <summary>
-        /// Gets a queryable dictionary of stream factory definition objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveStreamFactoryDefinition> StreamFactories => _provider.CreateSource<IReactiveStreamFactoryDefinition>(StreamFactoriesIdentifier);
+        public override IQueryProvider Provider { get; }
+    }
 
-        /// <summary>
-        /// Gets a queryable dictionary of stream objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveStreamProcess> Streams => _provider.CreateSource<IReactiveStreamProcess>(StreamsIdentifier);
-
-        /// <summary>
-        /// Gets a queryable dictionary of observable definition objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveObservableDefinition> Observables => _provider.CreateSource<IReactiveObservableDefinition>(ObservablesIdentifier);
-
-        /// <summary>
-        /// Gets a queryable dictionary of observer definition objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveObserverDefinition> Observers => _provider.CreateSource<IReactiveObserverDefinition>(ObserversIdentifier);
-
-        /// <summary>
-        /// Gets a queryable dictionary of subscription factory definition objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveSubscriptionFactoryDefinition> SubscriptionFactories => _provider.CreateSource<IReactiveSubscriptionFactoryDefinition>(SubscriptionFactoriesIdentifier);
-
-        /// <summary>
-        /// Gets a queryable dictionary of subscription objects.
-        /// </summary>
-        public virtual IQueryableDictionary<Uri, IReactiveSubscriptionProcess> Subscriptions => _provider.CreateSource<IReactiveSubscriptionProcess>(SubscriptionsIdentifier);
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Executes the specified expression.
-        /// </summary>
-        /// <typeparam name="TResult">Result type of the expression.</typeparam>
-        /// <param name="expression">Expression to execute.</param>
-        /// <returns>Result of executing the expression.</returns>
-        protected abstract TResult Execute<TResult>(Expression expression);
-
-        #endregion
-
-        #region Private implementation
-
-        private sealed class QueryableDictionary<T> : QueryableDictionaryBase<Uri, T>
+    private sealed class Queryable<T> : IQueryable<T>
+    {
+        public Queryable(IQueryProvider provider, Expression expression)
         {
-            public QueryableDictionary(IQueryProvider provider, Expression expression)
-            {
-                Provider = provider;
-                Expression = expression;
-            }
-
-            public override IEnumerator<KeyValuePair<Uri, T>> GetEnumerator() => Provider.Execute<IEnumerable<KeyValuePair<Uri, T>>>(Expression).GetEnumerator();
-
-            public override Expression Expression { get; }
-
-            public override IQueryProvider Provider { get; }
+            Provider = provider;
+            Expression = expression;
         }
 
-        private sealed class Queryable<T> : IQueryable<T>
+        public IEnumerator<T> GetEnumerator() => Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public Type ElementType => typeof(T);
+
+        public Expression Expression { get; }
+
+        public IQueryProvider Provider { get; }
+    }
+
+    private sealed class QueryProvider : IQueryProvider
+    {
+        private readonly ReactiveMetadataBase _parent;
+
+        public QueryProvider(ReactiveMetadataBase parent)
         {
-            public Queryable(IQueryProvider provider, Expression expression)
-            {
-                Provider = provider;
-                Expression = expression;
-            }
-
-            public IEnumerator<T> GetEnumerator() => Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-            public Type ElementType => typeof(T);
-
-            public Expression Expression { get; }
-
-            public IQueryProvider Provider { get; }
+            _parent = parent;
         }
 
-        private sealed class QueryProvider : IQueryProvider
+        public IQueryableDictionary<Uri, T> CreateSource<T>(string name)
         {
-            private readonly ReactiveMetadataBase _parent;
+            var expression = Expression.Parameter(typeof(IQueryableDictionary<Uri, T>), name);
+            return new QueryableDictionary<T>(this, expression);
+        }
 
-            public QueryProvider(ReactiveMetadataBase parent)
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+        {
+            ArgumentNullException.ThrowIfNull(expression);
+
+            return new Queryable<TElement>(this, expression);
+        }
+
+        public IQueryable CreateQuery(Expression expression)
+        {
+            ArgumentNullException.ThrowIfNull(expression);
+
+            var type = expression.Type.FindGenericType(typeof(IQueryable<>));
+            if (type == null)
+                throw new InvalidOperationException("Specified expression is not compatible with IQueryable<T>.");
+
+            var elementTypeArgs = type.GetGenericArguments();
+
+            var queryableType = typeof(Queryable<>).MakeGenericType(elementTypeArgs);
+
+            return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [this, expression], culture: null);
+        }
+
+        public TResult Execute<TResult>(Expression expression)
+        {
+            ArgumentNullException.ThrowIfNull(expression);
+
+            if (!typeof(TResult).IsAssignableFrom(expression.Type))
+                throw new InvalidOperationException("Specified expression is not assignable to " + typeof(TResult) + ".");
+
+            var rewritten = CollectionInliner.Instance.Visit(expression);
+            return _parent.Execute<TResult>(rewritten);
+        }
+
+        public object Execute(Expression expression)
+        {
+            ArgumentNullException.ThrowIfNull(expression);
+
+            var genericExecuteMethod = ((MethodInfo)ReflectionHelpers.InfoOf((ReactiveMetadataBase rmpb) => rmpb.Execute<object>(null))).GetGenericMethodDefinition();
+            var executeMethod = genericExecuteMethod.MakeGenericMethod(expression.Type);
+            return executeMethod.Invoke(_parent, [expression]);
+        }
+
+        private sealed class CollectionInliner : ExpressionVisitor
+        {
+            public static readonly CollectionInliner Instance = new();
+
+            protected override Expression VisitMember(MemberExpression node)
             {
-                _parent = parent;
-            }
+                var result = base.VisitMember(node);
 
-            public IQueryableDictionary<Uri, T> CreateSource<T>(string name)
-            {
-                var expression = Expression.Parameter(typeof(IQueryableDictionary<Uri, T>), name);
-                return new QueryableDictionary<T>(this, expression);
-            }
-
-            public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
-            {
-                ArgumentNullException.ThrowIfNull(expression);
-
-                return new Queryable<TElement>(this, expression);
-            }
-
-            public IQueryable CreateQuery(Expression expression)
-            {
-                ArgumentNullException.ThrowIfNull(expression);
-
-                var type = expression.Type.FindGenericType(typeof(IQueryable<>));
-                if (type == null)
-                    throw new InvalidOperationException("Specified expression is not compatible with IQueryable<T>.");
-
-                var elementTypeArgs = type.GetGenericArguments();
-
-                var queryableType = typeof(Queryable<>).MakeGenericType(elementTypeArgs);
-
-                return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [this, expression], culture: null);
-            }
-
-            public TResult Execute<TResult>(Expression expression)
-            {
-                ArgumentNullException.ThrowIfNull(expression);
-
-                if (!typeof(TResult).IsAssignableFrom(expression.Type))
-                    throw new InvalidOperationException("Specified expression is not assignable to " + typeof(TResult) + ".");
-
-                var rewritten = CollectionInliner.Instance.Visit(expression);
-                return _parent.Execute<TResult>(rewritten);
-            }
-
-            public object Execute(Expression expression)
-            {
-                ArgumentNullException.ThrowIfNull(expression);
-
-                var genericExecuteMethod = ((MethodInfo)ReflectionHelpers.InfoOf((ReactiveMetadataBase rmpb) => rmpb.Execute<object>(null))).GetGenericMethodDefinition();
-                var executeMethod = genericExecuteMethod.MakeGenericMethod(expression.Type);
-                return executeMethod.Invoke(_parent, [expression]);
-            }
-
-            private sealed class CollectionInliner : ExpressionVisitor
-            {
-                public static readonly CollectionInliner Instance = new();
-
-                protected override Expression VisitMember(MemberExpression node)
+                if (result is MemberExpression asMember)
                 {
-                    var result = base.VisitMember(node);
-
-                    if (result is MemberExpression asMember)
+                    // Assuming only metadata collection properties exist on the `IReactiveMetadata` interface.
+                    if (asMember.Member is PropertyInfo property && IsInterfaceProperty(typeof(IReactiveMetadata), property))
                     {
-                        // Assuming only metadata collection properties exist on the `IReactiveMetadata` interface.
-                        if (asMember.Member is PropertyInfo property && IsInterfaceProperty(typeof(IReactiveMetadata), property))
+                        var fvs = FreeVariableScanner.HasFreeVariables(asMember);
+                        if (!fvs)
                         {
-                            var fvs = FreeVariableScanner.HasFreeVariables(asMember);
-                            if (!fvs)
-                            {
-                                // For now, all properties on `IReactiveMetadata` are `IQueryable`.
-                                // If this is no longer the case, this call should be revisited.
-                                return asMember.Evaluate<IQueryable>().Expression;
-                            }
+                            // For now, all properties on `IReactiveMetadata` are `IQueryable`.
+                            // If this is no longer the case, this call should be revisited.
+                            return asMember.Evaluate<IQueryable>().Expression;
                         }
                     }
-
-                    return result;
                 }
 
-                private static bool IsInterfaceProperty(Type interfaceType, PropertyInfo property)
+                return result;
+            }
+
+            private static bool IsInterfaceProperty(Type interfaceType, PropertyInfo property)
+            {
+                var declaringType = property.DeclaringType;
+                if (declaringType == interfaceType)
                 {
-                    var declaringType = property.DeclaringType;
-                    if (declaringType == interfaceType)
-                    {
-                        return true;
-                    }
-                    else if (interfaceType.IsAssignableFrom(declaringType))
-                    {
-                        var accessors = property.GetAccessors();
-                        var interfaceMap = declaringType.GetInterfaceMap(interfaceType);
-                        var targetMethods = interfaceMap.TargetMethods;
-                        return accessors.Intersect(targetMethods).Count() == accessors.Length;
-                    }
-
-                    return false;
+                    return true;
                 }
+                else if (interfaceType.IsAssignableFrom(declaringType))
+                {
+                    var accessors = property.GetAccessors();
+                    var interfaceMap = declaringType.GetInterfaceMap(interfaceType);
+                    var targetMethods = interfaceMap.TargetMethods;
+                    return accessors.Intersect(targetMethods).Count() == accessors.Length;
+                }
+
+                return false;
             }
         }
-
-        #endregion
     }
+
+    #endregion
 }

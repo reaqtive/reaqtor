@@ -8,75 +8,72 @@
 // BD - February 2018
 //
 
-using System.Collections.Generic;
-
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedSortedSetOperationFactory<T> : ISortedSetOperationFactory<T>, IPersistedOperationFactory<IPersistedSortedSet<T>>
 {
-    internal interface IPersistedSortedSetOperationFactory<T> : ISortedSetOperationFactory<T>, IPersistedOperationFactory<IPersistedSortedSet<T>>
+}
+
+internal static class PersistedSortedSetOperation
+{
+    public static IPersistedSortedSetOperationFactory<T> WithType<T>() => new PersistedSortedSetOperationFactory<T>();
+
+    private sealed class PersistedSortedSetOperationFactory<T> : IPersistedSortedSetOperationFactory<T>
     {
-    }
+        public CountReadOnlyCollectionOperation<T> Count() => SetOperation.Count<T>();
 
-    internal static class PersistedSortedSetOperation
-    {
-        public static IPersistedSortedSetOperationFactory<T> WithType<T>() => new PersistedSortedSetOperationFactory<T>();
+        public EnumerateEnumerableOperation<T> Enumerate() => SetOperation.Enumerate<T>();
 
-        private sealed class PersistedSortedSetOperationFactory<T> : IPersistedSortedSetOperationFactory<T>
-        {
-            public CountReadOnlyCollectionOperation<T> Count() => SetOperation.Count<T>();
+        public GetIdPersistedOperation<IPersistedSortedSet<T>> GetId() => GetId<IPersistedSortedSet<T>>();
 
-            public EnumerateEnumerableOperation<T> Enumerate() => SetOperation.Enumerate<T>();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedSortedSet<T>> GetId() => GetId<IPersistedSortedSet<T>>();
+        public AddSetOperation<T> Add(T value) => SetOperation.Add(value);
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public UnionWithSetOperation<T> UnionWith(IEnumerable<T> other) => SetOperation.UnionWith(other);
 
-            public AddSetOperation<T> Add(T value) => SetOperation.Add(value);
+        public IntersectWithSetOperation<T> IntersectWith(IEnumerable<T> other) => SetOperation.IntersectWith(other);
 
-            public UnionWithSetOperation<T> UnionWith(IEnumerable<T> other) => SetOperation.UnionWith(other);
+        public ExceptWithSetOperation<T> ExceptWith(IEnumerable<T> other) => SetOperation.ExceptWith(other);
 
-            public IntersectWithSetOperation<T> IntersectWith(IEnumerable<T> other) => SetOperation.IntersectWith(other);
+        public SymmetricExceptWithSetOperation<T> SymmetricExceptWith(IEnumerable<T> other) => SetOperation.SymmetricExceptWith(other);
 
-            public ExceptWithSetOperation<T> ExceptWith(IEnumerable<T> other) => SetOperation.ExceptWith(other);
+        public IsSubsetOfSetOperation<T> IsSubsetOf(IEnumerable<T> other) => SetOperation.IsSubsetOf(other);
 
-            public SymmetricExceptWithSetOperation<T> SymmetricExceptWith(IEnumerable<T> other) => SetOperation.SymmetricExceptWith(other);
+        public IsSupersetOfSetOperation<T> IsSupersetOf(IEnumerable<T> other) => SetOperation.IsSupersetOf(other);
 
-            public IsSubsetOfSetOperation<T> IsSubsetOf(IEnumerable<T> other) => SetOperation.IsSubsetOf(other);
+        public IsProperSupersetOfSetOperation<T> IsProperSupersetOf(IEnumerable<T> other) => SetOperation.IsProperSupersetOf(other);
 
-            public IsSupersetOfSetOperation<T> IsSupersetOf(IEnumerable<T> other) => SetOperation.IsSupersetOf(other);
+        public IsProperSubsetOfSetOperation<T> IsProperSubsetOf(IEnumerable<T> other) => SetOperation.IsProperSubsetOf(other);
 
-            public IsProperSupersetOfSetOperation<T> IsProperSupersetOf(IEnumerable<T> other) => SetOperation.IsProperSupersetOf(other);
+        public OverlapsSetOperation<T> Overlaps(IEnumerable<T> other) => SetOperation.Overlaps(other);
 
-            public IsProperSubsetOfSetOperation<T> IsProperSubsetOf(IEnumerable<T> other) => SetOperation.IsProperSubsetOf(other);
+        public SetEqualsSetOperation<T> SetEquals(IEnumerable<T> other) => SetOperation.SetEquals(other);
 
-            public OverlapsSetOperation<T> Overlaps(IEnumerable<T> other) => SetOperation.Overlaps(other);
+        AddCollectionOperation<T> ICollectionOperationFactory<T>.Add(T value) => CollectionOperation.Add(value);
 
-            public SetEqualsSetOperation<T> SetEquals(IEnumerable<T> other) => SetOperation.SetEquals(other);
+        public ClearCollectionOperation<T> Clear() => SetOperation.Clear<T>();
 
-            AddCollectionOperation<T> ICollectionOperationFactory<T>.Add(T value) => CollectionOperation.Add(value);
+        public ContainsCollectionOperation<T> Contains(T value) => SetOperation.Contains(value);
 
-            public ClearCollectionOperation<T> Clear() => SetOperation.Clear<T>();
+        public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => SetOperation.CopyTo(array, index);
 
-            public ContainsCollectionOperation<T> Contains(T value) => SetOperation.Contains(value);
+        public RemoveCollectionOperation<T> Remove(T value) => SetOperation.Remove(value);
 
-            public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => SetOperation.CopyTo(array, index);
+        public IsReadOnlyCollectionOperation<T> IsReadOnly() => SetOperation.IsReadOnly<T>();
 
-            public RemoveCollectionOperation<T> Remove(T value) => SetOperation.Remove(value);
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public IsReadOnlyCollectionOperation<T> IsReadOnly() => SetOperation.IsReadOnly<T>();
+        public ThisResultOperation<IPersistedSortedSet<T>> This() => This<IPersistedSortedSet<T>>();
 
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
+        public MinSortedSetOperation<T> Min() => SortedSetOperation.Min<T>();
 
-            public ThisResultOperation<IPersistedSortedSet<T>> This() => This<IPersistedSortedSet<T>>();
+        public MaxSortedSetOperation<T> Max() => SortedSetOperation.Max<T>();
 
-            public MinSortedSetOperation<T> Min() => SortedSetOperation.Min<T>();
+        public GetViewBetweenSortedSetOperation<T> GetViewBetween(T lowerValue, T upperValue) => new(lowerValue, upperValue);
 
-            public MaxSortedSetOperation<T> Max() => SortedSetOperation.Max<T>();
-
-            public GetViewBetweenSortedSetOperation<T> GetViewBetween(T lowerValue, T upperValue) => new(lowerValue, upperValue);
-
-            public ReverseSortedSetOperation<T> Reverse() => SortedSetOperation.Reverse<T>();
-        }
+        public ReverseSortedSetOperation<T> Reverse() => SortedSetOperation.Reverse<T>();
     }
 }

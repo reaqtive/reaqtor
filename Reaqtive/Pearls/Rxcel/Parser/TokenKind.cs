@@ -13,23 +13,22 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal enum TokenKind
 {
-    internal enum TokenKind
-    {
-        Identifier,
-        Number,
+    Identifier,
+    Number,
 
-        Plus,
-        Dash,
-        Star,
-        Slash,
-        Percent,
+    Plus,
+    Dash,
+    Star,
+    Slash,
+    Percent,
 
-        OpenParen,
-        CloseParen,
+    OpenParen,
+    CloseParen,
 
-        Comma,
-        Colon,
-    }
+    Comma,
+    Colon,
 }

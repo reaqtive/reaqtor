@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class InsertStreamMetadata : InsertMetadataOperation
-    {
-        public InsertStreamMetadata(Uri streamUri)
-            : this(streamUri, null, null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public InsertStreamMetadata(Uri streamUri, Expression expression, object state)
-            : base(ServiceOperationKind.InsertStreamMetadata, streamUri, expression, state)
-        {
-        }
+public class InsertStreamMetadata : InsertMetadataOperation
+{
+    public InsertStreamMetadata(Uri streamUri)
+        : this(streamUri, null, null)
+    {
+    }
+
+    public InsertStreamMetadata(Uri streamUri, Expression expression, object state)
+        : base(ServiceOperationKind.InsertStreamMetadata, streamUri, expression, state)
+    {
     }
 }

@@ -8,21 +8,20 @@
 // BD, ER - July 2013 - Created this file.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Enumeration of structural data type slim kinds.
+/// </summary>
+public enum StructuralTypeSlimKind
 {
     /// <summary>
-    /// Enumeration of structural data type slim kinds.
+    /// Anonymous type.
     /// </summary>
-    public enum StructuralTypeSlimKind
-    {
-        /// <summary>
-        /// Anonymous type.
-        /// </summary>
-        Anonymous,
+    Anonymous,
 
-        /// <summary>
-        /// Record type.
-        /// </summary>
-        Record,
-    }
+    /// <summary>
+    /// Record type.
+    /// </summary>
+    Record,
 }

@@ -11,21 +11,20 @@ using Reaqtor.Expressions.Core;
 using Reaqtor.QueryEngine;
 using Reaqtor.Reliable;
 
-namespace Reaqtor.Shebang.Service
+namespace Reaqtor.Shebang.Service;
+
+public sealed class DefaultQuotedTypeConversionTargets : IQuotedTypeConversionTargets
 {
-    public sealed class DefaultQuotedTypeConversionTargets : IQuotedTypeConversionTargets
-    {
 #pragma warning disable format // (Formatted as a table.)
 
-        private static readonly Dictionary<Type, Type> s_map = new()
-        {
-            { typeof(ReactiveQbservable),     typeof(Subscribable)           },
-            { typeof(ReactiveQbserver),       typeof(Observer)               },
-            { typeof(ReactiveQubjectFactory), typeof(ReliableSubjectFactory) },
-        };
+    private static readonly Dictionary<Type, Type> s_map = new()
+    {
+        { typeof(ReactiveQbservable),     typeof(Subscribable)           },
+        { typeof(ReactiveQbserver),       typeof(Observer)               },
+        { typeof(ReactiveQubjectFactory), typeof(ReliableSubjectFactory) },
+    };
 
 #pragma warning restore format
 
-        public IReadOnlyDictionary<Type, Type> TypeMap => s_map;
-    }
+    public IReadOnlyDictionary<Type, Type> TypeMap => s_map;
 }

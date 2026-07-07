@@ -4,20 +4,19 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtive.Expressions
+namespace Reaqtive.Expressions;
+
+/// <summary>
+/// Represents a multi-subject wih an expression tree representation.
+/// </summary>
+/// <typeparam name="T">Type of the elements processed by the subject.</typeparam>
+public interface IMultiQubject<T>
 {
     /// <summary>
-    /// Represents a multi-subject wih an expression tree representation.
+    /// Gets the expression representing the subscribable resource.
     /// </summary>
-    /// <typeparam name="T">Type of the elements processed by the subject.</typeparam>
-    public interface IMultiQubject<T>
+    Expression Expression
     {
-        /// <summary>
-        /// Gets the expression representing the subscribable resource.
-        /// </summary>
-        Expression Expression
-        {
-            get;
-        }
+        get;
     }
 }

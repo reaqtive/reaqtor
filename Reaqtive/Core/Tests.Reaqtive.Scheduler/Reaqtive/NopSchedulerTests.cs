@@ -2,70 +2,64 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive.Scheduler;
 
 using Test.Reaqtive.Scheduler.Tasks;
 
-namespace Tests.Reaqtive.Scheduler
+namespace Tests.Reaqtive.Scheduler;
+
+[TestClass]
+public class NopSchedulerTests
 {
-    [TestClass]
-    public class NopSchedulerTests
+    [TestMethod]
+    public void NopScheduler_SwallowAllWork()
     {
-        [TestMethod]
-        public void NopScheduler_SwallowAllWork()
+        using var p = PhysicalScheduler.Create();
+
+        var l = new LogicalScheduler(p);
+        l.Dispose();
+
+        var n = l.CreateChildScheduler();
+        var o = n.CreateChildScheduler();
+
+        Assert.IsTrue(n.CheckAccess());
+        Assert.IsTrue(o.CheckAccess());
+
+        n.VerifyAccess();
+        o.VerifyAccess();
+
+        var hasError = false;
+        var h = new EventHandler<SchedulerUnhandledExceptionEventArgs>((_, e) =>
         {
-            using var p = PhysicalScheduler.Create();
+            hasError = true;
+        });
 
-            var l = new LogicalScheduler(p);
-            l.Dispose();
+        n.UnhandledException += h;
 
-            var n = l.CreateChildScheduler();
-            var o = n.CreateChildScheduler();
+        var failed = false;
+        var fail = ActionTask.Create(s => { failed = true; throw new Exception(); }, 1);
 
-            Assert.IsTrue(n.CheckAccess());
-            Assert.IsTrue(o.CheckAccess());
+        o.Schedule(fail);
+        o.Schedule(TimeSpan.Zero, fail);
+        o.Schedule(DateTimeOffset.UtcNow, fail);
 
-            n.VerifyAccess();
-            o.VerifyAccess();
+        o.RecalculatePriority();
 
-            var hasError = false;
-            var h = new EventHandler<SchedulerUnhandledExceptionEventArgs>((_, e) =>
-            {
-                hasError = true;
-            });
+        Task.Run(async () =>
+        {
+            await o.PauseAsync();
+            o.Continue();
+        }).Wait();
 
-            n.UnhandledException += h;
+        n.UnhandledException -= h;
 
-            var failed = false;
-            var fail = ActionTask.Create(s => { failed = true; throw new Exception(); }, 1);
+        Assert.IsFalse(failed);
+        Assert.IsFalse(hasError);
 
-            o.Schedule(fail);
-            o.Schedule(TimeSpan.Zero, fail);
-            o.Schedule(DateTimeOffset.UtcNow, fail);
+        var d = o.Now - DateTimeOffset.UtcNow;
+        Assert.IsTrue(d < TimeSpan.FromMinutes(1));
 
-            o.RecalculatePriority();
-
-            Task.Run(async () =>
-            {
-                await o.PauseAsync();
-                o.Continue();
-            }).Wait();
-
-            n.UnhandledException -= h;
-
-            Assert.IsFalse(failed);
-            Assert.IsFalse(hasError);
-
-            var d = o.Now - DateTimeOffset.UtcNow;
-            Assert.IsTrue(d < TimeSpan.FromMinutes(1));
-
-            n.Dispose();
-            o.Dispose();
-        }
+        n.Dispose();
+        o.Dispose();
     }
 }

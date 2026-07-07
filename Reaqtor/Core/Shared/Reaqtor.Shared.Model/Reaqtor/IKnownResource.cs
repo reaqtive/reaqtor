@@ -8,18 +8,15 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Interface for resources that have a known identity.
+/// </summary>
+public interface IKnownResource
 {
     /// <summary>
-    /// Interface for resources that have a known identity.
+    /// Gets the URI that identifies the resource.
     /// </summary>
-    public interface IKnownResource
-    {
-        /// <summary>
-        /// Gets the URI that identifies the resource.
-        /// </summary>
-        Uri Uri { get; }
-    }
+    Uri Uri { get; }
 }

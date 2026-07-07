@@ -4,10 +4,9 @@
 
 using System.Linq.Expressions;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal interface IService
 {
-    internal interface IService
-    {
-        void Evaluate(Expression expression); // NOTE: This is more elegant than IRP but has more overhead ("everything is an expression" mantra)
-    }
+    void Evaluate(Expression expression); // NOTE: This is more elegant than IRP but has more overhead ("everything is an expression" mantra)
 }

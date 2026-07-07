@@ -4,18 +4,17 @@
 
 using Reaqtive;
 
-namespace Reaqtor.Reactive
-{
-    public partial class HigherOrderExecutionEnvironment
-    {
-        private interface IPersistable
-        {
-            void Save(IOperatorStateWriter writer);
-            void Load(IOperatorStateReader reader);
-        }
+namespace Reaqtor.Reactive;
 
-        private interface IPersistableSubscription : ISubscription, IPersistable
-        {
-        }
+public partial class HigherOrderExecutionEnvironment
+{
+    private interface IPersistable
+    {
+        void Save(IOperatorStateWriter writer);
+        void Load(IOperatorStateReader reader);
+    }
+
+    private interface IPersistableSubscription : ISubscription, IPersistable
+    {
     }
 }

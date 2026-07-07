@@ -8,58 +8,57 @@
 // BD - January 2017 - Created this file.
 //
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+internal static class Utils
 {
-    internal static class Utils
+    private static readonly ConstantExpression s_true = Expression.Constant(true);
+    private static readonly ConstantExpression s_false = Expression.Constant(false);
+
+    public static Expression Constant(bool value)
     {
-        private static readonly ConstantExpression s_true = Expression.Constant(true);
-        private static readonly ConstantExpression s_false = Expression.Constant(false);
+        return value ? s_true : s_false;
+    }
 
-        public static Expression Constant(bool value)
+    public static Expression Constant(int value)
+    {
+        return Expression.Constant(value, typeof(int));
+    }
+
+    public static Expression Constant(object value, Type type)
+    {
+        if (type == typeof(bool))
         {
-            return value ? s_true : s_false;
+            return Constant((bool)value);
+        }
+        else if (type == typeof(int))
+        {
+            return Constant((int)value);
+        }
+        else if (type == typeof(void))
+        {
+            return Expression.Empty();
         }
 
-        public static Expression Constant(int value)
+        return Expression.Constant(value, type);
+    }
+
+    public static Expression ConvertTo(Expression original, Type type)
+    {
+        if (original.Type == type)
         {
-            return Expression.Constant(value, typeof(int));
+            return original;
         }
 
-        public static Expression Constant(object value, Type type)
+        if (type == typeof(void))
         {
-            if (type == typeof(bool))
-            {
-                return Constant((bool)value);
-            }
-            else if (type == typeof(int))
-            {
-                return Constant((int)value);
-            }
-            else if (type == typeof(void))
-            {
-                return Expression.Empty();
-            }
+            // REVIEW: Can we just use a Convert node here?
 
-            return Expression.Constant(value, type);
+            return Expression.Block(typeof(void), original);
         }
-
-        public static Expression ConvertTo(Expression original, Type type)
+        else
         {
-            if (original.Type == type)
-            {
-                return original;
-            }
-
-            if (type == typeof(void))
-            {
-                // REVIEW: Can we just use a Convert node here?
-
-                return Expression.Block(typeof(void), original);
-            }
-            else
-            {
-                return Expression.Convert(original, type);
-            }
+            return Expression.Convert(original, type);
         }
     }
 }

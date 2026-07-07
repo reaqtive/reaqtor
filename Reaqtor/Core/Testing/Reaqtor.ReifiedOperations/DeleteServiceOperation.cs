@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class DeleteServiceOperation : ServiceOperation
 {
-    public class DeleteServiceOperation : ServiceOperation
+    public DeleteServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)
+        : base(kind, targetObjectUri, null)
     {
-        public DeleteServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)
-            : base(kind, targetObjectUri, null)
-        {
-        }
     }
 }

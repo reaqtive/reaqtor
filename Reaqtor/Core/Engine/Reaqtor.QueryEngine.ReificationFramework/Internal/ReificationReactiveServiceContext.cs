@@ -5,32 +5,31 @@
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-namespace Reaqtor.QueryEngine.ReificationFramework
+namespace Reaqtor.QueryEngine.ReificationFramework;
+
+internal class ReificationReactiveServiceContext : ReactiveServiceContext
 {
-    internal class ReificationReactiveServiceContext : ReactiveServiceContext
+    public ReificationReactiveServiceContext(IReactiveEngineProvider provider)
+        : base(new BetaReducingExpressionServices(), provider)
     {
-        public ReificationReactiveServiceContext(IReactiveEngineProvider provider)
-            : base(new BetaReducingExpressionServices(), provider)
+    }
+
+    private sealed class BetaReducingExpressionServices : ReactiveExpressionServices
+    {
+        public BetaReducingExpressionServices()
+            : base(typeof(IReactiveClient))
         {
         }
 
-        private sealed class BetaReducingExpressionServices : ReactiveExpressionServices
+        public override Expression Normalize(Expression expression)
         {
-            public BetaReducingExpressionServices()
-                : base(typeof(IReactiveClient))
-            {
-            }
+            var normalized = base.Normalize(expression);
 
-            public override Expression Normalize(Expression expression)
-            {
-                var normalized = base.Normalize(expression);
-
-                return BetaReducer.ReduceEager(
-                    normalized,
-                    BetaReductionNodeTypes.Unrestricted,
-                    BetaReductionRestrictions.None,
-                    true);
-            }
+            return BetaReducer.ReduceEager(
+                normalized,
+                BetaReductionNodeTypes.Unrestricted,
+                BetaReductionRestrictions.None,
+                true);
         }
     }
 }

@@ -2,225 +2,218 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Memory;
 using System.Reflection;
-using System.Threading;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive;
 using Reaqtive.Expressions;
 
 using Reaqtor.Reactive.Expressions;
 
-namespace Test.Reaqtor.Expressions
+namespace Test.Reaqtor.Expressions;
+
+[TestClass]
+public class QuotationTests
 {
-    [TestClass]
-    public class QuotationTests
+    [TestMethod]
+    public void QuotedOfT_ArgumentChecking()
     {
-        [TestMethod]
-        public void QuotedOfT_ArgumentChecking()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(default(Expression)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, default(Expression)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, Expression.Constant(42), default(IExpressionPolicy)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(default(Expression)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, default(Expression)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, Expression.Constant(42), default(IExpressionPolicy)));
 
-            Assert.ThrowsExactly<ArgumentException>(() => new Quoted<int>(42, Expression.Constant("hello")));
+        Assert.ThrowsExactly<ArgumentException>(() => new Quoted<int>(42, Expression.Constant("hello")));
 #pragma warning restore IDE0034 // Simplify 'default' expression
+    }
+
+    [TestMethod]
+    public void QuotedOfT_HasValue()
+    {
+        var c = new ValueCell(42);
+
+        Expression<Func<int>> f = () => c.Value;
+
+        var e = f.Body;
+
+        var q = new Quoted<int>(42, e);
+
+        var v = q.Value;
+
+        Assert.AreEqual(42, q.Value);
+        Assert.AreSame(e, q.Expression);
+
+        Assert.IsFalse(c.HasAccessed);
+
+        Assert.IsTrue(q.ToString().Contains("42"));
+    }
+
+    [TestMethod]
+    public void QuotedOfT_NoValue()
+    {
+        var c = new ValueCell(42);
+
+        Expression<Func<int>> f = () => c.Value;
+
+        var e = f.Body;
+
+        var q = new Quoted<int>(e);
+
+        var v = q.Value;
+
+        Assert.AreEqual(42, q.Value);
+        Assert.AreSame(e, q.Expression);
+
+        Assert.IsTrue(c.HasAccessed);
+
+        Assert.IsTrue(q.ToString().Contains("42"));
+    }
+
+    [TestMethod]
+    public void QuotedOfT_WithExpressionPolicy()
+    {
+        var policy = new TestPolicy
+        {
+            InMemoryCache = new ExpressionHeap(),
+            DelegateCache = new SimpleCompiledDelegateCache(),
+            ConstantHoister = ConstantHoister.Create(useDefaultForNull: false)
+        };
+
+        var expr = Expression.Constant(42, typeof(int));
+
+        var q = new Quoted<int>(expr, policy);
+        Assert.AreEqual(42, q.Value);
+        Assert.AreNotSame(expr, q.Expression);
+        Assert.IsTrue(new ExpressionEqualityComparer().Equals(expr, q.Expression));
+    }
+
+    [TestMethod]
+    public void QuotedSubscribableOfT_Basics()
+    {
+        var xs = new Return<int>(42);
+
+        var q = new QuotedSubscribable<int>(Expression.Constant(xs));
+
+        var values = new List<int>();
+        var e = new ManualResetEvent(false);
+
+        var s = q.Subscribe(Observer.Create<int>(values.Add, _ => Assert.Fail(), () => e.Set()));
+        new SubscriptionInitializeVisitor(s).Start();
+        e.WaitOne();
+
+        Assert.IsTrue(new[] { 42 }.SequenceEqual(values));
+
+        values.Clear();
+        e.Reset();
+
+        var d = q.Subscribe(values.Add, _ => Assert.Fail(), () => e.Set());
+        new SubscriptionInitializeVisitor((ISubscription)d).Start();
+        e.WaitOne();
+
+        Assert.IsTrue(new[] { 42 }.SequenceEqual(values));
+    }
+
+    private sealed class Return<T> : SubscribableBase<T>
+    {
+        private readonly T _value;
+
+        public Return(T value)
+        {
+            _value = value;
         }
 
-        [TestMethod]
-        public void QuotedOfT_HasValue()
+        protected override ISubscription SubscribeCore(IObserver<T> observer)
         {
-            var c = new ValueCell(42);
-
-            Expression<Func<int>> f = () => c.Value;
-
-            var e = f.Body;
-
-            var q = new Quoted<int>(42, e);
-
-            var v = q.Value;
-
-            Assert.AreEqual(42, q.Value);
-            Assert.AreSame(e, q.Expression);
-
-            Assert.IsFalse(c.HasAccessed);
-
-            Assert.IsTrue(q.ToString().Contains("42"));
+            return new _(this, observer);
         }
 
-        [TestMethod]
-        public void QuotedOfT_NoValue()
+        private sealed class _ : Operator<Return<T>, T>
         {
-            var c = new ValueCell(42);
-
-            Expression<Func<int>> f = () => c.Value;
-
-            var e = f.Body;
-
-            var q = new Quoted<int>(e);
-
-            var v = q.Value;
-
-            Assert.AreEqual(42, q.Value);
-            Assert.AreSame(e, q.Expression);
-
-            Assert.IsTrue(c.HasAccessed);
-
-            Assert.IsTrue(q.ToString().Contains("42"));
-        }
-
-        [TestMethod]
-        public void QuotedOfT_WithExpressionPolicy()
-        {
-            var policy = new TestPolicy
+            public _(Return<T> ret, IObserver<T> obs)
+                : base(ret, obs)
             {
-                InMemoryCache = new ExpressionHeap(),
-                DelegateCache = new SimpleCompiledDelegateCache(),
-                ConstantHoister = ConstantHoister.Create(useDefaultForNull: false)
-            };
-
-            var expr = Expression.Constant(42, typeof(int));
-
-            var q = new Quoted<int>(expr, policy);
-            Assert.AreEqual(42, q.Value);
-            Assert.AreNotSame(expr, q.Expression);
-            Assert.IsTrue(new ExpressionEqualityComparer().Equals(expr, q.Expression));
-        }
-
-        [TestMethod]
-        public void QuotedSubscribableOfT_Basics()
-        {
-            var xs = new Return<int>(42);
-
-            var q = new QuotedSubscribable<int>(Expression.Constant(xs));
-
-            var values = new List<int>();
-            var e = new ManualResetEvent(false);
-
-            var s = q.Subscribe(Observer.Create<int>(values.Add, _ => Assert.Fail(), () => e.Set()));
-            new SubscriptionInitializeVisitor(s).Start();
-            e.WaitOne();
-
-            Assert.IsTrue(new[] { 42 }.SequenceEqual(values));
-
-            values.Clear();
-            e.Reset();
-
-            var d = q.Subscribe(values.Add, _ => Assert.Fail(), () => e.Set());
-            new SubscriptionInitializeVisitor((ISubscription)d).Start();
-            e.WaitOne();
-
-            Assert.IsTrue(new[] { 42 }.SequenceEqual(values));
-        }
-
-        private sealed class Return<T> : SubscribableBase<T>
-        {
-            private readonly T _value;
-
-            public Return(T value)
-            {
-                _value = value;
             }
 
-            protected override ISubscription SubscribeCore(IObserver<T> observer)
+            protected override void OnStart()
             {
-                return new _(this, observer);
+                base.OnStart();
+
+                Output.OnNext(Params._value);
+                Output.OnCompleted();
             }
+        }
+    }
 
-            private sealed class _ : Operator<Return<T>, T>
+    private sealed class ValueCell
+    {
+        public ValueCell(int value)
+        {
+            Value = value;
+            HasAccessed = false;
+        }
+
+        public int Value
+        {
+            get
             {
-                public _(Return<T> ret, IObserver<T> obs)
-                    : base(ret, obs)
-                {
-                }
-
-                protected override void OnStart()
-                {
-                    base.OnStart();
-
-                    Output.OnNext(Params._value);
-                    Output.OnCompleted();
-                }
+                HasAccessed = true;
+                return field;
             }
         }
 
-        private sealed class ValueCell
+        public bool HasAccessed { get; private set; }
+    }
+
+    private sealed class TestPolicy : IExpressionPolicy
+    {
+        public ICompiledDelegateCache DelegateCache
         {
-            public ValueCell(int value)
-            {
-                Value = value;
-                HasAccessed = false;
-            }
-
-            public int Value
-            {
-                get
-                {
-                    HasAccessed = true;
-                    return field;
-                }
-            }
-
-            public bool HasAccessed { get; private set; }
+            get;
+            set;
         }
 
-        private sealed class TestPolicy : IExpressionPolicy
+        public ICache<Expression> InMemoryCache
         {
-            public ICompiledDelegateCache DelegateCache
-            {
-                get;
-                set;
-            }
+            get;
+            set;
+        }
 
-            public ICache<Expression> InMemoryCache
-            {
-                get;
-                set;
-            }
+        public IConstantHoister ConstantHoister
+        {
+            get;
+            set;
+        }
 
-            public IConstantHoister ConstantHoister
-            {
-                get;
-                set;
-            }
+        public bool OutlineCompilation
+        {
+            get;
+            set;
+        }
 
-            public bool OutlineCompilation
-            {
-                get;
-                set;
-            }
+        public IReflectionProvider ReflectionProvider
+        {
+            get;
+            set;
+        }
 
-            public IReflectionProvider ReflectionProvider
-            {
-                get;
-                set;
-            }
+        public IExpressionFactory ExpressionFactory
+        {
+            get;
+            set;
+        }
 
-            public IExpressionFactory ExpressionFactory
-            {
-                get;
-                set;
-            }
+        public IMemoizer LiftMemoizer
+        {
+            get;
+            set;
+        }
 
-            public IMemoizer LiftMemoizer
-            {
-                get;
-                set;
-            }
-
-            public IMemoizer ReduceMemoizer
-            {
-                get;
-                set;
-            }
+        public IMemoizer ReduceMemoizer
+        {
+            get;
+            set;
         }
     }
 }

@@ -11,90 +11,89 @@
 
 using System.Time;
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Memoization cache factory for memoization caches that can be accessed concurrently.
+/// </summary>
+public static partial class ConcurrentMemoizationCacheFactory
 {
     /// <summary>
-    /// Memoization cache factory for memoization caches that can be accessed concurrently.
+    /// Gets a memoization cache factory for memoization caches with unbounded storage.
     /// </summary>
-    public static partial class ConcurrentMemoizationCacheFactory
+    /// <remarks>Memoization caches can be cleared explicitly through the <see cref="MemoizedDelegate{TDelegate}"/> returned from Memoize methods.</remarks>
+    public static IMemoizationCacheFactory Unbounded { get; } = new UnboundedImpl();
+
+    /// <summary>
+    /// Gets a memoization cache factory for memoization caches without any storage.
+    /// This allows to disable memoization while retaining a code structure that relies on IMemoizationCacheFactory instances.
+    /// </summary>
+    public static IMemoizationCacheFactory Nop => MemoizationCacheFactory.Nop;
+
+    /// <summary>
+    /// Creates a memoization cache factory for memoization caches that use an LRU cache eviction strategy.
+    /// </summary>
+    /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
+    /// <returns>Memoization cache factory for memoization caches that use an LRU cache eviction strategy.</returns>
+    public static IMemoizationCacheFactory CreateLru(int maxCapacity)
     {
-        /// <summary>
-        /// Gets a memoization cache factory for memoization caches with unbounded storage.
-        /// </summary>
-        /// <remarks>Memoization caches can be cleared explicitly through the <see cref="MemoizedDelegate{TDelegate}"/> returned from Memoize methods.</remarks>
-        public static IMemoizationCacheFactory Unbounded { get; } = new UnboundedImpl();
+        if (maxCapacity < 1)
+            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
 
-        /// <summary>
-        /// Gets a memoization cache factory for memoization caches without any storage.
-        /// This allows to disable memoization while retaining a code structure that relies on IMemoizationCacheFactory instances.
-        /// </summary>
-        public static IMemoizationCacheFactory Nop => MemoizationCacheFactory.Nop;
+        //
+        // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
+        //     cheaper ways by creating a custom implementation but we'll postpone this until later.
+        //
+        return MemoizationCacheFactory.CreateLru(maxCapacity).Synchronized();
+    }
 
-        /// <summary>
-        /// Creates a memoization cache factory for memoization caches that use an LRU cache eviction strategy.
-        /// </summary>
-        /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
-        /// <returns>Memoization cache factory for memoization caches that use an LRU cache eviction strategy.</returns>
-        public static IMemoizationCacheFactory CreateLru(int maxCapacity)
-        {
-            if (maxCapacity < 1)
-                throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
+    /// <summary>
+    /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
+    /// Entries that meet the age threshold and have the lowest score as computed by the ranker get evicted.
+    /// </summary>
+    /// <typeparam name="TMetric">Type of the metric to rank cache entries by.</typeparam>
+    /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
+    /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
+    /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
+    /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
+    /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
+    public static IMemoizationCacheFactory CreateEvictedByLowest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
+    {
+        ArgumentNullException.ThrowIfNull(ranker);
+        if (maxCapacity < 1)
+            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
+        if (ageThreshold is <= 0 or > 1)
+            throw new ArgumentOutOfRangeException(nameof(ageThreshold), "The age threshold should be a number between 0 (inclusive) and 1 (exclusive).");
 
-            //
-            // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
-            //     cheaper ways by creating a custom implementation but we'll postpone this until later.
-            //
-            return MemoizationCacheFactory.CreateLru(maxCapacity).Synchronized();
-        }
+        //
+        // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
+        //     cheaper ways by creating a custom implementation but we'll postpone this until later.
+        //
+        return MemoizationCacheFactory.CreateEvictedByLowest(ranker, maxCapacity, ageThreshold, stopwatchFactory).Synchronized();
+    }
 
-        /// <summary>
-        /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
-        /// Entries that meet the age threshold and have the lowest score as computed by the ranker get evicted.
-        /// </summary>
-        /// <typeparam name="TMetric">Type of the metric to rank cache entries by.</typeparam>
-        /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
-        /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
-        /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
-        /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
-        /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
-        public static IMemoizationCacheFactory CreateEvictedByLowest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
-        {
-            ArgumentNullException.ThrowIfNull(ranker);
-            if (maxCapacity < 1)
-                throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
-            if (ageThreshold is <= 0 or > 1)
-                throw new ArgumentOutOfRangeException(nameof(ageThreshold), "The age threshold should be a number between 0 (inclusive) and 1 (exclusive).");
+    /// <summary>
+    /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
+    /// Entries that meet the age threshold and have the highest score as computed by the ranker get evicted.
+    /// </summary>
+    /// <typeparam name="TMetric">Type of the metric to rank cache entries by.</typeparam>
+    /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
+    /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
+    /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
+    /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
+    /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
+    public static IMemoizationCacheFactory CreateEvictedByHighest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
+    {
+        ArgumentNullException.ThrowIfNull(ranker);
+        if (maxCapacity < 1)
+            throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
+        if (ageThreshold is <= 0 or > 1)
+            throw new ArgumentOutOfRangeException(nameof(ageThreshold), "The age threshold should be a number between 0 (inclusive) and 1 (exclusive).");
 
-            //
-            // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
-            //     cheaper ways by creating a custom implementation but we'll postpone this until later.
-            //
-            return MemoizationCacheFactory.CreateEvictedByLowest(ranker, maxCapacity, ageThreshold, stopwatchFactory).Synchronized();
-        }
-
-        /// <summary>
-        /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
-        /// Entries that meet the age threshold and have the highest score as computed by the ranker get evicted.
-        /// </summary>
-        /// <typeparam name="TMetric">Type of the metric to rank cache entries by.</typeparam>
-        /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
-        /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
-        /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
-        /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
-        /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
-        public static IMemoizationCacheFactory CreateEvictedByHighest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
-        {
-            ArgumentNullException.ThrowIfNull(ranker);
-            if (maxCapacity < 1)
-                throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
-            if (ageThreshold is <= 0 or > 1)
-                throw new ArgumentOutOfRangeException(nameof(ageThreshold), "The age threshold should be a number between 0 (inclusive) and 1 (exclusive).");
-
-            //
-            // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
-            //     cheaper ways by creating a custom implementation but we'll postpone this until later.
-            //
-            return MemoizationCacheFactory.CreateEvictedByHighest(ranker, maxCapacity, ageThreshold, stopwatchFactory).Synchronized();
-        }
+        //
+        // NB: For now, we use the Synchronized sledgehammer to achieve the concurrency safety. There may be
+        //     cheaper ways by creating a custom implementation but we'll postpone this until later.
+        //
+        return MemoizationCacheFactory.CreateEvictedByHighest(ranker, maxCapacity, ageThreshold, stopwatchFactory).Synchronized();
     }
 }

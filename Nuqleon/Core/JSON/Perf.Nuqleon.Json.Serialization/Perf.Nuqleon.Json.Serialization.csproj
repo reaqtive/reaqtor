@@ -10,9 +10,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <Configuration>Release</Configuration>
-
-    <!-- Works around error "MSB4086: A numeric comparison was attempted on "$(LangVersion)" that evaluates to "latest" instead of a number" at runtime. -->
-    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />

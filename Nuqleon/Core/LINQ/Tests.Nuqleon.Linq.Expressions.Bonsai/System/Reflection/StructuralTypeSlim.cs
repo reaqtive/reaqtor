@@ -8,23 +8,19 @@
 // ER - July 2013 - Created this file.
 //
 
-using System;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
+namespace Tests.System.Reflection;
+
+[TestClass]
+public class StructuralTypeSlimTests : TestBase
 {
-    [TestClass]
-    public class StructuralTypeSlimTests : TestBase
+    [TestMethod]
+    public void StructuralTypeSlim_ArgumentChecks()
     {
-        [TestMethod]
-        public void StructuralTypeSlim_ArgumentChecks()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Structural(properties: null, hasValueEqualitySemantics: false, StructuralTypeSlimKind.Record));
-            Assert.AreEqual("properties", ex.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Structural(properties: null, hasValueEqualitySemantics: false, StructuralTypeSlimKind.Record));
+        Assert.AreEqual("properties", ex.ParamName);
     }
 }

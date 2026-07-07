@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class DeleteSubscription : DeleteServiceOperation
 {
-    public class DeleteSubscription : DeleteServiceOperation
+    public DeleteSubscription(Uri subscriptionUri)
+        : base(ServiceOperationKind.DeleteSubscription, subscriptionUri)
     {
-        public DeleteSubscription(Uri subscriptionUri)
-            : base(ServiceOperationKind.DeleteSubscription, subscriptionUri)
-        {
-        }
     }
 }

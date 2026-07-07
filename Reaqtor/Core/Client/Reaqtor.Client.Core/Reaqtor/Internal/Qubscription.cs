@@ -9,24 +9,21 @@
 //
 
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class Qubscription : AsyncReactiveQubscriptionBase
 {
-    internal class Qubscription : AsyncReactiveQubscriptionBase
+    public Qubscription(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        public Qubscription(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        protected override Task DisposeAsyncCore(CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).DeleteSubscriptionAsync(this, token);
-        }
-
-        public override Expression Expression { get; }
+        Expression = expression;
     }
+
+    protected override Task DisposeAsyncCore(CancellationToken token)
+    {
+        return ((AsyncReactiveQueryProviderBase)base.Provider).DeleteSubscriptionAsync(this, token);
+    }
+
+    public override Expression Expression { get; }
 }

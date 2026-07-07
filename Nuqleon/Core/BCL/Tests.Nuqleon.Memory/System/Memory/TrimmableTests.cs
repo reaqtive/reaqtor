@@ -8,41 +8,36 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Memory;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests;
 
-namespace Tests
+[TestClass]
+public class TrimmableTests
 {
-    [TestClass]
-    public class TrimmableTests
+    [TestMethod]
+    public void Trimmable_Create_ArgumentChecking()
     {
-        [TestMethod]
-        public void Trimmable_Create_ArgumentChecking()
+        Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(trim: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(_ => 0).Trim(shouldTrim: null));
+    }
+
+    [TestMethod]
+    public void Trimmable_Create()
+    {
+        var values = new List<int>();
+
+        var res = Trimmable.Create<int>(shouldTrim =>
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(trim: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => Trimmable.Create<int>(_ => 0).Trim(shouldTrim: null));
-        }
+            return values.RemoveAll(x => shouldTrim(x));
+        });
 
-        [TestMethod]
-        public void Trimmable_Create()
-        {
-            var values = new List<int>();
+        values.Add(1);
+        values.Add(2);
+        values.Add(3);
+        values.Add(4);
 
-            var res = Trimmable.Create<int>(shouldTrim =>
-            {
-                return values.RemoveAll(x => shouldTrim(x));
-            });
-
-            values.Add(1);
-            values.Add(2);
-            values.Add(3);
-            values.Add(4);
-
-            Assert.AreEqual(2, res.Trim(x => x % 2 == 0));
-            Assert.AreEqual(2, values.Count);
-        }
+        Assert.AreEqual(2, res.Trim(x => x % 2 == 0));
+        Assert.AreEqual(2, values.Count);
     }
 }

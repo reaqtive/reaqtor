@@ -10,53 +10,52 @@
 
 //#define USE_HASHSET
 
-namespace System.Collections.Generic
-{
+namespace System.Collections.Generic;
+
 #if USE_HASHSET
+/// <summary>
+/// Set of objects.
+/// </summary>
+public class ObjectSet : HashSet<object>
+{
     /// <summary>
-    /// Set of objects.
+    /// Creates a set of objects.
     /// </summary>
-    public class ObjectSet : HashSet<object>
+    public ObjectSet()
+        : base(ReferenceEqualityComparer<object>.Instance)
     {
-        /// <summary>
-        /// Creates a set of objects.
-        /// </summary>
-        public ObjectSet()
-            : base(ReferenceEqualityComparer<object>.Instance)
-        {
-        }
-
-        /// <summary>
-        /// Creates a set of objects.
-        /// </summary>
-        /// <param name="collection">The initial set.</param>
-        public ObjectSet(IEnumerable<object> collection)
-            : base(collection, ReferenceEqualityComparer<object>.Instance)
-        {
-        }
     }
-#else
+
     /// <summary>
-    /// Set of objects.
+    /// Creates a set of objects.
     /// </summary>
-    public class ObjectSet : ObjectSet<object>
+    /// <param name="collection">The initial set.</param>
+    public ObjectSet(IEnumerable<object> collection)
+        : base(collection, ReferenceEqualityComparer<object>.Instance)
     {
-        /// <summary>
-        /// Creates a set of objects.
-        /// </summary>
-        public ObjectSet()
-            : base()
-        {
-        }
-
-        /// <summary>
-        /// Creates a set of objects.
-        /// </summary>
-        /// <param name="collection">The initial set.</param>
-        public ObjectSet(IEnumerable<object> collection)
-            : base(collection)
-        {
-        }
     }
-#endif
 }
+#else
+/// <summary>
+/// Set of objects.
+/// </summary>
+public class ObjectSet : ObjectSet<object>
+{
+    /// <summary>
+    /// Creates a set of objects.
+    /// </summary>
+    public ObjectSet()
+        : base()
+    {
+    }
+
+    /// <summary>
+    /// Creates a set of objects.
+    /// </summary>
+    /// <param name="collection">The initial set.</param>
+    public ObjectSet(IEnumerable<object> collection)
+        : base(collection)
+    {
+    }
+}
+#endif

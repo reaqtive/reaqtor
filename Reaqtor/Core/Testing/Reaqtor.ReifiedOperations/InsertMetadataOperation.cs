@@ -11,13 +11,12 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class InsertMetadataOperation : MetadataOperation
 {
-    public class InsertMetadataOperation : MetadataOperation
+    public InsertMetadataOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
+        : base(kind, targetObjectUri, expression, state)
     {
-        public InsertMetadataOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
-            : base(kind, targetObjectUri, expression, state)
-        {
-        }
     }
 }

@@ -20,132 +20,131 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal static class ExcelCompiler
 {
-    internal static class ExcelCompiler
+    public static LambdaExpression Compile(ExcelExpression expression)
     {
-        public static LambdaExpression Compile(ExcelExpression expression)
+        var comp = new Impl();
+
+        var res = comp.Visit(expression);
+
+        return Expression.Lambda(res, comp._cellReferences.Values);
+    }
+
+    private sealed class Impl : ExcelExpressionVisitor<Expression>
+    {
+        public Dictionary<string, ParameterExpression> _cellReferences = [];
+
+        protected internal override Expression VisitBinary(BinaryExcelExpression node)
         {
-            var comp = new Impl();
+            var kind = node.Kind switch
+            {
+                ExcelExpressionKind.Add => ExpressionType.Add,
+                ExcelExpressionKind.Subtract => ExpressionType.Subtract,
+                ExcelExpressionKind.Multiply => ExpressionType.Multiply,
+                ExcelExpressionKind.Divide => ExpressionType.Divide,
+                ExcelExpressionKind.Modulo => ExpressionType.Modulo,
+                _ => throw new InvalidOperationException(),
+            };
 
-            var res = comp.Visit(expression);
-
-            return Expression.Lambda(res, comp._cellReferences.Values);
+            return Expression.MakeBinary(kind, Visit(node.Left), Visit(node.Right));
         }
 
-        private sealed class Impl : ExcelExpressionVisitor<Expression>
+        protected internal override Expression VisitNumber(NumberExcelExpression node)
         {
-            public Dictionary<string, ParameterExpression> _cellReferences = [];
+            return Expression.Constant(node.Value, typeof(double?));
+        }
 
-            protected internal override Expression VisitBinary(BinaryExcelExpression node)
+        protected internal override Expression VisitCell(CellExcelExpression node)
+        {
+            return GetCellParameter(node.Cell);
+        }
+
+        private ParameterExpression GetCellParameter(string str)
+        {
+            if (!_cellReferences.TryGetValue(str, out var cell))
             {
-                var kind = node.Kind switch
-                {
-                    ExcelExpressionKind.Add => ExpressionType.Add,
-                    ExcelExpressionKind.Subtract => ExpressionType.Subtract,
-                    ExcelExpressionKind.Multiply => ExpressionType.Multiply,
-                    ExcelExpressionKind.Divide => ExpressionType.Divide,
-                    ExcelExpressionKind.Modulo => ExpressionType.Modulo,
-                    _ => throw new InvalidOperationException(),
-                };
-
-                return Expression.MakeBinary(kind, Visit(node.Left), Visit(node.Right));
+                cell = Expression.Parameter(typeof(double?), str);
+                _cellReferences[str] = cell;
             }
 
-            protected internal override Expression VisitNumber(NumberExcelExpression node)
+            return cell;
+        }
+
+        protected internal override Expression VisitFormula(FormulaExcelExpression node)
+        {
+            var args = Expression.NewArrayInit(typeof(double?), [.. node.Arguments.Select(Visit).SelectMany(Flatten)]);
+
+            var mtd = node.Name.ToUpper(CultureInfo.InvariantCulture) switch
             {
-                return Expression.Constant(node.Value, typeof(double?));
+                "SUM" => InfoOf((double?[] xs) => xs.Sum()),
+                "AVERAGE" => InfoOf((double?[] xs) => xs.Average()),
+                _ => throw new InvalidOperationException("Unknown function: " + node.Name)
+            };
+
+            return Expression.Call(mtd, args);
+        }
+
+        private static IEnumerable<Expression> Flatten(Expression e)
+        {
+            if (e is RuntimeVariablesExpression r)
+            {
+                return r.Variables;
             }
-
-            protected internal override Expression VisitCell(CellExcelExpression node)
+            else
             {
-                return GetCellParameter(node.Cell);
-            }
-
-            private ParameterExpression GetCellParameter(string str)
-            {
-                if (!_cellReferences.TryGetValue(str, out var cell))
-                {
-                    cell = Expression.Parameter(typeof(double?), str);
-                    _cellReferences[str] = cell;
-                }
-
-                return cell;
-            }
-
-            protected internal override Expression VisitFormula(FormulaExcelExpression node)
-            {
-                var args = Expression.NewArrayInit(typeof(double?), [.. node.Arguments.Select(Visit).SelectMany(Flatten)]);
-
-                var mtd = node.Name.ToUpper(CultureInfo.InvariantCulture) switch
-                {
-                    "SUM" => InfoOf((double?[] xs) => xs.Sum()),
-                    "AVERAGE" => InfoOf((double?[] xs) => xs.Average()),
-                    _ => throw new InvalidOperationException("Unknown function: " + node.Name)
-                };
-
-                return Expression.Call(mtd, args);
-            }
-
-            private static IEnumerable<Expression> Flatten(Expression e)
-            {
-                if (e is RuntimeVariablesExpression r)
-                {
-                    return r.Variables;
-                }
-                else
-                {
-                    return [e];
-                }
-            }
-
-            private static MethodInfo InfoOf<T, R>(Expression<Func<T, R>> f)
-            {
-                return ((MethodCallExpression)f.Body).Method;
-            }
-
-            protected internal override Expression VisitRange(RangeExcelExpression node)
-            {
-                if (!Parser.TryParseCell(node.Start, out var beginRow, out var beginCol) || !Parser.TryParseCell(node.End, out var endRow, out var endCol))
-                {
-                    throw new InvalidOperationException("Unexpected range.");
-                }
-
-                var firstRow = Math.Min(beginRow, endRow);
-                var firstCol = Math.Min(beginCol, endCol);
-
-                var lastRow = Math.Max(beginRow, endRow);
-                var lastCol = Math.Max(beginCol, endCol);
-
-                var ps = new List<ParameterExpression>();
-
-                for (var r = firstRow; r <= lastRow; r++)
-                {
-                    for (var c = firstCol; c <= lastCol; c++)
-                    {
-                        var p = GetCellParameter(ToBase26(c) + r);
-                        ps.Add(p);
-                    }
-                }
-
-                return Expression.RuntimeVariables(ps);
+                return [e];
             }
         }
 
-        public static string ToBase26(int x)
+        private static MethodInfo InfoOf<T, R>(Expression<Func<T, R>> f)
         {
-            var res = "";
+            return ((MethodCallExpression)f.Body).Method;
+        }
 
-            while (x > 0)
+        protected internal override Expression VisitRange(RangeExcelExpression node)
+        {
+            if (!Parser.TryParseCell(node.Start, out var beginRow, out var beginCol) || !Parser.TryParseCell(node.End, out var endRow, out var endCol))
             {
-                var r = (x - 1) % 26;
-
-                res = ((char)(r + 'A')).ToString() + res;
-
-                x = (x - 1) / 26;
+                throw new InvalidOperationException("Unexpected range.");
             }
 
-            return res;
+            var firstRow = Math.Min(beginRow, endRow);
+            var firstCol = Math.Min(beginCol, endCol);
+
+            var lastRow = Math.Max(beginRow, endRow);
+            var lastCol = Math.Max(beginCol, endCol);
+
+            var ps = new List<ParameterExpression>();
+
+            for (var r = firstRow; r <= lastRow; r++)
+            {
+                for (var c = firstCol; c <= lastCol; c++)
+                {
+                    var p = GetCellParameter(ToBase26(c) + r);
+                    ps.Add(p);
+                }
+            }
+
+            return Expression.RuntimeVariables(ps);
         }
+    }
+
+    public static string ToBase26(int x)
+    {
+        var res = "";
+
+        while (x > 0)
+        {
+            var r = (x - 1) % 26;
+
+            res = ((char)(r + 'A')).ToString() + res;
+
+            x = (x - 1) / 26;
+        }
+
+        return res;
     }
 }

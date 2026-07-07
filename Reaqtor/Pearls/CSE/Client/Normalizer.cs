@@ -12,30 +12,29 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Normalizer for expressions using identifiers to represent accesses to known resources.
+/// </summary>
+internal class Normalizer : ExpressionVisitor
 {
+    // NOTE: property accessor analysis omitted for brevity
+
     /// <summary>
-    /// Normalizer for expressions using identifiers to represent accesses to known resources.
+    /// Analyzes method calls for known resource identifiers.
     /// </summary>
-    internal class Normalizer : ExpressionVisitor
+    /// <param name="node">Method call expression to analayze.</param>
+    /// <returns>The original expression if the method does not represent a known resource; otherwise, an invocation expression using an unbound parameter expression representing the known resource.</returns>
+    protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        // NOTE: property accessor analysis omitted for brevity
-
-        /// <summary>
-        /// Analyzes method calls for known resource identifiers.
-        /// </summary>
-        /// <param name="node">Method call expression to analayze.</param>
-        /// <returns>The original expression if the method does not represent a known resource; otherwise, an invocation expression using an unbound parameter expression representing the known resource.</returns>
-        protected override Expression VisitMethodCall(MethodCallExpression node)
+        var known = node.Method.GetCustomAttribute<KnownResourceAttribute>();
+        if (known != null)
         {
-            var known = node.Method.GetCustomAttribute<KnownResourceAttribute>();
-            if (known != null)
-            {
-                var type = Expression.GetFuncType([.. node.Arguments.Select(a => a.Type), node.Type]);
-                return Expression.Invoke(Expression.Parameter(type, known.Id), Visit(node.Arguments));
-            }
-
-            return base.VisitMethodCall(node);
+            var type = Expression.GetFuncType([.. node.Arguments.Select(a => a.Type), node.Type]);
+            return Expression.Invoke(Expression.Parameter(type, known.Id), Visit(node.Arguments));
         }
+
+        return base.VisitMethodCall(node);
     }
 }

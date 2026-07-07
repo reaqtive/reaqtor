@@ -1,0 +1,6 @@
+# The archive/ tree is reference-only (excluded from all solutions, inline package versions). It is
+# intentionally left as it was on .NET Framework and is NOT subject to the .NET 10 modernizations applied
+# to the live tree. Inherit the root .editorconfig but opt out of file-scoped namespaces here.
+[*.cs]
+csharp_style_namespace_declarations = block_scoped:silent
+dotnet_diagnostic.IDE0161.severity = none

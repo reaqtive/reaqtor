@@ -2,114 +2,112 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class LastAsync<TSource> : SubscribableBase<TSource>
 {
-    internal sealed class LastAsync<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, bool> _predicate;
+    private readonly bool _throwOnEmpty;
+
+    public LastAsync(ISubscribable<TSource> source, Func<TSource, bool> predicate, bool throwOnEmpty)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool> _predicate;
-        private readonly bool _throwOnEmpty;
+        Debug.Assert(source != null);
 
-        public LastAsync(ISubscribable<TSource> source, Func<TSource, bool> predicate, bool throwOnEmpty)
+        _source = source;
+        _predicate = predicate ?? (_ => true);
+        _throwOnEmpty = throwOnEmpty;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<LastAsync<TSource>, TSource>, IObserver<TSource>
+    {
+        private bool _hasValue;
+        private TSource _lastValue = default;
+
+        public _(LastAsync<TSource> parent, IObserver<TSource> observer)
+            : base(parent, observer)
         {
-            Debug.Assert(source != null);
-
-            _source = source;
-            _predicate = predicate ?? (_ => true);
-            _throwOnEmpty = throwOnEmpty;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:Last";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            if (_hasValue)
+            {
+                Output.OnNext(_lastValue);
+                Output.OnCompleted();
+            }
+            else if (Params._throwOnEmpty)
+            {
+                Output.OnError(new InvalidOperationException("Observable has no elements."));
+            }
+            else
+            {
+                Output.OnNext(default);
+                Output.OnCompleted();
+            }
+
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<LastAsync<TSource>, TSource>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            private bool _hasValue;
-            private TSource _lastValue = default;
+            Output.OnError(error);
+            Dispose();
+        }
 
-            public _(LastAsync<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
+        public void OnNext(TSource value)
+        {
+            bool b;
+
+            try
             {
+                b = Params._predicate(value);
             }
-
-            public override string Name => "rc:Last";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
+            catch (Exception ex)
             {
-                if (_hasValue)
-                {
-                    Output.OnNext(_lastValue);
-                    Output.OnCompleted();
-                }
-                else if (Params._throwOnEmpty)
-                {
-                    Output.OnError(new InvalidOperationException("Observable has no elements."));
-                }
-                else
-                {
-                    Output.OnNext(default);
-                    Output.OnCompleted();
-                }
-
+                Output.OnError(ex);
                 Dispose();
+                return;
             }
 
-            public void OnError(Exception error)
+            if (b)
             {
-                Output.OnError(error);
-                Dispose();
+                _hasValue = true;
+                _lastValue = value;
+                StateChanged = true;
             }
+        }
 
-            public void OnNext(TSource value)
-            {
-                bool b;
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
+        }
 
-                try
-                {
-                    b = Params._predicate(value);
-                }
-                catch (Exception ex)
-                {
-                    Output.OnError(ex);
-                    Dispose();
-                    return;
-                }
+        protected override void LoadStateCore(IOperatorStateReader reader)
+        {
+            base.LoadStateCore(reader);
 
-                if (b)
-                {
-                    _hasValue = true;
-                    _lastValue = value;
-                    StateChanged = true;
-                }
-            }
+            _hasValue = reader.Read<bool>();
+            _lastValue = reader.Read<TSource>();
+        }
 
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
 
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
-
-                _hasValue = reader.Read<bool>();
-                _lastValue = reader.Read<TSource>();
-            }
-
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_hasValue);
-                writer.Write(_lastValue);
-            }
+            writer.Write(_hasValue);
+            writer.Write(_lastValue);
         }
     }
 }

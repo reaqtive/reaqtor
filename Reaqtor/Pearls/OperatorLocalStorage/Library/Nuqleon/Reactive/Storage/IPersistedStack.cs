@@ -10,15 +10,12 @@
 
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix. (By design for collection interfaces.)
 
-using System.Collections.Generic;
+namespace Reaqtive.Storage;
 
-namespace Reaqtive.Storage
+/// <summary>
+/// Interface representing a persisted stack.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the persisted stack.</typeparam>
+public interface IPersistedStack<T> : IStack<T>, IPersisted
 {
-    /// <summary>
-    /// Interface representing a persisted stack.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements in the persisted stack.</typeparam>
-    public interface IPersistedStack<T> : IStack<T>, IPersisted
-    {
-    }
 }

@@ -8,18 +8,17 @@
 // BD - January 2018
 //
 
-namespace Reaqtive.Serialization
+namespace Reaqtive.Serialization;
+
+/// <summary>
+/// Interface representing a factory for strongly typed serializers.
+/// </summary>
+public interface ISerializerFactory
 {
     /// <summary>
-    /// Interface representing a factory for strongly typed serializers.
+    /// Gets a serializer for objects of type <typeparamref name="T"/>.
     /// </summary>
-    public interface ISerializerFactory
-    {
-        /// <summary>
-        /// Gets a serializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-        /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
-        ISerializer<T> GetSerializer<T>();
-    }
+    /// <typeparam name="T">The type of the objects to serialize.</typeparam>
+    /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
+    ISerializer<T> GetSerializer<T>();
 }

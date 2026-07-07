@@ -8,15 +8,12 @@
 // BD - January 2018
 //
 
-using System.Collections.Generic;
+namespace Reaqtive.Storage;
 
-namespace Reaqtive.Storage
+/// <summary>
+/// Interface representing a persisted linked list.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the persisted linked list.</typeparam>
+public interface IPersistedLinkedList<T> : ILinkedList<T>, IPersisted
 {
-    /// <summary>
-    /// Interface representing a persisted linked list.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements in the persisted linked list.</typeparam>
-    public interface IPersistedLinkedList<T> : ILinkedList<T>, IPersisted
-    {
-    }
 }

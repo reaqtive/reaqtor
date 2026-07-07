@@ -10,80 +10,79 @@
 
 using System.Diagnostics;
 
-namespace System.Time
+namespace System.Time;
+
+/// <summary>
+/// Exposes commonly used stopwatch factories and methods to create stopwatch factories.
+/// </summary>
+public static class StopwatchFactory
 {
     /// <summary>
-    /// Exposes commonly used stopwatch factories and methods to create stopwatch factories.
+    /// Gets a factory for stopwatches that use the System.Diagnostics.Stopwatch type.
     /// </summary>
-    public static class StopwatchFactory
+    public static IStopwatchFactory Diagnostics { get; } = new SystemTimeStopwatchFactory();
+
+    /// <summary>
+    /// Creates a stopwatch factory that uses the specified clock to measure time.
+    /// </summary>
+    /// <param name="clock">Clock used to measure time.</param>
+    /// <returns>Stopwatch factory to create stopwatches based on the specified clock.</returns>
+    public static IStopwatchFactory FromClock(IClock clock)
     {
-        /// <summary>
-        /// Gets a factory for stopwatches that use the System.Diagnostics.Stopwatch type.
-        /// </summary>
-        public static IStopwatchFactory Diagnostics { get; } = new SystemTimeStopwatchFactory();
+        ArgumentNullException.ThrowIfNull(clock);
 
-        /// <summary>
-        /// Creates a stopwatch factory that uses the specified clock to measure time.
-        /// </summary>
-        /// <param name="clock">Clock used to measure time.</param>
-        /// <returns>Stopwatch factory to create stopwatches based on the specified clock.</returns>
-        public static IStopwatchFactory FromClock(IClock clock)
+        return new ClockStopwatchFactory(clock);
+    }
+
+    private sealed class SystemTimeStopwatchFactory : IStopwatchFactory
+    {
+        public IStopwatch Create() => new Impl();
+
+        private sealed class Impl : IStopwatch
         {
-            ArgumentNullException.ThrowIfNull(clock);
+            private readonly Stopwatch _stopwatch;
 
-            return new ClockStopwatchFactory(clock);
+            public Impl() => _stopwatch = new Stopwatch();
+
+            public TimeSpan Elapsed => _stopwatch.Elapsed;
+
+            public long ElapsedMilliseconds => _stopwatch.ElapsedMilliseconds;
+
+            public long ElapsedTicks => _stopwatch.ElapsedTicks;
+
+            public bool IsRunning => _stopwatch.IsRunning;
+
+            public void Reset() => _stopwatch.Reset();
+
+            public void Restart() => _stopwatch.Restart();
+
+            public void Start() => _stopwatch.Start();
+
+            public void Stop() => _stopwatch.Stop();
+
+            public long GetTimestamp() => Stopwatch.GetTimestamp();
         }
+    }
 
-        private sealed class SystemTimeStopwatchFactory : IStopwatchFactory
-        {
-            public IStopwatch Create() => new Impl();
+    private sealed class ClockStopwatchFactory : IStopwatchFactory
+    {
+        private readonly IClock _clock;
 
-            private sealed class Impl : IStopwatch
-            {
-                private readonly Stopwatch _stopwatch;
+        public ClockStopwatchFactory(IClock clock) => _clock = clock;
 
-                public Impl() => _stopwatch = new Stopwatch();
+        public IStopwatch Create() => new Impl(_clock);
 
-                public TimeSpan Elapsed => _stopwatch.Elapsed;
-
-                public long ElapsedMilliseconds => _stopwatch.ElapsedMilliseconds;
-
-                public long ElapsedTicks => _stopwatch.ElapsedTicks;
-
-                public bool IsRunning => _stopwatch.IsRunning;
-
-                public void Reset() => _stopwatch.Reset();
-
-                public void Restart() => _stopwatch.Restart();
-
-                public void Start() => _stopwatch.Start();
-
-                public void Stop() => _stopwatch.Stop();
-
-                public long GetTimestamp() => Stopwatch.GetTimestamp();
-            }
-        }
-
-        private sealed class ClockStopwatchFactory : IStopwatchFactory
+        private sealed class Impl : StopwatchBase
         {
             private readonly IClock _clock;
 
-            public ClockStopwatchFactory(IClock clock) => _clock = clock;
+            public Impl(IClock clock) => _clock = clock;
 
-            public IStopwatch Create() => new Impl(_clock);
+            protected override bool IsHighResolution => false;
 
-            private sealed class Impl : StopwatchBase
-            {
-                private readonly IClock _clock;
+            protected override double TickFrequency => throw new NotSupportedException();
 
-                public Impl(IClock clock) => _clock = clock;
-
-                protected override bool IsHighResolution => false;
-
-                protected override double TickFrequency => throw new NotSupportedException();
-
-                public override long GetTimestamp() => _clock.Now;
-            }
+            public override long GetTimestamp() => _clock.Now;
         }
     }
 }

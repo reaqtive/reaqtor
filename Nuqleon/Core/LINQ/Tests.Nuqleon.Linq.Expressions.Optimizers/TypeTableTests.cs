@@ -8,40 +8,36 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.Expressions.Optimizers;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+[TestClass]
+public partial class TypeTableTests
 {
-    [TestClass]
-    public partial class TypeTableTests
+    [TestMethod]
+    public void TypeTable_Add_ArgumentChecking()
     {
-        [TestMethod]
-        public void TypeTable_Add_ArgumentChecking()
-        {
-            var tt = new TypeTable();
+        var tt = new TypeTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(Type)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(TypeTable)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(Type)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => tt.Add(default(TypeTable)));
+    }
 
-        [TestMethod]
-        public void TypeTable_Contains_ArgumentChecking()
-        {
-            var tt = new TypeTable();
+    [TestMethod]
+    public void TypeTable_Contains_ArgumentChecking()
+    {
+        var tt = new TypeTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => tt.Contains(default));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => tt.Contains(default));
+    }
 
-        [TestMethod]
-        public void TypeTable_ReadOnly()
-        {
-            var tt = new TypeTable();
-            var rtt = tt.ToReadOnly();
+    [TestMethod]
+    public void TypeTable_ReadOnly()
+    {
+        var tt = new TypeTable();
+        var rtt = tt.ToReadOnly();
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => rtt.Add(typeof(int)));
-        }
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtt.Add(typeof(int)));
     }
 }

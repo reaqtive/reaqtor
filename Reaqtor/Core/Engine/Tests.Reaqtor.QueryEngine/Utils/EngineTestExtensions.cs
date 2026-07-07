@@ -5,13 +5,12 @@
 using Reaqtor;
 using Reaqtor.QueryEngine;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+public static class EngineTestExtensions
 {
-    public static class EngineTestExtensions
+    public static ReactiveServiceContext GetReactiveService(this ICheckpointingQueryEngine qe)
     {
-        public static ReactiveServiceContext GetReactiveService(this ICheckpointingQueryEngine qe)
-        {
-            return new TupletizingContext(qe.ReactiveService);
-        }
+        return new TupletizingContext(qe.ReactiveService);
     }
 }

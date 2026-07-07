@@ -8,18 +8,16 @@
 // BD - January 2017 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+internal sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T>
+    where T : class
 {
-    internal sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T>
-        where T : class
-    {
-        public static readonly ReferenceEqualityComparer<T> Instance = new();
+    public static readonly ReferenceEqualityComparer<T> Instance = new();
 
-        public bool Equals(T x, T y) => ReferenceEquals(x, y);
+    public bool Equals(T x, T y) => ReferenceEquals(x, y);
 
-        public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
-    }
+    public int GetHashCode(T obj) => RuntimeHelpers.GetHashCode(obj);
 }

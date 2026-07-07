@@ -8,18 +8,15 @@
 //   BD - 08/03/2015 - Added this type to make dictionaries with null entries easier to build.
 //
 
-using System.Collections.Generic;
+namespace System;
 
-namespace System
+internal class MaybeEqualityComparer<K> : IEqualityComparer<Maybe<K>>
 {
-    internal class MaybeEqualityComparer<K> : IEqualityComparer<Maybe<K>>
-    {
-        private readonly IEqualityComparer<K> _comparer;
+    private readonly IEqualityComparer<K> _comparer;
 
-        public MaybeEqualityComparer(IEqualityComparer<K> comparer) => _comparer = comparer;
+    public MaybeEqualityComparer(IEqualityComparer<K> comparer) => _comparer = comparer;
 
-        public bool Equals(Maybe<K> x, Maybe<K> y) => _comparer.Equals(x.Value, y.Value);
+    public bool Equals(Maybe<K> x, Maybe<K> y) => _comparer.Equals(x.Value, y.Value);
 
-        public int GetHashCode(Maybe<K> obj) => _comparer.GetHashCode(obj.Value);
-    }
+    public int GetHashCode(Maybe<K> obj) => _comparer.GetHashCode(obj.Value);
 }

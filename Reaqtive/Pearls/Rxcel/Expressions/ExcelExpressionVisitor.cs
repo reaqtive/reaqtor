@@ -13,19 +13,18 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
-{
-    internal abstract class ExcelExpressionVisitor<TResult>
-    {
-        public TResult Visit(ExcelExpression node)
-        {
-            return node.Accept(this);
-        }
+namespace Rxcel;
 
-        protected internal abstract TResult VisitBinary(BinaryExcelExpression node);
-        protected internal abstract TResult VisitNumber(NumberExcelExpression node);
-        protected internal abstract TResult VisitCell(CellExcelExpression node);
-        protected internal abstract TResult VisitRange(RangeExcelExpression node);
-        protected internal abstract TResult VisitFormula(FormulaExcelExpression node);
+internal abstract class ExcelExpressionVisitor<TResult>
+{
+    public TResult Visit(ExcelExpression node)
+    {
+        return node.Accept(this);
     }
+
+    protected internal abstract TResult VisitBinary(BinaryExcelExpression node);
+    protected internal abstract TResult VisitNumber(NumberExcelExpression node);
+    protected internal abstract TResult VisitCell(CellExcelExpression node);
+    protected internal abstract TResult VisitRange(RangeExcelExpression node);
+    protected internal abstract TResult VisitFormula(FormulaExcelExpression node);
 }

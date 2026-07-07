@@ -8,26 +8,25 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Enum describing the kind of a method.
+/// </summary>
+public enum MethodInfoSlimKind
 {
     /// <summary>
-    /// Enum describing the kind of a method.
+    /// Simple method, i.e. not generic.
     /// </summary>
-    public enum MethodInfoSlimKind
-    {
-        /// <summary>
-        /// Simple method, i.e. not generic.
-        /// </summary>
-        Simple,
+    Simple,
 
-        /// <summary>
-        /// Open generic method definition.
-        /// </summary>
-        GenericDefinition,
+    /// <summary>
+    /// Open generic method definition.
+    /// </summary>
+    GenericDefinition,
 
-        /// <summary>
-        /// Closed generic method, consisting of a method definition and type arguments.
-        /// </summary>
-        Generic,
-    }
+    /// <summary>
+    /// Closed generic method, consisting of a method definition and type arguments.
+    /// </summary>
+    Generic,
 }

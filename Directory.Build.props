@@ -1,6 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
     <LangVersion>14.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>

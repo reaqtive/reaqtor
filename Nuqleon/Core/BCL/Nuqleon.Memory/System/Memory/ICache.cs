@@ -8,22 +8,21 @@
 //   ER - 10/27/2014 - Created this type.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Implementation of an object cache.
+/// </summary>
+/// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
+public interface ICache<T>
 {
     /// <summary>
-    /// Implementation of an object cache.
+    /// Caches the item and creates a reference to reconstruct the item with.
     /// </summary>
-    /// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
-    public interface ICache<T>
-    {
-        /// <summary>
-        /// Caches the item and creates a reference to reconstruct the item with.
-        /// </summary>
-        /// <param name="value">The instance to cache.</param>
-        /// <returns>A handle to reconstruct the original instance.</returns>
-        /// <remarks>
-        /// The lifetime of the item in the cache is tied to the lifetime of the reference.
-        /// </remarks>
-        IDiscardable<T> Create(T value);
-    }
+    /// <param name="value">The instance to cache.</param>
+    /// <returns>A handle to reconstruct the original instance.</returns>
+    /// <remarks>
+    /// The lifetime of the item in the cache is tied to the lifetime of the reference.
+    /// </remarks>
+    IDiscardable<T> Create(T value);
 }

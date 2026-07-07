@@ -8,12 +8,11 @@
 // BD - January 2018
 //
 
-namespace Reaqtive.Serialization
+namespace Reaqtive.Serialization;
+
+/// <summary>
+/// Interface representing a factory for strongly typed serializers and deserializers.
+/// </summary>
+public interface ISerializationFactory : ISerializerFactory, IDeserializerFactory
 {
-    /// <summary>
-    /// Interface representing a factory for strongly typed serializers and deserializers.
-    /// </summary>
-    public interface ISerializationFactory : ISerializerFactory, IDeserializerFactory
-    {
-    }
 }

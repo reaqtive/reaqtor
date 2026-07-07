@@ -13,46 +13,45 @@ using System.IO;
 
 using Reaqtor.QueryEngine;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Implementation of <see cref="IStateReader"/> for the in-memory key/value store implementation in <see cref="Store"/>.
+/// </summary>
+public sealed class StateReader : IStateReader
 {
-    /// <summary>
-    /// Implementation of <see cref="IStateReader"/> for the in-memory key/value store implementation in <see cref="Store"/>.
-    /// </summary>
-    public sealed class StateReader : IStateReader
+    private readonly Store _store;
+
+    public StateReader(Store store)
     {
-        private readonly Store _store;
+        _store = store;
+    }
 
-        public StateReader(Store store)
+    public void Dispose() { }
+
+    public IEnumerable<string> GetCategories() => _store.Data.Keys;
+
+    public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    {
+        if (_store.Data.TryGetValue(category, out var table))
         {
-            _store = store;
+            keys = table.Keys;
+            return true;
         }
 
-        public void Dispose() { }
+        keys = null;
+        return false;
+    }
 
-        public IEnumerable<string> GetCategories() => _store.Data.Keys;
-
-        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    public bool TryGetItemReader(string category, string key, out Stream stream)
+    {
+        if (_store.Data.TryGetValue(category, out var table) && table.TryGetValue(key, out var data))
         {
-            if (_store.Data.TryGetValue(category, out var table))
-            {
-                keys = table.Keys;
-                return true;
-            }
-
-            keys = null;
-            return false;
+            stream = new MemoryStream(data);
+            return true;
         }
 
-        public bool TryGetItemReader(string category, string key, out Stream stream)
-        {
-            if (_store.Data.TryGetValue(category, out var table) && table.TryGetValue(key, out var data))
-            {
-                stream = new MemoryStream(data);
-                return true;
-            }
-
-            stream = null;
-            return false;
-        }
+        stream = null;
+        return false;
     }
 }

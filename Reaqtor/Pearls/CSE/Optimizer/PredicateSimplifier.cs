@@ -22,109 +22,108 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Simplifier for predicates using algebraic identities.
+/// </summary>
+internal class PredicateSimplifier : ExpressionVisitor
 {
     /// <summary>
-    /// Simplifier for predicates using algebraic identities.
+    /// Simplifies the specified expression using algebraic identities.
     /// </summary>
-    internal class PredicateSimplifier : ExpressionVisitor
+    /// <param name="expression">Expression to simplify.</param>
+    /// <returns>Simplified expression.</returns>
+    public Expression Simplify(Expression expression)
     {
-        /// <summary>
-        /// Simplifies the specified expression using algebraic identities.
-        /// </summary>
-        /// <param name="expression">Expression to simplify.</param>
-        /// <returns>Simplified expression.</returns>
-        public Expression Simplify(Expression expression)
+        // Monotonicity guaranteed; rewrites either keep the number of nodes, or reduce the number of nodes by 1, or make forward progress (e.g. push down of NOT in De Morgan's rule).
+
+        var newExpr = expression;
+        Expression oldExpr;
+        do
         {
-            // Monotonicity guaranteed; rewrites either keep the number of nodes, or reduce the number of nodes by 1, or make forward progress (e.g. push down of NOT in De Morgan's rule).
+            oldExpr = newExpr;
+            newExpr = Visit(oldExpr);
+        } while (oldExpr != newExpr);
 
-            var newExpr = expression;
-            Expression oldExpr;
-            do
-            {
-                oldExpr = newExpr;
-                newExpr = Visit(oldExpr);
-            } while (oldExpr != newExpr);
+        return newExpr;
+    }
 
-            return newExpr;
-        }
+    /// <summary>
+    /// Visits unary expression nodes to rewrite negations to a simpler form, if possible.
+    /// </summary>
+    /// <param name="node">Unary expression to analyze and simplify, if possible.</param>
+    /// <returns>The original expression if no simplifcation was applied; otherwise, the simplified expression.</returns>
+    protected override Expression VisitUnary(UnaryExpression node)
+    {
+        // TODO: omitted more rigorous checks to ensure that rewrites are possible
 
-        /// <summary>
-        /// Visits unary expression nodes to rewrite negations to a simpler form, if possible.
-        /// </summary>
-        /// <param name="node">Unary expression to analyze and simplify, if possible.</param>
-        /// <returns>The original expression if no simplifcation was applied; otherwise, the simplified expression.</returns>
-        protected override Expression VisitUnary(UnaryExpression node)
+        if (node.NodeType == ExpressionType.Not && node.Method == null)
         {
-            // TODO: omitted more rigorous checks to ensure that rewrites are possible
-
-            if (node.NodeType == ExpressionType.Not && node.Method == null)
+            var o = node.Operand;
+            switch (o.NodeType)
             {
-                var o = node.Operand;
-                switch (o.NodeType)
-                {
-                    case ExpressionType.Not:
+                case ExpressionType.Not:
+                    {
+                        var u = (UnaryExpression)o;
+                        if (u.Method == null)
                         {
-                            var u = (UnaryExpression)o;
-                            if (u.Method == null)
-                            {
-                                return Visit(u.Operand);
-                            }
+                            return Visit(u.Operand);
                         }
-                        break;
-                    case ExpressionType.Equal:
-                    case ExpressionType.NotEqual:
-                    case ExpressionType.LessThan:
-                    case ExpressionType.LessThanOrEqual:
-                    case ExpressionType.GreaterThan:
-                    case ExpressionType.GreaterThanOrEqual:
+                    }
+                    break;
+                case ExpressionType.Equal:
+                case ExpressionType.NotEqual:
+                case ExpressionType.LessThan:
+                case ExpressionType.LessThanOrEqual:
+                case ExpressionType.GreaterThan:
+                case ExpressionType.GreaterThanOrEqual:
+                    {
+                        var b = (BinaryExpression)o;
+                        if (b.Method == null && b.Conversion == null)
                         {
-                            var b = (BinaryExpression)o;
-                            if (b.Method == null && b.Conversion == null)
-                            {
-                                var l = Visit(b.Left);
-                                var r = Visit(b.Right);
-                                return Expression.MakeBinary(Invert(b.NodeType), l, r);
-                            }
+                            var l = Visit(b.Left);
+                            var r = Visit(b.Right);
+                            return Expression.MakeBinary(Invert(b.NodeType), l, r);
                         }
-                        break;
-                    case ExpressionType.Or:
-                    case ExpressionType.OrElse: // assume pure functions so short-circuiting effect is irrelevant
+                    }
+                    break;
+                case ExpressionType.Or:
+                case ExpressionType.OrElse: // assume pure functions so short-circuiting effect is irrelevant
+                    {
+                        var b = (BinaryExpression)o;
+                        if (b.Method == null && b.Conversion == null)
                         {
-                            var b = (BinaryExpression)o;
-                            if (b.Method == null && b.Conversion == null)
-                            {
-                                var l = Visit(Expression.Not(b.Left));
-                                var r = Visit(Expression.Not(b.Right));
-                                return Expression.MakeBinary(Invert(b.NodeType), l, r);
-                            }
+                            var l = Visit(Expression.Not(b.Left));
+                            var r = Visit(Expression.Not(b.Right));
+                            return Expression.MakeBinary(Invert(b.NodeType), l, r);
                         }
-                        break;
-                }
+                    }
+                    break;
             }
-
-            return base.VisitUnary(node);
         }
 
-        /// <summary>
-        /// Inverts an expression type under application of NOT.
-        /// </summary>
-        /// <param name="t">Expression type to invert.</param>
-        /// <returns>Inverted expression type.</returns>
-        private static ExpressionType Invert(ExpressionType t)
+        return base.VisitUnary(node);
+    }
+
+    /// <summary>
+    /// Inverts an expression type under application of NOT.
+    /// </summary>
+    /// <param name="t">Expression type to invert.</param>
+    /// <returns>Inverted expression type.</returns>
+    private static ExpressionType Invert(ExpressionType t)
+    {
+        return t switch
         {
-            return t switch
-            {
-                ExpressionType.Equal => ExpressionType.NotEqual,
-                ExpressionType.NotEqual => ExpressionType.Equal,
-                ExpressionType.LessThan => ExpressionType.GreaterThanOrEqual,
-                ExpressionType.LessThanOrEqual => ExpressionType.GreaterThan,
-                ExpressionType.GreaterThan => ExpressionType.LessThanOrEqual,
-                ExpressionType.GreaterThanOrEqual => ExpressionType.LessThan,
-                ExpressionType.Or => ExpressionType.And, // arbitrary; see short-circuiting remarks
-                ExpressionType.OrElse => ExpressionType.AndAlso, // arbitrary; see short-circuiting remarks
-                _ => throw new NotImplementedException(),
-            };
-        }
+            ExpressionType.Equal => ExpressionType.NotEqual,
+            ExpressionType.NotEqual => ExpressionType.Equal,
+            ExpressionType.LessThan => ExpressionType.GreaterThanOrEqual,
+            ExpressionType.LessThanOrEqual => ExpressionType.GreaterThan,
+            ExpressionType.GreaterThan => ExpressionType.LessThanOrEqual,
+            ExpressionType.GreaterThanOrEqual => ExpressionType.LessThan,
+            ExpressionType.Or => ExpressionType.And, // arbitrary; see short-circuiting remarks
+            ExpressionType.OrElse => ExpressionType.AndAlso, // arbitrary; see short-circuiting remarks
+            _ => throw new NotImplementedException(),
+        };
     }
 }

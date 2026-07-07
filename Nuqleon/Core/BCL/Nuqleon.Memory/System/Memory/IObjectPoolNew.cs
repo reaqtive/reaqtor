@@ -12,31 +12,30 @@
 #pragma warning disable CA1711 // Replace New suffix. (By design to reflect the `new` keyword.)
 #pragma warning disable CA1716 // Conflict with reserved language keyword New. (See above.)
 
-namespace System.Memory
-{
-    //===========================================================================\\
-    //   _  ____  _     _           _   _____            _ _   _                 \\
-    //  | |/ __ \| |   (_)         | | |  __ \          | | \ | |                \\
-    //  | | |  | | |__  _  ___  ___| |_| |__) |__   ___ | |  \| | _____      __  \\
-    //  | | |  | | '_ \| |/ _ \/ __| __|  ___/ _ \ / _ \| | . ` |/ _ \ \ /\ / /  \\
-    //  | | |__| | |_) | |  __/ (__| |_| |  | (_) | (_) | | |\  |  __/\ V  V /   \\
-    //  |_|\____/|_.__/| |\___|\___|\__|_|   \___/ \___/|_|_| \_|\___| \_/\_/    \\
-    //                _/ |                                                       \\
-    //               |__/                                                        \\
-    //===========================================================================\\
+namespace System.Memory;
 
+//===========================================================================\\
+//   _  ____  _     _           _   _____            _ _   _                 \\
+//  | |/ __ \| |   (_)         | | |  __ \          | | \ | |                \\
+//  | | |  | | |__  _  ___  ___| |_| |__) |__   ___ | |  \| | _____      __  \\
+//  | | |  | | '_ \| |/ _ \/ __| __|  ___/ _ \ / _ \| | . ` |/ _ \ \ /\ / /  \\
+//  | | |__| | |_) | |  __/ (__| |_| |  | (_) | (_) | | |\  |  __/\ V  V /   \\
+//  |_|\____/|_.__/| |\___|\___|\__|_|   \___/ \___/|_|_| \_|\___| \_/\_/    \\
+//                _/ |                                                       \\
+//               |__/                                                        \\
+//===========================================================================\\
+
+/// <summary>
+/// Interface for object pools with a "new" operator.
+/// </summary>
+/// <typeparam name="T">Type of the elements stored in the pool.</typeparam>
+/// <remarks>This interface can be used to restrict pool usage to the RAII pattern.</remarks>
+public interface IObjectPoolNew<T>
+    where T : class
+{
     /// <summary>
-    /// Interface for object pools with a "new" operator.
+    /// Gets a pooled object instance with RAII capabilities to return it to the pool.
     /// </summary>
-    /// <typeparam name="T">Type of the elements stored in the pool.</typeparam>
-    /// <remarks>This interface can be used to restrict pool usage to the RAII pattern.</remarks>
-    public interface IObjectPoolNew<T>
-        where T : class
-    {
-        /// <summary>
-        /// Gets a pooled object instance with RAII capabilities to return it to the pool.
-        /// </summary>
-        /// <returns>Pooled object instance.</returns>
-        PooledObject<T> New();
-    }
+    /// <returns>Pooled object instance.</returns>
+    PooledObject<T> New();
 }

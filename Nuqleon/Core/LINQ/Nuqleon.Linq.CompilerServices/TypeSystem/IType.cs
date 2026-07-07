@@ -8,18 +8,17 @@
 // BD - May 2013 - Created this file.
 //
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Represents a type.
+/// </summary>
+public interface IType : IEquatable<IType>
 {
     /// <summary>
-    /// Represents a type.
+    /// Checks whether objects of the current type are assignable to variables of the given type.
     /// </summary>
-    public interface IType : IEquatable<IType>
-    {
-        /// <summary>
-        /// Checks whether objects of the current type are assignable to variables of the given type.
-        /// </summary>
-        /// <param name="type">Type to check assignment compatibility for.</param>
-        /// <returns>true if objects of the current type are assignable to variables of the given type; otherwise, false.</returns>
-        bool IsAssignableTo(IType type);
-    }
+    /// <param name="type">Type to check assignment compatibility for.</param>
+    /// <returns>true if objects of the current type are assignable to variables of the given type; otherwise, false.</returns>
+    bool IsAssignableTo(IType type);
 }

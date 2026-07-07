@@ -10,49 +10,48 @@
 
 using System.CodeDom.Compiler;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Interface representing a reflection provider used to instantiate <see cref="Type"/> objects.
+/// </summary>
+[GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
+public interface ITypeCreationProvider
 {
     /// <summary>
-    /// Interface representing a reflection provider used to instantiate <see cref="Type"/> objects.
+    /// Makes a single-dimensional (vector) array type with the specified element type.
     /// </summary>
-    [GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
-    public interface ITypeCreationProvider
-    {
-        /// <summary>
-        /// Makes a single-dimensional (vector) array type with the specified element type.
-        /// </summary>
-        /// <param name="elementType">The element type of the array.</param>
-        /// <returns>A single-dimensional (vector) array type with the specified element type.</returns>
-        Type MakeArrayType(Type elementType);
+    /// <param name="elementType">The element type of the array.</param>
+    /// <returns>A single-dimensional (vector) array type with the specified element type.</returns>
+    Type MakeArrayType(Type elementType);
 
-        /// <summary>
-        /// Makes a multi-dimensional array type with the specified element type and rank.
-        /// </summary>
-        /// <param name="elementType">The element type of the array.</param>
-        /// <param name="rank">The rank of the multi-dimensional array.</param>
-        /// <returns>A multi-dimensional array type with the specified element type and rank.</returns>
-        Type MakeArrayType(Type elementType, int rank);
+    /// <summary>
+    /// Makes a multi-dimensional array type with the specified element type and rank.
+    /// </summary>
+    /// <param name="elementType">The element type of the array.</param>
+    /// <param name="rank">The rank of the multi-dimensional array.</param>
+    /// <returns>A multi-dimensional array type with the specified element type and rank.</returns>
+    Type MakeArrayType(Type elementType, int rank);
 
-        /// <summary>
-        /// Makes a by-ref type with the specified underlying element type.
-        /// </summary>
-        /// <param name="elementType">The underlying element type.</param>
-        /// <returns>A by-ref type with the specified underlying element type.</returns>
-        Type MakeByRefType(Type elementType);
+    /// <summary>
+    /// Makes a by-ref type with the specified underlying element type.
+    /// </summary>
+    /// <param name="elementType">The underlying element type.</param>
+    /// <returns>A by-ref type with the specified underlying element type.</returns>
+    Type MakeByRefType(Type elementType);
 
-        /// <summary>
-        /// Makes a generic type with the specified generic type definition and type arguments.
-        /// </summary>
-        /// <param name="genericTypeDefinition">The generic type definition.</param>
-        /// <param name="typeArguments">The type arguments.</param>
-        /// <returns>A generic type with the specified generic type definition and type arguments.</returns>
-        Type MakeGenericType(Type genericTypeDefinition, params Type[] typeArguments);
+    /// <summary>
+    /// Makes a generic type with the specified generic type definition and type arguments.
+    /// </summary>
+    /// <param name="genericTypeDefinition">The generic type definition.</param>
+    /// <param name="typeArguments">The type arguments.</param>
+    /// <returns>A generic type with the specified generic type definition and type arguments.</returns>
+    Type MakeGenericType(Type genericTypeDefinition, params Type[] typeArguments);
 
-        /// <summary>
-        /// Makes a pointer type with the specified underlying element type.
-        /// </summary>
-        /// <param name="elementType">The underlying element type.</param>
-        /// <returns>A pointer type with the specified underlying element type.</returns>
-        Type MakePointerType(Type elementType);
-    }
+    /// <summary>
+    /// Makes a pointer type with the specified underlying element type.
+    /// </summary>
+    /// <param name="elementType">The underlying element type.</param>
+    /// <returns>A pointer type with the specified underlying element type.</returns>
+    Type MakePointerType(Type elementType);
 }

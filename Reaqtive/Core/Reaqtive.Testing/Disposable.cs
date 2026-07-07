@@ -6,31 +6,28 @@
 // NB: This file contains a port of Rx code that should eventually get removed.
 //
 
-using System;
+namespace Reaqtive.Disposables;
 
-namespace Reaqtive.Disposables
+/// <summary>
+/// Provides a set of static methods for creating <see cref="IDisposable"/> objects.
+/// </summary>
+public static class Disposable
 {
     /// <summary>
-    /// Provides a set of static methods for creating <see cref="IDisposable"/> objects.
+    /// Gets the disposable that does nothing when disposed.
     /// </summary>
-    public static class Disposable
+    public static IDisposable Empty => DefaultDisposable.Instance;
+
+    /// <summary>
+    /// Creates a disposable object that invokes the specified action when disposed.
+    /// </summary>
+    /// <param name="dispose">Action to run during the first call to <see cref="IDisposable.Dispose"/>. The action is guaranteed to be run at most once.</param>
+    /// <returns>The disposable object that runs the given action upon disposal.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="dispose"/> is <c>null</c>.</exception>
+    public static IDisposable Create(Action dispose)
     {
-        /// <summary>
-        /// Gets the disposable that does nothing when disposed.
-        /// </summary>
-        public static IDisposable Empty => DefaultDisposable.Instance;
+        ArgumentNullException.ThrowIfNull(dispose);
 
-        /// <summary>
-        /// Creates a disposable object that invokes the specified action when disposed.
-        /// </summary>
-        /// <param name="dispose">Action to run during the first call to <see cref="IDisposable.Dispose"/>. The action is guaranteed to be run at most once.</param>
-        /// <returns>The disposable object that runs the given action upon disposal.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="dispose"/> is <c>null</c>.</exception>
-        public static IDisposable Create(Action dispose)
-        {
-            ArgumentNullException.ThrowIfNull(dispose);
-
-            return new AnonymousDisposable(dispose);
-        }
+        return new AnonymousDisposable(dispose);
     }
 }

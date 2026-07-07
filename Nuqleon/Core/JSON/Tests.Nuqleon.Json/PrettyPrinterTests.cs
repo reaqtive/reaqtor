@@ -8,69 +8,63 @@
 // BD - May 2014 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.Json.Expressions;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class PrettyPrinterTests
 {
-    [TestClass]
-    public class PrettyPrinterTests
+    [TestMethod]
+    public void PrettyPrinter_ArgumentChecks()
     {
-        [TestMethod]
-        public void PrettyPrinter_ArgumentChecks()
+        Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().Visit(node: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitObject(node: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitArray(node: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitConstant(node: null));
+    }
+
+    [TestMethod]
+    public void PrettyPrinter_Constant_Null()
+    {
+        AssertPretty(Expression.Null(), "null");
+    }
+
+    [TestMethod]
+    public void PrettyPrinter_Constant_Int()
+    {
+        AssertPretty(Expression.Number("42"), "42");
+    }
+
+    [TestMethod]
+    public void PrettyPrinter_Constant_String()
+    {
+        AssertPretty(Expression.String("foo"), "\"foo\"");
+    }
+
+    [TestMethod]
+    public void PrettyPrinter_Array()
+    {
+        AssertPretty(Expression.Array(Expression.Number("1"), Expression.Number("2")), "[" + Environment.NewLine + "  1," + Environment.NewLine + "  2" + Environment.NewLine + "]");
+    }
+
+    [TestMethod]
+    public void PrettyPrinter_Object()
+    {
+        var d = new Dictionary<string, Expression>
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().Visit(node: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitObject(node: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitArray(node: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitConstant(node: null));
-        }
+            { "bar", Expression.Number("1") },
+            { "foo", Expression.Number("2") },
+        };
 
-        [TestMethod]
-        public void PrettyPrinter_Constant_Null()
-        {
-            AssertPretty(Expression.Null(), "null");
-        }
+        AssertPretty(Expression.Object(d), "{" + Environment.NewLine + "  \"bar\": 1," + Environment.NewLine + "  \"foo\": 2" + Environment.NewLine + "}");
+    }
 
-        [TestMethod]
-        public void PrettyPrinter_Constant_Int()
-        {
-            AssertPretty(Expression.Number("42"), "42");
-        }
+    private static void AssertPretty(Expression e, string s)
+    {
+        var pp = new PrettyPrinter();
+        var js = pp.Visit(e);
 
-        [TestMethod]
-        public void PrettyPrinter_Constant_String()
-        {
-            AssertPretty(Expression.String("foo"), "\"foo\"");
-        }
-
-        [TestMethod]
-        public void PrettyPrinter_Array()
-        {
-            AssertPretty(Expression.Array(Expression.Number("1"), Expression.Number("2")), "[" + Environment.NewLine + "  1," + Environment.NewLine + "  2" + Environment.NewLine + "]");
-        }
-
-        [TestMethod]
-        public void PrettyPrinter_Object()
-        {
-            var d = new Dictionary<string, Expression>
-            {
-                { "bar", Expression.Number("1") },
-                { "foo", Expression.Number("2") },
-            };
-
-            AssertPretty(Expression.Object(d), "{" + Environment.NewLine + "  \"bar\": 1," + Environment.NewLine + "  \"foo\": 2" + Environment.NewLine + "}");
-        }
-
-        private static void AssertPretty(Expression e, string s)
-        {
-            var pp = new PrettyPrinter();
-            var js = pp.Visit(e);
-
-            Assert.AreEqual(s, js);
-        }
+        Assert.AreEqual(s, js);
     }
 }

@@ -8,42 +8,38 @@
 //   BD - 04/16/2016 - Created fast JSON serializer functionality.
 //
 
-using System;
 using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public partial class EmitterTests
 {
-    [TestClass]
-    public partial class EmitterTests
+    private static void AssertEmit<T>(EmitStringAction<T> action, T value, string expected)
     {
-        private static void AssertEmit<T>(EmitStringAction<T> action, T value, string expected)
-        {
-            var sb = new StringBuilder();
-            action(sb, value, GetEmitterContext());
-            Assert.AreEqual(expected, sb.ToString());
+        var sb = new StringBuilder();
+        action(sb, value, GetEmitterContext());
+        Assert.AreEqual(expected, sb.ToString());
 
 #if !NO_IO
-            var sw = new System.IO.StringWriter();
+        var sw = new System.IO.StringWriter();
 
-            var emitWriterMtd = action.Method.DeclaringType.GetMethod(action.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextWriter), typeof(T), typeof(EmitterContext)], modifiers: null);
-            var emitWriterFnc = (EmitWriterAction<T>)Delegate.CreateDelegate(typeof(EmitWriterAction<T>), emitWriterMtd);
-            emitWriterFnc(sw, value, GetEmitterContext());
+        var emitWriterMtd = action.Method.DeclaringType.GetMethod(action.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextWriter), typeof(T), typeof(EmitterContext)], modifiers: null);
+        var emitWriterFnc = (EmitWriterAction<T>)Delegate.CreateDelegate(typeof(EmitWriterAction<T>), emitWriterMtd);
+        emitWriterFnc(sw, value, GetEmitterContext());
 
-            Assert.AreEqual(expected, sw.ToString());
+        Assert.AreEqual(expected, sw.ToString());
 #endif
-        }
+    }
 
-        private static EmitterContext GetEmitterContext()
-        {
+    private static EmitterContext GetEmitterContext()
+    {
 #if !NO_IO
-            return new EmitterContext(builderString: null, builderWriter: null);
+        return new EmitterContext(builderString: null, builderWriter: null);
 #else
-            return new EmitterContext(builderString: null);
+        return new EmitterContext(builderString: null);
 #endif
-        }
     }
 }

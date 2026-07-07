@@ -8,177 +8,175 @@
 // PS - February 2015 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// A converter to create query expression trees from expressions with <see cref="IQueryable{T}" /> types.
+/// </summary>
+public class QueryableToQueryTreeConverter
 {
-    /// <summary>
-    /// A converter to create query expression trees from expressions with <see cref="IQueryable{T}" /> types.
-    /// </summary>
-    public class QueryableToQueryTreeConverter
-    {
-        private static readonly MethodInfo s_first = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First())).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_first = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First())).GetGenericMethodDefinition();
 #pragma warning disable IDE0034 // Simplify 'default' expression. (Deliberate: illustrative of the reflected method's signature, keeping this line parallel with the sibling declarations below - where a bare 'default' would be ambiguous anyway, so only this one fires.)
-        private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
 #pragma warning restore IDE0034
-        private static readonly MethodInfo s_select = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Select(default(Expression<Func<int, int>>)))).GetGenericMethodDefinition();
-        private static readonly MethodInfo s_take = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Take(default(int)))).GetGenericMethodDefinition();
-        private static readonly MethodInfo s_where = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Where(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_select = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Select(default(Expression<Func<int, int>>)))).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_take = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Take(default(int)))).GetGenericMethodDefinition();
+    private static readonly MethodInfo s_where = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Where(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
 
-        private readonly Impl _converter;
+    private readonly Impl _converter;
 
-        /// <summary>
-        /// Creates a converter to create query expression trees from expressions with <see cref="IQueryable{T}" /> types.
-        /// </summary>
-        public QueryableToQueryTreeConverter()
-        {
-            _converter = new Impl();
-        }
+    /// <summary>
+    /// Creates a converter to create query expression trees from expressions with <see cref="IQueryable{T}" /> types.
+    /// </summary>
+    public QueryableToQueryTreeConverter()
+    {
+        _converter = new Impl();
+    }
 
-        /// <summary>
-        /// Converts an expression with <see cref="IQueryable{T}" /> types into a query expression tree.
-        /// </summary>
-        /// <param name="expression">The expression to convert.</param>
-        /// <returns>A query expression tree representation of the query.</returns>
-        public QueryTree Convert(Expression expression) => _converter.Convert(expression);
+    /// <summary>
+    /// Converts an expression with <see cref="IQueryable{T}" /> types into a query expression tree.
+    /// </summary>
+    /// <param name="expression">The expression to convert.</param>
+    /// <returns>A query expression tree representation of the query.</returns>
+    public QueryTree Convert(Expression expression) => _converter.Convert(expression);
 
-        private sealed class Impl : MethodCallBasedOperatorToQueryTreeConverter
-        {
+    private sealed class Impl : MethodCallBasedOperatorToQueryTreeConverter
+    {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
-            private static readonly Dictionary<MethodInfo, OperatorType> operatorMap = new()
-            {
-                { s_first,          OperatorType.First          },
-                { s_firstPredicate, OperatorType.FirstPredicate },
-                { s_select,         OperatorType.Select         },
-                { s_take,           OperatorType.Take           },
-                { s_where,          OperatorType.Where          },
-            };
+        private static readonly Dictionary<MethodInfo, OperatorType> operatorMap = new()
+        {
+            { s_first,          OperatorType.First          },
+            { s_firstPredicate, OperatorType.FirstPredicate },
+            { s_select,         OperatorType.Select         },
+            { s_take,           OperatorType.Take           },
+            { s_where,          OperatorType.Where          },
+        };
 #pragma warning restore format
 #pragma warning restore IDE0079
 
-            protected override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+        protected override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
 
-            protected override bool TryGetOperatorType(MethodInfo method, out OperatorType operatorType)
+        protected override bool TryGetOperatorType(MethodInfo method, out OperatorType operatorType)
+        {
+            ArgumentNullException.ThrowIfNull(method);
+
+            if (!method.IsGenericMethod)
             {
-                ArgumentNullException.ThrowIfNull(method);
-
-                if (!method.IsGenericMethod)
-                {
-                    operatorType = default;
-                    return false;
-                }
-
-                return operatorMap.TryGetValue(method.GetGenericMethodDefinition(), out operatorType);
+                operatorType = default;
+                return false;
             }
+
+            return operatorMap.TryGetValue(method.GetGenericMethodDefinition(), out operatorType);
+        }
+    }
+
+    private sealed class QueryableQueryExpressionFactory : DefaultQueryExpressionFactory, IQueryExpressionFactory
+    {
+        public static new QueryableQueryExpressionFactory Instance { get; } = new QueryableQueryExpressionFactory();
+
+        protected override SelectOperator MakeSelect(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
+        {
+            return new QueryableSelectOperator(elementType, inputElementType, source, selector);
         }
 
-        private sealed class QueryableQueryExpressionFactory : DefaultQueryExpressionFactory, IQueryExpressionFactory
+        protected override WhereOperator MakeWhere(Type elementType, MonadMember source, QueryTree predicate)
         {
-            public static new QueryableQueryExpressionFactory Instance { get; } = new QueryableQueryExpressionFactory();
-
-            protected override SelectOperator MakeSelect(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
-            {
-                return new QueryableSelectOperator(elementType, inputElementType, source, selector);
-            }
-
-            protected override WhereOperator MakeWhere(Type elementType, MonadMember source, QueryTree predicate)
-            {
-                return new QueryableWhereOperator(elementType, source, predicate);
-            }
-
-            protected override FirstOperator MakeFirst(Type elementType, MonadMember source)
-            {
-                return new QueryableFirstOperator(elementType, source);
-            }
-
-            protected override FirstPredicateOperator MakeFirstPredicate(Type elementType, MonadMember source, QueryTree predicate)
-            {
-                return new QueryableFirstPredicateOperator(elementType, source, predicate);
-            }
-
-            protected override TakeOperator MakeTake(Type elementType, MonadMember source, QueryTree count)
-            {
-                return new QueryableTakeOperator(elementType, source, count);
-            }
+            return new QueryableWhereOperator(elementType, source, predicate);
         }
 
-        private sealed class QueryableFirstOperator : FirstOperator
+        protected override FirstOperator MakeFirst(Type elementType, MonadMember source)
         {
-            internal QueryableFirstOperator(Type elementType, MonadMember source)
-                : base(elementType, source)
-            {
-            }
-
-            public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
-
-            public override Expression Reduce()
-            {
-                return Expression.Call(s_first.MakeGenericMethod(ElementType), Source.Reduce());
-            }
+            return new QueryableFirstOperator(elementType, source);
         }
 
-        private sealed class QueryableFirstPredicateOperator : FirstPredicateOperator
+        protected override FirstPredicateOperator MakeFirstPredicate(Type elementType, MonadMember source, QueryTree predicate)
         {
-            internal QueryableFirstPredicateOperator(Type elementType, MonadMember source, QueryTree predicate)
-                : base(elementType, source, predicate)
-            {
-            }
-
-            public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
-
-            public override Expression Reduce()
-            {
-                return Expression.Call(s_firstPredicate.MakeGenericMethod(ElementType), Source.Reduce(), Predicate.Reduce());
-            }
+            return new QueryableFirstPredicateOperator(elementType, source, predicate);
         }
 
-        private sealed class QueryableSelectOperator : SelectOperator
+        protected override TakeOperator MakeTake(Type elementType, MonadMember source, QueryTree count)
         {
-            // TODO make this take a MethodInfo instead?
-            public QueryableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
-                : base(elementType, inputElementType, source, selector)
-            {
-            }
+            return new QueryableTakeOperator(elementType, source, count);
+        }
+    }
 
-            public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
-
-            public override Expression Reduce()
-            {
-                return Expression.Call(s_select.MakeGenericMethod(InputElementType, ElementType), Source.Reduce(), Selector.Reduce());
-            }
+    private sealed class QueryableFirstOperator : FirstOperator
+    {
+        internal QueryableFirstOperator(Type elementType, MonadMember source)
+            : base(elementType, source)
+        {
         }
 
-        private sealed class QueryableTakeOperator : TakeOperator
+        public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+
+        public override Expression Reduce()
         {
-            internal QueryableTakeOperator(Type elementType, MonadMember source, QueryTree count)
-                : base(elementType, source, count)
-            {
-            }
+            return Expression.Call(s_first.MakeGenericMethod(ElementType), Source.Reduce());
+        }
+    }
 
-            public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
-
-            public override Expression Reduce()
-            {
-                return Expression.Call(s_take.MakeGenericMethod(ElementType), Source.Reduce(), Count.Reduce());
-            }
+    private sealed class QueryableFirstPredicateOperator : FirstPredicateOperator
+    {
+        internal QueryableFirstPredicateOperator(Type elementType, MonadMember source, QueryTree predicate)
+            : base(elementType, source, predicate)
+        {
         }
 
-        private sealed class QueryableWhereOperator : WhereOperator
+        public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+
+        public override Expression Reduce()
         {
-            internal QueryableWhereOperator(Type elementType, MonadMember source, QueryTree predicate)
-                : base(elementType, source, predicate)
-            {
-            }
+            return Expression.Call(s_firstPredicate.MakeGenericMethod(ElementType), Source.Reduce(), Predicate.Reduce());
+        }
+    }
 
-            public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+    private sealed class QueryableSelectOperator : SelectOperator
+    {
+        // TODO make this take a MethodInfo instead?
+        public QueryableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
+            : base(elementType, inputElementType, source, selector)
+        {
+        }
 
-            public override Expression Reduce()
-            {
-                return Expression.Call(s_where.MakeGenericMethod(ElementType), Source.Reduce(), Predicate.Reduce());
-            }
+        public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+
+        public override Expression Reduce()
+        {
+            return Expression.Call(s_select.MakeGenericMethod(InputElementType, ElementType), Source.Reduce(), Selector.Reduce());
+        }
+    }
+
+    private sealed class QueryableTakeOperator : TakeOperator
+    {
+        internal QueryableTakeOperator(Type elementType, MonadMember source, QueryTree count)
+            : base(elementType, source, count)
+        {
+        }
+
+        public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+
+        public override Expression Reduce()
+        {
+            return Expression.Call(s_take.MakeGenericMethod(ElementType), Source.Reduce(), Count.Reduce());
+        }
+    }
+
+    private sealed class QueryableWhereOperator : WhereOperator
+    {
+        internal QueryableWhereOperator(Type elementType, MonadMember source, QueryTree predicate)
+            : base(elementType, source, predicate)
+        {
+        }
+
+        public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
+
+        public override Expression Reduce()
+        {
+            return Expression.Call(s_where.MakeGenericMethod(ElementType), Source.Reduce(), Predicate.Reduce());
         }
     }
 }

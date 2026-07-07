@@ -8,277 +8,270 @@
 // BD - January 2018
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive.Storage;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class TransactionalDictionaryTests
 {
-    [TestClass]
-    public class TransactionalDictionaryTests
+    [TestMethod]
+    public void Basics_Empty()
     {
-        [TestMethod]
-        public void Basics_Empty()
+        var d = new TransactionalDictionary<int, int>();
+
+        Assert.IsFalse(d.ContainsKey(0));
+        Assert.IsFalse(d.ContainsKey(1));
+        Assert.IsFalse(d.ContainsKey(2));
+
+        Assert.IsFalse(d.TryGetValue(0, out _));
+        Assert.IsFalse(d.TryGetValue(1, out _));
+        Assert.IsFalse(d.TryGetValue(2, out _));
+
+        Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[0]);
+        Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[1]);
+        Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[2]);
+
+        Assert.IsFalse(d.Any());
+
+        Assert.IsFalse(d.Remove(0));
+        Assert.IsFalse(d.Remove(1));
+        Assert.IsFalse(d.Remove(2));
+    }
+
+    [TestMethod]
+    public void Basics_Add()
+    {
+        var d = new TransactionalDictionary<int, int>
         {
-            var d = new TransactionalDictionary<int, int>();
+            { 42, 43 } // Add
+        };
 
-            Assert.IsFalse(d.ContainsKey(0));
-            Assert.IsFalse(d.ContainsKey(1));
-            Assert.IsFalse(d.ContainsKey(2));
+        Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
-            Assert.IsFalse(d.TryGetValue(0, out _));
-            Assert.IsFalse(d.TryGetValue(1, out _));
-            Assert.IsFalse(d.TryGetValue(2, out _));
+        Assert.IsTrue(d.ContainsKey(42));
 
-            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[0]);
-            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[1]);
-            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[2]);
+        Assert.IsTrue(d.TryGetValue(42, out var x));
+        Assert.AreEqual(43, x);
 
-            Assert.IsFalse(d.Any());
+        Assert.AreEqual(43, d[42]);
 
-            Assert.IsFalse(d.Remove(0));
-            Assert.IsFalse(d.Remove(1));
-            Assert.IsFalse(d.Remove(2));
-        }
+        Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
+    }
 
-        [TestMethod]
-        public void Basics_Add()
+    [TestMethod]
+    public void Basics_Remove()
+    {
+        var d = new TransactionalDictionary<int, int>
         {
-            var d = new TransactionalDictionary<int, int>
-            {
-                { 42, 43 } // Add
-            };
+            { 42, 43 } // Add
+        };
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
+        Assert.IsTrue(d.Remove(42));
 
-            Assert.IsTrue(d.ContainsKey(42));
+        Assert.IsFalse(d.ContainsKey(42));
 
-            Assert.IsTrue(d.TryGetValue(42, out var x));
-            Assert.AreEqual(43, x);
+        Assert.IsFalse(d.TryGetValue(42, out var _));
 
-            Assert.AreEqual(43, d[42]);
+        Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[42]);
 
-            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
-        }
+        Assert.IsFalse(d.Any());
+    }
 
-        [TestMethod]
-        public void Basics_Remove()
+    [TestMethod]
+    public void Basics_Assign()
+    {
+        var d = new TransactionalDictionary<int, int>
         {
-            var d = new TransactionalDictionary<int, int>
-            {
-                { 42, 43 } // Add
-            };
+            [42] = 43 // indexer assignment
+        };
 
-            Assert.IsTrue(d.Remove(42));
+        Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
-            Assert.IsFalse(d.ContainsKey(42));
+        Assert.IsTrue(d.ContainsKey(42));
 
-            Assert.IsFalse(d.TryGetValue(42, out var _));
+        Assert.IsTrue(d.TryGetValue(42, out var x));
+        Assert.AreEqual(43, x);
 
-            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[42]);
+        Assert.AreEqual(43, d[42]);
 
-            Assert.IsFalse(d.Any());
-        }
+        Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
+    }
 
-        [TestMethod]
-        public void Basics_Assign()
+    [TestMethod]
+    public void Basics_Edit()
+    {
+        var d = new TransactionalDictionary<int, int>
         {
-            var d = new TransactionalDictionary<int, int>
-            {
-                [42] = 43 // indexer assignment
-            };
+            { 42, 41 } // Add
+        };
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
+        d[42] = 43;
 
-            Assert.IsTrue(d.ContainsKey(42));
+        Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
-            Assert.IsTrue(d.TryGetValue(42, out var x));
-            Assert.AreEqual(43, x);
+        Assert.IsTrue(d.ContainsKey(42));
 
-            Assert.AreEqual(43, d[42]);
+        Assert.IsTrue(d.TryGetValue(42, out var x));
+        Assert.AreEqual(43, x);
 
-            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
-        }
+        Assert.AreEqual(43, d[42]);
 
-        [TestMethod]
-        public void Basics_Edit()
+        Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
+    }
+
+    [TestMethod]
+    public void Snapshot_Full()
+    {
+        var d = new TransactionalDictionary<int, char>
         {
-            var d = new TransactionalDictionary<int, int>
-            {
-                { 42, 41 } // Add
-            };
+            { 0, '0' },
+            { 1, 'a' },
+            { 2, 'b' },
+            { 4, '4' },
+            { 6, 'c' },
+        };
 
-            d[42] = 43;
+        d[1] = '1';
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
+        d.Remove(2);
+        d[2] = '2';
 
-            Assert.IsTrue(d.ContainsKey(42));
+        d.Add(5, '5');
 
-            Assert.IsTrue(d.TryGetValue(42, out var x));
-            Assert.AreEqual(43, x);
+        d.Remove(6);
+        d.Add(6, 'd');
 
-            Assert.AreEqual(43, d[42]);
+        d.Remove(6);
+        d[6] = '6';
 
-            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
-        }
+        d.Add(3, '3');
 
-        [TestMethod]
-        public void Snapshot_Full()
+        var s = d.CreateSnapshot(differential: false);
+
+        var res = new Dictionary<int, char>();
+
+        var v = new DictionarySnapshotVisitor<int, char>(res);
+        s.Accept(v);
+
+        var e = new Dictionary<int, char>
         {
-            var d = new TransactionalDictionary<int, char>
-            {
-                { 0, '0' },
-                { 1, 'a' },
-                { 2, 'b' },
-                { 4, '4' },
-                { 6, 'c' },
-            };
+            { 0, '0' },
+            { 1, '1' },
+            { 2, '2' },
+            { 3, '3' },
+            { 4, '4' },
+            { 5, '5' },
+            { 6, '6' },
+        };
 
-            d[1] = '1';
+        AssertEqual(e, d);
+        AssertEqual(res, d);
+    }
 
-            d.Remove(2);
-            d[2] = '2';
+    [TestMethod]
+    public void Snapshot_Delta()
+    {
+        var res = new Dictionary<int, char>();
+        var v = new DictionarySnapshotVisitor<int, char>(res);
 
-            d.Add(5, '5');
+        var d = new TransactionalDictionary<int, char>
+        {
+            { 0, '0' },
+            { 1, '1' },
+            { 2, '2' },
+            { 3, '3' },
+            { 4, '4' },
+            { 6, '6' },
+        };
 
-            d.Remove(6);
-            d.Add(6, 'd');
+        CheckpointAndAssert(delta: false);
 
-            d.Remove(6);
-            d[6] = '6';
+        d.Add(5, '5');
 
-            d.Add(3, '3');
+        CheckpointAndAssert(delta: true);
 
-            var s = d.CreateSnapshot(differential: false);
+        d.Remove(2);
 
-            var res = new Dictionary<int, char>();
+        CheckpointAndAssert(delta: true);
 
-            var v = new DictionarySnapshotVisitor<int, char>(res);
-            s.Accept(v);
+        d[0] = '-';
 
-            var e = new Dictionary<int, char>
-            {
-                { 0, '0' },
-                { 1, '1' },
-                { 2, '2' },
-                { 3, '3' },
-                { 4, '4' },
-                { 5, '5' },
-                { 6, '6' },
-            };
+        CheckpointAndAssert(delta: true);
 
-            AssertEqual(e, d);
+        d.Remove(5);
+        d.Add(5, 'x');
+
+        CheckpointAndAssert(delta: true);
+
+        d.Remove(4);
+        d.Add(4, 'x');
+        d.Remove(4);
+
+        CheckpointAndAssert(delta: true);
+
+        d.Remove(3);
+        d.Add(3, 'x');
+        d.Remove(3);
+        d.Add(3, 'y');
+
+        CheckpointAndAssert(delta: true);
+
+        d.Add(7, 'a');
+        d.Remove(7);
+
+        CheckpointAndAssert(delta: true);
+
+        d.Add(8, 'b');
+        d.Remove(8);
+        d.Add(8, 'c');
+
+        CheckpointAndAssert(delta: true);
+
+        d.Add(9, 'd');
+        d.Remove(9);
+        d.Add(9, 'e');
+        d.Remove(9);
+
+        CheckpointAndAssert(delta: true);
+
+        var e = new Dictionary<int, char>
+        {
+            { 0, '-' },
+            { 1, '1' },
+            { 3, 'y' },
+            { 5, 'x' },
+            { 6, '6' },
+            { 8, 'c' },
+        };
+
+        AssertEqual(e, d);
+
+        void CheckpointAndAssert(bool delta)
+        {
+            var s1 = d.CreateSnapshot(delta);
+            s1.Accept(v);
+            s1.OnCommitted();
+
             AssertEqual(res, d);
         }
+    }
 
-        [TestMethod]
-        public void Snapshot_Delta()
+    private static void AssertEqual<K, V>(Dictionary<K, V> expected, TransactionalDictionary<K, V> actual)
+    {
+        Assert.IsTrue(expected.OrderBy(kv => kv.Key).SequenceEqual(actual.OrderBy(kv => kv.Key)));
+
+        foreach (var kv in expected)
         {
-            var res = new Dictionary<int, char>();
-            var v = new DictionarySnapshotVisitor<int, char>(res);
+            var key = kv.Key;
+            var value = kv.Value;
 
-            var d = new TransactionalDictionary<int, char>
-            {
-                { 0, '0' },
-                { 1, '1' },
-                { 2, '2' },
-                { 3, '3' },
-                { 4, '4' },
-                { 6, '6' },
-            };
+            Assert.IsTrue(actual.ContainsKey(key));
 
-            CheckpointAndAssert(delta: false);
+            Assert.IsTrue(actual.TryGetValue(key, out var v));
+            Assert.AreEqual(value, v);
 
-            d.Add(5, '5');
-
-            CheckpointAndAssert(delta: true);
-
-            d.Remove(2);
-
-            CheckpointAndAssert(delta: true);
-
-            d[0] = '-';
-
-            CheckpointAndAssert(delta: true);
-
-            d.Remove(5);
-            d.Add(5, 'x');
-
-            CheckpointAndAssert(delta: true);
-
-            d.Remove(4);
-            d.Add(4, 'x');
-            d.Remove(4);
-
-            CheckpointAndAssert(delta: true);
-
-            d.Remove(3);
-            d.Add(3, 'x');
-            d.Remove(3);
-            d.Add(3, 'y');
-
-            CheckpointAndAssert(delta: true);
-
-            d.Add(7, 'a');
-            d.Remove(7);
-
-            CheckpointAndAssert(delta: true);
-
-            d.Add(8, 'b');
-            d.Remove(8);
-            d.Add(8, 'c');
-
-            CheckpointAndAssert(delta: true);
-
-            d.Add(9, 'd');
-            d.Remove(9);
-            d.Add(9, 'e');
-            d.Remove(9);
-
-            CheckpointAndAssert(delta: true);
-
-            var e = new Dictionary<int, char>
-            {
-                { 0, '-' },
-                { 1, '1' },
-                { 3, 'y' },
-                { 5, 'x' },
-                { 6, '6' },
-                { 8, 'c' },
-            };
-
-            AssertEqual(e, d);
-
-            void CheckpointAndAssert(bool delta)
-            {
-                var s1 = d.CreateSnapshot(delta);
-                s1.Accept(v);
-                s1.OnCommitted();
-
-                AssertEqual(res, d);
-            }
-        }
-
-        private static void AssertEqual<K, V>(Dictionary<K, V> expected, TransactionalDictionary<K, V> actual)
-        {
-            Assert.IsTrue(expected.OrderBy(kv => kv.Key).SequenceEqual(actual.OrderBy(kv => kv.Key)));
-
-            foreach (var kv in expected)
-            {
-                var key = kv.Key;
-                var value = kv.Value;
-
-                Assert.IsTrue(actual.ContainsKey(key));
-
-                Assert.IsTrue(actual.TryGetValue(key, out var v));
-                Assert.AreEqual(value, v);
-
-                Assert.AreEqual(value, actual[key]);
-            }
+            Assert.AreEqual(value, actual[key]);
         }
     }
 }

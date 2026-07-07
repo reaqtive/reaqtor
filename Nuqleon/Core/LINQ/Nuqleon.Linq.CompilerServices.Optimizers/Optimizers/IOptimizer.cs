@@ -8,18 +8,17 @@
 // PS - February 2015 - Created this file.
 //
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// Interface for an optimizer for query expression trees.
+/// </summary>
+public interface IOptimizer
 {
     /// <summary>
-    /// Interface for an optimizer for query expression trees.
+    /// Optimizes the given query expression.
     /// </summary>
-    public interface IOptimizer
-    {
-        /// <summary>
-        /// Optimizes the given query expression.
-        /// </summary>
-        /// <param name="queryTree">The query expression to optimize.</param>
-        /// <returns>The optimized query tree.</returns>
-        QueryTree Optimize(QueryTree queryTree);
-    }
+    /// <param name="queryTree">The query expression to optimize.</param>
+    /// <returns>The optimized query tree.</returns>
+    QueryTree Optimize(QueryTree queryTree);
 }

@@ -5,28 +5,27 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public interface IReliableQueryProvider
 {
-    public interface IReliableQueryProvider
-    {
-        IReliableQbservable<T> CreateQbservable<T>(Expression expression);
+    IReliableQbservable<T> CreateQbservable<T>(Expression expression);
 
-        Func<TArgs, IReliableQbservable<TResult>> CreateQbservable<TArgs, TResult>(Expression<Func<TArgs, IReliableQbservable<TResult>>> expression);
+    Func<TArgs, IReliableQbservable<TResult>> CreateQbservable<TArgs, TResult>(Expression<Func<TArgs, IReliableQbservable<TResult>>> expression);
 
-        IReliableQbserver<T> CreateQbserver<T>(Expression expression);
+    IReliableQbserver<T> CreateQbserver<T>(Expression expression);
 
-        Func<TArgs, IReliableQbserver<TResult>> CreateQbserver<TArgs, TResult>(Expression<Func<TArgs, IReliableQbserver<TResult>>> expression);
+    Func<TArgs, IReliableQbserver<TResult>> CreateQbserver<TArgs, TResult>(Expression<Func<TArgs, IReliableQbserver<TResult>>> expression);
 
-        IReliableQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(Expression expression);
+    IReliableQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(Expression expression);
 
-        IReliableQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(Expression expression);
+    IReliableQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(Expression expression);
 
-        IReliableMultiQubject<TInput, TOutput> CreateQubject<TInput, TOutput>(Expression expression);
+    IReliableMultiQubject<TInput, TOutput> CreateQubject<TInput, TOutput>(Expression expression);
 
-        IReliableQubscriptionFactory CreateQubscriptionFactory(Expression expression);
+    IReliableQubscriptionFactory CreateQubscriptionFactory(Expression expression);
 
-        IReliableQubscriptionFactory<TArgs> CreateQubscriptionFactory<TArgs>(Expression expression);
+    IReliableQubscriptionFactory<TArgs> CreateQubscriptionFactory<TArgs>(Expression expression);
 
-        IReliableQubscription CreateQubscription(Expression expression);
-    }
+    IReliableQubscription CreateQubscription(Expression expression);
 }

@@ -8,161 +8,160 @@ using Reaqtor.Reliable.Client;
 using Reaqtor.Reliable.Engine;
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableQueryProvider : ReliableQueryProviderBase
 {
-    public class ReliableQueryProvider : ReliableQueryProviderBase
+    private readonly IReliableReactiveClientEngineProvider _provider;
+
+    public ReliableQueryProvider(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
+        : base(expressionServices)
     {
-        private readonly IReliableReactiveClientEngineProvider _provider;
-
-        public ReliableQueryProvider(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
-            : base(expressionServices)
-        {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
-
-        #region Observer
-
-        protected override IReliableReactiveObserver<T> GetObserverCore<T>(IReliableQbserver<T> observer)
-        {
-            ArgumentNullException.ThrowIfNull(observer);
-
-            var observerUri = GetObserverUri(observer);
-            return _provider.GetObserver<T>(observerUri);
-        }
-
-        #endregion
-
-        #region Subscription
-
-        protected override void CreateSubscriptionCore(IReliableQubscription subscription, object state)
-        {
-            ArgumentNullException.ThrowIfNull(subscription);
-
-            if (!TryGetUriFromKnownResource(subscription, out var uri))
-            {
-                throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
-            }
-
-            _provider.CreateSubscription(uri, subscription.Expression, state);
-        }
-
-        protected override void DeleteSubscriptionCore(IReliableQubscription subscription)
-        {
-            ArgumentNullException.ThrowIfNull(subscription);
-
-            if (!TryGetUriFromKnownResource(subscription, out var uri))
-            {
-                throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
-            }
-
-            _provider.DeleteSubscription(uri);
-        }
-
-        protected override void StartSubscriptionCore(IReliableQubscription subscription, long sequenceId)
-        {
-            ArgumentNullException.ThrowIfNull(subscription);
-
-            if (!TryGetUriFromKnownResource(subscription, out var uri))
-            {
-                throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
-            }
-
-            _provider.StartSubscription(uri, sequenceId);
-        }
-
-        protected override void AcknowledgeRangeCore(IReliableQubscription subscription, long sequenceId)
-        {
-            ArgumentNullException.ThrowIfNull(subscription);
-
-            if (!TryGetUriFromKnownResource(subscription, out var uri))
-            {
-                throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
-            }
-
-            _provider.AcknowledgeRange(uri, sequenceId);
-        }
-
-        protected override Uri GetSubscriptionResubscribeUriCore(IReliableQubscription subscription)
-        {
-            ArgumentNullException.ThrowIfNull(subscription);
-
-            if (!TryGetUriFromKnownResource(subscription, out var uri))
-            {
-                throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
-            }
-
-            return _provider.GetSubscriptionResubscribeUri(uri);
-        }
-
-        #endregion
-
-        #region Stream
-
-        protected override void CreateStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream, object state)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-
-            if (!TryGetUriFromKnownResource(stream, out var uri))
-            {
-                throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
-            }
-
-            _provider.CreateStream(uri, stream.Expression, state);
-        }
-
-        protected override void DeleteStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-
-            if (!TryGetUriFromKnownResource(stream, out var uri))
-            {
-                throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
-            }
-
-            _provider.DeleteStream(uri);
-        }
-
-        protected override IReliableQbserver<TInput> CreateObserverCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
-        {
-            ArgumentNullException.ThrowIfNull(stream);
-
-            if (!TryGetUriFromKnownResource(stream, out var uri))
-            {
-                throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
-            }
-
-            _provider.CreateObserver(uri);
-
-            // TODO: Return a proxy object.
-            return null;
-        }
-
-        #endregion
-
-        #region Private implementation
-
-        private static Uri GetObserverUri<T>(IReliableQbserver<T> observer)
-        {
-            if (!TryGetUriFromKnownResource(observer, out var uri))
-            {
-                throw new InvalidOperationException("Cannot notify an observer without a known URI-based identity. Did you get the observer through GetObserver? Did you use DefineObserver to define the observer prior to usage?");
-            }
-
-            return uri;
-        }
-
-        private static bool TryGetUriFromKnownResource(object obj, out Uri uri)
-        {
-            if (obj is IKnownResource known)
-            {
-                uri = known.Uri;
-                return true;
-            }
-
-            uri = null;
-            return false;
-        }
-
-        #endregion
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
+
+    #region Observer
+
+    protected override IReliableReactiveObserver<T> GetObserverCore<T>(IReliableQbserver<T> observer)
+    {
+        ArgumentNullException.ThrowIfNull(observer);
+
+        var observerUri = GetObserverUri(observer);
+        return _provider.GetObserver<T>(observerUri);
+    }
+
+    #endregion
+
+    #region Subscription
+
+    protected override void CreateSubscriptionCore(IReliableQubscription subscription, object state)
+    {
+        ArgumentNullException.ThrowIfNull(subscription);
+
+        if (!TryGetUriFromKnownResource(subscription, out var uri))
+        {
+            throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
+        }
+
+        _provider.CreateSubscription(uri, subscription.Expression, state);
+    }
+
+    protected override void DeleteSubscriptionCore(IReliableQubscription subscription)
+    {
+        ArgumentNullException.ThrowIfNull(subscription);
+
+        if (!TryGetUriFromKnownResource(subscription, out var uri))
+        {
+            throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
+        }
+
+        _provider.DeleteSubscription(uri);
+    }
+
+    protected override void StartSubscriptionCore(IReliableQubscription subscription, long sequenceId)
+    {
+        ArgumentNullException.ThrowIfNull(subscription);
+
+        if (!TryGetUriFromKnownResource(subscription, out var uri))
+        {
+            throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
+        }
+
+        _provider.StartSubscription(uri, sequenceId);
+    }
+
+    protected override void AcknowledgeRangeCore(IReliableQubscription subscription, long sequenceId)
+    {
+        ArgumentNullException.ThrowIfNull(subscription);
+
+        if (!TryGetUriFromKnownResource(subscription, out var uri))
+        {
+            throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
+        }
+
+        _provider.AcknowledgeRange(uri, sequenceId);
+    }
+
+    protected override Uri GetSubscriptionResubscribeUriCore(IReliableQubscription subscription)
+    {
+        ArgumentNullException.ThrowIfNull(subscription);
+
+        if (!TryGetUriFromKnownResource(subscription, out var uri))
+        {
+            throw new InvalidOperationException("Unknown subscription object. Could not find a URI identity for the specified subscription object. Did you obtain the subscription object from Subscribe or GetSubscription?");
+        }
+
+        return _provider.GetSubscriptionResubscribeUri(uri);
+    }
+
+    #endregion
+
+    #region Stream
+
+    protected override void CreateStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream, object state)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        if (!TryGetUriFromKnownResource(stream, out var uri))
+        {
+            throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
+        }
+
+        _provider.CreateStream(uri, stream.Expression, state);
+    }
+
+    protected override void DeleteStreamCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        if (!TryGetUriFromKnownResource(stream, out var uri))
+        {
+            throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
+        }
+
+        _provider.DeleteStream(uri);
+    }
+
+    protected override IReliableQbserver<TInput> CreateObserverCore<TInput, TOutput>(IReliableMultiQubject<TInput, TOutput> stream)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+
+        if (!TryGetUriFromKnownResource(stream, out var uri))
+        {
+            throw new InvalidOperationException("Unknown stream object. Could not find a URI identity for the specified stream object. Did you obtain the stream object from Create or GetStream?");
+        }
+
+        _provider.CreateObserver(uri);
+
+        // TODO: Return a proxy object.
+        return null;
+    }
+
+    #endregion
+
+    #region Private implementation
+
+    private static Uri GetObserverUri<T>(IReliableQbserver<T> observer)
+    {
+        if (!TryGetUriFromKnownResource(observer, out var uri))
+        {
+            throw new InvalidOperationException("Cannot notify an observer without a known URI-based identity. Did you get the observer through GetObserver? Did you use DefineObserver to define the observer prior to usage?");
+        }
+
+        return uri;
+    }
+
+    private static bool TryGetUriFromKnownResource(object obj, out Uri uri)
+    {
+        if (obj is IKnownResource known)
+        {
+            uri = known.Uri;
+            return true;
+        }
+
+        uri = null;
+        return false;
+    }
+
+    #endregion
 }

@@ -14,226 +14,117 @@ using System.Threading.Tasks;
 
 using Reaqtor.QueryEngine;
 
-namespace Reaqtor.IoT
+namespace Reaqtor.IoT;
+
+//
+// Provides an in-memory mock implementation of a key/value store used by the engine for persistence.
+//
+// There are two parts to persistence in the engine:
+//
+// - Transaction log records due to Create/Delete operations. This is a write-ahead log.
+// - Checkpoint state, including query operator state. See CheckpointAsync on the engine.
+//
+// For historical reasons, these use a different interface:
+//
+// - The transaction log is passed as an IKeyValueStore to the constructor of the engine.
+// - The checkpoint store is passed as an IState[Reader|Writer] to [Recover|Checkpoint]Async.
+//
+// Here, we implement both using IKeyValueStore and provide GetReader and GetWriter methods to adapt
+// to the required interfaces for checkpointing. This is the recommended way going forward.
+//
+
+public sealed class InMemoryKeyValueStore : IKeyValueStore
 {
-    //
-    // Provides an in-memory mock implementation of a key/value store used by the engine for persistence.
-    //
-    // There are two parts to persistence in the engine:
-    //
-    // - Transaction log records due to Create/Delete operations. This is a write-ahead log.
-    // - Checkpoint state, including query operator state. See CheckpointAsync on the engine.
-    //
-    // For historical reasons, these use a different interface:
-    //
-    // - The transaction log is passed as an IKeyValueStore to the constructor of the engine.
-    // - The checkpoint store is passed as an IState[Reader|Writer] to [Recover|Checkpoint]Async.
-    //
-    // Here, we implement both using IKeyValueStore and provide GetReader and GetWriter methods to adapt
-    // to the required interfaces for checkpointing. This is the recommended way going forward.
-    //
+    private readonly Dictionary<string, Dictionary<string, byte[]>> _data = [];
 
-    public sealed class InMemoryKeyValueStore : IKeyValueStore
+    public IKeyValueStoreTransaction CreateTransaction() => new Transaction(this);
+
+    public IKeyValueTable<string, byte[]> GetTable(string name) => new Table(name);
+
+    public IStateReader GetReader() => new Reader(this);
+
+    public IStateWriter GetWriter() => new Writer(this);
+
+    public string DebugView
     {
-        private readonly Dictionary<string, Dictionary<string, byte[]>> _data = [];
-
-        public IKeyValueStoreTransaction CreateTransaction() => new Transaction(this);
-
-        public IKeyValueTable<string, byte[]> GetTable(string name) => new Table(name);
-
-        public IStateReader GetReader() => new Reader(this);
-
-        public IStateWriter GetWriter() => new Writer(this);
-
-        public string DebugView
+        get
         {
-            get
+            var sb = new StringBuilder();
+
+            lock (_data)
             {
-                var sb = new StringBuilder();
+                var totalSize = 0;
 
-                lock (_data)
+                foreach (var table in _data)
                 {
-                    var totalSize = 0;
+                    var tableSize = table.Key.Length * 2;
 
-                    foreach (var table in _data)
+                    sb.AppendLine($"Table '{table.Key}':");
+                    sb.AppendLine();
+
+                    foreach (var row in table.Value)
                     {
-                        var tableSize = table.Key.Length * 2;
+                        var rowSize = row.Value.Length + row.Key.Length * 2;
 
-                        sb.AppendLine($"Table '{table.Key}':");
+                        sb.AppendLine($"  Key '{row.Key}':");
+                        sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
+                        sb.AppendLine($"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
+                        sb.AppendLine($"    Size  = {rowSize}");
                         sb.AppendLine();
 
-                        foreach (var row in table.Value)
-                        {
-                            var rowSize = row.Value.Length + row.Key.Length * 2;
-
-                            sb.AppendLine($"  Key '{row.Key}':");
-                            sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
-                            sb.AppendLine($"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
-                            sb.AppendLine($"    Size  = {rowSize}");
-                            sb.AppendLine();
-
-                            tableSize += rowSize;
-                        }
-
-                        sb.AppendLine();
-                        sb.AppendLine($"  Size  = {tableSize}");
-                        sb.AppendLine();
-
-                        totalSize += tableSize;
+                        tableSize += rowSize;
                     }
 
-                    sb.AppendLine($"Total size = {totalSize}");
+                    sb.AppendLine();
+                    sb.AppendLine($"  Size  = {tableSize}");
+                    sb.AppendLine();
+
+                    totalSize += tableSize;
                 }
 
-                return sb.ToString();
+                sb.AppendLine($"Total size = {totalSize}");
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    public long TotalSize
+    {
+        get
+        {
+            lock (_data)
+            {
+                var totalSize = 0;
+
+                foreach (var table in _data)
+                {
+                    var tableSize = table.Key.Length * 2;
+
+                    foreach (var row in table.Value)
+                    {
+                        var rowSize = row.Value.Length + row.Key.Length * 2;
+                        tableSize += rowSize;
+                    }
+
+                    totalSize += tableSize;
+                }
+
+                return totalSize;
             }
         }
+    }
 
-        public long TotalSize
+    private sealed class Transaction : IKeyValueStoreTransaction
+    {
+        private readonly InMemoryKeyValueStore _parent;
+        private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
+
+        public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
+
+        public byte[] this[string tableName, string key]
         {
             get
-            {
-                lock (_data)
-                {
-                    var totalSize = 0;
-
-                    foreach (var table in _data)
-                    {
-                        var tableSize = table.Key.Length * 2;
-
-                        foreach (var row in table.Value)
-                        {
-                            var rowSize = row.Value.Length + row.Key.Length * 2;
-                            tableSize += rowSize;
-                        }
-
-                        totalSize += tableSize;
-                    }
-
-                    return totalSize;
-                }
-            }
-        }
-
-        private sealed class Transaction : IKeyValueStoreTransaction
-        {
-            private readonly InMemoryKeyValueStore _parent;
-            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
-
-            public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
-
-            public byte[] this[string tableName, string key]
-            {
-                get
-                {
-                    ArgumentNullException.ThrowIfNull(tableName);
-                    ArgumentNullException.ThrowIfNull(key);
-
-                    lock (_edits)
-                    {
-                        if (_edits.TryGetValue(tableName, out var table))
-                        {
-                            if (table.TryGetValue(key, out var value))
-                            {
-                                if (value == null)
-                                {
-                                    throw new KeyNotFoundException(tableName, key);
-                                }
-
-                                return value;
-                            }
-                        }
-                    }
-
-                    lock (_parent._data)
-                    {
-                        if (!_parent._data.TryGetValue(tableName, out var table))
-                        {
-                            throw new TableNotFoundException(tableName);
-                        }
-
-                        if (!table.TryGetValue(key, out var value))
-                        {
-                            throw new KeyNotFoundException(tableName, key);
-                        }
-
-                        return value;
-                    }
-                }
-            }
-
-            public void Add(string tableName, string key, byte[] value)
-            {
-                ArgumentNullException.ThrowIfNull(tableName);
-                ArgumentNullException.ThrowIfNull(key);
-                ArgumentNullException.ThrowIfNull(value);
-
-                lock (_edits)
-                {
-                    if (_edits.TryGetValue(tableName, out var table))
-                    {
-                        if (table.TryGetValue(key, out var existingValue))
-                        {
-                            if (existingValue != null)
-                            {
-                                throw new InvalidOperationException("Entry already exits.");
-                            }
-                        }
-
-                        table[key] = value;
-                    }
-                    else
-                    {
-                        lock (_parent._data)
-                        {
-                            if (_parent._data.TryGetValue(tableName, out var existingTable))
-                            {
-                                if (existingTable.ContainsKey(key))
-                                {
-                                    throw new InvalidOperationException("Entry already exits.");
-                                }
-                            }
-                        }
-
-                        _edits[tableName] = table = [];
-
-                        table[key] = value;
-                    }
-                }
-            }
-
-            public Task CommitAsync(CancellationToken token)
-            {
-                lock (_edits)
-                {
-                    lock (_parent._data)
-                    {
-                        foreach (var table in _edits)
-                        {
-                            if (!_parent._data.TryGetValue(table.Key, out var existingTable))
-                            {
-                                _parent._data[table.Key] = existingTable = [];
-                            }
-
-                            foreach (var entry in table.Value)
-                            {
-                                if (entry.Value == null)
-                                {
-                                    existingTable.Remove(entry.Key);
-                                }
-                                else
-                                {
-                                    existingTable[entry.Key] = entry.Value;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return Task.CompletedTask;
-            }
-
-            public bool Contains(string tableName, string key)
             {
                 ArgumentNullException.ThrowIfNull(tableName);
                 ArgumentNullException.ThrowIfNull(key);
@@ -244,7 +135,12 @@ namespace Reaqtor.IoT
                     {
                         if (table.TryGetValue(key, out var value))
                         {
-                            return value != null;
+                            if (value == null)
+                            {
+                                throw new KeyNotFoundException(tableName, key);
+                            }
+
+                            return value;
                         }
                     }
                 }
@@ -253,280 +149,384 @@ namespace Reaqtor.IoT
                 {
                     if (!_parent._data.TryGetValue(tableName, out var table))
                     {
-                        return false;
+                        throw new TableNotFoundException(tableName);
                     }
 
-                    return table.ContainsKey(key);
+                    if (!table.TryGetValue(key, out var value))
+                    {
+                        throw new KeyNotFoundException(tableName, key);
+                    }
+
+                    return value;
                 }
             }
+        }
 
-            public void Dispose() { }
+        public void Add(string tableName, string key, byte[] value)
+        {
+            ArgumentNullException.ThrowIfNull(tableName);
+            ArgumentNullException.ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(value);
 
-            public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
+            lock (_edits)
             {
-                ArgumentNullException.ThrowIfNull(tableName);
-
-                return Core();
-
-                IEnumerator<KeyValuePair<string, byte[]>> Core()
+                if (_edits.TryGetValue(tableName, out var table))
                 {
-                    var res = new Dictionary<string, byte[]>();
-
-                    lock (_edits)
-                    {
-                        if (_edits.TryGetValue(tableName, out var edits))
-                        {
-                            foreach (var entry in edits)
-                            {
-                                res.Add(entry.Key, entry.Value);
-                            }
-                        }
-                    }
-
-                    lock (_parent._data)
-                    {
-                        if (_parent._data.TryGetValue(tableName, out var table))
-                        {
-                            foreach (var entry in table)
-                            {
-                                if (!res.ContainsKey(entry.Key))
-                                {
-                                    res.Add(entry.Key, entry.Value);
-                                }
-                            }
-                        }
-
-                        // NB: Non-existing table is assumed empty.
-                    }
-
-                    foreach (var entry in res)
-                    {
-                        if (entry.Value != null)
-                        {
-                            yield return entry;
-                        }
-                    }
-                }
-            }
-
-            public void Remove(string tableName, string key)
-            {
-                ArgumentNullException.ThrowIfNull(tableName);
-                ArgumentNullException.ThrowIfNull(key);
-
-                UpdateCore(tableName, key, null);
-            }
-
-            public void Rollback() { }
-
-            public void Update(string tableName, string key, byte[] value)
-            {
-                ArgumentNullException.ThrowIfNull(tableName);
-                ArgumentNullException.ThrowIfNull(key);
-                ArgumentNullException.ThrowIfNull(value);
-
-                UpdateCore(tableName, key, value);
-            }
-
-            private void UpdateCore(string tableName, string key, byte[] value)
-            {
-                lock (_edits)
-                {
-                    if (!_edits.TryGetValue(tableName, out var table))
-                    {
-                        _edits[tableName] = table = [];
-                    }
-
                     if (table.TryGetValue(key, out var existingValue))
                     {
-                        if (existingValue == null)
+                        if (existingValue != null)
                         {
-                            throw new KeyNotFoundException(tableName, key);
+                            throw new InvalidOperationException("Entry already exits.");
                         }
                     }
+
+                    table[key] = value;
+                }
+                else
+                {
+                    lock (_parent._data)
+                    {
+                        if (_parent._data.TryGetValue(tableName, out var existingTable))
+                        {
+                            if (existingTable.ContainsKey(key))
+                            {
+                                throw new InvalidOperationException("Entry already exits.");
+                            }
+                        }
+                    }
+
+                    _edits[tableName] = table = [];
 
                     table[key] = value;
                 }
             }
         }
 
-        private sealed class Table : IKeyValueTable<string, byte[]>
+        public Task CommitAsync(CancellationToken token)
         {
-            private readonly string _name;
-
-            public Table(string name) => _name = name;
-
-            public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction) => new Impl(transaction, _name);
-
-            private sealed class Impl : ITransactedKeyValueTable<string, byte[]>
+            lock (_edits)
             {
-                private readonly string _name;
-                private readonly IKeyValueStoreTransaction _transaction;
+                lock (_parent._data)
+                {
+                    foreach (var table in _edits)
+                    {
+                        if (!_parent._data.TryGetValue(table.Key, out var existingTable))
+                        {
+                            _parent._data[table.Key] = existingTable = [];
+                        }
 
-                public Impl(IKeyValueStoreTransaction transaction, string name) => (_transaction, _name) = (transaction, name);
+                        foreach (var entry in table.Value)
+                        {
+                            if (entry.Value == null)
+                            {
+                                existingTable.Remove(entry.Key);
+                            }
+                            else
+                            {
+                                existingTable[entry.Key] = entry.Value;
+                            }
+                        }
+                    }
+                }
+            }
 
-                public byte[] this[string key] => _transaction[_name, key];
+            return Task.CompletedTask;
+        }
 
-                public void Add(string key, byte[] value) => _transaction.Add(_name, key, value);
+        public bool Contains(string tableName, string key)
+        {
+            ArgumentNullException.ThrowIfNull(tableName);
+            ArgumentNullException.ThrowIfNull(key);
 
-                public bool Contains(string key) => _transaction.Contains(_name, key);
+            lock (_edits)
+            {
+                if (_edits.TryGetValue(tableName, out var table))
+                {
+                    if (table.TryGetValue(key, out var value))
+                    {
+                        return value != null;
+                    }
+                }
+            }
 
-                public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator() => _transaction.GetEnumerator(_name);
+            lock (_parent._data)
+            {
+                if (!_parent._data.TryGetValue(tableName, out var table))
+                {
+                    return false;
+                }
 
-                public void Remove(string key) => _transaction.Remove(_name, key);
-
-                public void Update(string key, byte[] value) => _transaction.Update(_name, key, value);
-
-                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+                return table.ContainsKey(key);
             }
         }
 
-        private sealed class Reader : IStateReader
+        public void Dispose() { }
+
+        public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
         {
-            private readonly InMemoryKeyValueStore _store;
+            ArgumentNullException.ThrowIfNull(tableName);
 
-            public Reader(InMemoryKeyValueStore store) => _store = store;
+            return Core();
 
-            public void Dispose() { }
-
-            public IEnumerable<string> GetCategories() => throw new NotImplementedException("Unused by engine.");
-
-            public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+            IEnumerator<KeyValuePair<string, byte[]>> Core()
             {
-                using var tx = _store.CreateTransaction();
+                var res = new Dictionary<string, byte[]>();
 
-                try
+                lock (_edits)
                 {
-                    var table = _store.GetTable(category).Enter(tx);
-
-                    var res = new List<string>();
-
-                    using (var e = table.GetEnumerator())
+                    if (_edits.TryGetValue(tableName, out var edits))
                     {
-                        while (e.MoveNext())
+                        foreach (var entry in edits)
                         {
-                            res.Add(e.Current.Key);
+                            res.Add(entry.Key, entry.Value);
+                        }
+                    }
+                }
+
+                lock (_parent._data)
+                {
+                    if (_parent._data.TryGetValue(tableName, out var table))
+                    {
+                        foreach (var entry in table)
+                        {
+                            if (!res.ContainsKey(entry.Key))
+                            {
+                                res.Add(entry.Key, entry.Value);
+                            }
                         }
                     }
 
-                    keys = res;
-                    return true;
+                    // NB: Non-existing table is assumed empty.
                 }
-                catch (TableNotFoundException)
-                {
-                    // NB: Normally, both IKeyValueStore and IStateReader/IStateWriter would talk to a common infrastructure rather than being layered like this.
-                    //     As such, it'd be easier to check for table existence at the layer below rather than translating an exception.
 
-                    keys = null;
-                    return false;
+                foreach (var entry in res)
+                {
+                    if (entry.Value != null)
+                    {
+                        yield return entry;
+                    }
                 }
             }
+        }
 
-            public bool TryGetItemReader(string category, string key, out Stream stream)
+        public void Remove(string tableName, string key)
+        {
+            ArgumentNullException.ThrowIfNull(tableName);
+            ArgumentNullException.ThrowIfNull(key);
+
+            UpdateCore(tableName, key, null);
+        }
+
+        public void Rollback() { }
+
+        public void Update(string tableName, string key, byte[] value)
+        {
+            ArgumentNullException.ThrowIfNull(tableName);
+            ArgumentNullException.ThrowIfNull(key);
+            ArgumentNullException.ThrowIfNull(value);
+
+            UpdateCore(tableName, key, value);
+        }
+
+        private void UpdateCore(string tableName, string key, byte[] value)
+        {
+            lock (_edits)
             {
-                using (var tx = _store.CreateTransaction())
+                if (!_edits.TryGetValue(tableName, out var table))
                 {
-                    var table = _store.GetTable(category).Enter(tx);
+                    _edits[tableName] = table = [];
+                }
 
-                    if (table.Contains(key))
+                if (table.TryGetValue(key, out var existingValue))
+                {
+                    if (existingValue == null)
                     {
-                        stream = new MemoryStream(table[key]);
-                        return true;
+                        throw new KeyNotFoundException(tableName, key);
                     }
                 }
 
-                stream = null;
+                table[key] = value;
+            }
+        }
+    }
+
+    private sealed class Table : IKeyValueTable<string, byte[]>
+    {
+        private readonly string _name;
+
+        public Table(string name) => _name = name;
+
+        public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction) => new Impl(transaction, _name);
+
+        private sealed class Impl : ITransactedKeyValueTable<string, byte[]>
+        {
+            private readonly string _name;
+            private readonly IKeyValueStoreTransaction _transaction;
+
+            public Impl(IKeyValueStoreTransaction transaction, string name) => (_transaction, _name) = (transaction, name);
+
+            public byte[] this[string key] => _transaction[_name, key];
+
+            public void Add(string key, byte[] value) => _transaction.Add(_name, key, value);
+
+            public bool Contains(string key) => _transaction.Contains(_name, key);
+
+            public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator() => _transaction.GetEnumerator(_name);
+
+            public void Remove(string key) => _transaction.Remove(_name, key);
+
+            public void Update(string key, byte[] value) => _transaction.Update(_name, key, value);
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+    }
+
+    private sealed class Reader : IStateReader
+    {
+        private readonly InMemoryKeyValueStore _store;
+
+        public Reader(InMemoryKeyValueStore store) => _store = store;
+
+        public void Dispose() { }
+
+        public IEnumerable<string> GetCategories() => throw new NotImplementedException("Unused by engine.");
+
+        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+        {
+            using var tx = _store.CreateTransaction();
+
+            try
+            {
+                var table = _store.GetTable(category).Enter(tx);
+
+                var res = new List<string>();
+
+                using (var e = table.GetEnumerator())
+                {
+                    while (e.MoveNext())
+                    {
+                        res.Add(e.Current.Key);
+                    }
+                }
+
+                keys = res;
+                return true;
+            }
+            catch (TableNotFoundException)
+            {
+                // NB: Normally, both IKeyValueStore and IStateReader/IStateWriter would talk to a common infrastructure rather than being layered like this.
+                //     As such, it'd be easier to check for table existence at the layer below rather than translating an exception.
+
+                keys = null;
                 return false;
             }
         }
 
-        private sealed class Writer : IStateWriter
+        public bool TryGetItemReader(string category, string key, out Stream stream)
         {
-            private readonly InMemoryKeyValueStore _store;
-            private readonly Dictionary<(string, string), MemoryStream> _edits = [];
-
-            public Writer(InMemoryKeyValueStore store) => _store = store;
-
-            public CheckpointKind CheckpointKind => CheckpointKind.Differential;
-
-            public async Task CommitAsync(CancellationToken token, IProgress<int> progress)
+            using (var tx = _store.CreateTransaction())
             {
-                using var tx = _store.CreateTransaction();
+                var table = _store.GetTable(category).Enter(tx);
 
-                var tables = new Dictionary<string, ITransactedKeyValueTable<string, byte[]>>();
-
-                foreach (var edit in _edits)
+                if (table.Contains(key))
                 {
-                    var (category, key) = edit.Key;
+                    stream = new MemoryStream(table[key]);
+                    return true;
+                }
+            }
 
-                    if (!tables.TryGetValue(category, out var table))
-                    {
-                        tables[category] = table = _store.GetTable(category).Enter(tx);
-                    }
+            stream = null;
+            return false;
+        }
+    }
 
-                    if (edit.Value == null)
+    private sealed class Writer : IStateWriter
+    {
+        private readonly InMemoryKeyValueStore _store;
+        private readonly Dictionary<(string, string), MemoryStream> _edits = [];
+
+        public Writer(InMemoryKeyValueStore store) => _store = store;
+
+        public CheckpointKind CheckpointKind => CheckpointKind.Differential;
+
+        public async Task CommitAsync(CancellationToken token, IProgress<int> progress)
+        {
+            using var tx = _store.CreateTransaction();
+
+            var tables = new Dictionary<string, ITransactedKeyValueTable<string, byte[]>>();
+
+            foreach (var edit in _edits)
+            {
+                var (category, key) = edit.Key;
+
+                if (!tables.TryGetValue(category, out var table))
+                {
+                    tables[category] = table = _store.GetTable(category).Enter(tx);
+                }
+
+                if (edit.Value == null)
+                {
+                    table.Remove(key);
+                }
+                else
+                {
+                    var value = edit.Value.ToArray();
+
+                    if (table.Contains(key))
                     {
-                        table.Remove(key);
+                        table.Update(key, value);
                     }
                     else
                     {
-                        var value = edit.Value.ToArray();
-
-                        if (table.Contains(key))
-                        {
-                            table.Update(key, value);
-                        }
-                        else
-                        {
-                            table.Add(key, value);
-                        }
+                        table.Add(key, value);
                     }
                 }
-
-                await tx.CommitAsync(token).ConfigureAwait(false);
             }
 
-            public void DeleteItem(string category, string key)
-            {
-                _edits[(category, key)] = null;
-            }
-
-            public void Dispose() { }
-
-            public Stream GetItemWriter(string category, string key)
-            {
-                var ms = new MemoryStream();
-                _edits[(category, key)] = ms;
-                return ms;
-            }
-
-            public void Rollback() { }
+            await tx.CommitAsync(token).ConfigureAwait(false);
         }
+
+        public void DeleteItem(string category, string key)
+        {
+            _edits[(category, key)] = null;
+        }
+
+        public void Dispose() { }
+
+        public Stream GetItemWriter(string category, string key)
+        {
+            var ms = new MemoryStream();
+            _edits[(category, key)] = ms;
+            return ms;
+        }
+
+        public void Rollback() { }
     }
+}
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
-    public sealed class TableNotFoundException : Exception
+public sealed class TableNotFoundException : Exception
+{
+    internal TableNotFoundException(string tableName)
     {
-        internal TableNotFoundException(string tableName)
-        {
-            TableName = tableName;
-        }
-
-        public string TableName { get; }
+        TableName = tableName;
     }
 
-    public sealed class KeyNotFoundException : Exception
-    {
-        internal KeyNotFoundException(string tableName, string key)
-        {
-            TableName = tableName;
-            Key = key;
-        }
+    public string TableName { get; }
+}
 
-        public string TableName { get; }
-        public string Key { get; }
+public sealed class KeyNotFoundException : Exception
+{
+    internal KeyNotFoundException(string tableName, string key)
+    {
+        TableName = tableName;
+        Key = key;
     }
+
+    public string TableName { get; }
+    public string Key { get; }
+}
 #pragma warning restore CA1032
 #pragma warning restore IDE0079
-}
+

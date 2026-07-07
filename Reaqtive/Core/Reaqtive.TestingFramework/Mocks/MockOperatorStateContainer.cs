@@ -4,110 +4,109 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+/// <summary>
+/// Mock object to represent state reader/writer.
+/// </summary>
+public sealed class MockOperatorStateContainer : IOperatorStateContainer
 {
+    private readonly List<object> _values;
+    private int _readPosition;
+
     /// <summary>
-    /// Mock object to represent state reader/writer.
+    /// Initializes a new instance of the <see cref="MockOperatorStateContainer"/> class.
     /// </summary>
-    public sealed class MockOperatorStateContainer : IOperatorStateContainer
+    public MockOperatorStateContainer()
     {
-        private readonly List<object> _values;
-        private int _readPosition;
+        _values = [];
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockOperatorStateContainer"/> class.
-        /// </summary>
-        public MockOperatorStateContainer()
+    /// <summary>
+    /// Creates a new reader of the current state.
+    /// </summary>
+    public IOperatorStateReaderFactory CreateReader() => new Reader(this);
+
+    /// <summary>
+    /// Creates a new writer. The state is reset.
+    /// </summary>
+    public IOperatorStateWriterFactory CreateWriter() => new Writer(this);
+
+    private sealed class Reader : IOperatorStateReaderFactory, IOperatorStateReader
+    {
+        private readonly MockOperatorStateContainer _parent;
+        private readonly int _initialPosition;
+
+        public Reader(MockOperatorStateContainer parent)
         {
-            _values = [];
+            _parent = parent;
+            _initialPosition = _parent._readPosition;
         }
 
-        /// <summary>
-        /// Creates a new reader of the current state.
-        /// </summary>
-        public IOperatorStateReaderFactory CreateReader() => new Reader(this);
-
-        /// <summary>
-        /// Creates a new writer. The state is reset.
-        /// </summary>
-        public IOperatorStateWriterFactory CreateWriter() => new Writer(this);
-
-        private sealed class Reader : IOperatorStateReaderFactory, IOperatorStateReader
+        public IOperatorStateReader Create(IStatefulOperator o)
         {
-            private readonly MockOperatorStateContainer _parent;
-            private readonly int _initialPosition;
-
-            public Reader(MockOperatorStateContainer parent)
-            {
-                _parent = parent;
-                _initialPosition = _parent._readPosition;
-            }
-
-            public IOperatorStateReader Create(IStatefulOperator o)
-            {
-                return this;
-            }
-
-            public T Read<T>()
-            {
-                return (T)_parent._values[_parent._readPosition++];
-            }
-
-            public bool TryRead<T>(out T value)
-            {
-                if (_parent._readPosition < _parent._values.Count)
-                {
-                    value = Read<T>();
-                    return true;
-                }
-
-                value = default;
-                return false;
-            }
-
-            public void Reset()
-            {
-                _parent._readPosition = _initialPosition;
-            }
-
-            public IOperatorStateReader CreateChild()
-            {
-                return new Reader(_parent);
-            }
-
-            public void Dispose()
-            {
-            }
+            return this;
         }
 
-        private sealed class Writer : IOperatorStateWriterFactory, IOperatorStateWriter
+        public T Read<T>()
         {
-            private readonly MockOperatorStateContainer _parent;
+            return (T)_parent._values[_parent._readPosition++];
+        }
 
-            public Writer(MockOperatorStateContainer parent)
+        public bool TryRead<T>(out T value)
+        {
+            if (_parent._readPosition < _parent._values.Count)
             {
-                _parent = parent;
-                _parent._values.Clear();
+                value = Read<T>();
+                return true;
             }
 
-            public IOperatorStateWriter Create(IStatefulOperator o)
-            {
-                return this;
-            }
+            value = default;
+            return false;
+        }
 
-            public void Write<T>(T value)
-            {
-                _parent._values.Add(value);
-            }
+        public void Reset()
+        {
+            _parent._readPosition = _initialPosition;
+        }
 
-            public IOperatorStateWriter CreateChild()
-            {
-                return this;
-            }
+        public IOperatorStateReader CreateChild()
+        {
+            return new Reader(_parent);
+        }
 
-            public void Dispose()
-            {
-            }
+        public void Dispose()
+        {
+        }
+    }
+
+    private sealed class Writer : IOperatorStateWriterFactory, IOperatorStateWriter
+    {
+        private readonly MockOperatorStateContainer _parent;
+
+        public Writer(MockOperatorStateContainer parent)
+        {
+            _parent = parent;
+            _parent._values.Clear();
+        }
+
+        public IOperatorStateWriter Create(IStatefulOperator o)
+        {
+            return this;
+        }
+
+        public void Write<T>(T value)
+        {
+            _parent._values.Add(value);
+        }
+
+        public IOperatorStateWriter CreateChild()
+        {
+            return this;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

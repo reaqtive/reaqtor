@@ -13,13 +13,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class DeleteStream : DeleteServiceOperation
 {
-    public class DeleteStream : DeleteServiceOperation
+    public DeleteStream(Uri streamUri)
+        : base(ServiceOperationKind.DeleteStream, streamUri)
     {
-        public DeleteStream(Uri streamUri)
-            : base(ServiceOperationKind.DeleteStream, streamUri)
-        {
-        }
     }
 }

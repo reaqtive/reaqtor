@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class LookupSubscriptionMetadata : LookupMetadataOperation
 {
-    public class LookupSubscriptionMetadata : LookupMetadataOperation
+    public LookupSubscriptionMetadata(Uri subscriptionUri)
+        : base(ServiceOperationKind.LookupSubscriptionMetadata, subscriptionUri)
     {
-        public LookupSubscriptionMetadata(Uri subscriptionUri)
-            : base(ServiceOperationKind.LookupSubscriptionMetadata, subscriptionUri)
-        {
-        }
     }
 }

@@ -8,19 +8,18 @@
 //   BD - 10/27/2014 - Created bundle functionality.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Interface for indexable objects.
+/// </summary>
+public interface IReadOnlyIndexed
 {
     /// <summary>
-    /// Interface for indexable objects.
+    /// Gets the element at the specified index.
     /// </summary>
-    public interface IReadOnlyIndexed
-    {
-        /// <summary>
-        /// Gets the element at the specified index.
-        /// </summary>
-        /// <param name="index">Index of the element to retrieve.</param>
-        /// <returns>The element at the specified index.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the specified index falls out of the boundaries of the object.</exception>
-        object this[int index] { get; }
-    }
+    /// <param name="index">Index of the element to retrieve.</param>
+    /// <returns>The element at the specified index.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the specified index falls out of the boundaries of the object.</exception>
+    object this[int index] { get; }
 }

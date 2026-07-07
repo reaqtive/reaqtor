@@ -8,25 +8,21 @@
 // ER - July 2013 - Created this file.
 //
 
-using System;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
+namespace Tests.System.Reflection;
+
+[TestClass]
+public class ConstructorInfoSlimTests : TestBase
 {
-    [TestClass]
-    public class ConstructorInfoSlimTests : TestBase
+    [TestMethod]
+    public void ConstructorInfoSlim_ArgumentChecks()
     {
-        [TestMethod]
-        public void ConstructorInfoSlim_ArgumentChecks()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Empty));
-            Assert.AreEqual("type", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetConstructor(parameterTypes: null));
-            Assert.AreEqual("parameterTypes", ex2.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetConstructor(type: null, Empty));
+        Assert.AreEqual("type", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetConstructor(parameterTypes: null));
+        Assert.AreEqual("parameterTypes", ex2.ParamName);
     }
 }

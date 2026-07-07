@@ -9,170 +9,169 @@ using System.Threading.Tasks;
 using Reaqtive.Disposables;
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.TestingFramework
+namespace Reaqtive.TestingFramework;
+
+/// <summary>
+/// Virtual time scheduler based on priority queue.
+/// </summary>
+/// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
+/// <typeparam name="TRelative">Relative time representation type.</typeparam>
+public abstract class VirtualTimePhysicalScheduler<TAbsolute, TRelative> : VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative>
+    where TAbsolute : IComparable<TAbsolute>
 {
+    private readonly HeapBasedPriorityQueue<IWorkItem<TAbsolute>> _ready;
+    private readonly List<IWorkItem<TAbsolute>> _notReady;
+
     /// <summary>
-    /// Virtual time scheduler based on priority queue.
+    /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
     /// </summary>
-    /// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
-    /// <typeparam name="TRelative">Relative time representation type.</typeparam>
-    public abstract class VirtualTimePhysicalScheduler<TAbsolute, TRelative> : VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative>
-        where TAbsolute : IComparable<TAbsolute>
+    protected VirtualTimePhysicalScheduler() : this(Comparer<TAbsolute>.Default, default)
     {
-        private readonly HeapBasedPriorityQueue<IWorkItem<TAbsolute>> _ready;
-        private readonly List<IWorkItem<TAbsolute>> _notReady;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
-        /// </summary>
-        protected VirtualTimePhysicalScheduler() : this(Comparer<TAbsolute>.Default, default)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
+    /// </summary>
+    /// <param name="comparer">The comparer used to sort work items.</param>
+    /// <param name="initialClock">The initial clock value.</param>
+    protected VirtualTimePhysicalScheduler(IComparer<TAbsolute> comparer, TAbsolute initialClock)
+        : base(comparer, initialClock)
+    {
+        _ready = new HeapBasedPriorityQueue<IWorkItem<TAbsolute>>(Comparer<IWorkItem<TAbsolute>>.Create(Compare));
+        _notReady = [];
+    }
+
+    /// <summary>
+    /// Schedules a task to be executed at the specified due time.
+    /// </summary>
+    /// <param name="dueTime">Absolute time at which to execute the task.</param>
+    /// <param name="task">The task to execute.</param>
+    /// <param name="scheduler">The scheduler to execute the task on.</param>
+    /// <returns>A scheduled work item.</returns>
+    public override IWorkItem<TAbsolute> ScheduleAbsolute(TAbsolute dueTime, ISchedulerTask task, IScheduler scheduler)
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(scheduler);
+
+        var item = new WorkItemBase<TAbsolute>(scheduler, task, dueTime, Disposable.Empty);
+
+        item.RecalculatePriority();
+
+        if (item.IsRunnable)
         {
+            _ready.Enqueue(item);
+        }
+        else
+        {
+            _notReady.Add(item);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
-        /// </summary>
-        /// <param name="comparer">The comparer used to sort work items.</param>
-        /// <param name="initialClock">The initial clock value.</param>
-        protected VirtualTimePhysicalScheduler(IComparer<TAbsolute> comparer, TAbsolute initialClock)
-            : base(comparer, initialClock)
+        return item;
+    }
+
+    /// <summary>
+    /// Pauses the specified item.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    /// <returns>A pause task.</returns>
+    public override Task PauseAsync(IWorkItem<TAbsolute> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        item.IsPaused = true;
+
+        if (_ready.Contains(item))
         {
-            _ready = new HeapBasedPriorityQueue<IWorkItem<TAbsolute>>(Comparer<IWorkItem<TAbsolute>>.Create(Compare));
-            _notReady = [];
+            _ready.Remove(item);
+            _notReady.Add(item);
         }
 
-        /// <summary>
-        /// Schedules a task to be executed at the specified due time.
-        /// </summary>
-        /// <param name="dueTime">Absolute time at which to execute the task.</param>
-        /// <param name="task">The task to execute.</param>
-        /// <param name="scheduler">The scheduler to execute the task on.</param>
-        /// <returns>A scheduled work item.</returns>
-        public override IWorkItem<TAbsolute> ScheduleAbsolute(TAbsolute dueTime, ISchedulerTask task, IScheduler scheduler)
+        return Task.FromResult(true);
+    }
+
+    /// <summary>
+    /// Continues execution of the specified item.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    public override void Continue(IWorkItem<TAbsolute> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        item.IsPaused = false;
+
+        if (_notReady.Remove(item))
         {
-            ArgumentNullException.ThrowIfNull(task);
-            ArgumentNullException.ThrowIfNull(scheduler);
+            _ready.Enqueue(item);
+        }
+    }
 
-            var item = new WorkItemBase<TAbsolute>(scheduler, task, dueTime, Disposable.Empty);
+    /// <summary>
+    /// Cancels the specified item.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    public override void Cancel(IWorkItem<TAbsolute> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
 
-            item.RecalculatePriority();
+        _ready.Remove(item);
+        _notReady.Remove(item);
+    }
 
-            if (item.IsRunnable)
+    /// <summary>
+    /// Recalculates the priority of the item.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    public override void RecalculatePriority(IWorkItem<TAbsolute> item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        item.RecalculatePriority();
+
+        if (_notReady.Remove(item))
+        {
+            _ready.Enqueue(item);
+        }
+        else if (_ready.Contains(item))
+        {
+            // Need to change the places of the item according to the priority
+            _ready.Remove(item);
+            _ready.Enqueue(item);
+        }
+    }
+
+    /// <summary>
+    /// Dequeues next item to execute.
+    /// </summary>
+    /// <returns>Work item.</returns>
+    protected override IWorkItem<TAbsolute> DequeueItem()
+    {
+        IWorkItem<TAbsolute> item = null;
+
+        while (_ready.Count != 0)
+        {
+            item = _ready.Dequeue();
+            if (!item.IsRunnable)
             {
-                _ready.Enqueue(item);
+                _notReady.Add(item);
             }
             else
             {
-                _notReady.Add(item);
+                break;
             }
-
-            return item;
         }
 
-        /// <summary>
-        /// Pauses the specified item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>A pause task.</returns>
-        public override Task PauseAsync(IWorkItem<TAbsolute> item)
+        return item;
+    }
+
+    private static int Compare(IWorkItem<TAbsolute> a, IWorkItem<TAbsolute> b)
+    {
+        int c = a.DueTime.CompareTo(b.DueTime);
+
+        if (c != 0)
         {
-            ArgumentNullException.ThrowIfNull(item);
-
-            item.IsPaused = true;
-
-            if (_ready.Contains(item))
-            {
-                _ready.Remove(item);
-                _notReady.Add(item);
-            }
-
-            return Task.FromResult(true);
+            return c;
         }
 
-        /// <summary>
-        /// Continues execution of the specified item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        public override void Continue(IWorkItem<TAbsolute> item)
-        {
-            ArgumentNullException.ThrowIfNull(item);
-
-            item.IsPaused = false;
-
-            if (_notReady.Remove(item))
-            {
-                _ready.Enqueue(item);
-            }
-        }
-
-        /// <summary>
-        /// Cancels the specified item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        public override void Cancel(IWorkItem<TAbsolute> item)
-        {
-            ArgumentNullException.ThrowIfNull(item);
-
-            _ready.Remove(item);
-            _notReady.Remove(item);
-        }
-
-        /// <summary>
-        /// Recalculates the priority of the item.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        public override void RecalculatePriority(IWorkItem<TAbsolute> item)
-        {
-            ArgumentNullException.ThrowIfNull(item);
-
-            item.RecalculatePriority();
-
-            if (_notReady.Remove(item))
-            {
-                _ready.Enqueue(item);
-            }
-            else if (_ready.Contains(item))
-            {
-                // Need to change the places of the item according to the priority
-                _ready.Remove(item);
-                _ready.Enqueue(item);
-            }
-        }
-
-        /// <summary>
-        /// Dequeues next item to execute.
-        /// </summary>
-        /// <returns>Work item.</returns>
-        protected override IWorkItem<TAbsolute> DequeueItem()
-        {
-            IWorkItem<TAbsolute> item = null;
-
-            while (_ready.Count != 0)
-            {
-                item = _ready.Dequeue();
-                if (!item.IsRunnable)
-                {
-                    _notReady.Add(item);
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return item;
-        }
-
-        private static int Compare(IWorkItem<TAbsolute> a, IWorkItem<TAbsolute> b)
-        {
-            int c = a.DueTime.CompareTo(b.DueTime);
-
-            if (c != 0)
-            {
-                return c;
-            }
-
-            return a.Priority.CompareTo(b.Priority);
-        }
+        return a.Priority.CompareTo(b.Priority);
     }
 }

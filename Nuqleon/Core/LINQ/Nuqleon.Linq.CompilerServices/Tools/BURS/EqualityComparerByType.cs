@@ -8,35 +8,32 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
+namespace System.Linq.CompilerServices;
 
-namespace System.Linq.CompilerServices
+internal sealed class EqualityComparerByType<TSource> : IEqualityComparer<TSource>
 {
-    internal sealed class EqualityComparerByType<TSource> : IEqualityComparer<TSource>
+    public bool Equals(TSource x, TSource y)
     {
-        public bool Equals(TSource x, TSource y)
+        var res = false;
+
+        if (x is ITyped xTyped && y is ITyped yTyped)
         {
-            var res = false;
-
-            if (x is ITyped xTyped && y is ITyped yTyped)
-            {
-                var xType = xTyped.GetType();
-                var yType = yTyped.GetType();
-                res = EqualityComparer<IType>.Default.Equals(xType, yType);
-            }
-
-            return res;
+            var xType = xTyped.GetType();
+            var yType = yTyped.GetType();
+            res = EqualityComparer<IType>.Default.Equals(xType, yType);
         }
 
-        public int GetHashCode(TSource obj)
-        {
-            if (obj is ITyped typed)
-            {
-                var type = typed.GetType();
-                return EqualityComparer<IType>.Default.GetHashCode(type);
-            }
+        return res;
+    }
 
-            return EqualityComparer<object>.Default.GetHashCode(obj);
+    public int GetHashCode(TSource obj)
+    {
+        if (obj is ITyped typed)
+        {
+            var type = typed.GetType();
+            return EqualityComparer<IType>.Default.GetHashCode(type);
         }
+
+        return EqualityComparer<object>.Default.GetHashCode(obj);
     }
 }

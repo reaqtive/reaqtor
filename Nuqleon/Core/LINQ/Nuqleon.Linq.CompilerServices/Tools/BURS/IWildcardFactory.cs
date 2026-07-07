@@ -10,19 +10,18 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Represents a factory for wildcard objects used to match any subtree of a given type.
+/// </summary>
+/// <typeparam name="TSource">Type of the wildcard objects.</typeparam>
+public interface IWildcardFactory<TSource>
 {
     /// <summary>
-    /// Represents a factory for wildcard objects used to match any subtree of a given type.
+    /// Creates a new wildcard object for the given hole in a pattern.
     /// </summary>
-    /// <typeparam name="TSource">Type of the wildcard objects.</typeparam>
-    public interface IWildcardFactory<TSource>
-    {
-        /// <summary>
-        /// Creates a new wildcard object for the given hole in a pattern.
-        /// </summary>
-        /// <param name="hole">Parameter expression used for holes in a pattern, which will be matched by the wildcard.</param>
-        /// <returns>Wildcard for the given hole in a pattern.</returns>
-        TSource CreateWildcard(ParameterExpression hole);
-    }
+    /// <param name="hole">Parameter expression used for holes in a pattern, which will be matched by the wildcard.</param>
+    /// <returns>Wildcard for the given hole in a pattern.</returns>
+    TSource CreateWildcard(ParameterExpression hole);
 }

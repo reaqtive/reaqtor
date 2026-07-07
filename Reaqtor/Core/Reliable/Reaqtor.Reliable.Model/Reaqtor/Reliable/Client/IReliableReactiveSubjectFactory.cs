@@ -4,15 +4,14 @@
 
 using System;
 
-namespace Reaqtor.Reliable.Client
-{
-    public interface IReliableReactiveSubjectFactory<TInput, TOutput>
-    {
-        IReliableReactiveMultiSubject<TInput, TOutput> Create(Uri uri, object state = null);
-    }
+namespace Reaqtor.Reliable.Client;
 
-    public interface IReliableReactiveSubjectFactory<TInput, TOutput, TArgs>
-    {
-        IReliableReactiveMultiSubject<TInput, TOutput> Create(Uri uri, TArgs argument, object state = null);
-    }
+public interface IReliableReactiveSubjectFactory<TInput, TOutput>
+{
+    IReliableReactiveMultiSubject<TInput, TOutput> Create(Uri uri, object state = null);
+}
+
+public interface IReliableReactiveSubjectFactory<TInput, TOutput, TArgs>
+{
+    IReliableReactiveMultiSubject<TInput, TOutput> Create(Uri uri, TArgs argument, object state = null);
 }

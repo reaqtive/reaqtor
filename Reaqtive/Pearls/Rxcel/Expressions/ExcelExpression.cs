@@ -13,57 +13,56 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal abstract class ExcelExpression
 {
-    internal abstract class ExcelExpression
+    public abstract ExcelExpressionKind Kind { get; }
+
+    protected internal abstract TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor);
+
+    public static CellExcelExpression Cell(string cell)
     {
-        public abstract ExcelExpressionKind Kind { get; }
+        return new CellExcelExpression(cell);
+    }
 
-        protected internal abstract TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor);
+    public static RangeExcelExpression Range(string start, string end)
+    {
+        return new RangeExcelExpression(start, end);
+    }
 
-        public static CellExcelExpression Cell(string cell)
-        {
-            return new CellExcelExpression(cell);
-        }
+    public static NumberExcelExpression Number(double? value)
+    {
+        return new NumberExcelExpression(value);
+    }
 
-        public static RangeExcelExpression Range(string start, string end)
-        {
-            return new RangeExcelExpression(start, end);
-        }
+    public static BinaryExcelExpression Add(ExcelExpression left, ExcelExpression right)
+    {
+        return new BinaryExcelExpression(ExcelExpressionKind.Add, left, right);
+    }
 
-        public static NumberExcelExpression Number(double? value)
-        {
-            return new NumberExcelExpression(value);
-        }
+    public static BinaryExcelExpression Subtract(ExcelExpression left, ExcelExpression right)
+    {
+        return new BinaryExcelExpression(ExcelExpressionKind.Subtract, left, right);
+    }
 
-        public static BinaryExcelExpression Add(ExcelExpression left, ExcelExpression right)
-        {
-            return new BinaryExcelExpression(ExcelExpressionKind.Add, left, right);
-        }
+    public static BinaryExcelExpression Multiply(ExcelExpression left, ExcelExpression right)
+    {
+        return new BinaryExcelExpression(ExcelExpressionKind.Multiply, left, right);
+    }
 
-        public static BinaryExcelExpression Subtract(ExcelExpression left, ExcelExpression right)
-        {
-            return new BinaryExcelExpression(ExcelExpressionKind.Subtract, left, right);
-        }
+    public static BinaryExcelExpression Divide(ExcelExpression left, ExcelExpression right)
+    {
+        return new BinaryExcelExpression(ExcelExpressionKind.Divide, left, right);
+    }
 
-        public static BinaryExcelExpression Multiply(ExcelExpression left, ExcelExpression right)
-        {
-            return new BinaryExcelExpression(ExcelExpressionKind.Multiply, left, right);
-        }
+    public static BinaryExcelExpression Modulo(ExcelExpression left, ExcelExpression right)
+    {
+        return new BinaryExcelExpression(ExcelExpressionKind.Modulo, left, right);
+    }
 
-        public static BinaryExcelExpression Divide(ExcelExpression left, ExcelExpression right)
-        {
-            return new BinaryExcelExpression(ExcelExpressionKind.Divide, left, right);
-        }
-
-        public static BinaryExcelExpression Modulo(ExcelExpression left, ExcelExpression right)
-        {
-            return new BinaryExcelExpression(ExcelExpressionKind.Modulo, left, right);
-        }
-
-        public static FormulaExcelExpression Formula(string formula, params ExcelExpression[] args)
-        {
-            return new FormulaExcelExpression(formula, args);
-        }
+    public static FormulaExcelExpression Formula(string formula, params ExcelExpression[] args)
+    {
+        return new FormulaExcelExpression(formula, args);
     }
 }

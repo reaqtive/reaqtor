@@ -6,23 +6,22 @@ using System.Collections.Generic;
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.TestingFramework
+namespace Reaqtive.TestingFramework;
+
+internal sealed class LoggingPhysicalTestScheduler : PhysicalTestScheduler
 {
-    internal sealed class LoggingPhysicalTestScheduler : PhysicalTestScheduler
+    private readonly List<long> _scheduledTimes;
+
+    public LoggingPhysicalTestScheduler()
     {
-        private readonly List<long> _scheduledTimes;
+        _scheduledTimes = [];
+    }
 
-        public LoggingPhysicalTestScheduler()
-        {
-            _scheduledTimes = [];
-        }
+    public IEnumerable<long> ScheduledTimes => _scheduledTimes;
 
-        public IEnumerable<long> ScheduledTimes => _scheduledTimes;
-
-        public override IWorkItem<long> ScheduleAbsolute(long dueTime, ISchedulerTask task, IScheduler scheduler)
-        {
-            _scheduledTimes.Add(dueTime);
-            return base.ScheduleAbsolute(dueTime, task, scheduler);
-        }
+    public override IWorkItem<long> ScheduleAbsolute(long dueTime, ISchedulerTask task, IScheduler scheduler)
+    {
+        _scheduledTimes.Add(dueTime);
+        return base.ScheduleAbsolute(dueTime, task, scheduler);
     }
 }

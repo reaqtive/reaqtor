@@ -15,81 +15,80 @@ using System.Threading.Tasks;
 
 using Reaqtor.QueryEngine;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Implementation of <see cref="IStateWriter"/> with logging of operations through a <see cref="TextWriter"/>.
+/// </summary>
+public sealed class LoggingStateWriter : LoggingStateReaderWriterBase, IStateWriter
 {
-    /// <summary>
-    /// Implementation of <see cref="IStateWriter"/> with logging of operations through a <see cref="TextWriter"/>.
-    /// </summary>
-    public sealed class LoggingStateWriter : LoggingStateReaderWriterBase, IStateWriter
-    {
 #pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
-        private readonly IStateWriter _writer;
+    private readonly IStateWriter _writer;
 #pragma warning restore CA2213
 
-        public LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true)
-            : base(log, keepOpen)
-        {
-            _writer = writer;
-        }
-
-        public CheckpointKind CheckpointKind => _writer.CheckpointKind;
-
-        public async Task CommitAsync(CancellationToken token, IProgress<int> progress)
-        {
-            LogStart(nameof(CommitAsync));
-            try
-            {
-                await _writer.CommitAsync(token, progress).ConfigureAwait(false);
-            }
-            catch (Exception ex) when (LogError(nameof(CommitAsync), ex)) { throw; }
-            finally
-            {
-                LogStop(nameof(CommitAsync));
-            }
-        }
-
-        public void Rollback()
-        {
-            LogStart(nameof(Rollback));
-            try
-            {
-                _writer.Rollback();
-            }
-            catch (Exception ex) when (LogError(nameof(Rollback), ex)) { throw; }
-            finally
-            {
-                LogStop(nameof(Rollback));
-            }
-        }
-
-        public Stream GetItemWriter(string category, string key)
-        {
-            LogStart(nameof(GetItemWriter), category, key);
-            try
-            {
-                return _writer.GetItemWriter(category, key);
-            }
-            catch (Exception ex) when (LogError(nameof(GetItemWriter), ex, category, key)) { throw; }
-            finally
-            {
-                LogStop(nameof(GetItemWriter), category, key);
-            }
-        }
-
-        public void DeleteItem(string category, string key)
-        {
-            LogStart(nameof(DeleteItem), category, key);
-            try
-            {
-                _writer.DeleteItem(category, key);
-            }
-            catch (Exception ex) when (LogError(nameof(DeleteItem), ex, category, key)) { throw; }
-            finally
-            {
-                LogStop(nameof(DeleteItem), category, key);
-            }
-        }
-
-        protected override void DisposeCore() => _writer.Dispose();
+    public LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true)
+        : base(log, keepOpen)
+    {
+        _writer = writer;
     }
+
+    public CheckpointKind CheckpointKind => _writer.CheckpointKind;
+
+    public async Task CommitAsync(CancellationToken token, IProgress<int> progress)
+    {
+        LogStart(nameof(CommitAsync));
+        try
+        {
+            await _writer.CommitAsync(token, progress).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (LogError(nameof(CommitAsync), ex)) { throw; }
+        finally
+        {
+            LogStop(nameof(CommitAsync));
+        }
+    }
+
+    public void Rollback()
+    {
+        LogStart(nameof(Rollback));
+        try
+        {
+            _writer.Rollback();
+        }
+        catch (Exception ex) when (LogError(nameof(Rollback), ex)) { throw; }
+        finally
+        {
+            LogStop(nameof(Rollback));
+        }
+    }
+
+    public Stream GetItemWriter(string category, string key)
+    {
+        LogStart(nameof(GetItemWriter), category, key);
+        try
+        {
+            return _writer.GetItemWriter(category, key);
+        }
+        catch (Exception ex) when (LogError(nameof(GetItemWriter), ex, category, key)) { throw; }
+        finally
+        {
+            LogStop(nameof(GetItemWriter), category, key);
+        }
+    }
+
+    public void DeleteItem(string category, string key)
+    {
+        LogStart(nameof(DeleteItem), category, key);
+        try
+        {
+            _writer.DeleteItem(category, key);
+        }
+        catch (Exception ex) when (LogError(nameof(DeleteItem), ex, category, key)) { throw; }
+        finally
+        {
+            LogStop(nameof(DeleteItem), category, key);
+        }
+    }
+
+    protected override void DisposeCore() => _writer.Dispose();
 }

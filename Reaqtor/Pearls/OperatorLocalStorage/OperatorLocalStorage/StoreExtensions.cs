@@ -8,43 +8,38 @@
 // BD - February 2018
 //
 
-using System;
-using System.IO;
-using System.Linq;
-
 using Reaqtor.QueryEngine;
 
 using Utilities;
 
-namespace Playground
+namespace Playground;
+
+/// <summary>
+/// Provides a set of extension methods to work with in-memory key/value stores, state readers, and state writers.
+/// </summary>
+internal static class StoreExtensions
 {
-    /// <summary>
-    /// Provides a set of extension methods to work with in-memory key/value stores, state readers, and state writers.
-    /// </summary>
-    internal static class StoreExtensions
+    public static IStateReader WithLogging(this IStateReader reader) => new LoggingStateReader(reader, Console.Out);
+
+    public static IStateWriter WithLogging(this IStateWriter writer) => new LoggingStateWriter(writer, Console.Out);
+
+    public static void Print(this Store store)
     {
-        public static IStateReader WithLogging(this IStateReader reader) => new LoggingStateReader(reader, Console.Out);
+        Console.WriteLine("--------------------------------STORE--------------------------------");
+        Console.WriteLine();
 
-        public static IStateWriter WithLogging(this IStateWriter writer) => new LoggingStateWriter(writer, Console.Out);
-
-        public static void Print(this Store store)
+        foreach (var table in store.Data)
         {
-            Console.WriteLine("--------------------------------STORE--------------------------------");
-            Console.WriteLine();
+            Console.WriteLine(table.Key);
 
-            foreach (var table in store.Data)
+            foreach (var entry in table.Value.OrderBy(entry => entry.Key))
             {
-                Console.WriteLine(table.Key);
-
-                foreach (var entry in table.Value.OrderBy(entry => entry.Key))
-                {
-                    Console.WriteLine("  " + entry.Key + " = " + new StreamReader(new MemoryStream(entry.Value)).ReadToEnd());
-                }
-
-                Console.WriteLine();
+                Console.WriteLine("  " + entry.Key + " = " + new StreamReader(new MemoryStream(entry.Value)).ReadToEnd());
             }
 
-            Console.WriteLine("--------------------------------STORE--------------------------------");
+            Console.WriteLine();
         }
+
+        Console.WriteLine("--------------------------------STORE--------------------------------");
     }
 }

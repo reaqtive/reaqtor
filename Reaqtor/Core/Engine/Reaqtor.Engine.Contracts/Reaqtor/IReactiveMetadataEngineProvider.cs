@@ -8,21 +8,18 @@
 // BD - June 2013 - Created this file.
 //
 
-using System.Linq;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Interface for metadata discovery operations of a reactive processing engine.
+/// </summary>
+public interface IReactiveMetadataEngineProvider
 {
     /// <summary>
-    /// Interface for metadata discovery operations of a reactive processing engine.
+    /// Gets the query provider that will be used to execute metadata queries.
     /// </summary>
-    public interface IReactiveMetadataEngineProvider
+    IQueryProvider Provider
     {
-        /// <summary>
-        /// Gets the query provider that will be used to execute metadata queries.
-        /// </summary>
-        IQueryProvider Provider
-        {
-            get;
-        }
+        get;
     }
 }

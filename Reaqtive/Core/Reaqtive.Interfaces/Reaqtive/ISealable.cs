@@ -4,17 +4,16 @@
 
 using System.ComponentModel;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Infrastructure.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public interface ISealable
 {
     /// <summary>
-    /// Infrastructure.
+    /// Seals the object.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface ISealable
-    {
-        /// <summary>
-        /// Seals the object.
-        /// </summary>
-        void Seal();
-    }
+    void Seal();
 }

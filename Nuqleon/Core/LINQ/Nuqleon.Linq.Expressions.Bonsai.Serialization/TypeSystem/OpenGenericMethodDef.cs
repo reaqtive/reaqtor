@@ -13,43 +13,42 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class OpenGenericMethodDef : MethodDef
 {
-    internal sealed class OpenGenericMethodDef : MethodDef
+    #region Constructors
+
+    public OpenGenericMethodDef(TypeRef declaringType, GenericDefinitionMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
+        : base(declaringType, method, returnType, parameters)
     {
-        #region Constructors
-
-        public OpenGenericMethodDef(TypeRef declaringType, GenericDefinitionMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
-            : base(declaringType, method, returnType, parameters)
-        {
-        }
-
-        #endregion
-
-        #region Methods
-
-        public override Json.Expression ToJson(SerializationDomain domain)
-        {
-            var count = Parameters.Length;
-
-            var parameters = new Json.Expression[count];
-            for (var i = 0; i < count; i++)
-            {
-                parameters[i] = Parameters[i].ToJson();
-            }
-
-            var genericMethod = (GenericDefinitionMethodInfoSlim)Method;
-
-            return Json.Expression.Array(
-                Discriminators.MemberInfo.OpenGenericMethodDiscriminator,
-                DeclaringType.ToJson(),
-                Json.Expression.String(genericMethod.Name),
-                genericMethod.GenericParameterTypes.Count.ToJsonNumber(),
-                Json.Expression.Array(parameters),
-                ReturnType.ToJson()
-            );
-        }
-
-        #endregion
     }
+
+    #endregion
+
+    #region Methods
+
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        var count = Parameters.Length;
+
+        var parameters = new Json.Expression[count];
+        for (var i = 0; i < count; i++)
+        {
+            parameters[i] = Parameters[i].ToJson();
+        }
+
+        var genericMethod = (GenericDefinitionMethodInfoSlim)Method;
+
+        return Json.Expression.Array(
+            Discriminators.MemberInfo.OpenGenericMethodDiscriminator,
+            DeclaringType.ToJson(),
+            Json.Expression.String(genericMethod.Name),
+            genericMethod.GenericParameterTypes.Count.ToJsonNumber(),
+            Json.Expression.Array(parameters),
+            ReturnType.ToJson()
+        );
+    }
+
+    #endregion
 }

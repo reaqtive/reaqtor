@@ -8,184 +8,65 @@
 //   PS - 10/17/2014 - Wrote these tests.
 //
 
-using System;
 using System.Collections.Specialized;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Collections.Specialized;
 
-namespace Tests.System.Collections.Specialized
+[TestClass]
+public class BitArrayTests
 {
-    [TestClass]
-    public class BitArrayTests
+    [TestMethod]
+    public void BitArray_Factory_ReturnsCorrectlySizedType()
     {
-        [TestMethod]
-        public void BitArray_Factory_ReturnsCorrectlySizedType()
+        // i = 0 is hoisted out
+        var arr = BitArrayFactory.Create(0);
+        Assert.AreEqual(0, arr.Count);
+
+        for (int i = 1; i < 100; i++)
         {
-            // i = 0 is hoisted out
-            var arr = BitArrayFactory.Create(0);
-            Assert.AreEqual(0, arr.Count);
+            arr = BitArrayFactory.Create(i);
+            Assert.AreEqual(arr.Count, i);
+            arr[i - 1] = true;
 
-            for (int i = 1; i < 100; i++)
-            {
-                arr = BitArrayFactory.Create(i);
-                Assert.AreEqual(arr.Count, i);
-                arr[i - 1] = true;
-
-                try
-                {
-                    arr[i] = false;
-                    Assert.Fail();
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
-            }
-        }
-
-        [TestMethod]
-        public void BitArray_Assembly()
-        {
-            Type type = typeof(BitArrayFactory);
-            string assembly = type.Assembly.GetName().Name;
-            Assert.AreEqual("Nuqleon.Collections.Specialized", assembly);
-        }
-
-        [TestMethod]
-        public void BitArray_EdgeCases()
-        {
-            // i = 0 is hoisted out
-            var arr = BitArrayFactory.Create(0);
             try
             {
-                var dummy = arr[0];
-                Assert.Fail();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-
-            for (int i = 1; i < 100; i++)
-            {
-                arr = BitArrayFactory.Create(i);
-                try
-                {
-                    var dummy = arr[-1];
-                    Assert.Fail();
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
-
-                try
-                {
-                    var dummy = arr[i];
-                    Assert.Fail();
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                }
-            }
-        }
-
-        [TestMethod]
-        public void BitArray_ManOrBoy_Set()
-        {
-            for (var capacity = 0; capacity < 100; capacity++)
-            {
-                for (var i = 0; i < capacity; i++)
-                {
-                    var arr = BitArrayFactory.Create(capacity);
-                    arr[i] = true;
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(arr[j], i == j);
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void BitArray_ManOrBoy_UnSet()
-        {
-            for (var capacity = 0; capacity < 100; capacity++)
-            {
-                for (var i = 0; i < capacity; i++)
-                {
-                    var arr = BitArrayFactory.Create(capacity);
-                    arr.SetAll(true);
-
-                    arr[i] = false;
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(arr[j], i != j);
-                    }
-                }
-            }
-        }
-
-
-        [TestMethod]
-        public void BitArray_SetAll()
-        {
-            for (var capacity = 0; capacity < 100; capacity++)
-            {
-                for (var i = 0; i < capacity; i++)
-                {
-                    var arr = BitArrayFactory.Create(capacity);
-                    arr.SetAll(true);
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(true, arr[j]);
-                    }
-
-                    arr.SetAll(false);
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(false, arr[j]);
-                    }
-
-                    // The difference from above is that we set all to false first then set to true
-                    arr = BitArrayFactory.Create(capacity);
-                    arr.SetAll(false);
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(false, arr[j]);
-                    }
-
-                    arr.SetAll(true);
-
-                    for (var j = 0; j < capacity; j++)
-                    {
-                        Assert.AreEqual(true, arr[j]);
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
-        public void BitArrayFactory_InvalidSize()
-        {
-            try
-            {
-                BitArrayFactory.Create(-1);
+                arr[i] = false;
                 Assert.Fail();
             }
             catch (ArgumentOutOfRangeException)
             {
             }
         }
+    }
 
-        [TestMethod]
-        public void BitArrayFactory_Constructor_Validation()
+    [TestMethod]
+    public void BitArray_Assembly()
+    {
+        Type type = typeof(BitArrayFactory);
+        string assembly = type.Assembly.GetName().Name;
+        Assert.AreEqual("Nuqleon.Collections.Specialized", assembly);
+    }
+
+    [TestMethod]
+    public void BitArray_EdgeCases()
+    {
+        // i = 0 is hoisted out
+        var arr = BitArrayFactory.Create(0);
+        try
         {
+            var dummy = arr[0];
+            Assert.Fail();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+
+        for (int i = 1; i < 100; i++)
+        {
+            arr = BitArrayFactory.Create(i);
             try
             {
-                _ = new BitArraySlim<ByteArray1>(-1);
+                var dummy = arr[-1];
                 Assert.Fail();
             }
             catch (ArgumentOutOfRangeException)
@@ -194,37 +75,152 @@ namespace Tests.System.Collections.Specialized
 
             try
             {
-                _ = new BitArraySlim<ByteArray1>(9);
-                Assert.Fail();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-
-            _ = new BitArraySlim<ByteArrayGinormous>(255);
-
-            try
-            {
-                // Small bit array restricts the max size of the underlying
-                // byte array so it can save space by only using a byte for
-                // the field it uses to store the size
-                _ = new BitArraySlim<ByteArrayGinormous>(256);
+                var dummy = arr[i];
                 Assert.Fail();
             }
             catch (ArgumentOutOfRangeException)
             {
             }
         }
+    }
 
-        private struct ByteArrayGinormous : IByteArray
+    [TestMethod]
+    public void BitArray_ManOrBoy_Set()
+    {
+        for (var capacity = 0; capacity < 100; capacity++)
         {
-            public readonly int Length => 300;
-
-            public byte this[int index]
+            for (var i = 0; i < capacity; i++)
             {
-                readonly get => throw new NotImplementedException();
-                set => throw new NotImplementedException();
+                var arr = BitArrayFactory.Create(capacity);
+                arr[i] = true;
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(arr[j], i == j);
+                }
             }
+        }
+    }
+
+    [TestMethod]
+    public void BitArray_ManOrBoy_UnSet()
+    {
+        for (var capacity = 0; capacity < 100; capacity++)
+        {
+            for (var i = 0; i < capacity; i++)
+            {
+                var arr = BitArrayFactory.Create(capacity);
+                arr.SetAll(true);
+
+                arr[i] = false;
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(arr[j], i != j);
+                }
+            }
+        }
+    }
+
+
+    [TestMethod]
+    public void BitArray_SetAll()
+    {
+        for (var capacity = 0; capacity < 100; capacity++)
+        {
+            for (var i = 0; i < capacity; i++)
+            {
+                var arr = BitArrayFactory.Create(capacity);
+                arr.SetAll(true);
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(true, arr[j]);
+                }
+
+                arr.SetAll(false);
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(false, arr[j]);
+                }
+
+                // The difference from above is that we set all to false first then set to true
+                arr = BitArrayFactory.Create(capacity);
+                arr.SetAll(false);
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(false, arr[j]);
+                }
+
+                arr.SetAll(true);
+
+                for (var j = 0; j < capacity; j++)
+                {
+                    Assert.AreEqual(true, arr[j]);
+                }
+            }
+        }
+    }
+
+    [TestMethod]
+    public void BitArrayFactory_InvalidSize()
+    {
+        try
+        {
+            BitArrayFactory.Create(-1);
+            Assert.Fail();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+    }
+
+    [TestMethod]
+    public void BitArrayFactory_Constructor_Validation()
+    {
+        try
+        {
+            _ = new BitArraySlim<ByteArray1>(-1);
+            Assert.Fail();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+
+        try
+        {
+            _ = new BitArraySlim<ByteArray1>(9);
+            Assert.Fail();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+
+        _ = new BitArraySlim<ByteArrayGinormous>(255);
+
+        try
+        {
+            // Small bit array restricts the max size of the underlying
+            // byte array so it can save space by only using a byte for
+            // the field it uses to store the size
+            _ = new BitArraySlim<ByteArrayGinormous>(256);
+            Assert.Fail();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+        }
+    }
+
+    private struct ByteArrayGinormous : IByteArray
+    {
+        public readonly int Length => 300;
+
+        public byte this[int index]
+        {
+            readonly get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
     }
 }

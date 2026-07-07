@@ -8,43 +8,40 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Base class for subscriptions.
+/// </summary>
+public abstract class ReactiveSubscriptionBase : IReactiveSubscription
 {
+    #region Dispose
+
     /// <summary>
-    /// Base class for subscriptions.
+    /// Disposes the subscription.
     /// </summary>
-    public abstract class ReactiveSubscriptionBase : IReactiveSubscription
+    public void Dispose()
     {
-        #region Dispose
-
-        /// <summary>
-        /// Disposes the subscription.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">true if called from <see cref="IDisposable.Dispose"/>; otherwise, false.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                DisposeCore();
-            }
-        }
-
-        /// <summary>
-        /// Disposes the subscription.
-        /// </summary>
-        protected abstract void DisposeCore();
-
-        #endregion
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
+
+    /// <summary>
+    /// Disposes the object.
+    /// </summary>
+    /// <param name="disposing">true if called from <see cref="IDisposable.Dispose"/>; otherwise, false.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DisposeCore();
+        }
+    }
+
+    /// <summary>
+    /// Disposes the subscription.
+    /// </summary>
+    protected abstract void DisposeCore();
+
+    #endregion
 }

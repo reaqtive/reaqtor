@@ -10,35 +10,34 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedStackOperationFactory<T> : IStackOperationFactory<T>, IPersistedOperationFactory<IPersistedStack<T>>
 {
-    internal interface IPersistedStackOperationFactory<T> : IStackOperationFactory<T>, IPersistedOperationFactory<IPersistedStack<T>>
+}
+
+internal static class PersistedStackOperation
+{
+    public static IPersistedStackOperationFactory<T> WithType<T>() => new PersistedStackOperationFactory<T>();
+
+    private sealed class PersistedStackOperationFactory<T> : IPersistedStackOperationFactory<T>
     {
-    }
+        public CountReadOnlyCollectionOperation<T> Count() => StackOperation.Count<T>();
 
-    internal static class PersistedStackOperation
-    {
-        public static IPersistedStackOperationFactory<T> WithType<T>() => new PersistedStackOperationFactory<T>();
+        public PopStackOperation<T> Pop() => StackOperation.Pop<T>();
 
-        private sealed class PersistedStackOperationFactory<T> : IPersistedStackOperationFactory<T>
-        {
-            public CountReadOnlyCollectionOperation<T> Count() => StackOperation.Count<T>();
+        public PushStackOperation<T> Push(T value) => StackOperation.Push(value);
 
-            public PopStackOperation<T> Pop() => StackOperation.Pop<T>();
+        public EnumerateEnumerableOperation<T> Enumerate() => StackOperation.Enumerate<T>();
 
-            public PushStackOperation<T> Push(T value) => StackOperation.Push(value);
+        public GetIdPersistedOperation<IPersistedStack<T>> GetId() => GetId<IPersistedStack<T>>();
 
-            public EnumerateEnumerableOperation<T> Enumerate() => StackOperation.Enumerate<T>();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedStack<T>> GetId() => GetId<IPersistedStack<T>>();
+        public PeekStackOperation<T> Peek() => StackOperation.Peek<T>();
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public PeekStackOperation<T> Peek() => StackOperation.Peek<T>();
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedStack<T>> This() => This<IPersistedStack<T>>();
-        }
+        public ThisResultOperation<IPersistedStack<T>> This() => This<IPersistedStack<T>>();
     }
 }

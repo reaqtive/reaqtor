@@ -16,164 +16,163 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Simple stateless fire-and-forget subject implementation.
+/// </summary>
+/// <typeparam name="T">Type of elements processed by this subject.</typeparam>
+internal class Subject<T> : IObservable<T>, IObserver<T>
 {
+    // TODO: omitted locking; should use the well-known immutable list design (or use Rx's subject as-is)
+
     /// <summary>
-    /// Simple stateless fire-and-forget subject implementation.
+    /// List of observers subscribed to the subject.
     /// </summary>
-    /// <typeparam name="T">Type of elements processed by this subject.</typeparam>
-    internal class Subject<T> : IObservable<T>, IObserver<T>
+    private readonly List<IObserver<T>> _observers = [];
+
+    /// <summary>
+    /// Identifier of te subject.
+    /// </summary>
+    private readonly string _id;
+
+    /// <summary>
+    /// Creates a new subject.
+    /// </summary>
+    /// <param name="id">Optional identifier used for logging.</param>
+    public Subject(string id = "")
     {
-        // TODO: omitted locking; should use the well-known immutable list design (or use Rx's subject as-is)
+        _id = id;
+    }
+
+    /// <summary>
+    /// Returns a friendly string representation of the subject.
+    /// </summary>
+    /// <returns>String representation of the subject.</returns>
+    public override string ToString()
+    {
+        return "Subject<" + typeof(T).Name + ">(" + _id + ")";
+    }
+
+    /// <summary>
+    /// Subscribes the specified observer to the subject.
+    /// </summary>
+    /// <param name="observer">Observer to receive the subject's elements on.</param>
+    /// <returns>Disposable resource used to cancel the subscription.</returns>
+    public IDisposable Subscribe(IObserver<T> observer)
+    {
+        _observers.Add(observer);
+
+        LogSubCount();
+
+        return new Disposable(this, observer);
+    }
+
+    /// <summary>
+    /// Disposable resource used to unsubscribe an observer from the parent subject.
+    /// </summary>
+    private class Disposable : IDisposable
+    {
+        /// <summary>
+        /// Subject owning the subscription using the specified observer.
+        /// </summary>
+        private Subject<T> _subject;
 
         /// <summary>
-        /// List of observers subscribed to the subject.
+        /// Observer subscribed to the subject.
         /// </summary>
-        private readonly List<IObserver<T>> _observers = [];
+        private IObserver<T> _observer;
 
         /// <summary>
-        /// Identifier of te subject.
+        /// Creates a new disposable resource that can be used to unsubscribe the specified observer from the specified subject.
         /// </summary>
-        private readonly string _id;
-
-        /// <summary>
-        /// Creates a new subject.
-        /// </summary>
-        /// <param name="id">Optional identifier used for logging.</param>
-        public Subject(string id = "")
+        /// <param name="subject">Subject owning the subscription using the specified observer.</param>
+        /// <param name="observer">Observer subscribed to the subject.</param>
+        public Disposable(Subject<T> subject, IObserver<T> observer)
         {
-            _id = id;
+            _subject = subject;
+            _observer = observer;
         }
 
         /// <summary>
-        /// Returns a friendly string representation of the subject.
+        /// Disposes the subscription of the observer to the subject.
         /// </summary>
-        /// <returns>String representation of the subject.</returns>
-        public override string ToString()
+        public void Dispose()
         {
-            return "Subject<" + typeof(T).Name + ">(" + _id + ")";
-        }
-
-        /// <summary>
-        /// Subscribes the specified observer to the subject.
-        /// </summary>
-        /// <param name="observer">Observer to receive the subject's elements on.</param>
-        /// <returns>Disposable resource used to cancel the subscription.</returns>
-        public IDisposable Subscribe(IObserver<T> observer)
-        {
-            _observers.Add(observer);
-
-            LogSubCount();
-
-            return new Disposable(this, observer);
-        }
-
-        /// <summary>
-        /// Disposable resource used to unsubscribe an observer from the parent subject.
-        /// </summary>
-        private class Disposable : IDisposable
-        {
-            /// <summary>
-            /// Subject owning the subscription using the specified observer.
-            /// </summary>
-            private Subject<T> _subject;
-
-            /// <summary>
-            /// Observer subscribed to the subject.
-            /// </summary>
-            private IObserver<T> _observer;
-
-            /// <summary>
-            /// Creates a new disposable resource that can be used to unsubscribe the specified observer from the specified subject.
-            /// </summary>
-            /// <param name="subject">Subject owning the subscription using the specified observer.</param>
-            /// <param name="observer">Observer subscribed to the subject.</param>
-            public Disposable(Subject<T> subject, IObserver<T> observer)
+            var s = Interlocked.Exchange(ref _subject, null);
+            if (s != null)
             {
-                _subject = subject;
-                _observer = observer;
-            }
-
-            /// <summary>
-            /// Disposes the subscription of the observer to the subject.
-            /// </summary>
-            public void Dispose()
-            {
-                var s = Interlocked.Exchange(ref _subject, null);
-                if (s != null)
-                {
-                    s.Remove(_observer);
-                    _observer = null;
-                }
+                s.Remove(_observer);
+                _observer = null;
             }
         }
+    }
 
-        /// <summary>
-        /// Helper method to remove the last occurrence of the specified observer from the observers list.
-        /// </summary>
-        /// <param name="observer">Observer to remove.</param>
-        private void Remove(IObserver<T> observer)
+    /// <summary>
+    /// Helper method to remove the last occurrence of the specified observer from the observers list.
+    /// </summary>
+    /// <param name="observer">Observer to remove.</param>
+    private void Remove(IObserver<T> observer)
+    {
+        var i = _observers.LastIndexOf(observer);
+        if (i >= 0)
         {
-            var i = _observers.LastIndexOf(observer);
-            if (i >= 0)
-            {
-                _observers.RemoveAt(i);
-            }
-
-            LogSubCount();
+            _observers.RemoveAt(i);
         }
 
-        /// <summary>
-        /// Logs the number of subscriptions currently active on the subject.
-        /// </summary>
-        private void LogSubCount()
-        {
-            var n = _observers.Count;
+        LogSubCount();
+    }
+
+    /// <summary>
+    /// Logs the number of subscriptions currently active on the subject.
+    /// </summary>
+    private void LogSubCount()
+    {
+        var n = _observers.Count;
 
 #if DEBUG && !NO_LOG
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(ToString() + ".SubscriptionCount = " + n);
-            Console.ResetColor();
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine(ToString() + ".SubscriptionCount = " + n);
+        Console.ResetColor();
 #endif
-        }
+    }
 
-        /// <summary>
-        /// Publishes a completion notification into the subject.
-        /// </summary>
-        public void OnCompleted()
+    /// <summary>
+    /// Publishes a completion notification into the subject.
+    /// </summary>
+    public void OnCompleted()
+    {
+        // TODO: omitted terminal behavior
+
+        foreach (var o in _observers)
         {
-            // TODO: omitted terminal behavior
-
-            foreach (var o in _observers)
-            {
-                o.OnCompleted();
-            }
+            o.OnCompleted();
         }
+    }
 
-        /// <summary>
-        /// Publishes an error into the subject.
-        /// </summary>
-        /// <param name="error">Error to publish.</param>
-        public void OnError(Exception error)
+    /// <summary>
+    /// Publishes an error into the subject.
+    /// </summary>
+    /// <param name="error">Error to publish.</param>
+    public void OnError(Exception error)
+    {
+        // TODO: omitted terminal behavior
+
+        foreach (var o in _observers)
         {
-            // TODO: omitted terminal behavior
-
-            foreach (var o in _observers)
-            {
-                o.OnError(error);
-            }
+            o.OnError(error);
         }
+    }
 
-        /// <summary>
-        /// Publishes an element into the subject.
-        /// </summary>
-        /// <param name="value">Element to publish.</param>
-        public void OnNext(T value)
+    /// <summary>
+    /// Publishes an element into the subject.
+    /// </summary>
+    /// <param name="value">Element to publish.</param>
+    public void OnNext(T value)
+    {
+        foreach (var o in _observers)
         {
-            foreach (var o in _observers)
-            {
-                o.OnNext(value);
-            }
+            o.OnNext(value);
         }
     }
 }

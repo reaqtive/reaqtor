@@ -6,18 +6,15 @@
 // NB: This file contains a port of Rx code that should eventually get removed.
 //
 
-using System;
+namespace Reaqtive.Disposables;
 
-namespace Reaqtive.Disposables
+/// <summary>
+/// Disposable resource with disposal state tracking.
+/// </summary>
+public interface ICancelable : IDisposable
 {
     /// <summary>
-    /// Disposable resource with disposal state tracking.
+    /// Gets a value that indicates whether the object is disposed.
     /// </summary>
-    public interface ICancelable : IDisposable
-    {
-        /// <summary>
-        /// Gets a value that indicates whether the object is disposed.
-        /// </summary>
-        bool IsDisposed { get; }
-    }
+    bool IsDisposed { get; }
 }

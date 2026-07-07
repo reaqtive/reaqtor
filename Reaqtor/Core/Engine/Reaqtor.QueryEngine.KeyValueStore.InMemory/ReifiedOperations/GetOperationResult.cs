@@ -5,25 +5,24 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class GetOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
 {
-    public class GetOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
+    private readonly Sequenced<TValue> _result;
+    private readonly bool _keyNotFound;
+
+    public GetOperationResult(Sequenced<TValue> result, bool keyNotFound)
     {
-        private readonly Sequenced<TValue> _result;
-        private readonly bool _keyNotFound;
-
-        public GetOperationResult(Sequenced<TValue> result, bool keyNotFound)
-        {
-            _result = result;
-            _keyNotFound = keyNotFound;
-        }
-
-        public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
-
-        public override object Result => _result.Object;
-
-        public override bool Equals(object obj) => obj is GetOperationResult<TKey, TValue> state && _keyNotFound == state._keyNotFound && _result.SequenceId == state._result.SequenceId;
-
-        public override int GetHashCode() => _result.SequenceId.GetHashCode() ^ _keyNotFound.GetHashCode();
+        _result = result;
+        _keyNotFound = keyNotFound;
     }
+
+    public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
+
+    public override object Result => _result.Object;
+
+    public override bool Equals(object obj) => obj is GetOperationResult<TKey, TValue> state && _keyNotFound == state._keyNotFound && _result.SequenceId == state._result.SequenceId;
+
+    public override int GetHashCode() => _result.SequenceId.GetHashCode() ^ _keyNotFound.GetHashCode();
 }

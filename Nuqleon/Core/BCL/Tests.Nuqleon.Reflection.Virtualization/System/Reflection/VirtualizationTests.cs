@@ -8,22 +8,18 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Reflection.Virtualization;
 
-namespace Tests.System.Reflection.Virtualization
+[TestClass]
+public class VirtualizationTests
 {
-    [TestClass]
-    public class VirtualizationTests
+    [TestMethod]
+    public void TypeLoadingProviderExtensions_Assembly()
     {
-        [TestMethod]
-        public void TypeLoadingProviderExtensions_Assembly()
-        {
-            Type type = typeof(TypeLoadingProviderExtensions);
-            string assembly = type.Assembly.GetName().Name;
-            Assert.AreEqual("Nuqleon.Reflection.Virtualization", assembly);
-        }
+        Type type = typeof(TypeLoadingProviderExtensions);
+        string assembly = type.Assembly.GetName().Name;
+        Assert.AreEqual("Nuqleon.Reflection.Virtualization", assembly);
     }
 }

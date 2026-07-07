@@ -8,16 +8,15 @@
 // BD - January 2018
 //
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Interface representing a persisted object.
+/// </summary>
+public interface IPersisted
 {
     /// <summary>
-    /// Interface representing a persisted object.
+    /// Gets the unique identifier of the object.
     /// </summary>
-    public interface IPersisted
-    {
-        /// <summary>
-        /// Gets the unique identifier of the object.
-        /// </summary>
-        string Id { get; }
-    }
+    string Id { get; }
 }

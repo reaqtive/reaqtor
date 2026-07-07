@@ -2,37 +2,30 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtor;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class AsyncReactiveSubscriptionBaseTests
 {
-    [TestClass]
-    public class AsyncReactiveSubscriptionBaseTests
+    [TestMethod]
+    public void AsyncReactiveSubscriptionBase_Dispose()
     {
-        [TestMethod]
-        public void AsyncReactiveSubscriptionBase_Dispose()
-        {
-            var s = new MyAsyncReactiveSubscription();
+        var s = new MyAsyncReactiveSubscription();
 
-            var disposed = false;
-            s.DisposeAsyncImpl = (token) => { disposed = true; return Task.CompletedTask; };
+        var disposed = false;
+        s.DisposeAsyncImpl = (token) => { disposed = true; return Task.CompletedTask; };
 
-            s.DisposeAsync().AsTask().Wait();
+        s.DisposeAsync().AsTask().Wait();
 
-            Assert.IsTrue(disposed);
-        }
+        Assert.IsTrue(disposed);
+    }
 
-        private sealed class MyAsyncReactiveSubscription : AsyncReactiveSubscriptionBase
-        {
-            public Func<CancellationToken, Task> DisposeAsyncImpl;
+    private sealed class MyAsyncReactiveSubscription : AsyncReactiveSubscriptionBase
+    {
+        public Func<CancellationToken, Task> DisposeAsyncImpl;
 
-            protected override Task DisposeAsyncCore(CancellationToken token) => DisposeAsyncImpl(token);
-        }
+        protected override Task DisposeAsyncCore(CancellationToken token) => DisposeAsyncImpl(token);
     }
 }

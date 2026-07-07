@@ -8,13 +8,12 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for a full-blown reactive processing service.
+/// </summary>
+/// <typeparam name="TExpression">Type used for expression tree representation.</typeparam>
+public interface IReactiveServiceProvider<TExpression> : IReactiveClientServiceProvider<TExpression>, IReactiveDefinitionServiceProvider<TExpression>, IReactiveMetadataServiceProvider
 {
-    /// <summary>
-    /// Interface for a full-blown reactive processing service.
-    /// </summary>
-    /// <typeparam name="TExpression">Type used for expression tree representation.</typeparam>
-    public interface IReactiveServiceProvider<TExpression> : IReactiveClientServiceProvider<TExpression>, IReactiveDefinitionServiceProvider<TExpression>, IReactiveMetadataServiceProvider
-    {
-    }
 }

@@ -13,51 +13,50 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class FieldDef : DeclaredMemberDef
 {
-    internal sealed class FieldDef : DeclaredMemberDef
+    #region Fields
+
+    private readonly FieldInfoSlim _field;
+
+    #endregion
+
+    #region Constructors
+
+    public FieldDef(TypeRef declaringType, FieldInfoSlim field)
+        : base(declaringType)
     {
-        #region Fields
-
-        private readonly FieldInfoSlim _field;
-
-        #endregion
-
-        #region Constructors
-
-        public FieldDef(TypeRef declaringType, FieldInfoSlim field)
-            : base(declaringType)
-        {
-            _field = field;
-        }
-
-        #endregion
-
-        #region Methods
-
-        public override MemberInfoSlim ToMember(DeserializationDomain domain) => _field;
-
-        public override Json.Expression ToJson(SerializationDomain domain)
-        {
-            if (!domain.IsV08 && _field.FieldType != null)
-            {
-                return Json.Expression.Array(
-                    Discriminators.MemberInfo.FieldDiscriminator,
-                    DeclaringType.ToJson(),
-                    Json.Expression.String(_field.Name),
-                    domain.AddType(_field.FieldType).ToJson()
-                );
-            }
-            else
-            {
-                return Json.Expression.Array(
-                    Discriminators.MemberInfo.FieldDiscriminator,
-                    DeclaringType.ToJson(),
-                    Json.Expression.String(_field.Name)
-                );
-            }
-        }
-
-        #endregion
+        _field = field;
     }
+
+    #endregion
+
+    #region Methods
+
+    public override MemberInfoSlim ToMember(DeserializationDomain domain) => _field;
+
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        if (!domain.IsV08 && _field.FieldType != null)
+        {
+            return Json.Expression.Array(
+                Discriminators.MemberInfo.FieldDiscriminator,
+                DeclaringType.ToJson(),
+                Json.Expression.String(_field.Name),
+                domain.AddType(_field.FieldType).ToJson()
+            );
+        }
+        else
+        {
+            return Json.Expression.Array(
+                Discriminators.MemberInfo.FieldDiscriminator,
+                DeclaringType.ToJson(),
+                Json.Expression.String(_field.Name)
+            );
+        }
+    }
+
+    #endregion
 }

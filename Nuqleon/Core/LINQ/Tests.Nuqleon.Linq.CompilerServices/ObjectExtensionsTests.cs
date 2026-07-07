@@ -8,21 +8,16 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
+namespace Tests.System.Linq.CompilerServices;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Tests.System.Linq.CompilerServices
+[TestClass]
+public class ObjectExtensionsTests
 {
-    [TestClass]
-    public class ObjectExtensionsTests
+    [TestMethod]
+    public void ObjectExtensions_Let()
     {
-        [TestMethod]
-        public void ObjectExtensions_Let()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => 21.Let(default(Func<int, int>)));
-            Assert.AreEqual("function", ex.ParamName);
-            Assert.AreEqual(42, 21.Let(x => x * 2));
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => 21.Let(default(Func<int, int>)));
+        Assert.AreEqual("function", ex.ParamName);
+        Assert.AreEqual(42, 21.Let(x => x * 2));
     }
 }

@@ -8,43 +8,40 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
+namespace System.Linq.CompilerServices;
 
-namespace System.Linq.CompilerServices
+internal sealed class WildcardTraversalMap<TSource>
 {
-    internal sealed class WildcardTraversalMap<TSource>
+    private readonly Dictionary<TSource, WildcardTraversal<TSource>> _map;
+
+    public WildcardTraversalMap() => _map = [];
+
+    public WildcardTraversal<TSource> this[TSource node]
     {
-        private readonly Dictionary<TSource, WildcardTraversal<TSource>> _map;
-
-        public WildcardTraversalMap() => _map = [];
-
-        public WildcardTraversal<TSource> this[TSource node]
-        {
-            get => _map[node];
-            set => _map[node] = value;
-        }
-
-        public bool TryGetValue(TSource node, out WildcardTraversal<TSource> traversal) => _map.TryGetValue(node, out traversal);
-
-        public void PushPathSegment(int childIndex)
-        {
-            foreach (var traversal in _map)
-            {
-                traversal.Value.Push(childIndex);
-            }
-        }
-
-        public void Merge(WildcardTraversalMap<TSource> map)
-        {
-            foreach (var traversal in map._map)
-            {
-                if (_map.ContainsKey(traversal.Key))
-                    throw new InvalidOperationException("Wildcard used multiple times in pattern: " + traversal.Key);
-
-                _map[traversal.Key] = traversal.Value;
-            }
-        }
-
-        public override string ToString() => "{ " + string.Join(", ", _map.Select(kv => kv.Key + ": " + kv.Value)) + " }";
+        get => _map[node];
+        set => _map[node] = value;
     }
+
+    public bool TryGetValue(TSource node, out WildcardTraversal<TSource> traversal) => _map.TryGetValue(node, out traversal);
+
+    public void PushPathSegment(int childIndex)
+    {
+        foreach (var traversal in _map)
+        {
+            traversal.Value.Push(childIndex);
+        }
+    }
+
+    public void Merge(WildcardTraversalMap<TSource> map)
+    {
+        foreach (var traversal in map._map)
+        {
+            if (_map.ContainsKey(traversal.Key))
+                throw new InvalidOperationException("Wildcard used multiple times in pattern: " + traversal.Key);
+
+            _map[traversal.Key] = traversal.Value;
+        }
+    }
+
+    public override string ToString() => "{ " + string.Join(", ", _map.Select(kv => kv.Key + ": " + kv.Value)) + " }";
 }

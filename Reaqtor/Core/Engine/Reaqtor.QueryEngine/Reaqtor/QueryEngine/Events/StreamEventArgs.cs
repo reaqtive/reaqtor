@@ -4,25 +4,24 @@
 
 using Reaqtor.Metadata;
 
-namespace Reaqtor.QueryEngine.Events
+namespace Reaqtor.QueryEngine.Events;
+
+/// <summary>
+/// Event arguments involving a stream.
+/// </summary>
+internal sealed class StreamEventArgs : ReactiveEntityEventArgs
 {
     /// <summary>
-    /// Event arguments involving a stream.
+    /// Creates a new instance of <see cref="StreamEventArgs"/> class for the specified entity.
     /// </summary>
-    internal sealed class StreamEventArgs : ReactiveEntityEventArgs
+    /// <param name="entity">The entity representing the stream.</param>
+    public StreamEventArgs(SubjectEntity entity)
+        : base(entity.Uri, entity, ReactiveEntityKind.Stream)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="StreamEventArgs"/> class for the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity representing the stream.</param>
-        public StreamEventArgs(SubjectEntity entity)
-            : base(entity.Uri, entity, ReactiveEntityKind.Stream)
-        {
-        }
-
-        /// <summary>
-        /// Gets the stream entity.
-        /// </summary>
-        public new IReactiveStreamProcess Entity => (IReactiveStreamProcess)base.Entity;
     }
+
+    /// <summary>
+    /// Gets the stream entity.
+    /// </summary>
+    public new IReactiveStreamProcess Entity => (IReactiveStreamProcess)base.Entity;
 }

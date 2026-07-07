@@ -13,30 +13,29 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class RangeExcelExpression : ExcelExpression
 {
-    internal sealed class RangeExcelExpression : ExcelExpression
+    internal RangeExcelExpression(string start, string end)
     {
-        internal RangeExcelExpression(string start, string end)
-        {
-            Start = start;
-            End = end;
-        }
+        Start = start;
+        End = end;
+    }
 
-        public string Start { get; }
+    public string Start { get; }
 
-        public string End { get; }
+    public string End { get; }
 
-        public override ExcelExpressionKind Kind => ExcelExpressionKind.Range;
+    public override ExcelExpressionKind Kind => ExcelExpressionKind.Range;
 
-        protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
-        {
-            return visitor.VisitRange(this);
-        }
+    protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
+    {
+        return visitor.VisitRange(this);
+    }
 
-        public override string ToString()
-        {
-            return Start + ":" + End;
-        }
+    public override string ToString()
+    {
+        return Start + ":" + End;
     }
 }

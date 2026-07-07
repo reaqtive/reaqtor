@@ -8,73 +8,70 @@
 // BD - January 2018
 //
 
-using System.IO;
-
 using Reaqtive.Serialization;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Representation of an object obtained from persisted state with deferred deserialization support.
+/// </summary>
+internal sealed class EventualObject
 {
     /// <summary>
-    /// Representation of an object obtained from persisted state with deferred deserialization support.
+    /// The byte array containing the serialized state representing the object.
     /// </summary>
-    internal sealed class EventualObject
+    private readonly byte[] _bytes;
+
+    /// <summary>
+    /// Creates a new instance of <see cref="EventualObject"/>.
+    /// </summary>
+    /// <param name="bytes">The byte array containing the serialized state representing the object.</param>
+    private EventualObject(byte[] bytes)
     {
-        /// <summary>
-        /// The byte array containing the serialized state representing the object.
-        /// </summary>
-        private readonly byte[] _bytes;
+        _bytes = bytes;
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="EventualObject"/>.
-        /// </summary>
-        /// <param name="bytes">The byte array containing the serialized state representing the object.</param>
-        private EventualObject(byte[] bytes)
+    /// <summary>
+    /// Creates a new instance of <see cref="EventualObject"/>.
+    /// </summary>
+    /// <param name="stream">The stream containing the serialized state representing the object.</param>
+    /// <returns>An eventual object supporting deferred serialization of its representation in <paramref name="stream"/>.</returns>
+    public static EventualObject FromState(Stream stream)
+    {
+        if (stream is not MemoryStream ms)
         {
-            _bytes = bytes;
+            stream.Position = 0;
+
+            using var copy = new MemoryStream();
+
+            stream.CopyTo(copy);
+
+            return FromState(copy);
         }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="EventualObject"/>.
-        /// </summary>
-        /// <param name="stream">The stream containing the serialized state representing the object.</param>
-        /// <returns>An eventual object supporting deferred serialization of its representation in <paramref name="stream"/>.</returns>
-        public static EventualObject FromState(Stream stream)
-        {
-            if (stream is not MemoryStream ms)
-            {
-                stream.Position = 0;
+        var bytes = ms.ToArray();
 
-                using var copy = new MemoryStream();
+        return new EventualObject(bytes);
+    }
 
-                stream.CopyTo(copy);
+    /// <summary>
+    /// Deserializes the eventual object into an instance of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to deserialize to.</typeparam>
+    /// <param name="deserializerFactory">The deserialization factory to use to create a deserializer.</param>
+    /// <returns>An instance of type <typeparamref name="T"/> obtained from deserializing the state.</returns>
+    public T Deserialize<T>(IDeserializerFactory deserializerFactory) => Deserialize(deserializerFactory.GetDeserializer<T>());
 
-                return FromState(copy);
-            }
+    /// <summary>
+    /// Deserializes the eventual object into an instance of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type to deserialize to.</typeparam>
+    /// <param name="deserializer">The deserializer to us.</param>
+    /// <returns>An instance of type <typeparamref name="T"/> obtained from deserializing the state.</returns>
+    public T Deserialize<T>(IDeserializer<T> deserializer)
+    {
+        using var ms = new MemoryStream(_bytes);
 
-            var bytes = ms.ToArray();
-
-            return new EventualObject(bytes);
-        }
-
-        /// <summary>
-        /// Deserializes the eventual object into an instance of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize to.</typeparam>
-        /// <param name="deserializerFactory">The deserialization factory to use to create a deserializer.</param>
-        /// <returns>An instance of type <typeparamref name="T"/> obtained from deserializing the state.</returns>
-        public T Deserialize<T>(IDeserializerFactory deserializerFactory) => Deserialize(deserializerFactory.GetDeserializer<T>());
-
-        /// <summary>
-        /// Deserializes the eventual object into an instance of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to deserialize to.</typeparam>
-        /// <param name="deserializer">The deserializer to us.</param>
-        /// <returns>An instance of type <typeparamref name="T"/> obtained from deserializing the state.</returns>
-        public T Deserialize<T>(IDeserializer<T> deserializer)
-        {
-            using var ms = new MemoryStream(_bytes);
-
-            return deserializer.Deserialize(ms);
-        }
+        return deserializer.Deserialize(ms);
     }
 }

@@ -8,16 +8,13 @@
 // BD - January 2018
 //
 
-using System;
+namespace Reaqtive;
 
-namespace Reaqtive
+internal static class Invariant
 {
-    internal static class Invariant
+    public static void Assert(bool value, string message)
     {
-        public static void Assert(bool value, string message)
-        {
-            if (!value)
-                throw new InvalidOperationException(message);
-        }
+        if (!value)
+            throw new InvalidOperationException(message);
     }
 }

@@ -10,31 +10,30 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableQubscriptionFactory : ReliableQubscriptionFactoryBase
 {
-    public class ReliableQubscriptionFactory : ReliableQubscriptionFactoryBase
+    public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableQubscription CreateCore(Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, subscriptionUri, state);
+        Expression = expression;
     }
 
-    public class ReliableQubscriptionFactory<TArg> : ReliableQubscriptionFactoryBase<TArg>
+    public override Expression Expression { get; }
+
+    protected override IReliableQubscription CreateCore(Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, subscriptionUri, state);
+}
+
+public class ReliableQubscriptionFactory<TArg> : ReliableQubscriptionFactoryBase<TArg>
+{
+    public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, argument, subscriptionUri, state);
+        Expression = expression;
     }
+
+    public override Expression Expression { get; }
+
+    protected override IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, argument, subscriptionUri, state);
 }

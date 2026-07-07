@@ -10,56 +10,55 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal enum PersistedOperationKind
 {
-    internal enum PersistedOperationKind
+    GetId,
+}
+
+internal interface IPersistedOperationFactory<TPersisted> : IPersistedOperationFactory where TPersisted : IPersisted
+{
+    GetIdPersistedOperation<TPersisted> GetId();
+
+    ThisResultOperation<TPersisted> This();
+}
+
+internal interface IPersistedOperationFactory : IOperationFactory
+{
+    GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted;
+}
+
+internal abstract class PersistedOperation : OperationBase
+{
+    public abstract PersistedOperationKind Kind { get; }
+
+    public static GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => new();
+
+    private sealed class PersistedOperationFactory : IPersistedOperationFactory
     {
-        GetId,
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => GetId<TPersisted>();
+
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
     }
+}
 
-    internal interface IPersistedOperationFactory<TPersisted> : IPersistedOperationFactory where TPersisted : IPersisted
-    {
-        GetIdPersistedOperation<TPersisted> GetId();
+internal abstract class ResultPersistedOperation<TPersisted, TResult> : PersistedOperation, IResultOperation<TPersisted, TResult>
+    where TPersisted : IPersisted
+{
+    public void Accept(TPersisted value) => _ = GetResult(value);
 
-        ThisResultOperation<TPersisted> This();
-    }
+    public abstract TResult GetResult(TPersisted obj);
+}
 
-    internal interface IPersistedOperationFactory : IOperationFactory
-    {
-        GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted;
-    }
+internal sealed class GetIdPersistedOperation<TPersisted> : ResultPersistedOperation<TPersisted, string>
+    where TPersisted : IPersisted
+{
+    internal GetIdPersistedOperation() { }
 
-    internal abstract class PersistedOperation : OperationBase
-    {
-        public abstract PersistedOperationKind Kind { get; }
+    public override PersistedOperationKind Kind => PersistedOperationKind.GetId;
 
-        public static GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => new();
+    protected override string DebugViewCore => "GetId";
 
-        private sealed class PersistedOperationFactory : IPersistedOperationFactory
-        {
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => GetId<TPersisted>();
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-        }
-    }
-
-    internal abstract class ResultPersistedOperation<TPersisted, TResult> : PersistedOperation, IResultOperation<TPersisted, TResult>
-        where TPersisted : IPersisted
-    {
-        public void Accept(TPersisted value) => _ = GetResult(value);
-
-        public abstract TResult GetResult(TPersisted obj);
-    }
-
-    internal sealed class GetIdPersistedOperation<TPersisted> : ResultPersistedOperation<TPersisted, string>
-        where TPersisted : IPersisted
-    {
-        internal GetIdPersistedOperation() { }
-
-        public override PersistedOperationKind Kind => PersistedOperationKind.GetId;
-
-        protected override string DebugViewCore => "GetId";
-
-        public override string GetResult(TPersisted obj) => obj.Id;
-    }
+    public override string GetResult(TPersisted obj) => obj.Id;
 }

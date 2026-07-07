@@ -13,31 +13,30 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class BinaryExcelExpression : ExcelExpression
 {
-    internal sealed class BinaryExcelExpression : ExcelExpression
+    internal BinaryExcelExpression(ExcelExpressionKind kind, ExcelExpression left, ExcelExpression right)
     {
-        internal BinaryExcelExpression(ExcelExpressionKind kind, ExcelExpression left, ExcelExpression right)
-        {
-            Kind = kind;
-            Left = left;
-            Right = right;
-        }
+        Kind = kind;
+        Left = left;
+        Right = right;
+    }
 
-        public override ExcelExpressionKind Kind { get; }
+    public override ExcelExpressionKind Kind { get; }
 
-        public ExcelExpression Left { get; }
+    public ExcelExpression Left { get; }
 
-        public ExcelExpression Right { get; }
+    public ExcelExpression Right { get; }
 
-        protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
-        {
-            return visitor.VisitBinary(this);
-        }
+    protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
+    {
+        return visitor.VisitBinary(this);
+    }
 
-        public override string ToString()
-        {
-            return Kind.ToString() + "(" + Left.ToString() + ", " + Right.ToString() + ")";
-        }
+    public override string ToString()
+    {
+        return Kind.ToString() + "(" + Left.ToString() + ", " + Right.ToString() + ")";
     }
 }

@@ -10,24 +10,23 @@
 
 using Nuqleon.DataModel;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+public sealed partial class PersistedObjectSpace
 {
-    public sealed partial class PersistedObjectSpace
+    /// <summary>
+    /// Entity type used to store the descriptor of a persisted entity.
+    /// </summary>
+    private sealed class Descriptor
     {
         /// <summary>
-        /// Entity type used to store the descriptor of a persisted entity.
+        /// Gets or sets the string representation of the persisted entity kind, see <see cref="PersistableKind"/>.
         /// </summary>
-        private sealed class Descriptor
-        {
-            /// <summary>
-            /// Gets or sets the string representation of the persisted entity kind, see <see cref="PersistableKind"/>.
-            /// </summary>
-            [Mapping("kind")]
-            public string Kind { get; set; }
+        [Mapping("kind")]
+        public string Kind { get; set; }
 
-            //
-            // NB: Additional fields can be added here to represent additional state required for instantiation of persisted entities.
-            //
-        }
+        //
+        // NB: Additional fields can be added here to represent additional state required for instantiation of persisted entities.
+        //
     }
 }

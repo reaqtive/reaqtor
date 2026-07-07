@@ -10,22 +10,21 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableQubject<TInput, TOutput> : ReliableQubjectBase<TInput, TOutput>
 {
-    public class ReliableQubject<TInput, TOutput> : ReliableQubjectBase<TInput, TOutput>
+    public ReliableQubject(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQubject(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableQubscription SubscribeCore(IReliableQbserver<TOutput> observer, Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).Subscribe(this, observer, subscriptionUri, state);
-
-        protected override IReliableQbserver<TInput> CreateQbserverCore() => ((ReliableQueryProviderBase)Provider).CreateObserver(this);
-
-        protected override void DisposeCore() => ((ReliableQueryProviderBase)Provider).DeleteStream(this);
+        Expression = expression;
     }
+
+    public override Expression Expression { get; }
+
+    protected override IReliableQubscription SubscribeCore(IReliableQbserver<TOutput> observer, Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).Subscribe(this, observer, subscriptionUri, state);
+
+    protected override IReliableQbserver<TInput> CreateQbserverCore() => ((ReliableQueryProviderBase)Provider).CreateObserver(this);
+
+    protected override void DisposeCore() => ((ReliableQueryProviderBase)Provider).DeleteStream(this);
 }

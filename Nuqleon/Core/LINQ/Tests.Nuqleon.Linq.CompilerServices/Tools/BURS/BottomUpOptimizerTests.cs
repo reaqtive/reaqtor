@@ -8,185 +8,179 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.CompilerServices.Tools.BURS;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public partial class BottomUpOptimizerTests
 {
-    [TestClass]
-    public partial class BottomUpOptimizerTests
+    [TestMethod]
+    public void BottomUpOptimizer_ArgumentChecking()
     {
-        [TestMethod]
-        public void BottomUpOptimizer_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(sourceTreeComparer: null, EqualityComparer<Bar>.Default));
-            Assert.AreEqual("sourceTreeComparer", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(EqualityComparer<ITree<Bar>>.Default, sourceNodeComparer: null));
-            Assert.AreEqual("sourceNodeComparer", ex2.ParamName);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(sourceTreeComparer: null, EqualityComparer<Bar>.Default));
+        Assert.AreEqual("sourceTreeComparer", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>(EqualityComparer<ITree<Bar>>.Default, sourceNodeComparer: null));
+        Assert.AreEqual("sourceNodeComparer", ex2.ParamName);
 
-            var burs = new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>();
+        var burs = new BottomUpOptimizer<ITree<Bar>, Bar, BarWildcards>();
 
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Optimize(tree: null));
-            Assert.AreEqual("tree", ex3.ParamName);
-        }
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Optimize(tree: null));
+        Assert.AreEqual("tree", ex3.ParamName);
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple1()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple1()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Add, new ConstNumTree(42), ConstNumTree.Zero);
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Add, new ConstNumTree(42), ConstNumTree.Zero);
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple2()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple2()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Add, ConstNumTree.Zero, new ConstNumTree(42));
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Add, ConstNumTree.Zero, new ConstNumTree(42));
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple3()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple3()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Multiply, ConstNumTree.One, new ConstNumTree(42));
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Multiply, ConstNumTree.One, new ConstNumTree(42));
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple4()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple4()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Multiply, new ConstNumTree(42), ConstNumTree.One);
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Multiply, new ConstNumTree(42), ConstNumTree.One);
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple5()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple5()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Multiply, new BinaryNumTree(NumKind.Add, new ConstNumTree(42), ConstNumTree.Zero), ConstNumTree.One);
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Multiply, new BinaryNumTree(NumKind.Add, new ConstNumTree(42), ConstNumTree.Zero), ConstNumTree.One);
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple6()
-        {
-            var burs = GetNumOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple6()
+    {
+        var burs = GetNumOptimizer();
 
-            var t = new BinaryNumTree(NumKind.Add, new UnaryNumTree(NumKind.Negate, ConstNumTree.Zero), new ConstNumTree(42));
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const(42)", r.ToString());
-        }
+        var t = new BinaryNumTree(NumKind.Add, new UnaryNumTree(NumKind.Negate, ConstNumTree.Zero), new ConstNumTree(42));
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const(42)", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple7()
-        {
-            var burs = GetStrOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple7()
+    {
+        var burs = GetStrOptimizer();
 
-            var t = new ConcatStrTree();
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Const()", r.ToString());
-        }
+        var t = new ConcatStrTree();
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Const()", r.ToString());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Simple8()
-        {
-            var burs = GetStrOptimizer();
+    [TestMethod]
+    public void BottomUpOptimizer_Simple8()
+    {
+        var burs = GetStrOptimizer();
 
-            var t = new ConcatStrTree(
-                new UnaryStrTree(StrKind.ToUpper,
-                    new UnaryStrTree(StrKind.ToLower,
-                        new ConstStrTree("FoO")
-                    )
-                ),
+        var t = new ConcatStrTree(
+            new UnaryStrTree(StrKind.ToUpper,
                 new UnaryStrTree(StrKind.ToLower,
-                    new ConcatStrTree(
-                        ConstStrTree.Empty,
-                        ConstStrTree.Empty
-                    )
-                ),
-                new UnaryStrTree(StrKind.ToLower,
-                    new UnaryStrTree(StrKind.ToUpper,
-                        new ConstStrTree("bAr")
-                    )
+                    new ConstStrTree("FoO")
                 )
-            );
+            ),
+            new UnaryStrTree(StrKind.ToLower,
+                new ConcatStrTree(
+                    ConstStrTree.Empty,
+                    ConstStrTree.Empty
+                )
+            ),
+            new UnaryStrTree(StrKind.ToLower,
+                new UnaryStrTree(StrKind.ToUpper,
+                    new ConstStrTree("bAr")
+                )
+            )
+        );
 
-            var r = burs.Optimize(t);
-            Assert.AreEqual(t.Eval(), r.Eval());
-            Assert.AreEqual("Concat(ToUpper(Const(FoO)), ToLower(Const(bAr)))", r.ToString());
-        }
+        var r = burs.Optimize(t);
+        Assert.AreEqual(t.Eval(), r.Eval());
+        Assert.AreEqual("Concat(ToUpper(Const(FoO)), ToLower(Const(bAr)))", r.ToString());
+    }
 
-        private static BottomUpOptimizer<NumTree, Num, NumWildcards> GetNumOptimizer()
+    private static BottomUpOptimizer<NumTree, Num, NumWildcards> GetNumOptimizer()
+    {
+        var burs = new BottomUpOptimizer<NumTree, Num, NumWildcards>
         {
-            var burs = new BottomUpOptimizer<NumTree, Num, NumWildcards>
+            Rules =
             {
-                Rules =
-                {
-                    { n => new BinaryNumTree(NumKind.Add, n, ConstNumTree.Zero), n => n, 1 },
-                    { n => new BinaryNumTree(NumKind.Add, ConstNumTree.Zero, n), n => n, 1 },
-                    { n => new BinaryNumTree(NumKind.Multiply, n, ConstNumTree.One), n => n, 1 },
-                    { n => new BinaryNumTree(NumKind.Multiply, ConstNumTree.One, n), n => n, 1 },
-                    { n => new BinaryNumTree(NumKind.Multiply, n, ConstNumTree.Zero), n => ConstNumTree.Zero, 1 },
-                    { n => new BinaryNumTree(NumKind.Multiply, ConstNumTree.Zero, n), n => ConstNumTree.Zero, 1 },
-                    { n => new UnaryNumTree(NumKind.Negate, n), n => ConstNumTree.Zero, 1 },
-                },
-            };
+                { n => new BinaryNumTree(NumKind.Add, n, ConstNumTree.Zero), n => n, 1 },
+                { n => new BinaryNumTree(NumKind.Add, ConstNumTree.Zero, n), n => n, 1 },
+                { n => new BinaryNumTree(NumKind.Multiply, n, ConstNumTree.One), n => n, 1 },
+                { n => new BinaryNumTree(NumKind.Multiply, ConstNumTree.One, n), n => n, 1 },
+                { n => new BinaryNumTree(NumKind.Multiply, n, ConstNumTree.Zero), n => ConstNumTree.Zero, 1 },
+                { n => new BinaryNumTree(NumKind.Multiply, ConstNumTree.Zero, n), n => ConstNumTree.Zero, 1 },
+                { n => new UnaryNumTree(NumKind.Negate, n), n => ConstNumTree.Zero, 1 },
+            },
+        };
 
-            return burs;
-        }
+        return burs;
+    }
 
-        private static BottomUpOptimizer<StrTree, StrKind, StrWildcards> GetStrOptimizer()
+    private static BottomUpOptimizer<StrTree, StrKind, StrWildcards> GetStrOptimizer()
+    {
+        var burs = new BottomUpOptimizer<StrTree, StrKind, StrWildcards>(new TreeEqualityComparer<StrKind>(), EqualityComparer<StrKind>.Default)
         {
-            var burs = new BottomUpOptimizer<StrTree, StrKind, StrWildcards>(new TreeEqualityComparer<StrKind>(), EqualityComparer<StrKind>.Default)
+            Leaves =
             {
-                Leaves =
-                {
-                    { (ConcatStrTree c) => ConstStrTree.Empty, c => c.Children.Count == 0, 1 },
-                },
+                { (ConcatStrTree c) => ConstStrTree.Empty, c => c.Children.Count == 0, 1 },
+            },
 
-                Rules =
-                {
-                    { () => new UnaryStrTree(StrKind.ToLower, ConstStrTree.Empty), () => ConstStrTree.Empty, 1 },
-                    { () => new UnaryStrTree(StrKind.ToUpper, ConstStrTree.Empty), () => ConstStrTree.Empty, 1 },
-                    { s => new UnaryStrTree(StrKind.ToUpper, new UnaryStrTree(StrKind.ToUpper, s)), s => new UnaryStrTree(StrKind.ToUpper, s), 1 },
-                    { s => new UnaryStrTree(StrKind.ToUpper, new UnaryStrTree(StrKind.ToLower, s)), s => new UnaryStrTree(StrKind.ToUpper, s), 1 },
-                    { s => new UnaryStrTree(StrKind.ToLower, new UnaryStrTree(StrKind.ToUpper, s)), s => new UnaryStrTree(StrKind.ToLower, s), 1 },
-                    { s => new UnaryStrTree(StrKind.ToLower, new UnaryStrTree(StrKind.ToLower, s)), s => new UnaryStrTree(StrKind.ToLower, s), 1 },
-                },
+            Rules =
+            {
+                { () => new UnaryStrTree(StrKind.ToLower, ConstStrTree.Empty), () => ConstStrTree.Empty, 1 },
+                { () => new UnaryStrTree(StrKind.ToUpper, ConstStrTree.Empty), () => ConstStrTree.Empty, 1 },
+                { s => new UnaryStrTree(StrKind.ToUpper, new UnaryStrTree(StrKind.ToUpper, s)), s => new UnaryStrTree(StrKind.ToUpper, s), 1 },
+                { s => new UnaryStrTree(StrKind.ToUpper, new UnaryStrTree(StrKind.ToLower, s)), s => new UnaryStrTree(StrKind.ToUpper, s), 1 },
+                { s => new UnaryStrTree(StrKind.ToLower, new UnaryStrTree(StrKind.ToUpper, s)), s => new UnaryStrTree(StrKind.ToLower, s), 1 },
+                { s => new UnaryStrTree(StrKind.ToLower, new UnaryStrTree(StrKind.ToLower, s)), s => new UnaryStrTree(StrKind.ToLower, s), 1 },
+            },
 
-                Fallbacks =
-                {
-                    { s => new ConcatStrTree(s.Children.Cast<StrTree>().Where(c => c != ConstStrTree.Empty).ToArray()), s => s is ConcatStrTree && s.Children.Contains(ConstStrTree.Empty), 1 },
-                },
-            };
+            Fallbacks =
+            {
+                { s => new ConcatStrTree(s.Children.Cast<StrTree>().Where(c => c != ConstStrTree.Empty).ToArray()), s => s is ConcatStrTree && s.Children.Contains(ConstStrTree.Empty), 1 },
+            },
+        };
 
-            return burs;
-        }
+        return burs;
     }
 }

@@ -8,156 +8,149 @@
 // BD - January 2018
 //
 
-using System;
-using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.QueryEngine;
 
 using Utilities;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class LoggingStateWriterTests
 {
-    [TestClass]
-    public class LoggingStateWriterTests
+    [TestMethod]
+    public void LoggingStateWriter_Basics()
     {
-        [TestMethod]
-        public void LoggingStateWriter_Basics()
+        var sb = new StringBuilder();
+
+        using (var sw = new StringWriter(sb))
         {
-            var sb = new StringBuilder();
+            using var w = new MyWriter();
+            using var writer = new LoggingStateWriter(w, sw);
 
-            using (var sw = new StringWriter(sb))
-            {
-                using var w = new MyWriter();
-                using var writer = new LoggingStateWriter(w, sw);
+            Assert.AreEqual(CheckpointKind.Full, writer.CheckpointKind);
 
-                Assert.AreEqual(CheckpointKind.Full, writer.CheckpointKind);
+            var s = writer.GetItemWriter("bar", "foo");
+            Assert.IsNotNull(s);
 
-                var s = writer.GetItemWriter("bar", "foo");
-                Assert.IsNotNull(s);
+            writer.DeleteItem("bar", "foo");
 
-                writer.DeleteItem("bar", "foo");
+            writer.Rollback();
 
-                writer.Rollback();
-
-                writer.CommitAsync().Wait();
-            }
-
-            var log = sb.ToString();
-
-            foreach (var entry in new[]
-            {
-                "GetItemWriter(bar, foo)/Start",
-                "GetItemWriter(bar, foo)/Stop",
-
-                "DeleteItem(bar, foo)/Start",
-                "DeleteItem(bar, foo)/Stop",
-
-                "Rollback()/Start",
-                "Rollback()/Stop",
-
-                "CommitAsync()/Start",
-                "CommitAsync()/Stop",
-
-                "Dispose()/Start",
-                "Dispose()/Stop",
-            })
-            {
-                Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
-            }
+            writer.CommitAsync().Wait();
         }
 
-        [TestMethod]
-        public void LoggingStateWriter_Errors()
+        var log = sb.ToString();
+
+        foreach (var entry in new[]
         {
-            var sb = new StringBuilder();
+            "GetItemWriter(bar, foo)/Start",
+            "GetItemWriter(bar, foo)/Stop",
 
-            using (var sw = new StringWriter(sb))
-            {
-                using var w = new MyWriter { Throw = true };
-                using var writer = new LoggingStateWriter(w, sw);
+            "DeleteItem(bar, foo)/Start",
+            "DeleteItem(bar, foo)/Stop",
 
-                Assert.ThrowsExactly<NotImplementedException>(() => _ = writer.GetItemWriter("bar", "foo"));
-                Assert.ThrowsExactly<NotImplementedException>(() => writer.DeleteItem("bar", "foo"));
-                Assert.ThrowsExactly<NotImplementedException>(() => writer.Rollback());
-                Assert.ThrowsExactly<NotImplementedException>(() => writer.CommitAsync().GetAwaiter().GetResult());
-                Assert.ThrowsExactly<NotImplementedException>(() => writer.Dispose());
+            "Rollback()/Start",
+            "Rollback()/Stop",
 
-                w.Throw = false;
-            }
+            "CommitAsync()/Start",
+            "CommitAsync()/Stop",
 
-            var log = sb.ToString();
+            "Dispose()/Start",
+            "Dispose()/Stop",
+        })
+        {
+            Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
+        }
+    }
 
-            foreach (var entry in new[]
-            {
-                "GetItemWriter(bar, foo)/Start",
-                "GetItemWriter(bar, foo)/Error",
-                "GetItemWriter(bar, foo)/Stop",
+    [TestMethod]
+    public void LoggingStateWriter_Errors()
+    {
+        var sb = new StringBuilder();
 
-                "DeleteItem(bar, foo)/Start",
-                "DeleteItem(bar, foo)/Error",
-                "DeleteItem(bar, foo)/Stop",
+        using (var sw = new StringWriter(sb))
+        {
+            using var w = new MyWriter { Throw = true };
+            using var writer = new LoggingStateWriter(w, sw);
 
-                "Rollback()/Start",
-                "Rollback()/Error",
-                "Rollback()/Stop",
+            Assert.ThrowsExactly<NotImplementedException>(() => _ = writer.GetItemWriter("bar", "foo"));
+            Assert.ThrowsExactly<NotImplementedException>(() => writer.DeleteItem("bar", "foo"));
+            Assert.ThrowsExactly<NotImplementedException>(() => writer.Rollback());
+            Assert.ThrowsExactly<NotImplementedException>(() => writer.CommitAsync().GetAwaiter().GetResult());
+            Assert.ThrowsExactly<NotImplementedException>(() => writer.Dispose());
 
-                "CommitAsync()/Start",
-                "CommitAsync()/Error",
-                "CommitAsync()/Stop",
-
-                "Dispose()/Start",
-                "Dispose()/Error",
-                "Dispose()/Stop",
-            })
-            {
-                Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
-            }
+            w.Throw = false;
         }
 
-        private sealed class MyWriter : IStateWriter
+        var log = sb.ToString();
+
+        foreach (var entry in new[]
         {
-            public bool Throw;
+            "GetItemWriter(bar, foo)/Start",
+            "GetItemWriter(bar, foo)/Error",
+            "GetItemWriter(bar, foo)/Stop",
 
-            public CheckpointKind CheckpointKind => CheckpointKind.Full;
+            "DeleteItem(bar, foo)/Start",
+            "DeleteItem(bar, foo)/Error",
+            "DeleteItem(bar, foo)/Stop",
 
-            public Task CommitAsync(CancellationToken token, IProgress<int> progress)
-            {
-                if (Throw)
-                    throw new NotImplementedException();
+            "Rollback()/Start",
+            "Rollback()/Error",
+            "Rollback()/Stop",
 
-                return Task.CompletedTask;
-            }
+            "CommitAsync()/Start",
+            "CommitAsync()/Error",
+            "CommitAsync()/Stop",
 
-            public void DeleteItem(string category, string key)
-            {
-                if (Throw)
-                    throw new NotImplementedException();
-            }
+            "Dispose()/Start",
+            "Dispose()/Error",
+            "Dispose()/Stop",
+        })
+        {
+            Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
+        }
+    }
 
-            public void Dispose()
-            {
-                if (Throw)
-                    throw new NotImplementedException();
-            }
+    private sealed class MyWriter : IStateWriter
+    {
+        public bool Throw;
 
-            public Stream GetItemWriter(string category, string key)
-            {
-                if (Throw)
-                    throw new NotImplementedException();
+        public CheckpointKind CheckpointKind => CheckpointKind.Full;
 
-                return new MemoryStream();
-            }
+        public Task CommitAsync(CancellationToken token, IProgress<int> progress)
+        {
+            if (Throw)
+                throw new NotImplementedException();
 
-            public void Rollback()
-            {
-                if (Throw)
-                    throw new NotImplementedException();
-            }
+            return Task.CompletedTask;
+        }
+
+        public void DeleteItem(string category, string key)
+        {
+            if (Throw)
+                throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            if (Throw)
+                throw new NotImplementedException();
+        }
+
+        public Stream GetItemWriter(string category, string key)
+        {
+            if (Throw)
+                throw new NotImplementedException();
+
+            return new MemoryStream();
+        }
+
+        public void Rollback()
+        {
+            if (Throw)
+                throw new NotImplementedException();
         }
     }
 }

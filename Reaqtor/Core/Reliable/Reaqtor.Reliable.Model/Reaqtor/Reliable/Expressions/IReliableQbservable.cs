@@ -6,15 +6,14 @@ using System;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
-{
-    public interface IReliableQbservable : IReliableReactiveExpressible
-    {
-        Type ElementType { get; }
-    }
+namespace Reaqtor.Reliable.Expressions;
 
-    public interface IReliableQbservable<out T> : IReliableReactiveObservable<T>, IReliableQbservable
-    {
-        IReliableQubscription Subscribe(IReliableQbserver<T> observer, Uri subscriptionUri, object state = null);
-    }
+public interface IReliableQbservable : IReliableReactiveExpressible
+{
+    Type ElementType { get; }
+}
+
+public interface IReliableQbservable<out T> : IReliableReactiveObservable<T>, IReliableQbservable
+{
+    IReliableQubscription Subscribe(IReliableQbserver<T> observer, Uri subscriptionUri, object state = null);
 }

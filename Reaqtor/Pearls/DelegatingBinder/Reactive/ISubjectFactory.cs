@@ -4,10 +4,9 @@
 
 using System.Reactive.Subjects;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal interface ISubjectFactory<T>
 {
-    internal interface ISubjectFactory<T>
-    {
-        ISubject<T> Create();
-    }
+    ISubject<T> Create();
 }

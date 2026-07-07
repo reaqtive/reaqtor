@@ -4,40 +4,39 @@
 
 using System;
 
-namespace Reaqtor.IoT
+namespace Reaqtor.IoT;
+
+// Avoids taking dependency on Rx
+
+public static class MiniRx
 {
-    // Avoids taking dependency on Rx
-
-    public static class MiniRx
+    public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext)
     {
-        public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext)
+        return source.Subscribe(new AnonymousObserver<T>(onNext, _ => { }, () => { }));
+    }
+
+    public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError, Action onCompleted)
+    {
+        return source.Subscribe(new AnonymousObserver<T>(onNext, onError, onCompleted));
+    }
+
+    private sealed class AnonymousObserver<T> : IObserver<T>
+    {
+        private readonly Action<T> _onNext;
+        private readonly Action<Exception> _onError;
+        private readonly Action _onCompleted;
+
+        public AnonymousObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
         {
-            return source.Subscribe(new AnonymousObserver<T>(onNext, _ => { }, () => { }));
+            _onNext = onNext;
+            _onError = onError;
+            _onCompleted = onCompleted;
         }
 
-        public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError, Action onCompleted)
-        {
-            return source.Subscribe(new AnonymousObserver<T>(onNext, onError, onCompleted));
-        }
+        public void OnCompleted() => _onCompleted();
 
-        private sealed class AnonymousObserver<T> : IObserver<T>
-        {
-            private readonly Action<T> _onNext;
-            private readonly Action<Exception> _onError;
-            private readonly Action _onCompleted;
+        public void OnError(Exception error) => _onError(error);
 
-            public AnonymousObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
-            {
-                _onNext = onNext;
-                _onError = onError;
-                _onCompleted = onCompleted;
-            }
-
-            public void OnCompleted() => _onCompleted();
-
-            public void OnError(Exception error) => _onError(error);
-
-            public void OnNext(T value) => _onNext(value);
-        }
+        public void OnNext(T value) => _onNext(value);
     }
 }

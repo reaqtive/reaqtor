@@ -92,134 +92,133 @@ using System.Threading.Tasks;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
-namespace PartitionedSubject
+namespace PartitionedSubject;
+
+internal static class Program
 {
-    internal static class Program
+    public static void Main()
     {
-        public static void Main()
+        Naive();
+        Optimized();
+    }
+
+    private static void Naive()
+    {
+        var M = 1000;
+
+        var sub = new UnorderedFastSubject<Weather>();
+
+        var c = new Dictionary<string, int>();
+
+        var rnd1 = Random.Shared;
+
+        var sw = Stopwatch.StartNew();
+
+        Console.Write("Subscribing " + M + "... ");
+
+        for (var m = 0; m < M; m++)
         {
-            Naive();
-            Optimized();
+            if (m % 1000 == 0)
+                Console.Title = m.ToString(CultureInfo.InvariantCulture);
+
+            var tile = GetTile(rnd1);
+
+            sub.Where(w => w.Tile == tile).Subscribe(Observer.Create<Weather>(_ =>
+            {
+                c.TryGetValue(tile, out var d);
+                c[tile] = d + 1;
+            }));
         }
 
-        private static void Naive()
+        Console.WriteLine("Done " + sw.Elapsed);
+
+        Publish(sub, 10000);
+
+        Console.WriteLine("{0} tiles, avg {1}/tile, max {2}/tile", c.Count, c.Values.Average(), c.Values.Max());
+    }
+
+    private static void Optimized()
+    {
+        var M = 1000000;
+
+        var sub = new PartitionedSubject<Weather, string>(w => w.Tile, EqualityComparer<string>.Default);
+
+        var c = new Dictionary<string, int>();
+
+        var rnd1 = Random.Shared;
+
+        var sw = Stopwatch.StartNew();
+
+        Console.Write("Subscribing " + M + "... ");
+
+        for (var m = 0; m < M; m++)
         {
-            var M = 1000;
+            if (m % 1000 == 0)
+                Console.Title = m.ToString(CultureInfo.InvariantCulture);
 
-            var sub = new UnorderedFastSubject<Weather>();
-
-            var c = new Dictionary<string, int>();
-
-            var rnd1 = Random.Shared;
-
-            var sw = Stopwatch.StartNew();
-
-            Console.Write("Subscribing " + M + "... ");
-
-            for (var m = 0; m < M; m++)
-            {
-                if (m % 1000 == 0)
-                    Console.Title = m.ToString(CultureInfo.InvariantCulture);
-
-                var tile = GetTile(rnd1);
-
-                sub.Where(w => w.Tile == tile).Subscribe(Observer.Create<Weather>(_ =>
-                {
-                    c.TryGetValue(tile, out var d);
-                    c[tile] = d + 1;
-                }));
-            }
-
-            Console.WriteLine("Done " + sw.Elapsed);
-
-            Publish(sub, 10000);
-
-            Console.WriteLine("{0} tiles, avg {1}/tile, max {2}/tile", c.Count, c.Values.Average(), c.Values.Max());
-        }
-
-        private static void Optimized()
-        {
-            var M = 1000000;
-
-            var sub = new PartitionedSubject<Weather, string>(w => w.Tile, EqualityComparer<string>.Default);
-
-            var c = new Dictionary<string, int>();
-
-            var rnd1 = Random.Shared;
-
-            var sw = Stopwatch.StartNew();
-
-            Console.Write("Subscribing " + M + "... ");
-
-            for (var m = 0; m < M; m++)
-            {
-                if (m % 1000 == 0)
-                    Console.Title = m.ToString(CultureInfo.InvariantCulture);
-
-                var tile = GetTile(rnd1);
+            var tile = GetTile(rnd1);
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. (By design to keep Rx subscription running in sample.)
-                sub.Subscribe(tile, Observer.Create<Weather>(_ =>
-                {
-                    c.TryGetValue(tile, out var d);
-                    c[tile] = d + 1;
-                }));
-#pragma warning restore CA2000
-            }
-
-            Console.WriteLine("Done " + sw.Elapsed);
-
-            Publish(sub);
-
-            Console.WriteLine("{0} tiles, avg {1}/tile, max {2}/tile", c.Count, c.Values.Average(), c.Values.Max());
-        }
-
-        private static void Publish(IObserver<Weather> sub, int N = 1000000)
-        {
-            var sw = Stopwatch.StartNew();
-
-            Console.Write("Publishing " + N + "... ");
-
-            var pub = Task.Run(() =>
+            sub.Subscribe(tile, Observer.Create<Weather>(_ =>
             {
-                var rnd2 = Random.Shared;
-
-                for (var n = 0; n < N; n++)
-                {
-                    if (n % 1000 == 0)
-                        Console.Title = n.ToString(CultureInfo.InvariantCulture);
-
-                    var tile = GetTile(rnd2);
-
-                    sub.OnNext(new Weather { Tile = tile });
-                }
-            });
-
-            pub.Wait();
-
-            Console.WriteLine("Done " + sw.Elapsed);
+                c.TryGetValue(tile, out var d);
+                c[tile] = d + 1;
+            }));
+#pragma warning restore CA2000
         }
 
-        private static string GetTile(Random rnd)
+        Console.WriteLine("Done " + sw.Elapsed);
+
+        Publish(sub);
+
+        Console.WriteLine("{0} tiles, avg {1}/tile, max {2}/tile", c.Count, c.Values.Average(), c.Values.Max());
+    }
+
+    private static void Publish(IObserver<Weather> sub, int N = 1000000)
+    {
+        var sw = Stopwatch.StartNew();
+
+        Console.Write("Publishing " + N + "... ");
+
+        var pub = Task.Run(() =>
         {
-            const int MAX = 999;
-            const int WIDTH = 3;
+            var rnd2 = Random.Shared;
+
+            for (var n = 0; n < N; n++)
+            {
+                if (n % 1000 == 0)
+                    Console.Title = n.ToString(CultureInfo.InvariantCulture);
+
+                var tile = GetTile(rnd2);
+
+                sub.OnNext(new Weather { Tile = tile });
+            }
+        });
+
+        pub.Wait();
+
+        Console.WriteLine("Done " + sw.Elapsed);
+    }
+
+    private static string GetTile(Random rnd)
+    {
+        const int MAX = 999;
+        const int WIDTH = 3;
 
 #pragma warning disable CA5394 // Do not use insecure randomness. (No security needed for this sample.)
-            var i = rnd.Next(0, MAX);
-            var j = rnd.Next(0, MAX);
+        var i = rnd.Next(0, MAX);
+        var j = rnd.Next(0, MAX);
 #pragma warning restore CA5394
 
-            var x = i.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
-            var y = j.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
+        var x = i.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
+        var y = j.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
 
-            var tile = "t000x" + x + "y" + y;
-            return tile;
-        }
+        var tile = "t000x" + x + "y" + y;
+        return tile;
     }
+}
 
-    internal class Weather
-    {
-        public string Tile { get; set; }
-    }
+internal class Weather
+{
+    public string Tile { get; set; }
 }

@@ -4,9 +4,8 @@
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public interface IReliableQubscription : IReliableReactiveSubscription, IReliableReactiveExpressible
 {
-    public interface IReliableQubscription : IReliableReactiveSubscription, IReliableReactiveExpressible
-    {
-    }
 }

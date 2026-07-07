@@ -2,394 +2,389 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class Merge : OperatorTestBase
 {
-    [TestClass]
-    public partial class Merge : OperatorTestBase
+    [TestMethod]
+    public void Merge_ArgumentChecking()
     {
-        [TestMethod]
-        public void Merge_ArgumentChecking()
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Merge((ISubscribable<ISubscribable<int>>)null));
+    }
+
+    [TestMethod]
+    public void Merge_ObservableOfObservable_Data()
+    {
+        Run(client =>
         {
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Merge((ISubscribable<ISubscribable<int>>)null));
-        }
+            var ys1 = client.CreateColdObservable(
+                OnNext(10, 101),
+                OnNext(20, 102),
+                OnNext(110, 103),
+                OnNext(120, 104),
+                OnNext(210, 105),
+                OnNext(220, 106),
+                OnCompleted<int>(230)
+            );
 
-        [TestMethod]
-        public void Merge_ObservableOfObservable_Data()
+            var ys2 = client.CreateColdObservable(
+                OnNext(10, 201),
+                OnNext(20, 202),
+                OnNext(30, 203),
+                OnNext(40, 204),
+                OnCompleted<int>(50)
+            );
+
+            var ys3 = client.CreateColdObservable(
+                OnNext(10, 301),
+                OnNext(20, 302),
+                OnNext(30, 303),
+                OnNext(40, 304),
+                OnNext(120, 305),
+                OnCompleted<int>(150)
+            );
+
+            var xs = client.CreateHotObservable(
+                OnNext<ISubscribable<int>>(300, ys1),
+                OnNext<ISubscribable<int>>(400, ys2),
+                OnNext<ISubscribable<int>>(500, ys3),
+                OnCompleted<ISubscribable<int>>(600)
+            );
+
+            var res = client.Start(() =>
+                xs.Merge()
+            );
+
+            res.Messages.AssertEqual(
+                OnNext(310, 101),
+                OnNext(320, 102),
+                OnNext(410, 103),
+                OnNext(410, 201),
+                OnNext(420, 104),
+                OnNext(420, 202),
+                OnNext(430, 203),
+                OnNext(440, 204),
+                OnNext(510, 105),
+                OnNext(510, 301),
+                OnNext(520, 106),
+                OnNext(520, 302),
+                OnNext(530, 303),
+                OnNext(540, 304),
+                OnNext(620, 305),
+                OnCompleted<int>(650)
+            );
+
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 600)
+            );
+
+            ys1.Subscriptions.AssertEqual(
+                Subscribe(300, 530)
+            );
+
+            ys2.Subscriptions.AssertEqual(
+                Subscribe(400, 450)
+            );
+
+            ys3.Subscriptions.AssertEqual(
+                Subscribe(500, 650)
+            );
+        });
+    }
+
+    [TestMethod]
+    public void Merge_ObservableOfObservable_Data_NonOverlapped()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ys1 = client.CreateColdObservable(
-                    OnNext(10, 101),
-                    OnNext(20, 102),
-                    OnNext(110, 103),
-                    OnNext(120, 104),
-                    OnNext(210, 105),
-                    OnNext(220, 106),
-                    OnCompleted<int>(230)
-                );
+            var ys1 = client.CreateColdObservable(
+                OnNext(10, 101),
+                OnNext(20, 102),
+                OnCompleted<int>(230)
+            );
 
-                var ys2 = client.CreateColdObservable(
-                    OnNext(10, 201),
-                    OnNext(20, 202),
-                    OnNext(30, 203),
-                    OnNext(40, 204),
-                    OnCompleted<int>(50)
-                );
+            var ys2 = client.CreateColdObservable(
+                OnNext(10, 201),
+                OnNext(20, 202),
+                OnNext(30, 203),
+                OnNext(40, 204),
+                OnCompleted<int>(50)
+            );
 
-                var ys3 = client.CreateColdObservable(
-                    OnNext(10, 301),
-                    OnNext(20, 302),
-                    OnNext(30, 303),
-                    OnNext(40, 304),
-                    OnNext(120, 305),
-                    OnCompleted<int>(150)
-                );
+            var ys3 = client.CreateColdObservable(
+                OnNext(10, 301),
+                OnNext(20, 302),
+                OnNext(30, 303),
+                OnNext(40, 304),
+                OnCompleted<int>(50)
+            );
 
-                var xs = client.CreateHotObservable(
-                    OnNext<ISubscribable<int>>(300, ys1),
-                    OnNext<ISubscribable<int>>(400, ys2),
-                    OnNext<ISubscribable<int>>(500, ys3),
-                    OnCompleted<ISubscribable<int>>(600)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext<ISubscribable<int>>(300, ys1),
+                OnNext<ISubscribable<int>>(400, ys2),
+                OnNext<ISubscribable<int>>(500, ys3),
+                OnCompleted<ISubscribable<int>>(600)
+            );
 
-                var res = client.Start(() =>
-                    xs.Merge()
-                );
+            var res = client.Start(() =>
+                xs.Merge()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(310, 101),
-                    OnNext(320, 102),
-                    OnNext(410, 103),
-                    OnNext(410, 201),
-                    OnNext(420, 104),
-                    OnNext(420, 202),
-                    OnNext(430, 203),
-                    OnNext(440, 204),
-                    OnNext(510, 105),
-                    OnNext(510, 301),
-                    OnNext(520, 106),
-                    OnNext(520, 302),
-                    OnNext(530, 303),
-                    OnNext(540, 304),
-                    OnNext(620, 305),
-                    OnCompleted<int>(650)
-                );
+            res.Messages.AssertEqual(
+                OnNext(310, 101),
+                OnNext(320, 102),
+                OnNext(410, 201),
+                OnNext(420, 202),
+                OnNext(430, 203),
+                OnNext(440, 204),
+                OnNext(510, 301),
+                OnNext(520, 302),
+                OnNext(530, 303),
+                OnNext(540, 304),
+                OnCompleted<int>(600)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 600)
-                );
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 600)
+            );
 
-                ys1.Subscriptions.AssertEqual(
-                    Subscribe(300, 530)
-                );
+            ys1.Subscriptions.AssertEqual(
+                Subscribe(300, 530)
+            );
 
-                ys2.Subscriptions.AssertEqual(
-                    Subscribe(400, 450)
-                );
+            ys2.Subscriptions.AssertEqual(
+                Subscribe(400, 450)
+            );
 
-                ys3.Subscriptions.AssertEqual(
-                    Subscribe(500, 650)
-                );
-            });
-        }
+            ys3.Subscriptions.AssertEqual(
+                Subscribe(500, 550)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Merge_ObservableOfObservable_Data_NonOverlapped()
+    [TestMethod]
+    public void Merge_ObservableOfObservable_InnerThrows()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ys1 = client.CreateColdObservable(
-                    OnNext(10, 101),
-                    OnNext(20, 102),
-                    OnCompleted<int>(230)
-                );
+            var ex = new Exception();
 
-                var ys2 = client.CreateColdObservable(
-                    OnNext(10, 201),
-                    OnNext(20, 202),
-                    OnNext(30, 203),
-                    OnNext(40, 204),
-                    OnCompleted<int>(50)
-                );
+            var ys1 = client.CreateColdObservable(
+                OnNext(10, 101),
+                OnNext(20, 102),
+                OnNext(110, 103),
+                OnNext(120, 104),
+                OnNext(210, 105),
+                OnNext(220, 106),
+                OnCompleted<int>(230)
+            );
 
-                var ys3 = client.CreateColdObservable(
-                    OnNext(10, 301),
-                    OnNext(20, 302),
-                    OnNext(30, 303),
-                    OnNext(40, 304),
-                    OnCompleted<int>(50)
-                );
+            var ys2 = client.CreateColdObservable(
+                OnNext(10, 201),
+                OnNext(20, 202),
+                OnNext(30, 203),
+                OnNext(40, 204),
+                OnError<int>(50, ex)
+            );
 
-                var xs = client.CreateHotObservable(
-                    OnNext<ISubscribable<int>>(300, ys1),
-                    OnNext<ISubscribable<int>>(400, ys2),
-                    OnNext<ISubscribable<int>>(500, ys3),
-                    OnCompleted<ISubscribable<int>>(600)
-                );
+            var ys3 = client.CreateColdObservable(
+                OnNext(10, 301),
+                OnNext(20, 302),
+                OnNext(30, 303),
+                OnNext(40, 304),
+                OnCompleted<int>(150)
+            );
 
-                var res = client.Start(() =>
-                    xs.Merge()
-                );
+            var xs = client.CreateHotObservable(
+                OnNext<ISubscribable<int>>(300, ys1),
+                OnNext<ISubscribable<int>>(400, ys2),
+                OnNext<ISubscribable<int>>(500, ys3),
+                OnCompleted<ISubscribable<int>>(600)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(310, 101),
-                    OnNext(320, 102),
-                    OnNext(410, 201),
-                    OnNext(420, 202),
-                    OnNext(430, 203),
-                    OnNext(440, 204),
-                    OnNext(510, 301),
-                    OnNext(520, 302),
-                    OnNext(530, 303),
-                    OnNext(540, 304),
-                    OnCompleted<int>(600)
-                );
+            var res = client.Start(() =>
+                xs.Merge()
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 600)
-                );
+            res.Messages.AssertEqual(
+                OnNext(310, 101),
+                OnNext(320, 102),
+                OnNext(410, 103),
+                OnNext(410, 201),
+                OnNext(420, 104),
+                OnNext(420, 202),
+                OnNext(430, 203),
+                OnNext(440, 204),
+                OnError<int>(450, ex)
+            );
 
-                ys1.Subscriptions.AssertEqual(
-                    Subscribe(300, 530)
-                );
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 450)
+            );
 
-                ys2.Subscriptions.AssertEqual(
-                    Subscribe(400, 450)
-                );
+            ys1.Subscriptions.AssertEqual(
+                Subscribe(300, 450)
+            );
 
-                ys3.Subscriptions.AssertEqual(
-                    Subscribe(500, 550)
-                );
-            });
-        }
+            ys2.Subscriptions.AssertEqual(
+                Subscribe(400, 450)
+            );
 
-        [TestMethod]
-        public void Merge_ObservableOfObservable_InnerThrows()
+            ys3.Subscriptions.AssertEqual(
+            );
+        });
+    }
+
+    [TestMethod]
+    public void Merge_ObservableOfObservable_OuterThrows()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var ys1 = client.CreateColdObservable(
-                    OnNext(10, 101),
-                    OnNext(20, 102),
-                    OnNext(110, 103),
-                    OnNext(120, 104),
-                    OnNext(210, 105),
-                    OnNext(220, 106),
-                    OnCompleted<int>(230)
-                );
+            var ys1 = client.CreateColdObservable(
+                OnNext(10, 101),
+                OnNext(20, 102),
+                OnNext(110, 103),
+                OnNext(120, 104),
+                OnNext(210, 105),
+                OnNext(220, 106),
+                OnCompleted<int>(230)
+            );
 
-                var ys2 = client.CreateColdObservable(
-                    OnNext(10, 201),
-                    OnNext(20, 202),
-                    OnNext(30, 203),
-                    OnNext(40, 204),
-                    OnError<int>(50, ex)
-                );
+            var ys2 = client.CreateColdObservable(
+                OnNext(10, 201),
+                OnNext(20, 202),
+                OnNext(30, 203),
+                OnNext(40, 204),
+                OnCompleted<int>(50)
+            );
 
-                var ys3 = client.CreateColdObservable(
-                    OnNext(10, 301),
-                    OnNext(20, 302),
-                    OnNext(30, 303),
-                    OnNext(40, 304),
-                    OnCompleted<int>(150)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext<ISubscribable<int>>(300, ys1),
+                OnNext<ISubscribable<int>>(400, ys2),
+                OnError<ISubscribable<int>>(500, ex)
+            );
 
-                var xs = client.CreateHotObservable(
-                    OnNext<ISubscribable<int>>(300, ys1),
-                    OnNext<ISubscribable<int>>(400, ys2),
-                    OnNext<ISubscribable<int>>(500, ys3),
-                    OnCompleted<ISubscribable<int>>(600)
-                );
+            var res = client.Start(() =>
+                xs.Merge()
+            );
 
-                var res = client.Start(() =>
-                    xs.Merge()
-                );
+            res.Messages.AssertEqual(
+                OnNext(310, 101),
+                OnNext(320, 102),
+                OnNext(410, 103),
+                OnNext(410, 201),
+                OnNext(420, 104),
+                OnNext(420, 202),
+                OnNext(430, 203),
+                OnNext(440, 204),
+                OnError<int>(500, ex)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(310, 101),
-                    OnNext(320, 102),
-                    OnNext(410, 103),
-                    OnNext(410, 201),
-                    OnNext(420, 104),
-                    OnNext(420, 202),
-                    OnNext(430, 203),
-                    OnNext(440, 204),
-                    OnError<int>(450, ex)
-                );
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 500)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 450)
-                );
+            ys1.Subscriptions.AssertEqual(
+                Subscribe(300, 500)
+            );
 
-                ys1.Subscriptions.AssertEqual(
-                    Subscribe(300, 450)
-                );
+            ys2.Subscriptions.AssertEqual(
+                Subscribe(400, 450)
+            );
+        });
+    }
 
-                ys2.Subscriptions.AssertEqual(
-                    Subscribe(400, 450)
-                );
-
-                ys3.Subscriptions.AssertEqual(
-                );
-            });
-        }
-
-        [TestMethod]
-        public void Merge_ObservableOfObservable_OuterThrows()
+    [TestMethod]
+    public void Merge_Binary_Data()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var xs = client.CreateHotObservable(
+                OnNext(210, 101),
+                OnNext(230, 102),
+                OnNext(310, 103),
+                OnNext(320, 104),
+                OnNext(410, 105),
+                OnNext(420, 106),
+                OnCompleted<int>(430)
+            );
 
-                var ys1 = client.CreateColdObservable(
-                    OnNext(10, 101),
-                    OnNext(20, 102),
-                    OnNext(110, 103),
-                    OnNext(120, 104),
-                    OnNext(210, 105),
-                    OnNext(220, 106),
-                    OnCompleted<int>(230)
-                );
+            var ys = client.CreateHotObservable(
+                OnNext(220, 201),
+                OnNext(240, 202),
+                OnNext(340, 203),
+                OnCompleted<int>(450)
+            );
 
-                var ys2 = client.CreateColdObservable(
-                    OnNext(10, 201),
-                    OnNext(20, 202),
-                    OnNext(30, 203),
-                    OnNext(40, 204),
-                    OnCompleted<int>(50)
-                );
+            var res = client.Start(() =>
+                xs.Merge(ys)
+            );
 
-                var xs = client.CreateHotObservable(
-                    OnNext<ISubscribable<int>>(300, ys1),
-                    OnNext<ISubscribable<int>>(400, ys2),
-                    OnError<ISubscribable<int>>(500, ex)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 101),
+                OnNext(220, 201),
+                OnNext(230, 102),
+                OnNext(240, 202),
+                OnNext(310, 103),
+                OnNext(320, 104),
+                OnNext(340, 203),
+                OnNext(410, 105),
+                OnNext(420, 106),
+                OnCompleted<int>(450)
+            );
 
-                var res = client.Start(() =>
-                    xs.Merge()
-                );
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 430)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(310, 101),
-                    OnNext(320, 102),
-                    OnNext(410, 103),
-                    OnNext(410, 201),
-                    OnNext(420, 104),
-                    OnNext(420, 202),
-                    OnNext(430, 203),
-                    OnNext(440, 204),
-                    OnError<int>(500, ex)
-                );
+            ys.Subscriptions.AssertEqual(
+                Subscribe(200, 450)
+            );
+        });
+    }
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 500)
-                );
-
-                ys1.Subscriptions.AssertEqual(
-                    Subscribe(300, 500)
-                );
-
-                ys2.Subscriptions.AssertEqual(
-                    Subscribe(400, 450)
-                );
-            });
-        }
-
-        [TestMethod]
-        public void Merge_Binary_Data()
+    [TestMethod]
+    public void Merge_Binary_Error()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(210, 101),
-                    OnNext(230, 102),
-                    OnNext(310, 103),
-                    OnNext(320, 104),
-                    OnNext(410, 105),
-                    OnNext(420, 106),
-                    OnCompleted<int>(430)
-                );
+            var ex = new Exception();
 
-                var ys = client.CreateHotObservable(
-                    OnNext(220, 201),
-                    OnNext(240, 202),
-                    OnNext(340, 203),
-                    OnCompleted<int>(450)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(210, 101),
+                OnError<int>(230, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.Merge(ys)
-                );
+            var ys = client.CreateHotObservable(
+                OnNext(220, 201),
+                OnNext(240, 202),
+                OnCompleted<int>(250)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 101),
-                    OnNext(220, 201),
-                    OnNext(230, 102),
-                    OnNext(240, 202),
-                    OnNext(310, 103),
-                    OnNext(320, 104),
-                    OnNext(340, 203),
-                    OnNext(410, 105),
-                    OnNext(420, 106),
-                    OnCompleted<int>(450)
-                );
+            var res = client.Start(() =>
+                xs.Merge(ys)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 430)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 101),
+                OnNext(220, 201),
+                OnError<int>(230, ex)
+            );
 
-                ys.Subscriptions.AssertEqual(
-                    Subscribe(200, 450)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 230)
+            );
 
-        [TestMethod]
-        public void Merge_Binary_Error()
-        {
-            Run(client =>
-            {
-                var ex = new Exception();
-
-                var xs = client.CreateHotObservable(
-                    OnNext(210, 101),
-                    OnError<int>(230, ex)
-                );
-
-                var ys = client.CreateHotObservable(
-                    OnNext(220, 201),
-                    OnNext(240, 202),
-                    OnCompleted<int>(250)
-                );
-
-                var res = client.Start(() =>
-                    xs.Merge(ys)
-                );
-
-                res.Messages.AssertEqual(
-                    OnNext(210, 101),
-                    OnNext(220, 201),
-                    OnError<int>(230, ex)
-                );
-
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 230)
-                );
-
-                ys.Subscriptions.AssertEqual(
-                    Subscribe(200, 230)
-                );
-            });
-        }
+            ys.Subscriptions.AssertEqual(
+                Subscribe(200, 230)
+            );
+        });
     }
 }

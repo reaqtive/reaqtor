@@ -4,13 +4,12 @@
 
 using BenchmarkDotNet.Running;
 
-namespace Perf.Nuqleon.Memory
+namespace Perf.Nuqleon.Memory;
+
+public static class Program
 {
-    public static class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            _ = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
-        }
+        _ = BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
     }
 }

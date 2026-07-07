@@ -5,40 +5,39 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class AddOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
 {
-    public class AddOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    private long _sequenceId = -1;
+
+    public AddOperation(TKey key, TValue value)
     {
-        private long _sequenceId = -1;
+        Key = key;
+        Value = value;
+    }
 
-        public AddOperation(TKey key, TValue value)
+    public override OperationType OperationType => OperationType.Add;
+
+    public TKey Key { get; }
+
+    public TValue Value { get; }
+
+    public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
+    {
+        ArgumentNullException.ThrowIfNull(dictionary);
+
+        if (!dictionary.ContainsKey(Key))
         {
-            Key = key;
-            Value = value;
+            var val = _sequenceId == -1 ? new Sequenced<TValue>(Value) : new Sequenced<TValue>(Value, _sequenceId);
+
+            _sequenceId = val.SequenceId;
+
+            dictionary = dictionary.Add(Key, val);
+
+            return new AddOperationResult<TKey, TValue>(keyAlreadyExists: false);
         }
 
-        public override OperationType OperationType => OperationType.Add;
-
-        public TKey Key { get; }
-
-        public TValue Value { get; }
-
-        public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
-        {
-            ArgumentNullException.ThrowIfNull(dictionary);
-
-            if (!dictionary.ContainsKey(Key))
-            {
-                var val = _sequenceId == -1 ? new Sequenced<TValue>(Value) : new Sequenced<TValue>(Value, _sequenceId);
-
-                _sequenceId = val.SequenceId;
-
-                dictionary = dictionary.Add(Key, val);
-
-                return new AddOperationResult<TKey, TValue>(keyAlreadyExists: false);
-            }
-
-            return new AddOperationResult<TKey, TValue>(keyAlreadyExists: true);
-        }
+        return new AddOperationResult<TKey, TValue>(keyAlreadyExists: true);
     }
 }

@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class InsertSubscriptionFactoryMetadata : InsertMetadataOperation
-    {
-        public InsertSubscriptionFactoryMetadata(Uri subscriptionFactoryUri)
-            : this(subscriptionFactoryUri, null, null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public InsertSubscriptionFactoryMetadata(Uri subscriptionFactoryUri, Expression expression, object state)
-            : base(ServiceOperationKind.InsertSubscriptionFactoryMetadata, subscriptionFactoryUri, expression, state)
-        {
-        }
+public class InsertSubscriptionFactoryMetadata : InsertMetadataOperation
+{
+    public InsertSubscriptionFactoryMetadata(Uri subscriptionFactoryUri)
+        : this(subscriptionFactoryUri, null, null)
+    {
+    }
+
+    public InsertSubscriptionFactoryMetadata(Uri subscriptionFactoryUri, Expression expression, object state)
+        : base(ServiceOperationKind.InsertSubscriptionFactoryMetadata, subscriptionFactoryUri, expression, state)
+    {
     }
 }

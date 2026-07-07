@@ -8,19 +8,18 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Interface for a visitor over generic trees.
+/// </summary>
+/// <typeparam name="T">Type of the data contained in the tree nodes.</typeparam>
+public interface ITreeVisitor<T>
 {
     /// <summary>
-    /// Interface for a visitor over generic trees.
+    /// Visits the specified tree.
     /// </summary>
-    /// <typeparam name="T">Type of the data contained in the tree nodes.</typeparam>
-    public interface ITreeVisitor<T>
-    {
-        /// <summary>
-        /// Visits the specified tree.
-        /// </summary>
-        /// <param name="node">Tree to visit.</param>
-        /// <returns>Result of the visit.</returns>
-        ITree<T> Visit(ITree<T> node);
-    }
+    /// <param name="node">Tree to visit.</param>
+    /// <returns>Result of the visit.</returns>
+    ITree<T> Visit(ITree<T> node);
 }

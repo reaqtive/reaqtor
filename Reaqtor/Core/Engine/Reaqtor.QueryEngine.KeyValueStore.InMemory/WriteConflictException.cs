@@ -4,35 +4,34 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+/// <summary>
+/// Exception to indicate a write conflict in the key/value store.
+/// </summary>
+public partial class WriteConflictException : Exception
 {
     /// <summary>
-    /// Exception to indicate a write conflict in the key/value store.
+    /// Creates a new <see cref="WriteConflictException"/>.
     /// </summary>
-    public partial class WriteConflictException : Exception
+    public WriteConflictException()
     {
-        /// <summary>
-        /// Creates a new <see cref="WriteConflictException"/>.
-        /// </summary>
-        public WriteConflictException()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="WriteConflictException"/> with the specified message.
-        /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        public WriteConflictException(string message) : base(message)
-        {
-        }
+    /// <summary>
+    /// Creates a new <see cref="WriteConflictException"/> with the specified message.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    public WriteConflictException(string message) : base(message)
+    {
+    }
 
-        /// <summary>
-        /// Creates a new <see cref="WriteConflictException"/> with the specified message and inner exception.
-        /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
-        public WriteConflictException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    /// <summary>
+    /// Creates a new <see cref="WriteConflictException"/> with the specified message and inner exception.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
+    public WriteConflictException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

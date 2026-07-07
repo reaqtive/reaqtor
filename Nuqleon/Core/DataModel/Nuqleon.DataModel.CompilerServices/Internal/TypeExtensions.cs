@@ -8,16 +8,13 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
+namespace Nuqleon.DataModel;
 
-namespace Nuqleon.DataModel
+internal static class TypeExtensions
 {
-    internal static class TypeExtensions
-    {
-        public static string ToCSharpStringPretty(this Type type) => System.TypeExtensions.ToCSharpString(type, useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false);
+    public static string ToCSharpStringPretty(this Type type) => System.TypeExtensions.ToCSharpString(type, useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false);
 
-        public static bool IsNullableType(this Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+    public static bool IsNullableType(this Type type) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-        public static Type GetNonNullType(this Type type) => type.GetGenericArguments()[0];
-    }
+    public static Type GetNonNullType(this Type type) => type.GetGenericArguments()[0];
 }

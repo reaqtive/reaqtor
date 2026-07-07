@@ -8,97 +8,93 @@
 //   BD - 08/03/2015 - Wrote these tests.
 //
 
-using System;
 using System.Runtime.CompilerServices;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests;
 
-namespace Tests
+[TestClass]
+public class WeakReferenceExtensionsTests
 {
-    [TestClass]
-    public class WeakReferenceExtensionsTests
+    [TestMethod]
+    public void WeakReferenceExtensions_ArgumentChecking()
     {
-        [TestMethod]
-        public void WeakReferenceExtensions_ArgumentChecking()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetTarget(default(WeakReference<string>)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(default(WeakReference<string>), () => ""));
-            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(new WeakReference<string>(""), default(Func<string>)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetTarget(default(WeakReference<string>)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(default(WeakReference<string>), () => ""));
+        Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(new WeakReference<string>(""), default(Func<string>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
+    }
 
-        [TestMethod]
-        public void WeakReferenceExtensions_Create_Null()
-        {
-            var w = WeakReferenceExtensions.Create<string>(target: null);
+    [TestMethod]
+    public void WeakReferenceExtensions_Create_Null()
+    {
+        var w = WeakReferenceExtensions.Create<string>(target: null);
 
-            Assert.IsFalse(w.TryGetTarget(out _));
+        Assert.IsFalse(w.TryGetTarget(out _));
 
-            Assert.IsNull(w.GetTarget());
+        Assert.IsNull(w.GetTarget());
 
-            Assert.IsNull(w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
-        }
+        Assert.IsNull(w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
+    }
 
-        [TestMethod]
-        public void WeakReferenceExtensions_Create_Alive()
-        {
-            var s = "bar".ToUpper();
+    [TestMethod]
+    public void WeakReferenceExtensions_Create_Alive()
+    {
+        var s = "bar".ToUpper();
 
-            var w = WeakReferenceExtensions.Create<string>(s);
+        var w = WeakReferenceExtensions.Create<string>(s);
 
-            Assert.IsTrue(w.TryGetTarget(out string target));
-            Assert.AreSame(s, target);
+        Assert.IsTrue(w.TryGetTarget(out string target));
+        Assert.AreSame(s, target);
 
-            Assert.AreSame(s, w.GetTarget());
+        Assert.AreSame(s, w.GetTarget());
 
-            Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
+        Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
 
-            GC.KeepAlive(s);
-        }
+        GC.KeepAlive(s);
+    }
 
-        [TestMethod]
-        public void WeakReferenceExtensions_Create_Dead()
-        {
-            var w = CreateWeakString();
+    [TestMethod]
+    public void WeakReferenceExtensions_Create_Dead()
+    {
+        var w = CreateWeakString();
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
 
-            Assert.IsFalse(w.TryGetTarget(out string ignored));
+        Assert.IsFalse(w.TryGetTarget(out string ignored));
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => w.GetTarget());
+        Assert.ThrowsExactly<InvalidOperationException>(() => w.GetTarget());
 
-            var s = w.GetOrSetTarget(() => { return "qux".ToUpper(); });
-            Assert.AreEqual("QUX", s);
+        var s = w.GetOrSetTarget(() => { return "qux".ToUpper(); });
+        Assert.AreEqual("QUX", s);
 
-            Assert.IsTrue(w.TryGetTarget(out string target));
-            Assert.AreSame(s, target);
+        Assert.IsTrue(w.TryGetTarget(out string target));
+        Assert.AreSame(s, target);
 
-            Assert.AreSame(s, w.GetTarget());
+        Assert.AreSame(s, w.GetTarget());
 
-            Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
+        Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
 
-            GC.KeepAlive(s);
-        }
+        GC.KeepAlive(s);
+    }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private static WeakReference<string> CreateWeakString()
-        {
-            var s = GetString();
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    private static WeakReference<string> CreateWeakString()
+    {
+        var s = GetString();
 
-            var w = WeakReferenceExtensions.Create<string>(s);
+        var w = WeakReferenceExtensions.Create<string>(s);
 
-            Assert.AreSame(s, w.GetTarget());
+        Assert.AreSame(s, w.GetTarget());
 
-            GC.KeepAlive(s);
+        GC.KeepAlive(s);
 
-            return w;
-        }
+        return w;
+    }
 
-        private static string GetString()
-        {
-            return "bar".ToUpper();
-        }
+    private static string GetString()
+    {
+        return "bar".ToUpper();
     }
 }

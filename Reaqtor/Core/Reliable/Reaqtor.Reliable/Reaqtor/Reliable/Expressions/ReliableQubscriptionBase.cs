@@ -6,14 +6,13 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public abstract class ReliableQubscriptionBase : ReliableReactiveSubscriptionBase, IReliableQubscription
 {
-    public abstract class ReliableQubscriptionBase : ReliableReactiveSubscriptionBase, IReliableQubscription
-    {
-        protected ReliableQubscriptionBase(IReliableQueryProvider provider) => Provider = provider;
+    protected ReliableQubscriptionBase(IReliableQueryProvider provider) => Provider = provider;
 
-        public IReliableQueryProvider Provider { get; }
+    public IReliableQueryProvider Provider { get; }
 
-        public abstract Expression Expression { get; }
-    }
+    public abstract Expression Expression { get; }
 }

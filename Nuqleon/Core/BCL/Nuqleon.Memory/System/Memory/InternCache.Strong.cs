@@ -8,28 +8,27 @@
 //   BD - 08/04/2015 - Adding intern caches.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+public static partial class InternCache
 {
-    public static partial class InternCache
+    private sealed class Strong<T> : IInternCache<T>, IServiceProvider
+        where T : class
     {
-        private sealed class Strong<T> : IInternCache<T>, IServiceProvider
-            where T : class
-        {
-            private readonly IMemoizedDelegate<Func<T, T>> _delegate;
+        private readonly IMemoizedDelegate<Func<T, T>> _delegate;
 
-            public Strong(IMemoizedDelegate<Func<T, T>> @delegate) => _delegate = @delegate;
+        public Strong(IMemoizedDelegate<Func<T, T>> @delegate) => _delegate = @delegate;
 
-            public string DebugView => _delegate.Cache.DebugView;
+        public string DebugView => _delegate.Cache.DebugView;
 
-            public int Count => _delegate.Cache.Count;
+        public int Count => _delegate.Cache.Count;
 
-            public void Clear() => _delegate.Cache.Clear();
+        public void Clear() => _delegate.Cache.Clear();
 
-            public void Dispose() => _delegate.Cache.Dispose();
+        public void Dispose() => _delegate.Cache.Dispose();
 
-            public T Intern(T value) => _delegate.Delegate(value);
+        public T Intern(T value) => _delegate.Delegate(value);
 
-            public object GetService(Type serviceType) => _delegate.Cache.GetService(serviceType);
-        }
+        public object GetService(Type serviceType) => _delegate.Cache.GetService(serviceType);
     }
 }

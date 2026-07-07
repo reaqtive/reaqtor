@@ -8,12 +8,11 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for a full-blown reactive processing engine.
+/// </summary>
+public interface IReactiveEngineProvider : IReactiveClientEngineProvider, IReactiveDefinitionEngineProvider, IReactiveMetadataEngineProvider
 {
-    /// <summary>
-    /// Interface for a full-blown reactive processing engine.
-    /// </summary>
-    public interface IReactiveEngineProvider : IReactiveClientEngineProvider, IReactiveDefinitionEngineProvider, IReactiveMetadataEngineProvider
-    {
-    }
 }

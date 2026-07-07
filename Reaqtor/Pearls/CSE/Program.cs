@@ -70,241 +70,240 @@ using System.Linq.Expressions;
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 #pragma warning disable CA2000 // Dispose objects before losing scope. (By design for Rx subscriptions in sample.)
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+internal static class Program
 {
-    internal static class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            Demo1();
-            Demo2();
-            Perf();
-        }
+        Demo1();
+        Demo2();
+        Perf();
+    }
 
-        /// <summary>
-        /// Quick perf test.
-        /// </summary>
-        private static void Perf()
-        {
-            var sub = new Subject<int>("xs");
+    /// <summary>
+    /// Quick perf test.
+    /// </summary>
+    private static void Perf()
+    {
+        var sub = new Subject<int>("xs");
 
-            var cout = Observer.Create<int>(
-                x => { },
-                ex => { },
-                () => { }
+        var cout = Observer.Create<int>(
+            x => { },
+            ex => { },
+            () => { }
+        );
+
+        var r = new Registry
+        {
+            { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
+            { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
+            { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
+            { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
+            { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
+        };
+
+        var svc = new Service(r)
+        {
+            //Logger = new ConsoleLogger()
+        };
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        var N = 10000;
+        var opt = false;
+
+        Console.WriteLine("Optimized = " + opt);
+        Console.WriteLine("N = " + N);
+
+        var sw = Stopwatch.StartNew();
+
+        for (var i = 0; i < N; i++)
+        {
+            var d = CreateSubscription(
+                svc,
+                () => Xs().Where(x => x > 0).Select(x => x * x).Take(int.MaxValue).Subscribe(O()),
+                opt
             );
-
-            var r = new Registry
-            {
-                { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
-                { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
-                { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
-                { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
-                { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
-            };
-
-            var svc = new Service(r)
-            {
-                //Logger = new ConsoleLogger()
-            };
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            var N = 10000;
-            var opt = false;
-
-            Console.WriteLine("Optimized = " + opt);
-            Console.WriteLine("N = " + N);
-
-            var sw = Stopwatch.StartNew();
-
-            for (var i = 0; i < N; i++)
-            {
-                var d = CreateSubscription(
-                    svc,
-                    () => Xs().Where(x => x > 0).Select(x => x * x).Take(int.MaxValue).Subscribe(O()),
-                    opt
-                );
-            }
-
-            Console.WriteLine("Time = " + sw.Elapsed);
-            Console.WriteLine("Memory = " + GC.GetTotalMemory(forceFullCollection: true));
-
-            sw.Restart();
-
-            Console.WriteLine("M = " + N);
-
-            var M = 10000;
-
-            for (var i = 1; i <= M; i++)
-            {
-                sub.OnNext(i);
-            }
-
-            Console.WriteLine("Time = " + sw.Elapsed);
-            Console.WriteLine("Memory = " + GC.GetTotalMemory(forceFullCollection: true));
         }
 
-        /// <summary>
-        /// Illustrates normalization of expressions to increase sharing likelihood.
-        /// </summary>
-        private static void Demo1()
+        Console.WriteLine("Time = " + sw.Elapsed);
+        Console.WriteLine("Memory = " + GC.GetTotalMemory(forceFullCollection: true));
+
+        sw.Restart();
+
+        Console.WriteLine("M = " + N);
+
+        var M = 10000;
+
+        for (var i = 1; i <= M; i++)
         {
-            var sub = new Subject<int>("xs");
-
-            var cout = Observer.Create<int>(
-                x => Console.WriteLine(x),
-                ex => { },
-                () => { }
-            );
-
-            var r = new Registry
-            {
-                { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
-                { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
-                { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
-                { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
-                { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
-            };
-
-            var svc = new Service(r)
-            {
-                Logger = new ConsoleLogger()
-            };
-
-            //
-            // All of these get normalized to the same expression.
-            //
-
-            Console.WriteLine("1>");
-            var d1 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Where(x => x % 2 == 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            Console.WriteLine("2>");
-            var d2 = CreateSubscription(svc, () => Xs().Where(x => x % 2 == 0).Where(x => x > 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            //Console.WriteLine("3>");
-            //var d3 = CreateSubscription(svc, () => Xs().Where(x => x % 2 == 0).Where(x => x < 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            Console.WriteLine("4>");
-            var d4 = CreateSubscription(svc, () => Xs().Where(x => !(x <= 0)).Where(x => !(x % 2 != 0)).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            Console.WriteLine("5>");
-            var d5 = CreateSubscription(svc, () => Xs().Where(x => x > 0 && x % 2 == 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            Console.WriteLine("6>");
-            var d6 = CreateSubscription(svc, () => Xs().Where(x => !(!(x > 0) || !(x % 2 == 0))).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-            Console.WriteLine("7>");
-            var d7 = CreateSubscription(svc, () => Xs().Where(x => 0 < x && 0 == x % 2).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
-
-            sub.OnNext(1);
-            sub.OnNext(2);
-            sub.OnNext(3);
-            sub.OnCompleted();
+            sub.OnNext(i);
         }
 
-        /// <summary>
-        /// Illustrates reuse of common sub-expressions and refcounting of intermediaries.
-        /// </summary>
-        private static void Demo2()
+        Console.WriteLine("Time = " + sw.Elapsed);
+        Console.WriteLine("Memory = " + GC.GetTotalMemory(forceFullCollection: true));
+    }
+
+    /// <summary>
+    /// Illustrates normalization of expressions to increase sharing likelihood.
+    /// </summary>
+    private static void Demo1()
+    {
+        var sub = new Subject<int>("xs");
+
+        var cout = Observer.Create<int>(
+            x => Console.WriteLine(x),
+            ex => { },
+            () => { }
+        );
+
+        var r = new Registry
         {
-            var sub = new Subject<int>("xs");
+            { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
+            { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
+            { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
+            { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
+            { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
+        };
 
-            var cout = Observer.Create<int>(
-                x => Console.WriteLine(x),
-                ex => { },
-                () => { }
-            );
-
-            var r = new Registry
-            {
-                { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
-                { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
-                { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
-                { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
-                { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
-            };
-
-            var svc = new Service(r)
-            {
-                Logger = new ConsoleLogger()
-            };
-
-            //
-            // All of these share stuff.
-            //
-
-            Console.WriteLine("1>");
-            var d1 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x * x).Subscribe(O()));
-            Console.WriteLine("2>");
-            var d2 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x + 1).Subscribe(O()));
-            Console.WriteLine("3>");
-            var d3 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x * x).Subscribe(O()));
-            Console.WriteLine("4>");
-            var d4 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x + 1).Select(x => x - 1).Subscribe(O()));
-            Console.WriteLine("5>");
-            var d5 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Subscribe(O()));
-            Console.WriteLine("6>");
-            var d6 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Take(10).Subscribe(O())); // NOTE: for n == 3, this will crash right now on collection mutation in Subject<T>
-            Console.WriteLine("7>");
-            var d7 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Take(10).Subscribe(O()));
-
-            sub.OnNext(1);
-            sub.OnNext(2);
-            sub.OnNext(3);
-            sub.OnCompleted();
-
-            //
-            // Effects of refcounting.
-            //
-
-            d5.Dispose();
-            d3.Dispose();
-            d1.Dispose();
-            d6.Dispose();
-            d4.Dispose();
-            d7.Dispose();
-            d2.Dispose();
-        }
-
-        /// <summary>
-        /// Creates a subscription in the specified service using the given expression.
-        /// </summary>
-        /// <param name="svc">Service to create the subscription in.</param>
-        /// <param name="subscribe">Expression representing a subscription.</param>
-        /// <param name="optimize">Enables or disables CSE optimizations.</param>
-        /// <returns>Disposable resource used to cancel the subscription.</returns>
-        private static IDisposable CreateSubscription(Service svc, Expression<Func<IDisposable>> subscribe, bool optimize = true)
+        var svc = new Service(r)
         {
-            var n = new Normalizer().Visit(subscribe);
+            Logger = new ConsoleLogger()
+        };
 
-            if (optimize)
-            {
-                var o = new QueryOperatorOptimizer().Optimize(n); // TODO: relocate in service front-end?
-                return svc.CreateSubscription(o);
-            }
-            else
-            {
-                return svc.CreateSubscription(n, share: false);
-            }
-        }
+        //
+        // All of these get normalized to the same expression.
+        //
 
-        // NOTE: the below is a gross simplification of the well-understood mechanisms to compose queries using proxies.
+        Console.WriteLine("1>");
+        var d1 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Where(x => x % 2 == 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        Console.WriteLine("2>");
+        var d2 = CreateSubscription(svc, () => Xs().Where(x => x % 2 == 0).Where(x => x > 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        //Console.WriteLine("3>");
+        //var d3 = CreateSubscription(svc, () => Xs().Where(x => x % 2 == 0).Where(x => x < 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        Console.WriteLine("4>");
+        var d4 = CreateSubscription(svc, () => Xs().Where(x => !(x <= 0)).Where(x => !(x % 2 != 0)).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        Console.WriteLine("5>");
+        var d5 = CreateSubscription(svc, () => Xs().Where(x => x > 0 && x % 2 == 0).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        Console.WriteLine("6>");
+        var d6 = CreateSubscription(svc, () => Xs().Where(x => !(!(x > 0) || !(x % 2 == 0))).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
+        Console.WriteLine("7>");
+        var d7 = CreateSubscription(svc, () => Xs().Where(x => 0 < x && 0 == x % 2).Select(x => x * x).Take(10).Take(7).Subscribe(O()));
 
-        /// <summary>
-        /// Accessor for the observable side of the subject identified as "my://xs".
-        /// </summary>
-        /// <returns>Always throws an exception; meant to used within an expression.</returns>
-        [KnownResource("my://xs")]
-        private static IObservable<int> Xs()
+        sub.OnNext(1);
+        sub.OnNext(2);
+        sub.OnNext(3);
+        sub.OnCompleted();
+    }
+
+    /// <summary>
+    /// Illustrates reuse of common sub-expressions and refcounting of intermediaries.
+    /// </summary>
+    private static void Demo2()
+    {
+        var sub = new Subject<int>("xs");
+
+        var cout = Observer.Create<int>(
+            x => Console.WriteLine(x),
+            ex => { },
+            () => { }
+        );
+
+        var r = new Registry
         {
-            throw new NotImplementedException();
-        }
+            { "my://xs", new Entry { Expression = Expression.Lambda<Func<IObservable<int>>>(Expression.Constant(sub, typeof(IObservable<int>))), CanShare = true, IsSubject = true } },
+            { "my://o", new Entry { Expression = Expression.Lambda<Func<IObserver<int>>>(Expression.Constant(cout, typeof(IObserver<int>))), CanShare = false } },
+            { "rx://operators/filter", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, bool>, IObservable<T>>>)((xs, f) => xs.Where(f)), CanShare = true } },
+            { "rx://operators/map", new Entry { Expression = (Expression<Func<IObservable<T>, Func<T, R>, IObservable<R>>>)((xs, f) => xs.Select(f)), CanShare = true } },
+            { "rx://operators/take", new Entry { Expression = (Expression<Func<IObservable<T>, int, IObservable<T>>>)((xs, n) => xs.Take(n)), CanShare = false } },
+        };
 
-        /// <summary>
-        /// Accessor for the observer identified as "my://o".
-        /// </summary>
-        /// <returns>Always throws an exception; meant to used within an expression.</returns>
-        [KnownResource("my://o")]
-        private static IObserver<int> O()
+        var svc = new Service(r)
         {
-            throw new NotImplementedException();
+            Logger = new ConsoleLogger()
+        };
+
+        //
+        // All of these share stuff.
+        //
+
+        Console.WriteLine("1>");
+        var d1 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x * x).Subscribe(O()));
+        Console.WriteLine("2>");
+        var d2 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x + 1).Subscribe(O()));
+        Console.WriteLine("3>");
+        var d3 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x * x).Subscribe(O()));
+        Console.WriteLine("4>");
+        var d4 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Select(x => x + 1).Select(x => x - 1).Subscribe(O()));
+        Console.WriteLine("5>");
+        var d5 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Subscribe(O()));
+        Console.WriteLine("6>");
+        var d6 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Take(10).Subscribe(O())); // NOTE: for n == 3, this will crash right now on collection mutation in Subject<T>
+        Console.WriteLine("7>");
+        var d7 = CreateSubscription(svc, () => Xs().Where(x => x > 0).Take(10).Subscribe(O()));
+
+        sub.OnNext(1);
+        sub.OnNext(2);
+        sub.OnNext(3);
+        sub.OnCompleted();
+
+        //
+        // Effects of refcounting.
+        //
+
+        d5.Dispose();
+        d3.Dispose();
+        d1.Dispose();
+        d6.Dispose();
+        d4.Dispose();
+        d7.Dispose();
+        d2.Dispose();
+    }
+
+    /// <summary>
+    /// Creates a subscription in the specified service using the given expression.
+    /// </summary>
+    /// <param name="svc">Service to create the subscription in.</param>
+    /// <param name="subscribe">Expression representing a subscription.</param>
+    /// <param name="optimize">Enables or disables CSE optimizations.</param>
+    /// <returns>Disposable resource used to cancel the subscription.</returns>
+    private static IDisposable CreateSubscription(Service svc, Expression<Func<IDisposable>> subscribe, bool optimize = true)
+    {
+        var n = new Normalizer().Visit(subscribe);
+
+        if (optimize)
+        {
+            var o = new QueryOperatorOptimizer().Optimize(n); // TODO: relocate in service front-end?
+            return svc.CreateSubscription(o);
         }
+        else
+        {
+            return svc.CreateSubscription(n, share: false);
+        }
+    }
+
+    // NOTE: the below is a gross simplification of the well-understood mechanisms to compose queries using proxies.
+
+    /// <summary>
+    /// Accessor for the observable side of the subject identified as "my://xs".
+    /// </summary>
+    /// <returns>Always throws an exception; meant to used within an expression.</returns>
+    [KnownResource("my://xs")]
+    private static IObservable<int> Xs()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Accessor for the observer identified as "my://o".
+    /// </summary>
+    /// <returns>Always throws an exception; meant to used within an expression.</returns>
+    [KnownResource("my://o")]
+    private static IObserver<int> O()
+    {
+        throw new NotImplementedException();
     }
 }

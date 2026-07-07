@@ -10,43 +10,42 @@
 
 using System.Reflection;
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+public partial class ExpressionOptimizer
 {
-    public partial class ExpressionOptimizer
+    /// <summary>
+    /// Indicates whether the expression being visited is part of an assignment to a parameter that has
+    /// <c>const</c> behavior, allowing for relaxations in the checks for constant folding.
+    /// </summary>
+    private bool _isConst;
+
+    /// <summary>
+    /// Visits the expression <paramref name="argument"/> using the corresponding <paramref name="parameter"/>
+    /// to determine whether the argument is assigned to a <c>ref</c> or <c>out</c> parameter. An argument that
+    /// is passed by reference gets visited using <see cref="LvalExpressionVisitor.VisitLval"/>.
+    /// </summary>
+    /// <param name="argument">The argument expression to visit.</param>
+    /// <param name="parameter">The parameter corresponding to the argument.</param>
+    /// <returns>The result of visiting the expression arguments.</returns>
+    protected override Expression VisitArgument(Expression argument, ParameterInfo parameter)
     {
-        /// <summary>
-        /// Indicates whether the expression being visited is part of an assignment to a parameter that has
-        /// <c>const</c> behavior, allowing for relaxations in the checks for constant folding.
-        /// </summary>
-        private bool _isConst;
+        var isConst = IsConst(parameter);
+        var wasConst = default(bool);
 
-        /// <summary>
-        /// Visits the expression <paramref name="argument"/> using the corresponding <paramref name="parameter"/>
-        /// to determine whether the argument is assigned to a <c>ref</c> or <c>out</c> parameter. An argument that
-        /// is passed by reference gets visited using <see cref="LvalExpressionVisitor.VisitLval"/>.
-        /// </summary>
-        /// <param name="argument">The argument expression to visit.</param>
-        /// <param name="parameter">The parameter corresponding to the argument.</param>
-        /// <returns>The result of visiting the expression arguments.</returns>
-        protected override Expression VisitArgument(Expression argument, ParameterInfo parameter)
+        if (isConst)
         {
-            var isConst = IsConst(parameter);
-            var wasConst = default(bool);
-
-            if (isConst)
-            {
-                wasConst = _isConst;
-                _isConst = true;
-            }
-
-            var res = base.VisitArgument(argument, parameter);
-
-            if (isConst)
-            {
-                _isConst = wasConst;
-            }
-
-            return res;
+            wasConst = _isConst;
+            _isConst = true;
         }
+
+        var res = base.VisitArgument(argument, parameter);
+
+        if (isConst)
+        {
+            _isConst = wasConst;
+        }
+
+        return res;
     }
 }

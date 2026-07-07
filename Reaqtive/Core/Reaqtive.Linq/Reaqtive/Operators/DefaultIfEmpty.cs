@@ -2,88 +2,86 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class DefaultIfEmpty<TSource> : SubscribableBase<TSource>
 {
-    internal sealed class DefaultIfEmpty<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+    private readonly TSource _defaultValue;
+
+    public DefaultIfEmpty(ISubscribable<TSource> source, TSource defaultValue = default)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly TSource _defaultValue;
+        Debug.Assert(source != null);
 
-        public DefaultIfEmpty(ISubscribable<TSource> source, TSource defaultValue = default)
+        _source = source;
+        _defaultValue = defaultValue;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<DefaultIfEmpty<TSource>, TSource>, IObserver<TSource>
+    {
+        private bool _isNotEmpty;
+
+        public _(DefaultIfEmpty<TSource> parent, IObserver<TSource> observer)
+            : base(parent, observer)
         {
-            Debug.Assert(source != null);
-
-            _source = source;
-            _defaultValue = defaultValue;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:DefaultIfEmpty";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            if (!_isNotEmpty)
+            {
+                Output.OnNext(Params._defaultValue);
+            }
+
+            Output.OnCompleted();
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<DefaultIfEmpty<TSource>, TSource>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            private bool _isNotEmpty;
+            Output.OnError(error);
+            Dispose();
+        }
 
-            public _(DefaultIfEmpty<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
+        public void OnNext(TSource value)
+        {
+            if (!_isNotEmpty)
             {
+                _isNotEmpty = true;
+                StateChanged = true;
             }
 
-            public override string Name => "rc:DefaultIfEmpty";
+            Output.OnNext(value);
+        }
 
-            public override Version Version => Versioning.v1;
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
+        }
 
-            public void OnCompleted()
-            {
-                if (!_isNotEmpty)
-                {
-                    Output.OnNext(Params._defaultValue);
-                }
+        protected override void LoadStateCore(IOperatorStateReader reader)
+        {
+            base.LoadStateCore(reader);
 
-                Output.OnCompleted();
-                Dispose();
-            }
+            _isNotEmpty = reader.Read<bool>();
+        }
 
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
 
-            public void OnNext(TSource value)
-            {
-                if (!_isNotEmpty)
-                {
-                    _isNotEmpty = true;
-                    StateChanged = true;
-                }
-
-                Output.OnNext(value);
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
-
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
-
-                _isNotEmpty = reader.Read<bool>();
-            }
-
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_isNotEmpty);
-            }
+            writer.Write(_isNotEmpty);
         }
     }
 }

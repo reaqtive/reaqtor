@@ -8,3425 +8,3418 @@
 // BD - February 2018
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive.Storage;
 
 using Tests.ReifiedOperations;
 
 using Utilities;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class LinkedListTests : PersistedTestBase
 {
-    [TestClass]
-    public class LinkedListTests : PersistedTestBase
+    // TODO: Add ManOrBoy tests.
+
+    [TestMethod]
+    public void LinkedList_CreateAndGet()
     {
-        // TODO: Add ManOrBoy tests.
+        var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
+        var space = new PersistedObjectSpace(new SerializationFactory());
 
-        [TestMethod]
-        public void LinkedList_CreateAndGet()
-        {
-            var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
-            var space = new PersistedObjectSpace(new SerializationFactory());
+        CreateAndGetCore(assert).Accept(space);
+    }
 
-            CreateAndGetCore(assert).Accept(space);
-        }
+    [TestMethod]
+    public void LinkedList_Volatile_CreateAndGet()
+    {
+        var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
+        var space = new VolatilePersistedObjectSpace();
 
-        [TestMethod]
-        public void LinkedList_Volatile_CreateAndGet()
-        {
-            var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
-            var space = new VolatilePersistedObjectSpace();
+        CreateAndGetCore(assert).Accept(space);
+    }
 
-            CreateAndGetCore(assert).Accept(space);
-        }
+    private static IOperation<IPersistedObjectSpace> CreateAndGetCore(IAssertOperationFactory assert) =>
+        Operation.Sequence(
 
-        private static IOperation<IPersistedObjectSpace> CreateAndGetCore(IAssertOperationFactory assert) =>
+            //
+            // Exceptions thrown by Create.
+            //
             Operation.Sequence(
+                assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.CreateLinkedList<int>(null))
+            ),
+
+            //
+            // Exceptions thrown by Get.
+            //
+            Operation.Sequence(
+                assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>(null))
+            ),
+
+            //
+            // Exceptions thrown by Delete.
+            //
+            Operation.Sequence(
+                assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
+            ),
+
+            //
+            // Create a new array.
+            //
+            PersistedObjectSpaceOperation.CreateLinkedList<int>("bar").Apply(list =>
 
                 //
-                // Exceptions thrown by Create.
+                // Check the new array is present in the object space.
                 //
                 Operation.Sequence(
-                    assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.CreateLinkedList<int>(null))
-                ),
-
-                //
-                // Exceptions thrown by Get.
-                //
-                Operation.Sequence(
-                    assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>(null))
-                ),
-
-                //
-                // Exceptions thrown by Delete.
-                //
-                Operation.Sequence(
-                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
-                ),
-
-                //
-                // Create a new array.
-                //
-                PersistedObjectSpaceOperation.CreateLinkedList<int>("bar").Apply(list =>
 
                     //
-                    // Check the new array is present in the object space.
+                    // Assert we can get the same instance back using GetLinkedList.
+                    //
+                    assert.AreSame(
+                        PersistedObjectSpaceOperation.GetLinkedList<int>("bar"),
+                        list
+                    ),
+
+                    //
+                    // Assert we can't create an artifact with the same name.
                     //
                     Operation.Sequence(
-
-                        //
-                        // Assert we can get the same instance back using GetLinkedList.
-                        //
-                        assert.AreSame(
-                            PersistedObjectSpaceOperation.GetLinkedList<int>("bar"),
-                            list
-                        ),
-
-                        //
-                        // Assert we can't create an artifact with the same name.
-                        //
-                        Operation.Sequence(
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateArray<int>("bar", 42)),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateDictionary<int, int>("bar")),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateList<int>("bar")),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateQueue<int>("bar")),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateSet<int>("bar")),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateStack<int>("bar")),
-                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateValue<int>("bar"))
-                        )
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateArray<int>("bar", 42)),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateDictionary<int, int>("bar")),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateList<int>("bar")),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateQueue<int>("bar")),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateSet<int>("bar")),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateStack<int>("bar")),
+                        assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateValue<int>("bar"))
                     )
-                ),
-
-                //
-                // Delete array.
-                //
-                PersistedObjectSpaceOperation.Delete("bar"),
-
-                //
-                // Check the array is no longer present in the object space.
-                //
-                Operation.Sequence(
-                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>("bar")),
-                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
                 )
-            );
+            ),
 
-        [TestMethod]
-        public void LinkedList_Recovery_CreateDefault() => WithNewSpace(s =>
+            //
+            // Delete array.
+            //
+            PersistedObjectSpaceOperation.Delete("bar"),
+
+            //
+            // Check the array is no longer present in the object space.
+            //
+            Operation.Sequence(
+                assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>("bar")),
+                assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
+            )
+        );
+
+    [TestMethod]
+    public void LinkedList_Recovery_CreateDefault() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+
+        _ = s.Space.CreateLinkedList<int>("bar");
+
+        //
+        // Save the space to the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
+            var edits = s.SaveSpace(differential: false);
 
-            _ = s.Space.CreateLinkedList<int>("bar");
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+            ]);
+        }
 
-            //
-            // Save the space to the store.
-            //
-            {
-                var edits = s.SaveSpace(differential: false);
+        //
+        // Create a new space.
+        //
 
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                ]);
-            }
+        s.CreateSpace();
 
-            //
-            // Create a new space.
-            //
+        //
+        // Assert the new space does not contain the linked list.
+        //
 
-            s.CreateSpace();
+        Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
 
-            //
-            // Assert the new space does not contain the linked list.
-            //
+        //
+        // Load the space from the store.
+        //
 
-            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
+        s.LoadSpace();
 
-            //
-            // Load the space from the store.
-            //
+        //
+        // Get the linked list.
+        //
 
-            s.LoadSpace();
+        var bar = s.Space.GetLinkedList<int>("bar");
 
-            //
-            // Get the linked list.
-            //
+        //
+        // Assert the linked list size.
+        //
 
-            var bar = s.Space.GetLinkedList<int>("bar");
+        Assert.AreEqual(0, bar.Count);
+    });
 
-            //
-            // Assert the linked list size.
-            //
-
-            Assert.AreEqual(0, bar.Count);
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_CreateLinkedList() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_CreateLinkedList() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_NoChange() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Save differential and assert no edits took place.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Add() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Add(7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Add_Differential() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_NoChange() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Add(7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddFirst() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddFirst(2);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddFirst_Differential() => WithNewSpace(s =>
+        //
+        // Save differential and assert no edits took place.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddFirst(2);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddFirst() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(2);
-                list.Add(7);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var node = list.Find(2);
-                list.Remove(node);
-                list.AddFirst(node);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddFirst_Differential() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_Add() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(2);
-                list.Add(7);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var node = list.Find(2);
-                list.Remove(node);
-                list.AddFirst(node);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Reusing the same storage slot; update the previous and next references.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddLast() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddLast(7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddLast_Differential() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddLast(7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddLast() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(7);
-                list.Add(3);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var node = list.FindLast(7);
-                list.Remove(node);
-                list.AddLast(node);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddLast_Differential() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(7);
-                list.Add(3);
-                list.Add(5);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var node = list.FindLast(7);
-                list.Remove(node);
-                list.AddLast(node);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Reusing the same storage slot; update the previous and next references.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the next reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfterFirst() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_Add_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.First, 3);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfterFirst_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.First, 3);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfter() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(7);
-            }
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.First.Next, 5);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfter_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.First.Next, 5);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfterLast() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.Last, 7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddAfterLast_Differential() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_AddFirst() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddAfter(list.Last, 7);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddAfter() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(7);
-                list.Add(3);
-                list.Add(5);
-                list.Add(11);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var five = list.Find(5);
-                var seven = list.Find(7);
-
-                list.Remove(seven);
-                list.AddAfter(five, seven);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7, 11]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddAfter_Differential() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(7);
-                list.Add(3);
-                list.Add(5);
-                list.Add(11);
-            }
+            list.AddFirst(2);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var five = list.Find(5);
-                var seven = list.Find(7);
-
-                list.Remove(seven);
-                list.AddAfter(five, seven);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Reusing the same storage slot; update the previous and next references.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7, 11]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBeforeFirst() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.First, 2);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBeforeFirst_Differential() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(3);
-                list.Add(5);
-                list.Add(7);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.First, 2);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBefore() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_AddFirst_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-            }
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.Last.Previous, 3);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBefore_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.Last.Previous, 3);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBeforeLast() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(7);
-            }
+            list.AddFirst(2);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.Last, 5);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_AddBeforeLast_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(7);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and add an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.AddBefore(list.Last, 5);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddBefore() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-                list.Add(3);
-                list.Add(11);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var five = list.Find(5);
-                var three = list.Find(3);
-
-                list.Remove(three);
-                list.AddBefore(five, three);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7, 11]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_AddBefore_Differential() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddFirst() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(5);
-                list.Add(7);
-                list.Add(3);
-                list.Add(11);
-            }
+            list.Add(3);
+            list.Add(5);
+            list.Add(2);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
-                ]);
-            }
-
-            //
-            // Get the linked list, remove an element, and add it back.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                var five = list.Find(5);
-                var three = list.Find(3);
-
-                list.Remove(three);
-                list.AddBefore(five, three);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Reusing the same storage slot; update the previous and next references.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5, 7, 11]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_EditValue() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(4);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and edit an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.First.Next.Value = 3;
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_EditValue_Differential() => WithNewSpace(s =>
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(4);
-                list.Add(5);
-            }
+            var node = list.Find(2);
+            list.Remove(node);
+            list.AddFirst(node);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and edit an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.First.Next.Value = 3;
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"), // Edit value.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveFirstOnSingleton() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveFirst();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveFirstOnSingleton_Differential() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveFirst();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveFirst() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddFirst_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(1);
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.Add(3);
+            list.Add(5);
+            list.Add(2);
+            list.Add(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveFirst();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveFirst_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(1);
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveFirst();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveLastOnSingleton() => WithNewSpace(s =>
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-            }
+            var node = list.Find(2);
+            list.Remove(node);
+            list.AddFirst(node);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveLast();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveLastOnSingleton_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Reusing the same storage slot; update the previous and next references.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the previous reference.
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveLast();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveLast() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(6);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveLast();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_RemoveLast_Differential() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_AddLast() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(6);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.RemoveLast();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_First() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(1);
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.First);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_First_Differential() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(1);
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.AddLast(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.First);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_Last() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(6);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.Last);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_Last_Differential() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-                list.Add(6);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.Last);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove() => WithNewSpace(s =>
+    [TestMethod]
+    public void LinkedList_Recovery_AddLast_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(4);
-                list.Add(5);
-            }
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.Last.Previous);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Remove_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(4);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
-                ]);
-            }
-
-            //
-            // Get the linked list and remove an element.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Remove(list.Last.Previous);
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the previous reference.
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, [2, 3, 5]);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Clear() => WithNewSpace(s =>
+        //
+        // Get the linked list and add an element.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            list.AddLast(7);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and clear it.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Clear();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: false);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Clear_Differential() => WithNewSpace(s =>
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var edits = s.SaveAndReloadSpace(differential: true);
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get the linked list and clear it.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                list.Clear();
-            }
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Get and assert the linked list.
-            //
-            {
-                var list = s.Space.GetLinkedList<int>("bar");
-
-                AssertList(list, []);
-            }
-        });
-
-        [TestMethod]
-        public void LinkedList_Recovery_Delete() => WithNewSpace(s =>
+        //
+        // Get and assert the linked list.
+        //
         {
-            //
-            // Create a linked list.
-            //
-            {
-                var list = s.Space.CreateLinkedList<int>("bar");
+            var list = s.Space.GetLinkedList<int>("bar");
 
-                list.Add(2);
-                list.Add(3);
-                list.Add(5);
-            }
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
 
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Delete the linked list.
-            //
-            s.Space.Delete("bar");
-
-            //
-            // Save the space to the store, create a new space, and load from the store.
-            //
-            {
-                var edits = s.SaveAndReloadSpace(differential: true);
-
-                s.AssertEdits(edits,
-                [
-                    (StateWriterOperationKind.Delete, "state/index", "bar"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "1"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "1"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
-                    (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
-                ]);
-            }
-
-            //
-            // Assert the linked list is gone.
-            //
-
-            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
-        });
-
-        // TODO: Tests that reuse nodes, multiple edits to nodes, etc.
-
-        private static void AssertList<T>(ILinkedList<T> list, T[] values)
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddLast() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
         {
-            //
-            // Check Count property.
-            //
-            Assert.AreEqual(values.Length, list.Count);
+            var list = s.Space.CreateLinkedList<int>("bar");
 
-            //
-            // Check enumeration behavior.
-            //
-            Assert.IsTrue(list.SequenceEqual(values));
+            list.Add(2);
+            list.Add(7);
+            list.Add(3);
+            list.Add(5);
+        }
 
-            //
-            // Check CopyTo behavior.
-            //
-            var res = new T[values.Length];
-            list.CopyTo(res, 0);
-            Assert.IsTrue(res.SequenceEqual(values));
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
 
-            //
-            // Assert elements from head to tail.
-            //
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var node = list.FindLast(7);
+            list.Remove(node);
+            list.AddLast(node);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddLast_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(7);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var node = list.FindLast(7);
+            list.Remove(node);
+            list.AddLast(node);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Reusing the same storage slot; update the previous and next references.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the next reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfterFirst() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.First, 3);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfterFirst_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.First, 3);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfter() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.First.Next, 5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfter_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.First.Next, 5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfterLast() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.Last, 7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddAfterLast_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddAfter(list.Last, 7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddAfter() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(7);
+            list.Add(3);
+            list.Add(5);
+            list.Add(11);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var five = list.Find(5);
+            var seven = list.Find(7);
+
+            list.Remove(seven);
+            list.AddAfter(five, seven);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7, 11]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddAfter_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(7);
+            list.Add(3);
+            list.Add(5);
+            list.Add(11);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var five = list.Find(5);
+            var seven = list.Find(7);
+
+            list.Remove(seven);
+            list.AddAfter(five, seven);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Reusing the same storage slot; update the previous and next references.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"), // Update the previous reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7, 11]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBeforeFirst() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.First, 2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBeforeFirst_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(3);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.First, 2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBefore() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.Last.Previous, 3);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBefore_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.Last.Previous, 3);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBeforeLast() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.Last, 5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_AddBeforeLast_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(7);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and add an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.AddBefore(list.Last, 5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddBefore() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+            list.Add(3);
+            list.Add(11);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var five = list.Find(5);
+            var three = list.Find(3);
+
+            list.Remove(three);
+            list.AddBefore(five, three);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7, 11]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_AddBefore_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(5);
+            list.Add(7);
+            list.Add(3);
+            list.Add(11);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "4"),
+            ]);
+        }
+
+        //
+        // Get the linked list, remove an element, and add it back.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            var five = list.Find(5);
+            var three = list.Find(3);
+
+            list.Remove(three);
+            list.AddBefore(five, three);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Reusing the same storage slot; update the previous and next references.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),     // Reusing the same storage slot; (re)write the value. REVIEW: Can we avoid having to rewrite the value? Likely not, because we used a Remove operation above.
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "4"), // Update the previous reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5, 7, 11]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_EditValue() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(4);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and edit an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.First.Next.Value = 3;
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_EditValue_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(4);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and edit an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.First.Next.Value = 3;
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"), // Edit value.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveFirstOnSingleton() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveFirst();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveFirstOnSingleton_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveFirst();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveFirst() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(1);
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveFirst();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveFirst_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(1);
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveFirst();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveLastOnSingleton() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveLast();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveLastOnSingleton_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveLast();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveLast() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(6);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveLast();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_RemoveLast_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(6);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.RemoveLast();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_First() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(1);
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.First);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_First_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(1);
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.First);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the previous reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_Last() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(6);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.Last);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_Last_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+            list.Add(6);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.Last);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"), // Update the next reference.
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(4);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.Last.Previous);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Remove_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(4);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "3"),
+            ]);
+        }
+
+        //
+        // Get the linked list and remove an element.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Remove(list.Last.Previous);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"), // Update the next reference.
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "3"), // Update the previous reference.
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, [2, 3, 5]);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Clear() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and clear it.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Clear();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: false);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Clear_Differential() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get the linked list and clear it.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            list.Clear();
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Get and assert the linked list.
+        //
+        {
+            var list = s.Space.GetLinkedList<int>("bar");
+
+            AssertList(list, []);
+        }
+    });
+
+    [TestMethod]
+    public void LinkedList_Recovery_Delete() => WithNewSpace(s =>
+    {
+        //
+        // Create a linked list.
+        //
+        {
+            var list = s.Space.CreateLinkedList<int>("bar");
+
+            list.Add(2);
+            list.Add(3);
+            list.Add(5);
+        }
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.AddOrUpdate, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Delete the linked list.
+        //
+        s.Space.Delete("bar");
+
+        //
+        // Save the space to the store, create a new space, and load from the store.
+        //
+        {
+            var edits = s.SaveAndReloadSpace(differential: true);
+
+            s.AssertEdits(edits,
+            [
+                (StateWriterOperationKind.Delete, "state/index", "bar"),
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "0"),
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "1"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "1"),
+                (StateWriterOperationKind.Delete, "state/item/bar/metadata", "2"),
+                (StateWriterOperationKind.Delete, "state/item/bar/data", "2"),
+            ]);
+        }
+
+        //
+        // Assert the linked list is gone.
+        //
+
+        Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
+    });
+
+    // TODO: Tests that reuse nodes, multiple edits to nodes, etc.
+
+    private static void AssertList<T>(ILinkedList<T> list, T[] values)
+    {
+        //
+        // Check Count property.
+        //
+        Assert.AreEqual(values.Length, list.Count);
+
+        //
+        // Check enumeration behavior.
+        //
+        Assert.IsTrue(list.SequenceEqual(values));
+
+        //
+        // Check CopyTo behavior.
+        //
+        var res = new T[values.Length];
+        list.CopyTo(res, 0);
+        Assert.IsTrue(res.SequenceEqual(values));
+
+        //
+        // Assert elements from head to tail.
+        //
+        {
+            var node = list.First;
+
+            for (var i = 0; i < values.Length; i++)
             {
-                var node = list.First;
-
-                for (var i = 0; i < values.Length; i++)
-                {
-                    Assert.AreEqual(values[i], node.Value);
-                    node = node.Next;
-                }
-
-                Assert.IsNull(node);
+                Assert.AreEqual(values[i], node.Value);
+                node = node.Next;
             }
 
-            //
-            // Assert elements from tail to head.
-            //
+            Assert.IsNull(node);
+        }
+
+        //
+        // Assert elements from tail to head.
+        //
+        {
+            var node = list.Last;
+
+            for (var i = values.Length - 1; i >= 0; i--)
             {
-                var node = list.Last;
-
-                for (var i = values.Length - 1; i >= 0; i--)
-                {
-                    Assert.AreEqual(values[i], node.Value);
-                    node = node.Previous;
-                }
-
-                Assert.IsNull(node);
+                Assert.AreEqual(values[i], node.Value);
+                node = node.Previous;
             }
 
-            //
-            // Check Contains behavior.
-            //
-            foreach (var value in values)
-            {
-                Assert.IsTrue(list.Contains(value));
-            }
+            Assert.IsNull(node);
+        }
+
+        //
+        // Check Contains behavior.
+        //
+        foreach (var value in values)
+        {
+            Assert.IsTrue(list.Contains(value));
         }
     }
 }

@@ -8,44 +8,43 @@
 // BD - December 2013 - Created this file.
 //
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Void compiled delegate cache that just compiles lambda expressions without storing them.
+/// </summary>
+public class VoidCompiledDelegateCache : ICompiledDelegateCache
 {
-    /// <summary>
-    /// Void compiled delegate cache that just compiles lambda expressions without storing them.
-    /// </summary>
-    public class VoidCompiledDelegateCache : ICompiledDelegateCache
+    private VoidCompiledDelegateCache()
     {
-        private VoidCompiledDelegateCache()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Gets the singleton instance of the void compiled delegate cache.
-        /// </summary>
-        public static ICompiledDelegateCache Instance { get; } = new VoidCompiledDelegateCache();
+    /// <summary>
+    /// Gets the singleton instance of the void compiled delegate cache.
+    /// </summary>
+    public static ICompiledDelegateCache Instance { get; } = new VoidCompiledDelegateCache();
 
-        /// <summary>
-        /// Gets the number of entries in the cache. Always returns zero.
-        /// </summary>
-        public int Count => 0;
+    /// <summary>
+    /// Gets the number of entries in the cache. Always returns zero.
+    /// </summary>
+    public int Count => 0;
 
-        /// <summary>
-        /// Clears the cache. This operation has no effect.
-        /// </summary>
-        public void Clear()
-        {
-        }
+    /// <summary>
+    /// Clears the cache. This operation has no effect.
+    /// </summary>
+    public void Clear()
+    {
+    }
 
-        /// <summary>
-        /// Compiles the lambda expression to a delegate and returns the result.
-        /// </summary>
-        /// <param name="expression">Lambda expression to look up in the cache.</param>
-        /// <returns>Compiled delegate to execute the lambda expression.</returns>
-        public Delegate GetOrAdd(LambdaExpression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
+    /// <summary>
+    /// Compiles the lambda expression to a delegate and returns the result.
+    /// </summary>
+    /// <param name="expression">Lambda expression to look up in the cache.</param>
+    /// <returns>Compiled delegate to execute the lambda expression.</returns>
+    public Delegate GetOrAdd(LambdaExpression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
 
-            return expression.Compile();
-        }
+        return expression.Compile();
     }
 }

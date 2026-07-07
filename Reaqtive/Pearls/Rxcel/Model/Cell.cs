@@ -21,177 +21,176 @@ using System.Linq.Expressions;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class Cell : IDisposable
 {
-    internal sealed class Cell : IDisposable
+    private readonly Sheet _sheet;
+    private readonly BehaviorSubject<double?> _subject;
+    private readonly SerialDisposable _subscription;
+    private LambdaExpression _expr;
+
+    public Cell(Sheet sheet)
     {
-        private readonly Sheet _sheet;
-        private readonly BehaviorSubject<double?> _subject;
-        private readonly SerialDisposable _subscription;
-        private LambdaExpression _expr;
+        _sheet = sheet;
+        _subject = new BehaviorSubject<double?>(null);
+        _subscription = new SerialDisposable();
+    }
 
-        public Cell(Sheet sheet)
+    public string Value
+    {
+        get => !string.IsNullOrEmpty(field) ? field : _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+
+        set
         {
-            _sheet = sheet;
-            _subject = new BehaviorSubject<double?>(null);
-            _subscription = new SerialDisposable();
-        }
-
-        public string Value
-        {
-            get => !string.IsNullOrEmpty(field) ? field : _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-
-            set
+            if (string.IsNullOrEmpty(value))
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    _expr = null;
-                    field = null;
-                    _subscription.Disposable = Disposable.Empty;
-                    _subject.OnNext(null);
-                }
-                else if (double.TryParse(value, out var v))
-                {
-                    _expr = null;
-                    field = null;
-                    _subscription.Disposable = Disposable.Empty;
-                    _subject.OnNext(v);
-                }
-                else
-                {
-                    var text = value.TrimStart();
+                _expr = null;
+                field = null;
+                _subscription.Disposable = Disposable.Empty;
+                _subject.OnNext(null);
+            }
+            else if (double.TryParse(value, out var v))
+            {
+                _expr = null;
+                field = null;
+                _subscription.Disposable = Disposable.Empty;
+                _subject.OnNext(v);
+            }
+            else
+            {
+                var text = value.TrimStart();
 
-                    if (text.StartsWith('='))
-                    {
-                        text = text[1..];
+                if (text.StartsWith('='))
+                {
+                    text = text[1..];
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1303 // Retrieve the following string(s) from a resource table instead. (No globalization in sample.)
 #pragma warning disable CA1031 // Do not catch general exception types. (By design to show errors to the user.)
 
-                        try
-                        {
-                            var formula = new Parser().Parse(text);
-                            var f = ExcelCompiler.Compile(formula);
-                            _expr = f;
-                            CreateSubscription(f);
-                        }
-                        catch (Exception ex)
-                        {
-#if NO_UI
-                            Console.WriteLine(
-#else
-                            System.Windows.Forms.MessageBox.Show(
-#endif
-                                "Invalid formula: " + ex.Message
-                            );
-
-#if NO_UI
-                            Console.ReadLine();
-#endif
-                            return;
-                        }
-
-#pragma warning restore CA1031
-
-                        field = value;
+                    try
+                    {
+                        var formula = new Parser().Parse(text);
+                        var f = ExcelCompiler.Compile(formula);
+                        _expr = f;
+                        CreateSubscription(f);
                     }
-                    else
+                    catch (Exception ex)
                     {
 #if NO_UI
                         Console.WriteLine(
 #else
                         System.Windows.Forms.MessageBox.Show(
 #endif
-                            "Text input not supported. Did you mean to write a formula that starts with =?"
+                            "Invalid formula: " + ex.Message
                         );
+
+#if NO_UI
+                        Console.ReadLine();
+#endif
+                        return;
                     }
+
+#pragma warning restore CA1031
+
+                    field = value;
+                }
+                else
+                {
+#if NO_UI
+                    Console.WriteLine(
+#else
+                    System.Windows.Forms.MessageBox.Show(
+#endif
+                        "Text input not supported. Did you mean to write a formula that starts with =?"
+                    );
+                }
 
 #pragma warning restore CA1303
 #pragma warning restore IDE0079
-                }
             }
         }
+    }
 
-        public override string ToString()
+    public override string ToString()
+    {
+        // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
+        return _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+    }
+
+    private void CreateSubscription(LambdaExpression f)
+    {
+        var n = f.Parameters.Count;
+
+        if (n >= CombineLatestMethods.s_combineLatest.Length)
         {
-            // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
-            return _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
+            throw new InvalidOperationException("Formula too complex."); // TODO: compile into binary tree
         }
 
-        private void CreateSubscription(LambdaExpression f)
+        var mtd = CombineLatestMethods.s_combineLatest[n - 1];
+
+        var cells = new List<IObservable<double?>>();
+        var formulae = new Queue<Cell>();
+
+        foreach (var p in f.Parameters)
         {
-            var n = f.Parameters.Count;
-
-            if (n >= CombineLatestMethods.s_combineLatest.Length)
+            if (!Parser.TryParseCell(p.Name, out var row, out var col))
             {
-                throw new InvalidOperationException("Formula too complex."); // TODO: compile into binary tree
+                throw new InvalidOperationException("Invalid cell reference: " + p.Name);
             }
 
-            var mtd = CombineLatestMethods.s_combineLatest[n - 1];
-
-            var cells = new List<IObservable<double?>>();
-            var formulae = new Queue<Cell>();
-
-            foreach (var p in f.Parameters)
+            if (row > _sheet.RowCount || col > _sheet.ColumnCount)
             {
-                if (!Parser.TryParseCell(p.Name, out var row, out var col))
-                {
-                    throw new InvalidOperationException("Invalid cell reference: " + p.Name);
-                }
-
-                if (row > _sheet.RowCount || col > _sheet.ColumnCount)
-                {
-                    throw new InvalidOperationException("Cell out of range: " + p.Name);
-                }
-
-                row--;
-                col--;
-
-                var cell = _sheet[row, col];
-                cells.Add(cell._subject);
-                formulae.Enqueue(cell);
+                throw new InvalidOperationException("Cell out of range: " + p.Name);
             }
 
-            var visited = new HashSet<Cell>();
+            row--;
+            col--;
 
-            while (formulae.Count > 0)
+            var cell = _sheet[row, col];
+            cells.Add(cell._subject);
+            formulae.Enqueue(cell);
+        }
+
+        var visited = new HashSet<Cell>();
+
+        while (formulae.Count > 0)
+        {
+            var cell = formulae.Dequeue();
+
+            if (visited.Add(cell))
             {
-                var cell = formulae.Dequeue();
-
-                if (visited.Add(cell))
+                if (cell._expr != null)
                 {
-                    if (cell._expr != null)
+                    foreach (var p in cell._expr.Parameters)
                     {
-                        foreach (var p in cell._expr.Parameters)
+                        if (!Parser.TryParseCell(p.Name, out var row, out var col))
                         {
-                            if (!Parser.TryParseCell(p.Name, out var row, out var col))
-                            {
-                                throw new InvalidOperationException("Invalid cell reference: " + p.Name);
-                            }
-
-                            formulae.Enqueue(_sheet[row - 1, col - 1]);
+                            throw new InvalidOperationException("Invalid cell reference: " + p.Name);
                         }
+
+                        formulae.Enqueue(_sheet[row - 1, col - 1]);
                     }
                 }
             }
-
-            if (visited.Contains(this))
-            {
-                throw new InvalidOperationException("Cycle detected.");
-            }
-
-            var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), f]);
-
-            var src = Expression.Lambda<Func<IObservable<double?>>>(res).Compile()();
-
-            _subscription.Disposable = src.Subscribe(_subject);
         }
 
-        public void Dispose()
+        if (visited.Contains(this))
         {
-            _subscription.Dispose();
-            _subject.Dispose();
+            throw new InvalidOperationException("Cycle detected.");
         }
+
+        var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), f]);
+
+        var src = Expression.Lambda<Func<IObservable<double?>>>(res).Compile()();
+
+        _subscription.Disposable = src.Subscribe(_subject);
+    }
+
+    public void Dispose()
+    {
+        _subscription.Dispose();
+        _subject.Dispose();
     }
 }

@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class DeleteSubscriptionFactoryMetadata : DeleteMetadataOperation
 {
-    public class DeleteSubscriptionFactoryMetadata : DeleteMetadataOperation
+    public DeleteSubscriptionFactoryMetadata(Uri targetObjectUri)
+        : base(ServiceOperationKind.DeleteSubscriptionFactoryMetadata, targetObjectUri)
     {
-        public DeleteSubscriptionFactoryMetadata(Uri targetObjectUri)
-            : base(ServiceOperationKind.DeleteSubscriptionFactoryMetadata, targetObjectUri)
-        {
-        }
     }
 }

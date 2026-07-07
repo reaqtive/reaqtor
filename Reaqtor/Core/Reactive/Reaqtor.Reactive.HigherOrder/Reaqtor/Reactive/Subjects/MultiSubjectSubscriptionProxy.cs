@@ -2,37 +2,34 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
 using Reaqtive;
 
-namespace Reaqtor.Reactive
+namespace Reaqtor.Reactive;
+
+internal sealed class MultiSubjectSubscriptionProxy<TInput, TOutput> : UnaryOperator<Uri, TOutput>
 {
-    internal sealed class MultiSubjectSubscriptionProxy<TInput, TOutput> : UnaryOperator<Uri, TOutput>
-    {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
-        private readonly SingleAssignmentSubscription _subscription = new();
+    private readonly SingleAssignmentSubscription _subscription = new();
 #pragma warning restore CA2213
 
-        public MultiSubjectSubscriptionProxy(Uri uri, IObserver<TOutput> observer)
-            : base(uri, observer)
-        {
-        }
+    public MultiSubjectSubscriptionProxy(Uri uri, IObserver<TOutput> observer)
+        : base(uri, observer)
+    {
+    }
 
-        protected override ISubscription OnSubscribe()
-        {
-            return _subscription;
-        }
+    protected override ISubscription OnSubscribe()
+    {
+        return _subscription;
+    }
 
-        public override void SetContext(IOperatorContext context)
-        {
-            base.SetContext(context);
+    public override void SetContext(IOperatorContext context)
+    {
+        base.SetContext(context);
 
-            var sub = context.ExecutionEnvironment.GetSubject<TInput, TOutput>(Params).Subscribe(Output);
+        var sub = context.ExecutionEnvironment.GetSubject<TInput, TOutput>(Params).Subscribe(Output);
 
-            SubscriptionInitializeVisitor.Subscribe(sub);
+        SubscriptionInitializeVisitor.Subscribe(sub);
 
-            _subscription.Subscription = sub;
-        }
+        _subscription.Subscription = sub;
     }
 }

@@ -23,149 +23,148 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal static partial class Program
 {
-    internal static partial class Program
+    public static void Main()
     {
-        public static void Main()
+        //     |    A    |    B    |
+        // ----+---------+---------+
+        //   1 |         |         |
+        // ----+---------+---------+
+        //   2 |         |         |
+        // ----+---------+---------+
+        //
+
+        const string LeftColLine = "----+";
+        const string CellColLine = "---------+";
+
+        var C = Math.Min((Console.WindowWidth - LeftColLine.Length) / CellColLine.Length, 26);
+        var R = Math.Min((Console.WindowHeight - 2 /* header */ - 5 /* prompts while editing and avoid scroll */) / 2 /* lines per row */, 32);
+
+        var sheet = new Sheet(R, C);
+
+        void Draw()
         {
-            //     |    A    |    B    |
-            // ----+---------+---------+
-            //   1 |         |         |
-            // ----+---------+---------+
-            //   2 |         |         |
-            // ----+---------+---------+
-            //
+            Console.Clear();
 
-            const string LeftColLine = "----+";
-            const string CellColLine = "---------+";
+            Console.Write(new string(' ', LeftColLine.Length - 1) + "|");
 
-            var C = Math.Min((Console.WindowWidth - LeftColLine.Length) / CellColLine.Length, 26);
-            var R = Math.Min((Console.WindowHeight - 2 /* header */ - 5 /* prompts while editing and avoid scroll */) / 2 /* lines per row */, 32);
-
-            var sheet = new Sheet(R, C);
-
-            void Draw()
+            for (var c = 'A'; c < 'A' + C; c++)
             {
-                Console.Clear();
+                Console.Write(Center(c.ToString(), CellColLine.Length - 1) + "|");
+            }
 
-                Console.Write(new string(' ', LeftColLine.Length - 1) + "|");
+            Console.WriteLine();
 
-                for (var c = 'A'; c < 'A' + C; c++)
+            var line = LeftColLine + string.Join("", Enumerable.Repeat(CellColLine, C));
+            Console.WriteLine(line);
+
+            var maxCellWidth = CellColLine.Length - 3 /* spaces and + */;
+
+            for (var r = 1; r <= R; r++)
+            {
+                Console.Write(" " + string.Format(CultureInfo.CurrentCulture, "{0,-" + (LeftColLine.Length - 2 /* space and + */) + "}", r) + "|");
+
+                for (int c = 0; c < C; c++)
                 {
-                    Console.Write(Center(c.ToString(), CellColLine.Length - 1) + "|");
+                    Console.Write(" {0," + maxCellWidth + "} |", sheet[r - 1, c].ToString());
                 }
 
                 Console.WriteLine();
-
-                var line = LeftColLine + string.Join("", Enumerable.Repeat(CellColLine, C));
                 Console.WriteLine(line);
-
-                var maxCellWidth = CellColLine.Length - 3 /* spaces and + */;
-
-                for (var r = 1; r <= R; r++)
-                {
-                    Console.Write(" " + string.Format(CultureInfo.CurrentCulture, "{0,-" + (LeftColLine.Length - 2 /* space and + */) + "}", r) + "|");
-
-                    for (int c = 0; c < C; c++)
-                    {
-                        Console.Write(" {0," + maxCellWidth + "} |", sheet[r - 1, c].ToString());
-                    }
-
-                    Console.WriteLine();
-                    Console.WriteLine(line);
-                }
             }
+        }
 
-            while (true)
+        while (true)
+        {
+            Draw();
+
+            Console.Write("Enter cell (O = Open, S = Save, X = Exit): ");
+            var cell = Console.ReadLine().Trim();
+
+            var option = cell.ToUpper(CultureInfo.InvariantCulture);
+
+            if (option == "O")
             {
-                Draw();
+                Console.Write("Enter file name: ");
+                var file = Console.ReadLine();
 
-                Console.Write("Enter cell (O = Open, S = Save, X = Exit): ");
-                var cell = Console.ReadLine().Trim();
-
-                var option = cell.ToUpper(CultureInfo.InvariantCulture);
-
-                if (option == "O")
+                try
                 {
-                    Console.Write("Enter file name: ");
-                    var file = Console.ReadLine();
-
-                    try
-                    {
-                        sheet = Sheet.Load(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowError("Error: " + ex);
-                        continue;
-                    }
-
-                    Draw();
-                    continue;
+                    sheet = Sheet.Load(file);
                 }
-                else if (option == "S")
+                catch (Exception ex)
                 {
-                    Console.Write("Enter file name: ");
-                    var file = Console.ReadLine();
-
-                    try
-                    {
-                        sheet.Save(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowError("Error: " + ex);
-                    }
-
-                    continue;
-                }
-                else if (option == "X")
-                {
-                    return;
-                }
-
-                if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
-                {
-                    ShowError("Invalid cell. Press ENTER to retry.");
+                    ShowError("Error: " + ex);
                     continue;
                 }
 
                 Draw();
+                continue;
+            }
+            else if (option == "S")
+            {
+                Console.Write("Enter file name: ");
+                var file = Console.ReadLine();
 
-                Console.WriteLine("Current formula or value: " + sheet[row - 1, col - 1].Value);
-
-                Console.Write("Enter formula or value (use _ to cancel edit): ");
-                var formula = Console.ReadLine().Trim();
-
-                if (formula == "_")
+                try
                 {
-                    continue;
+                    sheet.Save(file);
+                }
+                catch (Exception ex)
+                {
+                    ShowError("Error: " + ex);
                 }
 
-                sheet[row - 1, col - 1].Value = formula;
+                continue;
             }
-
-            static string Center(string s, int width)
+            else if (option == "X")
             {
-                if (s.Length >= width)
-                {
-                    return s;
-                }
-
-                int leftPadding = (width - s.Length) / 2;
-                int rightPadding = width - s.Length - leftPadding;
-
-                return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+                return;
             }
 
-            static void ShowError(string msg)
+            if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(msg);
-                Console.ResetColor();
-                Console.ReadLine();
+                ShowError("Invalid cell. Press ENTER to retry.");
+                continue;
             }
+
+            Draw();
+
+            Console.WriteLine("Current formula or value: " + sheet[row - 1, col - 1].Value);
+
+            Console.Write("Enter formula or value (use _ to cancel edit): ");
+            var formula = Console.ReadLine().Trim();
+
+            if (formula == "_")
+            {
+                continue;
+            }
+
+            sheet[row - 1, col - 1].Value = formula;
+        }
+
+        static string Center(string s, int width)
+        {
+            if (s.Length >= width)
+            {
+                return s;
+            }
+
+            int leftPadding = (width - s.Length) / 2;
+            int rightPadding = width - s.Length - leftPadding;
+
+            return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+        }
+
+        static void ShowError(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(msg);
+            Console.ResetColor();
+            Console.ReadLine();
         }
     }
 }
@@ -176,217 +175,216 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal static partial class Program
 {
-    internal static partial class Program
+    [STAThread]
+    public static void Main()
     {
-        [STAThread]
-        public static void Main()
+        var open = new ToolStripMenuItem("&Open") { ShortcutKeys = Keys.Control | Keys.O };
+        var save = new ToolStripMenuItem("&Save") { ShortcutKeys = Keys.Control | Keys.S };
+
+        var menu = new MenuStrip()
         {
-            var open = new ToolStripMenuItem("&Open") { ShortcutKeys = Keys.Control | Keys.O };
-            var save = new ToolStripMenuItem("&Save") { ShortcutKeys = Keys.Control | Keys.S };
-
-            var menu = new MenuStrip()
+            Items =
             {
-                Items =
+                new ToolStripMenuItem("&File")
                 {
-                    new ToolStripMenuItem("&File")
+                    DropDownItems =
                     {
-                        DropDownItems =
-                        {
-                            open,
-                            save
-                        }
-                    }
-                }
-            };
-
-            using var frm = new Form
-            {
-                Text = "Rxcel",
-                Width = 1200,
-                Height = 400,
-                MainMenuStrip = menu
-            };
-
-            var txt = new TextBox
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                Left = 0,
-                Top = 0,
-                Width = frm.Width
-            };
-
-            var panel = new Panel
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                Left = 0,
-                Top = menu.Height,
-                Width = frm.Width,
-                Height = frm.Height - txt.Height
-            };
-
-            panel.Controls.Add(txt);
-
-            var dg = new DataGridView
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                Left = 0,
-                Top = txt.Height,
-                Width = frm.Width,
-                Height = frm.Height - txt.Height
-            };
-
-            var C = 10;
-            var R = 10;
-
-            var sheet = new Sheet(R, C);
-
-            void DrawSheet()
-            {
-                dg.Rows.Clear();
-                dg.Columns.Clear();
-
-                for (var c = 'A'; c < 'A' + sheet.ColumnCount; c++)
-                {
-                    dg.Columns.Add(c.ToString(), c.ToString());
-                }
-
-                for (var i = 0; i < sheet.ColumnCount; i++)
-                {
-                    var j = dg.Rows.Add();
-                    dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
-                }
-
-                for (var r = 0; r < dg.Rows.Count - 1; r++)
-                {
-                    var row = dg.Rows[r];
-                    for (var c = 0; c < dg.Columns.Count; c++)
-                    {
-                        row.Cells[c].Value = sheet[r, c];
+                        open,
+                        save
                     }
                 }
             }
+        };
 
-            DrawSheet();
+        using var frm = new Form
+        {
+            Text = "Rxcel",
+            Width = 1200,
+            Height = 400,
+            MainMenuStrip = menu
+        };
 
-            panel.Controls.Add(dg);
+        var txt = new TextBox
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            Left = 0,
+            Top = 0,
+            Width = frm.Width
+        };
 
-            open.Click += (_1, _2) =>
+        var panel = new Panel
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+            Left = 0,
+            Top = menu.Height,
+            Width = frm.Width,
+            Height = frm.Height - txt.Height
+        };
+
+        panel.Controls.Add(txt);
+
+        var dg = new DataGridView
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+            Left = 0,
+            Top = txt.Height,
+            Width = frm.Width,
+            Height = frm.Height - txt.Height
+        };
+
+        var C = 10;
+        var R = 10;
+
+        var sheet = new Sheet(R, C);
+
+        void DrawSheet()
+        {
+            dg.Rows.Clear();
+            dg.Columns.Clear();
+
+            for (var c = 'A'; c < 'A' + sheet.ColumnCount; c++)
             {
-                string file;
+                dg.Columns.Add(c.ToString(), c.ToString());
+            }
 
-                using (var dlg = new OpenFileDialog())
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    file = dlg.FileName;
-                }
-
-                try
-                {
-                    var newSheet = Sheet.Load(file);
-                    if (newSheet != null)
-                    {
-                        sheet = newSheet;
-                        DrawSheet();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                }
-            };
-
-            save.Click += (_1, _2) =>
+            for (var i = 0; i < sheet.ColumnCount; i++)
             {
-                string file;
+                var j = dg.Rows.Add();
+                dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
+            }
 
-                using (var dlg = new SaveFileDialog())
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    file = dlg.FileName;
-                }
-
-                try
-                {
-                    sheet.Save(file);
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                }
-            };
-
-            txt.KeyDown += (o, e) =>
+            for (var r = 0; r < dg.Rows.Count - 1; r++)
             {
-                if (e.KeyCode is Keys.Enter or Keys.Return)
+                var row = dg.Rows[r];
+                for (var c = 0; c < dg.Columns.Count; c++)
                 {
-                    if (dg.SelectedCells.Count == 1)
-                    {
-                        var cell = (Cell)dg.SelectedCells[0].Value;
-
-                        cell.Value = txt.Text;
-
-                        dg.Refresh();
-                    }
+                    row.Cells[c].Value = sheet[r, c];
                 }
-            };
+            }
+        }
 
-            dg.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dg.MultiSelect = false;
+        DrawSheet();
 
-            dg.SelectionChanged += (o, e) =>
+        panel.Controls.Add(dg);
+
+        open.Click += (_1, _2) =>
+        {
+            string file;
+
+            using (var dlg = new OpenFileDialog())
+            {
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                file = dlg.FileName;
+            }
+
+            try
+            {
+                var newSheet = Sheet.Load(file);
+                if (newSheet != null)
+                {
+                    sheet = newSheet;
+                    DrawSheet();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+
+        save.Click += (_1, _2) =>
+        {
+            string file;
+
+            using (var dlg = new SaveFileDialog())
+            {
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                file = dlg.FileName;
+            }
+
+            try
+            {
+                sheet.Save(file);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+
+        txt.KeyDown += (o, e) =>
+        {
+            if (e.KeyCode is Keys.Enter or Keys.Return)
             {
                 if (dg.SelectedCells.Count == 1)
                 {
-                    var sel = (Cell)dg.SelectedCells[0].Value;
-                    txt.Text = sel?.Value;
+                    var cell = (Cell)dg.SelectedCells[0].Value;
+
+                    cell.Value = txt.Text;
+
+                    dg.Refresh();
                 }
-                else
-                {
-                    txt.Text = "";
-                }
-            };
-
-            var editing = default(DataGridViewCell);
-            var editingCell = default(Cell);
-
-            dg.CellBeginEdit += (o, e) =>
-            {
-                editing = dg.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                editingCell = (Cell)editing.Value;
-            };
-
-            dg.CellEndEdit += (o, e) =>
-            {
-                if (editing != null)
-                {
-                    if (editing.Value is string value)
-                    {
-                        editingCell.Value = value;
-                        editing.Value = editingCell;
-                        dg.Refresh();
-                    }
-                }
-            };
-
-            frm.Controls.Add(panel);
-            frm.Controls.Add(menu);
-
-            Application.Run(frm);
-
-            static void ShowError(Exception ex)
-            {
-                MessageBox.Show("Error: " + ex, "Rxcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        };
+
+        dg.SelectionMode = DataGridViewSelectionMode.CellSelect;
+        dg.MultiSelect = false;
+
+        dg.SelectionChanged += (o, e) =>
+        {
+            if (dg.SelectedCells.Count == 1)
+            {
+                var sel = (Cell)dg.SelectedCells[0].Value;
+                txt.Text = sel?.Value;
+            }
+            else
+            {
+                txt.Text = "";
+            }
+        };
+
+        var editing = default(DataGridViewCell);
+        var editingCell = default(Cell);
+
+        dg.CellBeginEdit += (o, e) =>
+        {
+            editing = dg.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            editingCell = (Cell)editing.Value;
+        };
+
+        dg.CellEndEdit += (o, e) =>
+        {
+            if (editing != null)
+            {
+                if (editing.Value is string value)
+                {
+                    editingCell.Value = value;
+                    editing.Value = editingCell;
+                    dg.Refresh();
+                }
+            }
+        };
+
+        frm.Controls.Add(panel);
+        frm.Controls.Add(menu);
+
+        Application.Run(frm);
+
+        static void ShowError(Exception ex)
+        {
+            MessageBox.Show("Error: " + ex, "Rxcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

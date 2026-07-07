@@ -8,36 +8,34 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Exposes reactive processing client-side operations using a provider to perform service-side operations.
+/// </summary>
+public class ReactiveClientProxy : ReactiveClientProxyBase
 {
+    #region Constructor & fields
+
     /// <summary>
-    /// Exposes reactive processing client-side operations using a provider to perform service-side operations.
+    /// Creates a new reactive processing client using the specified client operations provider.
     /// </summary>
-    public class ReactiveClientProxy : ReactiveClientProxyBase
+    /// <param name="provider">Client operations provider.</param>
+    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+    public ReactiveClientProxy(IReactiveClientServiceProvider provider, IReactiveExpressionServices expressionServices)
+        : base(new AsyncReactiveQueryProvider(provider, expressionServices))
     {
-        #region Constructor & fields
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(expressionServices);
 
-        /// <summary>
-        /// Creates a new reactive processing client using the specified client operations provider.
-        /// </summary>
-        /// <param name="provider">Client operations provider.</param>
-        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-        public ReactiveClientProxy(IReactiveClientServiceProvider provider, IReactiveExpressionServices expressionServices)
-            : base(new AsyncReactiveQueryProvider(provider, expressionServices))
-        {
-            ArgumentNullException.ThrowIfNull(provider);
-            ArgumentNullException.ThrowIfNull(expressionServices);
-
-            var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
-            expressionServices.RegisterObject(this, thisParameter);
-            expressionServices.RegisterObject(base.Provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClientProxy c) => c.Provider)));
-        }
-
-        #endregion
+        var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
+        expressionServices.RegisterObject(this, thisParameter);
+        expressionServices.RegisterObject(base.Provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClientProxy c) => c.Provider)));
     }
+
+    #endregion
 }

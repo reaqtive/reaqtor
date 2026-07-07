@@ -11,66 +11,65 @@
 using System;
 using System.IO;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Base class for logging state readers and writers.
+/// </summary>
+public abstract class LoggingStateReaderWriterBase : IDisposable
 {
-    /// <summary>
-    /// Base class for logging state readers and writers.
-    /// </summary>
-    public abstract class LoggingStateReaderWriterBase : IDisposable
+    private readonly TextWriter _log;
+    private readonly bool _keepOpen;
+
+    protected LoggingStateReaderWriterBase(TextWriter log, bool keepOpen)
     {
-        private readonly TextWriter _log;
-        private readonly bool _keepOpen;
+        _log = log;
+        _keepOpen = keepOpen;
+    }
 
-        protected LoggingStateReaderWriterBase(TextWriter log, bool keepOpen)
-        {
-            _log = log;
-            _keepOpen = keepOpen;
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
-        public void Dispose()
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
+            LogStart(nameof(Dispose));
+            try
             {
-                LogStart(nameof(Dispose));
-                try
-                {
-                    DisposeCore();
-                }
-                catch (Exception ex) when (LogError(nameof(Dispose), ex)) { throw; }
-                finally
-                {
-                    LogStop(nameof(Dispose));
-                }
+                DisposeCore();
+            }
+            catch (Exception ex) when (LogError(nameof(Dispose), ex)) { throw; }
+            finally
+            {
+                LogStop(nameof(Dispose));
+            }
 
-                if (!_keepOpen)
-                {
-                    _log.Dispose();
-                }
+            if (!_keepOpen)
+            {
+                _log.Dispose();
             }
         }
+    }
 
-        protected abstract void DisposeCore();
+    protected abstract void DisposeCore();
 
-        protected void LogStart(string method, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Start");
-        }
+    protected void LogStart(string method, params object[] args)
+    {
+        _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Start");
+    }
 
-        protected bool LogError(string method, Exception exception, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Error -> " + exception);
-            return false;
-        }
+    protected bool LogError(string method, Exception exception, params object[] args)
+    {
+        _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Error -> " + exception);
+        return false;
+    }
 
-        protected void LogStop(string method, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Stop");
-        }
+    protected void LogStop(string method, params object[] args)
+    {
+        _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Stop");
     }
 }

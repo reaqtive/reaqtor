@@ -8,54 +8,50 @@
 // BD - January 2018
 //
 
-using System;
-using System.Linq;
+namespace Tests.ReifiedOperations;
 
-namespace Tests.ReifiedOperations
+internal enum OperationKind
 {
-    internal enum OperationKind
+    Sequence,
+}
+
+internal interface IOperationFactory
+{
+    ThisResultOperation<TValue> This<TValue>();
+}
+
+internal abstract class Operation : OperationBase
+{
+    public abstract OperationKind Kind { get; }
+
+    public static SequenceOperation<TValue> Sequence<TValue>(params IOperation<TValue>[] operations)
     {
-        Sequence,
+        ArgumentNullException.ThrowIfNull(operations);
+
+        return new SequenceOperation<TValue>(operations);
     }
 
-    internal interface IOperationFactory
+    public static ThisResultOperation<TValue> This<TValue>() => new();
+}
+
+internal sealed class SequenceOperation<TValue> : Operation, IOperation<TValue>
+{
+    internal SequenceOperation(IOperation<TValue>[] operations)
     {
-        ThisResultOperation<TValue> This<TValue>();
+        Operations = operations;
     }
 
-    internal abstract class Operation : OperationBase
+    public override OperationKind Kind => OperationKind.Sequence;
+
+    public IOperation<TValue>[] Operations { get; }
+
+    protected override string DebugViewCore => "{ " + string.Join("; ", Operations.Select(o => o.DebugView)) + " }";
+
+    public void Accept(TValue value)
     {
-        public abstract OperationKind Kind { get; }
-
-        public static SequenceOperation<TValue> Sequence<TValue>(params IOperation<TValue>[] operations)
+        foreach (var operation in Operations)
         {
-            ArgumentNullException.ThrowIfNull(operations);
-
-            return new SequenceOperation<TValue>(operations);
-        }
-
-        public static ThisResultOperation<TValue> This<TValue>() => new();
-    }
-
-    internal sealed class SequenceOperation<TValue> : Operation, IOperation<TValue>
-    {
-        internal SequenceOperation(IOperation<TValue>[] operations)
-        {
-            Operations = operations;
-        }
-
-        public override OperationKind Kind => OperationKind.Sequence;
-
-        public IOperation<TValue>[] Operations { get; }
-
-        protected override string DebugViewCore => "{ " + string.Join("; ", Operations.Select(o => o.DebugView)) + " }";
-
-        public void Accept(TValue value)
-        {
-            foreach (var operation in Operations)
-            {
-                operation.Accept(value);
-            }
+            operation.Accept(value);
         }
     }
 }

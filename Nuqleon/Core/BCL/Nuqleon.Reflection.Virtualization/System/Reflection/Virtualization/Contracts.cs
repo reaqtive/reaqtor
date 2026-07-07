@@ -10,16 +10,15 @@
 
 using System.Runtime.CompilerServices;
 
-namespace System.Reflection
-{
-    internal static class Contracts
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T NotNull<T>(T provider)
-        {
-            ArgumentNullException.ThrowIfNull(provider);
+namespace System.Reflection;
 
-            return provider;
-        }
+internal static class Contracts
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T NotNull<T>(T provider)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+
+        return provider;
     }
 }

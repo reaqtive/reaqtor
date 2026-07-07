@@ -5,14 +5,11 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1064 // Exceptions should be public. (Scoped to the query engine; should not escape.)
 
-using System;
+namespace Reaqtor.QueryEngine;
 
-namespace Reaqtor.QueryEngine
+internal class BridgeCleanupException : Exception
 {
-    internal class BridgeCleanupException : Exception
-    {
-        public BridgeCleanupException() { }
-        public BridgeCleanupException(string message) : base(message) { }
-        public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
-    }
+    public BridgeCleanupException() { }
+    public BridgeCleanupException(string message) : base(message) { }
+    public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
 }

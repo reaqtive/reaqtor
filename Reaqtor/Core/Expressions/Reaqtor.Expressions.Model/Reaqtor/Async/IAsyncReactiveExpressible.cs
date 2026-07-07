@@ -10,16 +10,15 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Represents a reactive resource with an expression tree representation.
+/// </summary>
+public interface IAsyncReactiveExpressible : IExpressible
 {
     /// <summary>
-    /// Represents a reactive resource with an expression tree representation.
+    /// Gets the query provider that is associated with the object.
     /// </summary>
-    public interface IAsyncReactiveExpressible : IExpressible
-    {
-        /// <summary>
-        /// Gets the query provider that is associated with the object.
-        /// </summary>
-        IAsyncReactiveQueryProvider Provider { get; }
-    }
+    IAsyncReactiveQueryProvider Provider { get; }
 }

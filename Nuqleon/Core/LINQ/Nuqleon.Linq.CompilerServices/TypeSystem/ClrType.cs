@@ -10,38 +10,37 @@
 
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations. (Equals deliberately rejects comparisons across type systems.)
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+internal class ClrType : IType
 {
-    internal class ClrType : IType
+    public static readonly IType Void = new ClrType(typeof(void));
+
+    private readonly Type _type;
+
+    public ClrType(Type type) => _type = type;
+
+    public bool IsAssignableTo(IType type)
     {
-        public static readonly IType Void = new ClrType(typeof(void));
+        if (type is not ClrType clrType)
+            throw new InvalidOperationException("Type check across type systems.");
 
-        private readonly Type _type;
-
-        public ClrType(Type type) => _type = type;
-
-        public bool IsAssignableTo(IType type)
-        {
-            if (type is not ClrType clrType)
-                throw new InvalidOperationException("Type check across type systems.");
-
-            return IsAssignableTo(_type, clrType._type);
-        }
-
-        private static bool IsAssignableTo(Type fromType, Type toType) => toType.IsAssignableFrom(fromType); // TODO: generic wildcards
-
-        public bool Equals(IType other)
-        {
-            if (other is not ClrType clrType)
-                throw new InvalidOperationException("Type check across type systems.");
-
-            return clrType._type.Equals(_type);
-        }
-
-        public override bool Equals(object obj) => obj is IType type ? Equals(type) : base.Equals(obj);
-
-        public override int GetHashCode() => _type.GetHashCode();
-
-        public override string ToString() => _type.ToCSharpString(useNamespaceQualifiedNames: true, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false);
+        return IsAssignableTo(_type, clrType._type);
     }
+
+    private static bool IsAssignableTo(Type fromType, Type toType) => toType.IsAssignableFrom(fromType); // TODO: generic wildcards
+
+    public bool Equals(IType other)
+    {
+        if (other is not ClrType clrType)
+            throw new InvalidOperationException("Type check across type systems.");
+
+        return clrType._type.Equals(_type);
+    }
+
+    public override bool Equals(object obj) => obj is IType type ? Equals(type) : base.Equals(obj);
+
+    public override int GetHashCode() => _type.GetHashCode();
+
+    public override string ToString() => _type.ToCSharpString(useNamespaceQualifiedNames: true, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false);
 }

@@ -10,67 +10,66 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// Visitor to replace a parameter in an expression.
+/// </summary>
+internal class ReplacementVisitor : ExpressionVisitor
 {
+    private readonly Expression _replacement;
+    private readonly ParameterExpression _variableToReplace;
+
+    private int scopes;
+
     /// <summary>
-    /// Visitor to replace a parameter in an expression.
+    /// Creates a visitor to repace a parameter in an expression.
     /// </summary>
-    internal class ReplacementVisitor : ExpressionVisitor
+    /// <param name="variableToReplace">The variable to replace.</param>
+    /// <param name="replacement">The expression to replace the variable with.</param>
+    public ReplacementVisitor(ParameterExpression variableToReplace, Expression replacement)
     {
-        private readonly Expression _replacement;
-        private readonly ParameterExpression _variableToReplace;
+        _variableToReplace = variableToReplace;
+        _replacement = replacement;
+    }
 
-        private int scopes;
+    /// <summary>
+    /// Visits the lambda to perform scope tracking.
+    /// </summary>
+    /// <typeparam name="T">The delegate type of the lambda.</typeparam>
+    /// <param name="node">The lambda expression node to visit.</param>
+    /// <returns>The visited expression.</returns>
+    protected override Expression VisitLambda<T>(Expression<T> node)
+    {
+        var paramsContainsVariableToReplace = node.Parameters.Contains(_variableToReplace);
 
-        /// <summary>
-        /// Creates a visitor to repace a parameter in an expression.
-        /// </summary>
-        /// <param name="variableToReplace">The variable to replace.</param>
-        /// <param name="replacement">The expression to replace the variable with.</param>
-        public ReplacementVisitor(ParameterExpression variableToReplace, Expression replacement)
+        if (paramsContainsVariableToReplace)
         {
-            _variableToReplace = variableToReplace;
-            _replacement = replacement;
+            scopes++;
         }
 
-        /// <summary>
-        /// Visits the lambda to perform scope tracking.
-        /// </summary>
-        /// <typeparam name="T">The delegate type of the lambda.</typeparam>
-        /// <param name="node">The lambda expression node to visit.</param>
-        /// <returns>The visited expression.</returns>
-        protected override Expression VisitLambda<T>(Expression<T> node)
+        var body = Visit(node.Body);
+
+        if (paramsContainsVariableToReplace)
         {
-            var paramsContainsVariableToReplace = node.Parameters.Contains(_variableToReplace);
-
-            if (paramsContainsVariableToReplace)
-            {
-                scopes++;
-            }
-
-            var body = Visit(node.Body);
-
-            if (paramsContainsVariableToReplace)
-            {
-                scopes--;
-            }
-
-            return node.Update(body, node.Parameters);
+            scopes--;
         }
 
-        /// <summary>
-        /// Visits the parameter and replaces it if it matches the variable to be replaced and is in scope.
-        /// </summary>
-        /// <param name="node">The parameter expression node to visit.</param>
-        /// <returns>The visited expression.</returns>
-        protected override Expression VisitParameter(ParameterExpression node)
-        {
-            if (scopes == 0 && _variableToReplace == node)
-            {
-                return _replacement;
-            }
+        return node.Update(body, node.Parameters);
+    }
 
-            return node;
+    /// <summary>
+    /// Visits the parameter and replaces it if it matches the variable to be replaced and is in scope.
+    /// </summary>
+    /// <param name="node">The parameter expression node to visit.</param>
+    /// <returns>The visited expression.</returns>
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        if (scopes == 0 && _variableToReplace == node)
+        {
+            return _replacement;
         }
+
+        return node;
     }
 }

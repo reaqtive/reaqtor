@@ -8,122 +8,116 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.Expressions.Optimizers;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+[TestClass]
+public class AssignmentAnalyzerTests
 {
-    [TestClass]
-    public class AssignmentAnalyzerTests
+    [TestMethod]
+    public void AssignmentAnalyzer_Assign()
     {
-        [TestMethod]
-        public void AssignmentAnalyzer_Assign()
-        {
-            var x = Expression.Parameter(typeof(int));
+        var x = Expression.Parameter(typeof(int));
 
-            var b =
-                Expression.Block(
-                    [x],
-                    Expression.Constant(0),
-                    Expression.Assign(x, Expression.Constant(1)),
-                    Expression.Constant(2)
-                );
+        var b =
+            Expression.Block(
+                [x],
+                Expression.Constant(0),
+                Expression.Assign(x, Expression.Constant(1)),
+                Expression.Constant(2)
+            );
 
-            var analyze = new AssignmentAnalyzer(b.Variables);
+        var analyze = new AssignmentAnalyzer(b.Variables);
 
-            var res = analyze.Visit(b.Expressions);
+        var res = analyze.Visit(b.Expressions);
 
-            Assert.AreSame(b.Expressions, res);
+        Assert.AreSame(b.Expressions, res);
 
-            Assert.AreEqual(0, analyze.Unassigned.Count);
-        }
+        Assert.AreEqual(0, analyze.Unassigned.Count);
+    }
 
-        [TestMethod]
-        public void AssignmentAnalyzer_ByRef()
-        {
-            var read = typeof(Volatile).GetMethod(nameof(Volatile.Read), [typeof(int).MakeByRefType()]);
+    [TestMethod]
+    public void AssignmentAnalyzer_ByRef()
+    {
+        var read = typeof(Volatile).GetMethod(nameof(Volatile.Read), [typeof(int).MakeByRefType()]);
 
-            var x = Expression.Parameter(typeof(int));
+        var x = Expression.Parameter(typeof(int));
 
-            var b =
-                Expression.Block(
-                    [x],
-                    Expression.Constant(0),
-                    Expression.Call(read, x),
-                    Expression.Constant(2)
-                );
+        var b =
+            Expression.Block(
+                [x],
+                Expression.Constant(0),
+                Expression.Call(read, x),
+                Expression.Constant(2)
+            );
 
-            var analyze = new AssignmentAnalyzer(b.Variables);
+        var analyze = new AssignmentAnalyzer(b.Variables);
 
-            var res = analyze.Visit(b.Expressions);
+        var res = analyze.Visit(b.Expressions);
 
-            Assert.AreSame(b.Expressions, res);
+        Assert.AreSame(b.Expressions, res);
 
-            Assert.AreEqual(0, analyze.Unassigned.Count);
-        }
+        Assert.AreEqual(0, analyze.Unassigned.Count);
+    }
 
-        [TestMethod]
-        public void AssignmentAnalyzer_RuntimeVariables()
-        {
-            var x = Expression.Parameter(typeof(int));
+    [TestMethod]
+    public void AssignmentAnalyzer_RuntimeVariables()
+    {
+        var x = Expression.Parameter(typeof(int));
 
-            var b =
-                Expression.Block(
-                    [x],
-                    Expression.RuntimeVariables(x)
-                );
+        var b =
+            Expression.Block(
+                [x],
+                Expression.RuntimeVariables(x)
+            );
 
-            var analyze = new AssignmentAnalyzer(b.Variables);
+        var analyze = new AssignmentAnalyzer(b.Variables);
 
-            var res = analyze.Visit(b.Expressions);
+        var res = analyze.Visit(b.Expressions);
 
-            Assert.AreSame(b.Expressions, res);
+        Assert.AreSame(b.Expressions, res);
 
-            Assert.AreEqual(0, analyze.Unassigned.Count);
-        }
+        Assert.AreEqual(0, analyze.Unassigned.Count);
+    }
 
-        [TestMethod]
-        public void AssignmentAnalyzer_Quote()
-        {
-            var x = Expression.Parameter(typeof(int));
+    [TestMethod]
+    public void AssignmentAnalyzer_Quote()
+    {
+        var x = Expression.Parameter(typeof(int));
 
-            var b =
-                Expression.Block(
-                    [x],
-                    Expression.Quote(Expression.Lambda<Func<int>>(x))
-                );
+        var b =
+            Expression.Block(
+                [x],
+                Expression.Quote(Expression.Lambda<Func<int>>(x))
+            );
 
-            var analyze = new AssignmentAnalyzer(b.Variables);
+        var analyze = new AssignmentAnalyzer(b.Variables);
 
-            var res = analyze.Visit(b.Expressions);
+        var res = analyze.Visit(b.Expressions);
 
-            Assert.AreSame(b.Expressions, res);
+        Assert.AreSame(b.Expressions, res);
 
-            Assert.AreEqual(0, analyze.Unassigned.Count);
-        }
+        Assert.AreEqual(0, analyze.Unassigned.Count);
+    }
 
-        [TestMethod]
-        public void AssignmentAnalyzer_Unassigned()
-        {
-            var x = Expression.Parameter(typeof(int));
+    [TestMethod]
+    public void AssignmentAnalyzer_Unassigned()
+    {
+        var x = Expression.Parameter(typeof(int));
 
-            var b =
-                Expression.Block(
-                    [x],
-                    x
-                );
+        var b =
+            Expression.Block(
+                [x],
+                x
+            );
 
-            var analyze = new AssignmentAnalyzer(b.Variables);
+        var analyze = new AssignmentAnalyzer(b.Variables);
 
-            var res = analyze.Visit(b.Expressions);
+        var res = analyze.Visit(b.Expressions);
 
-            Assert.AreSame(b.Expressions, res);
+        Assert.AreSame(b.Expressions, res);
 
-            Assert.IsTrue(new[] { x }.SequenceEqual(analyze.Unassigned));
-        }
+        Assert.IsTrue(new[] { x }.SequenceEqual(analyze.Unassigned));
     }
 }

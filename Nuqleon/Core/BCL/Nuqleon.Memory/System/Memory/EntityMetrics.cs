@@ -11,58 +11,57 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace System.Memory
+namespace System.Memory;
+
+internal static class EntryMetricsExtensions
 {
-    internal static class EntryMetricsExtensions
+    private static readonly ConditionalWeakTable<object, EntityMetrics> s_metrics = [];
+
+    public static IWritableMemoizationCacheEntryMetrics GetMetrics(this object entry) => s_metrics.GetOrCreateValue(entry);
+
+    public static void ToDebugView(this IMemoizationCacheEntryMetrics metrics, StringBuilder sb, string indent)
     {
-        private static readonly ConditionalWeakTable<object, EntityMetrics> s_metrics = [];
+        sb
+            .AppendLine(indent + "Invoke duration     = " + metrics.InvokeDuration)
+            .AppendLine(indent + "Hit count           = " + metrics.HitCount)
+            .AppendLine(indent + "Average access time = " + metrics.AverageAccessTime)
+            .AppendLine(indent + "Speed up factor     = " + metrics.SpeedupFactor + (metrics.SpeedupFactor < 1 ? " [DEGRADATION]" : ""));
+    }
+}
 
-        public static IWritableMemoizationCacheEntryMetrics GetMetrics(this object entry) => s_metrics.GetOrCreateValue(entry);
-
-        public static void ToDebugView(this IMemoizationCacheEntryMetrics metrics, StringBuilder sb, string indent)
-        {
-            sb
-                .AppendLine(indent + "Invoke duration     = " + metrics.InvokeDuration)
-                .AppendLine(indent + "Hit count           = " + metrics.HitCount)
-                .AppendLine(indent + "Average access time = " + metrics.AverageAccessTime)
-                .AppendLine(indent + "Speed up factor     = " + metrics.SpeedupFactor + (metrics.SpeedupFactor < 1 ? " [DEGRADATION]" : ""));
-        }
+internal sealed class EntityMetrics : IWritableMemoizationCacheEntryMetrics
+{
+    public TimeSpan CreationTime
+    {
+        get;
+        set;
     }
 
-    internal sealed class EntityMetrics : IWritableMemoizationCacheEntryMetrics
+    public TimeSpan InvokeDuration
     {
-        public TimeSpan CreationTime
-        {
-            get;
-            set;
-        }
-
-        public TimeSpan InvokeDuration
-        {
-            get;
-            set;
-        }
-
-        public int HitCount
-        {
-            get;
-            set;
-        }
-
-        public TimeSpan LastAccessTime
-        {
-            get;
-            set;
-        }
-
-        public TimeSpan TotalDuration
-        {
-            get;
-            set;
-        }
-
-        public TimeSpan AverageAccessTime => new(TotalDuration.Ticks / HitCount);
-
-        public double SpeedupFactor => (double)InvokeDuration.Ticks / AverageAccessTime.Ticks;
+        get;
+        set;
     }
+
+    public int HitCount
+    {
+        get;
+        set;
+    }
+
+    public TimeSpan LastAccessTime
+    {
+        get;
+        set;
+    }
+
+    public TimeSpan TotalDuration
+    {
+        get;
+        set;
+    }
+
+    public TimeSpan AverageAccessTime => new(TotalDuration.Ticks / HitCount);
+
+    public double SpeedupFactor => (double)InvokeDuration.Ticks / AverageAccessTime.Ticks;
 }

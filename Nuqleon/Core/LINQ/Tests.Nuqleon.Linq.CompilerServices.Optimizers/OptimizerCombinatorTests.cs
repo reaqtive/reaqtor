@@ -8,229 +8,225 @@
 // PS - February 2015 - Created this file.
 //
 
-using System;
 using System.Linq.CompilerServices.Optimizers;
 using System.Linq.Expressions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.CompilerServices.Optimizers;
 
-namespace Tests.System.Linq.CompilerServices.Optimizers
+[TestClass]
+public class OptimizerCombinatorTests
 {
-    [TestClass]
-    public class OptimizerCombinatorTests
+    [TestMethod]
+    public void OptimizerCombinators_ArgumentChecks()
     {
-        [TestMethod]
-        public void OptimizerCombinators_ArgumentChecks()
+        AssertParameterName("first")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Then(first: null, Optimizer.Nop())));
+        AssertParameterName("second")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Nop().Then(second: null)));
+
+        AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null)));
+
+        AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true)));
+
+        AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true, maxIterations: 0)));
+        AssertParameterName("maxIterations")(Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Optimizer.Nop().FixedPoint(throwOnCycle: true, maxIterations: -1)));
+    }
+
+    [TestMethod]
+    public void OptimizerCombinators_Nop()
+    {
+        var factory = DefaultQueryExpressionFactory.Instance;
+        var qt = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
+        Assert.AreSame(qt, Optimizer.Nop().Optimize(qt));
+    }
+
+    [TestMethod]
+    public void OptimizerCombinators_Then()
+    {
+        var factory = DefaultQueryExpressionFactory.Instance;
+        var qt = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
+
         {
-            AssertParameterName("first")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Then(first: null, Optimizer.Nop())));
-            AssertParameterName("second")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.Nop().Then(second: null)));
-
-            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null)));
-
-            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true)));
-
-            AssertParameterName("optimizer")(Assert.ThrowsExactly<ArgumentNullException>(() => Optimizer.FixedPoint(optimizer: null, throwOnCycle: true, maxIterations: 0)));
-            AssertParameterName("maxIterations")(Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Optimizer.Nop().FixedPoint(throwOnCycle: true, maxIterations: -1)));
+            var str = string.Empty;
+            new MockOptimizer(_ => { str += "first"; return _; })
+                .Then(new MockOptimizer(_ => { str += "second"; return _; }))
+                .Optimize(qt);
+            Assert.AreEqual("firstsecond", str);
         }
 
-        [TestMethod]
-        public void OptimizerCombinators_Nop()
         {
-            var factory = DefaultQueryExpressionFactory.Instance;
-            var qt = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
-            Assert.AreSame(qt, Optimizer.Nop().Optimize(qt));
+            var str = string.Empty;
+            new MockOptimizer(_ => { str += "first"; return _; })
+                .Then(new MockOptimizer(_ => { str += "second"; return _; }))
+                .Then(new MockOptimizer(_ => { str += "third"; return _; }))
+                .Optimize(qt);
+            Assert.AreEqual("firstsecondthird", str);
         }
+    }
 
-        [TestMethod]
-        public void OptimizerCombinators_Then()
+    [TestMethod]
+    public void OptimizerCombinators_FixedPointSimple()
+    {
+        var factory = DefaultQueryExpressionFactory.Instance;
+        var start = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
+        var intermediate = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(typeof(int))));
+        var end = factory.LambdaAbstraction(Expression.Lambda(Expression.Constant(42)));
+
+        // zero args
         {
-            var factory = DefaultQueryExpressionFactory.Instance;
-            var qt = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
-
             {
-                var str = string.Empty;
-                new MockOptimizer(_ => { str += "first"; return _; })
-                    .Then(new MockOptimizer(_ => { str += "second"; return _; }))
-                    .Optimize(qt);
-                Assert.AreEqual("firstsecond", str);
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
+                        .FixedPoint()
+                        .Optimize(start);
+                Assert.AreSame(end, res);
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
             }
 
             {
-                var str = string.Empty;
-                new MockOptimizer(_ => { str += "first"; return _; })
-                    .Then(new MockOptimizer(_ => { str += "second"; return _; }))
-                    .Then(new MockOptimizer(_ => { str += "third"; return _; }))
-                    .Optimize(qt);
-                Assert.AreEqual("firstsecondthird", str);
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => { counter++; return start; })
+                        .FixedPoint()
+                        .Optimize(start);
+                Assert.AreSame(start, res);
+                Assert.AreEqual(1, counter); // start -> start
             }
-        }
 
-        [TestMethod]
-        public void OptimizerCombinators_FixedPointSimple()
-        {
-            var factory = DefaultQueryExpressionFactory.Instance;
-            var start = factory.LambdaAbstraction(Expression.Lambda(Expression.Empty()));
-            var intermediate = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(typeof(int))));
-            var end = factory.LambdaAbstraction(Expression.Lambda(Expression.Constant(42)));
-
-            // zero args
             {
-                {
 
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
-                            .FixedPoint()
-                            .Optimize(start);
-                    Assert.AreSame(end, res);
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
-                }
-
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => { counter++; return start; })
-                            .FixedPoint()
-                            .Optimize(start);
-                    Assert.AreSame(start, res);
-                    Assert.AreEqual(1, counter); // start -> start
-                }
-
-                {
-
-                    var counter = 0;
-                    Assert.ThrowsExactly<InvalidOperationException>(() =>
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
-                            .FixedPoint(throwOnCycle: true)
-                            .Optimize(start));
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
-                }
-            }
-
-            // one arg
-            {
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
-                            .FixedPoint(throwOnCycle: false)
-                            .Optimize(start);
-                    Assert.AreSame(end, res);
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
-                }
-
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => { counter++; return start; })
-                            .FixedPoint(throwOnCycle: false)
-                            .Optimize(start);
-                    Assert.AreSame(start, res);
-                    Assert.AreEqual(1, counter); // start -> start
-                }
-
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
-                            .FixedPoint(throwOnCycle: false)
-                            .Optimize(start);
-                    Assert.AreSame(start, res);
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
-                }
-
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
-                            .FixedPoint(throwOnCycle: true)
-                            .Optimize(start);
-                    Assert.AreSame(end, res);
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
-                }
-
-                {
-
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => { counter++; return start; })
-                            .FixedPoint(throwOnCycle: true)
-                            .Optimize(start);
-                    Assert.AreSame(start, res);
-                    Assert.AreEqual(1, counter); // start -> start
-                }
-
-                {
-
-                    var counter = 0;
-                    Assert.ThrowsExactly<InvalidOperationException>(() =>
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
-                            .FixedPoint(throwOnCycle: true)
-                            .Optimize(start));
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
-                }
-            }
-
-            // two args
-            {
-                {
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => { counter++; return end; })
-                            .FixedPoint(throwOnCycle: true, maxIterations: 0)
-                            .Optimize(start);
-                    Assert.AreSame(start, res);
-                    Assert.AreEqual(0, counter); // start
-                }
-
-                {
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => { counter++; return end; })
-                            .FixedPoint(throwOnCycle: true, maxIterations: 1)
-                            .Optimize(start);
-                    Assert.AreSame(end, res);
-                    Assert.AreEqual(1, counter); // start -> start
-                }
-
-                {
-                    var counter = 0;
-                    Assert.ThrowsExactly<InvalidOperationException>(() =>
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
-                            .FixedPoint(throwOnCycle: true, maxIterations: 3)
-                            .Optimize(start));
-                    Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
-                }
-
-                {
-                    var counter = 0;
-                    var res =
-                        new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
-                            .FixedPoint(throwOnCycle: true, maxIterations: 2)
-                            .Optimize(start);
-                    Assert.AreSame(end, res);
-                    Assert.AreEqual(2, counter); // start -> intermediate -> end -> start
-                }
+                var counter = 0;
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
+                        .FixedPoint(throwOnCycle: true)
+                        .Optimize(start));
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
             }
         }
 
-        private sealed class MockOptimizer : IOptimizer
+        // one arg
         {
-            private readonly Func<QueryTree, QueryTree> _optimize;
+            {
 
-            public MockOptimizer(Func<QueryTree, QueryTree> optimize) => _optimize = optimize;
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
+                        .FixedPoint(throwOnCycle: false)
+                        .Optimize(start);
+                Assert.AreSame(end, res);
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
+            }
 
-            public QueryTree Optimize(QueryTree queryTree) => _optimize(queryTree);
+            {
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => { counter++; return start; })
+                        .FixedPoint(throwOnCycle: false)
+                        .Optimize(start);
+                Assert.AreSame(start, res);
+                Assert.AreEqual(1, counter); // start -> start
+            }
+
+            {
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
+                        .FixedPoint(throwOnCycle: false)
+                        .Optimize(start);
+                Assert.AreSame(start, res);
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
+            }
+
+            {
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : end)
+                        .FixedPoint(throwOnCycle: true)
+                        .Optimize(start);
+                Assert.AreSame(end, res);
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> end
+            }
+
+            {
+
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => { counter++; return start; })
+                        .FixedPoint(throwOnCycle: true)
+                        .Optimize(start);
+                Assert.AreSame(start, res);
+                Assert.AreEqual(1, counter); // start -> start
+            }
+
+            {
+
+                var counter = 0;
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
+                        .FixedPoint(throwOnCycle: true)
+                        .Optimize(start));
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
+            }
         }
 
-        private static Action<ArgumentException> AssertParameterName(string paramName)
+        // two args
         {
-            return ex => { Assert.AreEqual(paramName, ex.ParamName); };
+            {
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => { counter++; return end; })
+                        .FixedPoint(throwOnCycle: true, maxIterations: 0)
+                        .Optimize(start);
+                Assert.AreSame(start, res);
+                Assert.AreEqual(0, counter); // start
+            }
+
+            {
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => { counter++; return end; })
+                        .FixedPoint(throwOnCycle: true, maxIterations: 1)
+                        .Optimize(start);
+                Assert.AreSame(end, res);
+                Assert.AreEqual(1, counter); // start -> start
+            }
+
+            {
+                var counter = 0;
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
+                        .FixedPoint(throwOnCycle: true, maxIterations: 3)
+                        .Optimize(start));
+                Assert.AreEqual(3, counter); // start -> intermediate -> end -> start
+            }
+
+            {
+                var counter = 0;
+                var res =
+                    new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
+                        .FixedPoint(throwOnCycle: true, maxIterations: 2)
+                        .Optimize(start);
+                Assert.AreSame(end, res);
+                Assert.AreEqual(2, counter); // start -> intermediate -> end -> start
+            }
         }
+    }
+
+    private sealed class MockOptimizer : IOptimizer
+    {
+        private readonly Func<QueryTree, QueryTree> _optimize;
+
+        public MockOptimizer(Func<QueryTree, QueryTree> optimize) => _optimize = optimize;
+
+        public QueryTree Optimize(QueryTree queryTree) => _optimize(queryTree);
+    }
+
+    private static Action<ArgumentException> AssertParameterName(string paramName)
+    {
+        return ex => { Assert.AreEqual(paramName, ex.ParamName); };
     }
 }

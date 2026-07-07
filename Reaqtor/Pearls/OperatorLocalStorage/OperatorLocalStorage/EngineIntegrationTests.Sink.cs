@@ -8,57 +8,54 @@
 // BD - February 2018
 //
 
-using System;
-
 using Reaqtive;
 
-namespace Playground
+namespace Playground;
+
+internal static partial class EngineIntegrationTests
 {
-    internal static partial class EngineIntegrationTests
+    /// <summary>
+    /// Sink for events sent into a subject registered in a <see cref="StreamManager"/> accessed through the <see cref="IOperatorContext"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the events.</typeparam>
+    private sealed class Sink<T> : StatefulObserver<T>
     {
-        /// <summary>
-        /// Sink for events sent into a subject registered in a <see cref="StreamManager"/> accessed through the <see cref="IOperatorContext"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the events.</typeparam>
-        private sealed class Sink<T> : StatefulObserver<T>
+        private readonly string _id;
+        private StreamManager _streamManager;
+        private IObserver<T> _observer;
+
+        public Sink(string id)
         {
-            private readonly string _id;
-            private StreamManager _streamManager;
-            private IObserver<T> _observer;
+            _id = id;
+        }
 
-            public Sink(string id)
+        public override string Name => "Sink";
+
+        public override Version Version => new(1, 0, 0, 0);
+
+        protected override void OnCompletedCore() => _observer.OnCompleted();
+
+        protected override void OnErrorCore(Exception error) => _observer.OnError(error);
+
+        protected override void OnNextCore(T value) => _observer.OnNext(value);
+
+        public override void SetContext(IOperatorContext context)
+        {
+            base.SetContext(context);
+
+            if (!context.TryGetElement("StreamManager", out _streamManager))
             {
-                _id = id;
+                throw new InvalidOperationException("Need stream manager.");
             }
+        }
 
-            public override string Name => "Sink";
+        protected override void OnStart()
+        {
+            _observer = _streamManager.GetSubject<T>(_id);
+        }
 
-            public override Version Version => new(1, 0, 0, 0);
-
-            protected override void OnCompletedCore() => _observer.OnCompleted();
-
-            protected override void OnErrorCore(Exception error) => _observer.OnError(error);
-
-            protected override void OnNextCore(T value) => _observer.OnNext(value);
-
-            public override void SetContext(IOperatorContext context)
-            {
-                base.SetContext(context);
-
-                if (!context.TryGetElement("StreamManager", out _streamManager))
-                {
-                    throw new InvalidOperationException("Need stream manager.");
-                }
-            }
-
-            protected override void OnStart()
-            {
-                _observer = _streamManager.GetSubject<T>(_id);
-            }
-
-            protected override void OnDispose()
-            {
-            }
+        protected override void OnDispose()
+        {
         }
     }
 }

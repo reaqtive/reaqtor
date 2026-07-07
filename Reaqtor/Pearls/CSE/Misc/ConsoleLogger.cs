@@ -10,31 +10,30 @@
 
 using System;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Logger using Console.Out.
+/// </summary>
+internal class ConsoleLogger : ILogger
 {
     /// <summary>
-    /// Logger using Console.Out.
+    /// Writes the specified message to the logger using the specified color (if specified).
     /// </summary>
-    internal class ConsoleLogger : ILogger
+    /// <param name="message">Message to write to the logger.</param>
+    /// <param name="color">Color to render the message in. If omitted, the currently configured console color is used.</param>
+    public void WriteLine(string message, ConsoleColor? color = null)
     {
-        /// <summary>
-        /// Writes the specified message to the logger using the specified color (if specified).
-        /// </summary>
-        /// <param name="message">Message to write to the logger.</param>
-        /// <param name="color">Color to render the message in. If omitted, the currently configured console color is used.</param>
-        public void WriteLine(string message, ConsoleColor? color = null)
+        if (color != null)
         {
-            if (color != null)
-            {
-                Console.ForegroundColor = color.Value;
-            }
+            Console.ForegroundColor = color.Value;
+        }
 
-            Console.WriteLine(message);
+        Console.WriteLine(message);
 
-            if (color != null)
-            {
-                Console.ResetColor();
-            }
+        if (color != null)
+        {
+            Console.ResetColor();
         }
     }
 }

@@ -8,60 +8,57 @@
 // BD - December 2016 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.Json.Expressions;
 using Nuqleon.Json.Interop.Newtonsoft;
 
-namespace Tests.Nuqleon.Json.Interop.Newtonsoft
+namespace Tests.Nuqleon.Json.Interop.Newtonsoft;
+
+[TestClass]
+public class TokenStackTests
 {
-    [TestClass]
-    public class TokenStackTests
+    [TestMethod]
+    public void TokenStack_Push1()
     {
-        [TestMethod]
-        public void TokenStack_Push1()
+        var tokens = new TokenStack();
+
+        Assert.IsFalse(tokens.TryPop(out _));
+        Assert.AreEqual(0, tokens.Count);
+
+        for (var i = 0; i < 99; i++)
         {
-            var tokens = new TokenStack();
-
-            Assert.IsFalse(tokens.TryPop(out _));
-            Assert.AreEqual(0, tokens.Count);
-
-            for (var i = 0; i < 99; i++)
-            {
-                tokens.Push(new Token { Expression = Expression.Number(i.ToString()) });
-                Assert.AreEqual(i + 1, tokens.Count);
-            }
-
-            for (var i = 98; i >= 0; i--)
-            {
-                Assert.IsTrue(tokens.TryPop(out var token));
-                Assert.AreEqual(i, tokens.Count);
-                Assert.AreEqual(i.ToString(), ((ConstantExpression)token.Expression).Value);
-            }
+            tokens.Push(new Token { Expression = Expression.Number(i.ToString()) });
+            Assert.AreEqual(i + 1, tokens.Count);
         }
 
-        [TestMethod]
-        public void TokenStack_PushN()
+        for (var i = 98; i >= 0; i--)
         {
-            var tokens = new TokenStack();
+            Assert.IsTrue(tokens.TryPop(out var token));
+            Assert.AreEqual(i, tokens.Count);
+            Assert.AreEqual(i.ToString(), ((ConstantExpression)token.Expression).Value);
+        }
+    }
 
-            Assert.IsFalse(tokens.TryPop(out _));
-            Assert.AreEqual(0, tokens.Count);
+    [TestMethod]
+    public void TokenStack_PushN()
+    {
+        var tokens = new TokenStack();
 
-            tokens.Push(99);
-            Assert.AreEqual(99, tokens.Count);
+        Assert.IsFalse(tokens.TryPop(out _));
+        Assert.AreEqual(0, tokens.Count);
 
-            for (var i = 0; i < 99; i++)
-            {
-                tokens[i] = new Token { Expression = Expression.Number(i.ToString()) };
-            }
+        tokens.Push(99);
+        Assert.AreEqual(99, tokens.Count);
 
-            for (var i = 98; i >= 0; i--)
-            {
-                Assert.IsTrue(tokens.TryPop(out var token));
-                Assert.AreEqual(i, tokens.Count);
-                Assert.AreEqual(i.ToString(), ((ConstantExpression)token.Expression).Value);
-            }
+        for (var i = 0; i < 99; i++)
+        {
+            tokens[i] = new Token { Expression = Expression.Number(i.ToString()) };
+        }
+
+        for (var i = 98; i >= 0; i--)
+        {
+            Assert.IsTrue(tokens.TryPop(out var token));
+            Assert.AreEqual(i, tokens.Count);
+            Assert.AreEqual(i.ToString(), ((ConstantExpression)token.Expression).Value);
         }
     }
 }

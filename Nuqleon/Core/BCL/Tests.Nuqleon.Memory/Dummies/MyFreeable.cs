@@ -11,39 +11,38 @@
 
 using System.Memory;
 
-namespace Tests
+namespace Tests;
+
+internal class MyFreeable : IFreeable, IClearable
 {
-    internal class MyFreeable : IFreeable, IClearable
+    private readonly ObjectPool<MyFreeable> _pool;
+
+    public MyFreeable()
     {
-        private readonly ObjectPool<MyFreeable> _pool;
+    }
 
-        public MyFreeable()
-        {
-        }
+    public MyFreeable(ObjectPool<MyFreeable> pool)
+    {
+        _pool = pool;
+    }
 
-        public MyFreeable(ObjectPool<MyFreeable> pool)
-        {
-            _pool = pool;
-        }
+    public bool hasFreed;
+    public bool used;
 
-        public bool hasFreed;
-        public bool used;
+    public void Use()
+    {
+        used = true;
+    }
 
-        public void Use()
-        {
-            used = true;
-        }
+    public void Free()
+    {
+        hasFreed = true;
 
-        public void Free()
-        {
-            hasFreed = true;
+        _pool?.Free(this);
+    }
 
-            _pool?.Free(this);
-        }
-
-        public void Clear()
-        {
-            used = false;
-        }
+    public void Clear()
+    {
+        used = false;
     }
 }

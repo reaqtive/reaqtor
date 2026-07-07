@@ -8,19 +8,18 @@
 //   ER - 10/27/2014 - Created this type.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+internal sealed class DefaultDiscardable<T> : IDiscardable<T>
 {
-    internal sealed class DefaultDiscardable<T> : IDiscardable<T>
+    public static readonly DefaultDiscardable<T> Instance = new();
+
+    private DefaultDiscardable() { }
+
+    public T Value => default;
+
+    public void Dispose()
     {
-        public static readonly DefaultDiscardable<T> Instance = new();
-
-        private DefaultDiscardable() { }
-
-        public T Value => default;
-
-        public void Dispose()
-        {
-            // No-op, this will be called many times.
-        }
+        // No-op, this will be called many times.
     }
 }

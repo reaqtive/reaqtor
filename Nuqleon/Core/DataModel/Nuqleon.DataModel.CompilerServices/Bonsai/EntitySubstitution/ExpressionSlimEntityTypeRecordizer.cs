@@ -8,123 +8,117 @@
 // ER, BD - November 2013 - Created this file.
 //
 
-#if DEBUG
-using System;
-#endif
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Reflection;
 
 using Nuqleon.DataModel.TypeSystem;
 
-namespace Nuqleon.DataModel.CompilerServices.Bonsai
-{
-    #region Aliases
+namespace Nuqleon.DataModel.CompilerServices.Bonsai;
 
-    using Expression = System.Linq.Expressions.ExpressionSlim;
-    using MemberAssignment = System.Linq.Expressions.MemberAssignmentSlim;
+#region Aliases
 
-    using Type = TypeSlim;
-    using MemberInfo = MemberInfoSlim;
+using Expression = System.Linq.Expressions.ExpressionSlim;
+using MemberAssignment = System.Linq.Expressions.MemberAssignmentSlim;
 
-    using ExpressionEntityTypeSubstitutor = ExpressionSlimEntityTypeSubstitutor;
-    using EntityTypeSubstitutor = EntityTypeSlimSubstitutor;
+using Type = TypeSlim;
+using MemberInfo = MemberInfoSlim;
+
+using ExpressionEntityTypeSubstitutor = ExpressionSlimEntityTypeSubstitutor;
+using EntityTypeSubstitutor = EntityTypeSlimSubstitutor;
 
 #if DEBUG
-    using Object = ObjectSlim;
+using Object = ObjectSlim;
 #endif
 
-    #endregion
+#endregion
+
+/// <summary>
+/// Expression tree visitor to substitute occurrences of user-defined entity types for record types.
+/// </summary>
+public sealed class ExpressionSlimEntityTypeRecordizer : ExpressionEntityTypeSubstitutor
+{
+    /// <summary>
+    /// Creates a new entity type substitutor using record types.
+    /// </summary>
+    public ExpressionSlimEntityTypeRecordizer()
+        : base(new RecordEntityTypeSlimSubstitutor())
+    {
+        DataTypeConverter = new RecordDataTypeToTypeSlimConverter();
+    }
 
     /// <summary>
-    /// Expression tree visitor to substitute occurrences of user-defined entity types for record types.
+    /// Gets a converter to create a slim type from a data type.
     /// </summary>
-    public sealed class ExpressionSlimEntityTypeRecordizer : ExpressionEntityTypeSubstitutor
+    protected override DataTypeVisitor<Type, PropertyDataSlim> DataTypeConverter { get; }
+
+    private sealed class RecordEntityTypeSlimSubstitutor : EntityTypeSubstitutor
     {
-        /// <summary>
-        /// Creates a new entity type substitutor using record types.
-        /// </summary>
-        public ExpressionSlimEntityTypeRecordizer()
-            : base(new RecordEntityTypeSlimSubstitutor())
+        public RecordEntityTypeSlimSubstitutor()
+            : base(new Dictionary<Type, Type>(TypeSlimEqualityComparer.Default))
         {
-            DataTypeConverter = new RecordDataTypeToTypeSlimConverter();
         }
 
-        /// <summary>
-        /// Gets a converter to create a slim type from a data type.
-        /// </summary>
-        protected override DataTypeVisitor<Type, PropertyDataSlim> DataTypeConverter { get; }
-
-        private sealed class RecordEntityTypeSlimSubstitutor : EntityTypeSubstitutor
+        protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)
         {
-            public RecordEntityTypeSlimSubstitutor()
-                : base(new Dictionary<Type, Type>(TypeSlimEqualityComparer.Default))
+            var constructor = type.GetConstructor(EmptyReadOnlyCollection<Type>.Instance);
+
+            var newExpression = Expression.New(constructor, [], []);
+
+            var bindings = new MemberAssignment[memberAssignments.Count];
+
+            var i = 0;
+            foreach (var kv in memberAssignments)
             {
+                bindings[i++] = Expression.Bind(kv.Key, kv.Value);
             }
 
-            protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)
+            var memberInit = Expression.MemberInit(newExpression, bindings);
+
+            return memberInit;
+        }
+
+        protected override object ConvertConstantStructuralCore(object originalValue, StructuralDataType oldDataType, StructuralDataType newDataType)
+        {
+            var res = newDataType.CreateInstance();
+
+            ConstantsMap[originalValue] = res; // Allow cycles
+
+            var oldPropertyMap = oldDataType.Properties.ToDictionary(p => p.Name, p => p);
+
+            var newProperties = newDataType.Properties;
+
+            for (int i = 0, n = newProperties.Count; i < n; i++)
             {
-                var constructor = type.GetConstructor(EmptyReadOnlyCollection<Type>.Instance);
+                var newProperty = newProperties[i];
+                var oldProperty = oldPropertyMap[newProperty.Name];
 
-                var newExpression = Expression.New(constructor, [], []);
+                var oldValue = oldProperty.GetValue(originalValue);
+                var newValue = ConvertConstant(oldValue, oldProperty.Type, newProperty.Type);
 
-                var bindings = new MemberAssignment[memberAssignments.Count];
-
-                var i = 0;
-                foreach (var kv in memberAssignments)
-                {
-                    bindings[i++] = Expression.Bind(kv.Key, kv.Value);
-                }
-
-                var memberInit = Expression.MemberInit(newExpression, bindings);
-
-                return memberInit;
+                newProperty.SetValue(res, newValue);
             }
 
-            protected override object ConvertConstantStructuralCore(object originalValue, StructuralDataType oldDataType, StructuralDataType newDataType)
-            {
-                var res = newDataType.CreateInstance();
-
-                ConstantsMap[originalValue] = res; // Allow cycles
-
-                var oldPropertyMap = oldDataType.Properties.ToDictionary(p => p.Name, p => p);
-
-                var newProperties = newDataType.Properties;
-
-                for (int i = 0, n = newProperties.Count; i < n; i++)
-                {
-                    var newProperty = newProperties[i];
-                    var oldProperty = oldPropertyMap[newProperty.Name];
-
-                    var oldValue = oldProperty.GetValue(originalValue);
-                    var newValue = ConvertConstant(oldValue, oldProperty.Type, newProperty.Type);
-
-                    newProperty.SetValue(res, newValue);
-                }
-
-                return res;
-            }
+            return res;
+        }
 
 #if DEBUG
-            protected override void CheckConstantStructuralCore(Object newValue, StructuralDataType oldDataType)
+        protected override void CheckConstantStructuralCore(Object newValue, StructuralDataType oldDataType)
+        {
+            var oldPropertyMap = oldDataType.Properties.ToDictionary(p => p.Name, p => p);
+
+            var newStructuralType = (StructuralTypeSlim)newValue.TypeSlim;
+            var newProperties = newStructuralType.Properties;
+
+            for (int i = 0, n = newProperties.Count; i < n; i++)
             {
-                var oldPropertyMap = oldDataType.Properties.ToDictionary(p => p.Name, p => p);
+                var newProperty = newProperties[i];
+                var oldProperty = oldPropertyMap[newProperty.Name];
 
-                var newStructuralType = (StructuralTypeSlim)newValue.TypeSlim;
-                var newProperties = newStructuralType.Properties;
-
-                for (int i = 0, n = newProperties.Count; i < n; i++)
-                {
-                    var newProperty = newProperties[i];
-                    var oldProperty = oldPropertyMap[newProperty.Name];
-
-                    var oldValue = oldProperty.GetValue(newValue.Value);
-                    var newPropertyValue = Object.Create(oldValue, newProperty.PropertyType, oldProperty.Type.UnderlyingType);
-                    CheckConstant(newPropertyValue, oldProperty.Type);
-                }
+                var oldValue = oldProperty.GetValue(newValue.Value);
+                var newPropertyValue = Object.Create(oldValue, newProperty.PropertyType, oldProperty.Type.UnderlyingType);
+                CheckConstant(newPropertyValue, oldProperty.Type);
             }
-#endif
         }
+#endif
     }
 }

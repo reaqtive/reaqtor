@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
@@ -13,140 +11,138 @@ using Reaqtor;
 using Reaqtor.TestingFramework;
 #endif
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class DefaultIfEmpty : OperatorTestBase
 {
-    public partial class DefaultIfEmpty : OperatorTestBase
+    [TestMethod]
+    public void DefaultIfEmpty_Empty()
     {
-        [TestMethod]
-        public void DefaultIfEmpty_Empty()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.DefaultIfEmpty()
-                );
+            var res = client.Start(() =>
+                xs.DefaultIfEmpty()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(250, default(int)),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(250, default(int)),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void DefaultIfEmpty_Empty_DefaultValue()
+    [TestMethod]
+    public void DefaultIfEmpty_Empty_DefaultValue()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.DefaultIfEmpty(defaultValue: 10)
-                );
+            var res = client.Start(() =>
+                xs.DefaultIfEmpty(defaultValue: 10)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(250, 10),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(250, 10),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void DefaultIfEmpty_One()
+    [TestMethod]
+    public void DefaultIfEmpty_One()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.DefaultIfEmpty()
-                );
+            var res = client.Start(() =>
+                xs.DefaultIfEmpty()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void DefaultIfEmpty_Many()
+    [TestMethod]
+    public void DefaultIfEmpty_Many()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.DefaultIfEmpty()
-                );
+            var res = client.Start(() =>
+                xs.DefaultIfEmpty()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void DefaultIfEmpty_Error()
+    [TestMethod]
+    public void DefaultIfEmpty_Error()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnError<int>(210, ex)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnError<int>(210, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.DefaultIfEmpty()
-                );
+            var res = client.Start(() =>
+                xs.DefaultIfEmpty()
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(210, ex)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(210, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 210)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 210)
+            );
+        });
     }
 }

@@ -8,30 +8,28 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal sealed class KnownQubjectFactory<TInput, TOutput> : QubjectFactory<TInput, TOutput>, IKnownResource
 {
-    internal sealed class KnownQubjectFactory<TInput, TOutput> : QubjectFactory<TInput, TOutput>, IKnownResource
+    public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        Uri = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg> : QubjectFactory<TInput, TOutput, TArg>, IKnownResource
-    {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
+    public Uri Uri { get; }
+}
 
-        public Uri Uri { get; }
+internal sealed class KnownQubjectFactory<TInput, TOutput, TArg> : QubjectFactory<TInput, TOutput, TArg>, IKnownResource
+{
+    public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = streamFactoryUri;
     }
+
+    public Uri Uri { get; }
 }

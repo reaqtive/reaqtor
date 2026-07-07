@@ -15,28 +15,27 @@
 
 using System.Globalization;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class NumberExcelExpression : ExcelExpression
 {
-    internal sealed class NumberExcelExpression : ExcelExpression
+    internal NumberExcelExpression(double? value)
     {
-        internal NumberExcelExpression(double? value)
-        {
-            Value = value;
-        }
+        Value = value;
+    }
 
-        public override ExcelExpressionKind Kind => ExcelExpressionKind.Number;
+    public override ExcelExpressionKind Kind => ExcelExpressionKind.Number;
 
-        public double? Value { get; }
+    public double? Value { get; }
 
-        protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
-        {
-            return visitor.VisitNumber(this);
-        }
+    protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
+    {
+        return visitor.VisitNumber(this);
+    }
 
-        public override string ToString()
-        {
-            // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
-            return Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
-        }
+    public override string ToString()
+    {
+        // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
+        return Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
     }
 }

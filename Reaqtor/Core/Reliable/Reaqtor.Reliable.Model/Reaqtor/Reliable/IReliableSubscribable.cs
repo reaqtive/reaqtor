@@ -4,9 +4,8 @@
 
 using Reaqtive.Expressions;
 
-namespace Reaqtor.Reliable
+namespace Reaqtor.Reliable;
+
+public interface IReliableSubscribable<out T> : IQubscribable<T>
 {
-    public interface IReliableSubscribable<out T> : IQubscribable<T>
-    {
-    }
 }

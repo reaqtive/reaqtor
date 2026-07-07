@@ -8,27 +8,26 @@
 // BD - July 2013 - Created this file.
 //
 
-namespace Nuqleon.DataModel.TypeSystem
+namespace Nuqleon.DataModel.TypeSystem;
+
+/// <summary>
+/// Represents an enum value, conform to the data model.
+/// </summary>
+public class DataEnumValue
 {
-    /// <summary>
-    /// Represents an enum value, conform to the data model.
-    /// </summary>
-    public class DataEnumValue
+    internal DataEnumValue(string name, object value)
     {
-        internal DataEnumValue(string name, object value)
-        {
-            Name = name;
-            Value = value;
-        }
-
-        /// <summary>
-        /// Gets the enum value name.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the enum underlying value.
-        /// </summary>
-        public object Value { get; }
+        Name = name;
+        Value = value;
     }
+
+    /// <summary>
+    /// Gets the enum value name.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// Gets the enum underlying value.
+    /// </summary>
+    public object Value { get; }
 }

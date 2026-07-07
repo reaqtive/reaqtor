@@ -8,27 +8,26 @@
 // PS - February 2015 - Created this file.
 //
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// An optimizer that does not do any optimization.
+/// </summary>
+public sealed class NopOptimizer : IOptimizer
 {
-    /// <summary>
-    /// An optimizer that does not do any optimization.
-    /// </summary>
-    public sealed class NopOptimizer : IOptimizer
+    private NopOptimizer()
     {
-        private NopOptimizer()
-        {
-        }
-
-        /// <summary>
-        /// Gets an instance of this optimizer.
-        /// </summary>
-        public static IOptimizer Instance { get; } = new NopOptimizer();
-
-        /// <summary>
-        /// Gives back the original tree.
-        /// </summary>
-        /// <param name="queryTree">The query expression to optimize.</param>
-        /// <returns>The original query expression.</returns>
-        public QueryTree Optimize(QueryTree queryTree) => queryTree;
     }
+
+    /// <summary>
+    /// Gets an instance of this optimizer.
+    /// </summary>
+    public static IOptimizer Instance { get; } = new NopOptimizer();
+
+    /// <summary>
+    /// Gives back the original tree.
+    /// </summary>
+    /// <param name="queryTree">The query expression to optimize.</param>
+    /// <returns>The original query expression.</returns>
+    public QueryTree Optimize(QueryTree queryTree) => queryTree;
 }

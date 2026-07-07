@@ -6,28 +6,27 @@ using Reaqtive;
 using Reaqtive.TestingFramework;
 using Reaqtive.TestingFramework.Mocks;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public class OperatorTestBase : TestBase
 {
-    public class OperatorTestBase : TestBase
+    protected static ITestableSubscribable<T> GetObservableWitness<T>()
     {
-        protected static ITestableSubscribable<T> GetObservableWitness<T>()
-        {
-            return default;
-        }
+        return default;
+    }
 
-        protected static TestScheduler GetContext(TestScheduler scheduler)
-        {
-            return scheduler;
-        }
+    protected static TestScheduler GetContext(TestScheduler scheduler)
+    {
+        return scheduler;
+    }
 
-        protected static long Increment(long from, int repeat)
-        {
-            return from + repeat;
-        }
+    protected static long Increment(long from, int repeat)
+    {
+        return from + repeat;
+    }
 
-        protected static void InitializeSubscription(ISubscription sub, TestScheduler scheduler)
-        {
-            SubscriptionInitializeVisitor.Initialize(sub, scheduler.CreateContext());
-        }
+    protected static void InitializeSubscription(ISubscription sub, TestScheduler scheduler)
+    {
+        SubscriptionInitializeVisitor.Initialize(sub, scheduler.CreateContext());
     }
 }

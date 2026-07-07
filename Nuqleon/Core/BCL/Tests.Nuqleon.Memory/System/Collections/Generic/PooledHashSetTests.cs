@@ -8,206 +8,198 @@
 //   BD - 07/02/2014 - Wrote these tests.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace Tests;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-
-namespace Tests
+[TestClass]
+public class PooledHashSetTests : TestBase
 {
-    [TestClass]
-    public class PooledHashSetTests : TestBase
+    private static readonly string[] exp = ["qux", "foo", "bar", "baz"];
+
+    [TestMethod]
+    public void PooledHashSet_ArgumentChecking()
     {
-        private static readonly string[] exp = ["qux", "foo", "bar", "baz"];
+        Assert.ThrowsExactly<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
+    }
 
-        [TestMethod]
-        public void PooledHashSet_ArgumentChecking()
+    [TestMethod]
+    public void PooledHashSet_ManOrBoy()
+    {
+        PooledHashSet_ManOrBoy_Impl(false);
+    }
+
+    [TestMethod]
+    public void PooledHashSet_ManOrBoy_RAII()
+    {
+        PooledHashSet_ManOrBoy_Impl(true);
+    }
+
+    private void PooledHashSet_ManOrBoy_Impl(bool useRAII)
+    {
+        var res = from C in new[] { 4, 8, 16, 32, 64 }
+                  from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
+                  from M in new[] { 1000, 5000, 10000 }
+                  select (C, P, M);
+
+        foreach (var cpm in res.Trim())
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
-        }
-
-        [TestMethod]
-        public void PooledHashSet_ManOrBoy()
-        {
-            PooledHashSet_ManOrBoy_Impl(false);
-        }
-
-        [TestMethod]
-        public void PooledHashSet_ManOrBoy_RAII()
-        {
-            PooledHashSet_ManOrBoy_Impl(true);
-        }
-
-        private void PooledHashSet_ManOrBoy_Impl(bool useRAII)
-        {
-            var res = from C in new[] { 4, 8, 16, 32, 64 }
-                      from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
-                      from M in new[] { 1000, 5000, 10000 }
-                      select (C, P, M);
-
-            foreach (var cpm in res.Trim())
+            Do(cpm.C, cpm.P, cpm.M, false, useRAII, set =>
             {
-                Do(cpm.C, cpm.P, cpm.M, false, useRAII, set =>
+                var N = 128;
+
+                for (var i = 0; i < N; i++)
                 {
-                    var N = 128;
+                    set.Add(i);
+                }
 
-                    for (var i = 0; i < N; i++)
-                    {
-                        set.Add(i);
-                    }
-
-                    return N;
-                });
-            }
+                return N;
+            });
         }
+    }
 
-        [TestMethod]
-        public void PooledHashSet_ManOrBoy_Random()
+    [TestMethod]
+    public void PooledHashSet_ManOrBoy_Random()
+    {
+        PooledHashSet_ManOrBoy_Random_Impl(false);
+    }
+
+    [TestMethod]
+    public void PooledHashSet_ManOrBoy_Random_RAII()
+    {
+        PooledHashSet_ManOrBoy_Random_Impl(true);
+    }
+
+    private void PooledHashSet_ManOrBoy_Random_Impl(bool useRAII)
+    {
+        var res = from C in new[] { 4, 8, 16, 32, 64 }
+                  from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
+                  from M in new[] { 100, 200, 500 }
+                  select (C, P, M);
+
+        foreach (var cpm in res.Trim())
         {
-            PooledHashSet_ManOrBoy_Random_Impl(false);
-        }
-
-        [TestMethod]
-        public void PooledHashSet_ManOrBoy_Random_RAII()
-        {
-            PooledHashSet_ManOrBoy_Random_Impl(true);
-        }
-
-        private void PooledHashSet_ManOrBoy_Random_Impl(bool useRAII)
-        {
-            var res = from C in new[] { 4, 8, 16, 32, 64 }
-                      from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
-                      from M in new[] { 100, 200, 500 }
-                      select (C, P, M);
-
-            foreach (var cpm in res.Trim())
+            Do(cpm.C, cpm.P, cpm.M, false, useRAII, set =>
             {
-                Do(cpm.C, cpm.P, cpm.M, false, useRAII, set =>
+                var rand = GetRandom();
+
+                var L = rand.Next(1, 128);
+
+                for (var i = 0; i < L; i++)
                 {
-                    var rand = GetRandom();
+                    set.Add(i);
+                }
 
-                    var L = rand.Next(1, 128);
-
-                    for (var i = 0; i < L; i++)
-                    {
-                        set.Add(i);
-                    }
-
-                    return L;
-                });
-            }
+                return L;
+            });
         }
+    }
 
-        private void Do(int C, int P, int M, bool noisy, bool useRAII, Func<HashSet<int>, int> test)
+    private void Do(int C, int P, int M, bool noisy, bool useRAII, Func<HashSet<int>, int> test)
+    {
+        var pool = HashSetPool<int>.Create(C);
+
+        void testCore(HashSet<int> set)
         {
-            var pool = HashSetPool<int>.Create(C);
+            var len = set.Count;
+            Assert.AreEqual(0, len);
 
-            void testCore(HashSet<int> set)
-            {
-                var len = set.Count;
-                Assert.AreEqual(0, len);
+            var L = test(set);
 
-                var L = test(set);
-
-                len = set.Count;
-                Assert.AreEqual(L, len);
-            }
-
-            if (useRAII)
-            {
-                Run(() => pool.New(), o => o.HashSet, o => o.Dispose(), testCore, P, M, noisy);
-            }
-            else
-            {
-                Run(() => pool.Allocate(), o => o, o => pool.Free(o), testCore, P, M, noisy);
-            }
+            len = set.Count;
+            Assert.AreEqual(L, len);
         }
 
-        [TestMethod]
-        public void PooledHashSet_Simple1()
+        if (useRAII)
         {
-            var pool = HashSetPool<string>.Create(4);
-            PooledHashSet_Simple_Impl(pool);
+            Run(() => pool.New(), o => o.HashSet, o => o.Dispose(), testCore, P, M, noisy);
         }
-
-        [TestMethod]
-        public void PooledHashSet_Simple2()
+        else
         {
-            var pool = HashSetPool<string>.Create(4, EqualityComparer<string>.Default);
-            PooledHashSet_Simple_Impl(pool);
+            Run(() => pool.Allocate(), o => o, o => pool.Free(o), testCore, P, M, noisy);
         }
+    }
 
-        private static void PooledHashSet_Simple_Impl(HashSetPool<string> pool)
+    [TestMethod]
+    public void PooledHashSet_Simple1()
+    {
+        var pool = HashSetPool<string>.Create(4);
+        PooledHashSet_Simple_Impl(pool);
+    }
+
+    [TestMethod]
+    public void PooledHashSet_Simple2()
+    {
+        var pool = HashSetPool<string>.Create(4, EqualityComparer<string>.Default);
+        PooledHashSet_Simple_Impl(pool);
+    }
+
+    private static void PooledHashSet_Simple_Impl(HashSetPool<string> pool)
+    {
+        for (var i = 0; i < 100; i++)
         {
-            for (var i = 0; i < 100; i++)
-            {
-                using var obj = i % 2 == 0 ? pool.New() : PooledHashSet<string>.New(pool);
+            using var obj = i % 2 == 0 ? pool.New() : PooledHashSet<string>.New(pool);
 
-                var set = obj.HashSet;
+            var set = obj.HashSet;
 
-                Assert.AreEqual(0, set.Count);
+            Assert.AreEqual(0, set.Count);
 
-                set.Add("qux");
-                set.Add("foo");
-                set.Add("bar");
-                set.Add("baz");
+            set.Add("qux");
+            set.Add("foo");
+            set.Add("bar");
+            set.Add("baz");
 
-                Assert.IsTrue(set.SetEquals(exp));
-            }
+            Assert.IsTrue(set.SetEquals(exp));
         }
+    }
 
-        [TestMethod]
-        public void PooledHashSet_GlobalPool()
+    [TestMethod]
+    public void PooledHashSet_GlobalPool()
+    {
+        for (var i = 0; i < 100; i++)
         {
-            for (var i = 0; i < 100; i++)
-            {
-                using var obj = PooledHashSet<string>.New();
+            using var obj = PooledHashSet<string>.New();
 
-                var set = obj.HashSet;
+            var set = obj.HashSet;
 
-                Assert.AreEqual(0, set.Count);
+            Assert.AreEqual(0, set.Count);
 
-                set.Add("qux");
-                set.Add("foo");
-                set.Add("bar");
-                set.Add("baz");
+            set.Add("qux");
+            set.Add("foo");
+            set.Add("bar");
+            set.Add("baz");
 
-                Assert.IsTrue(set.SetEquals(exp));
-            }
+            Assert.IsTrue(set.SetEquals(exp));
         }
+    }
 
-        [TestMethod]
-        public void PooledHashSet_GetInstance()
+    [TestMethod]
+    public void PooledHashSet_GetInstance()
+    {
+        for (var i = 0; i < 100; i++)
         {
-            for (var i = 0; i < 100; i++)
-            {
-                var set = PooledHashSet<string>.GetInstance();
+            var set = PooledHashSet<string>.GetInstance();
 
-                Assert.AreEqual(0, set.Count);
+            Assert.AreEqual(0, set.Count);
 
-                set.Add("qux");
-                set.Add("foo");
-                set.Add("bar");
-                set.Add("baz");
+            set.Add("qux");
+            set.Add("foo");
+            set.Add("bar");
+            set.Add("baz");
 
-                Assert.IsTrue(set.SetEquals(exp));
+            Assert.IsTrue(set.SetEquals(exp));
 
-                set.Free();
-            }
+            set.Free();
         }
+    }
 
 
-        [TestMethod]
-        public void PooledHashSet_GottenTooBig()
-        {
-            var bigPool = HashSetPool<int>.Create(1, EqualityComparer<int>.Default, 2048);
-            var smallPool = HashSetPool<int>.Create(1, EqualityComparer<int>.Default, 16);
-            TooBig(() => PooledHashSet<int>.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 1024);
-            TooBig(() => bigPool.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 2048);
-            TooBig(() => smallPool.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 16);
-        }
+    [TestMethod]
+    public void PooledHashSet_GottenTooBig()
+    {
+        var bigPool = HashSetPool<int>.Create(1, EqualityComparer<int>.Default, 2048);
+        var smallPool = HashSetPool<int>.Create(1, EqualityComparer<int>.Default, 16);
+        TooBig(() => PooledHashSet<int>.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 1024);
+        TooBig(() => bigPool.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 2048);
+        TooBig(() => smallPool.New(), h => h.HashSet, (h, n) => h.UnionWith(Enumerable.Range(0, n)), 16);
     }
 }

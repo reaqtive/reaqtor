@@ -8,79 +8,73 @@
 // ER - July 2013 - Created this file.
 //
 
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+[TestClass]
+public class TypeToTypeSlimConverterTests : TestBase
 {
-    [TestClass]
-    public class TypeToTypeSlimConverterTests : TestBase
+    private new class Foo
     {
-        private new class Foo
-        {
 #pragma warning disable IDE0060 // Remove unused parameter
-            public Foo(ref int bar)
-            { }
+        public Foo(ref int bar)
+        { }
 #pragma warning restore IDE0060 // Remove unused parameter
-        }
+    }
 
-        [TestMethod]
-        public void TypeToTypeSlimConverter_ArgumentChecks()
-        {
-            var converter = new TypeToTypeSlimConverter();
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => converter.Visit(type: null));
-            Assert.AreEqual("type", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(type: null, typeSlim: null));
-            Assert.AreEqual("type", ex2.ParamName);
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(typeof(int), typeSlim: null));
-            Assert.AreEqual("typeSlim", ex3.ParamName);
-        }
+    [TestMethod]
+    public void TypeToTypeSlimConverter_ArgumentChecks()
+    {
+        var converter = new TypeToTypeSlimConverter();
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => converter.Visit(type: null));
+        Assert.AreEqual("type", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(type: null, typeSlim: null));
+        Assert.AreEqual("type", ex2.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(typeof(int), typeSlim: null));
+        Assert.AreEqual("typeSlim", ex3.ParamName);
+    }
 
-        [TestMethod]
-        public void TypeToTypeSlimConverter_ThrowsNotSupported()
-        {
-            var refType = typeof(Foo).GetConstructors().Single().GetParameters()[0].ParameterType;
-            Assert.IsTrue(refType.IsByRef);
+    [TestMethod]
+    public void TypeToTypeSlimConverter_ThrowsNotSupported()
+    {
+        var refType = typeof(Foo).GetConstructors().Single().GetParameters()[0].ParameterType;
+        Assert.IsTrue(refType.IsByRef);
 
-            var pointerType = typeof(int*);
-            Assert.IsTrue(pointerType.IsPointer);
+        var pointerType = typeof(int*);
+        Assert.IsTrue(pointerType.IsPointer);
 
-            var converter = new TypeToTypeSlimConverter();
-            Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(refType));
-            Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(pointerType));
-        }
+        var converter = new TypeToTypeSlimConverter();
+        Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(refType));
+        Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(pointerType));
+    }
 
-        [TestMethod]
-        public void TypeToTypeSlimConverter_Resolve_Success()
-        {
-            var visitor = new TypeToTypeSlimConverter();
-            var longTypeSlim = visitor.Visit(typeof(long));
-            visitor.MapType(typeof(int), longTypeSlim);
-            var intTypeSlim = visitor.Visit(typeof(int));
-            Assert.AreEqual(intTypeSlim, longTypeSlim);
-            visitor.MapType(typeof(int), longTypeSlim);
-        }
+    [TestMethod]
+    public void TypeToTypeSlimConverter_Resolve_Success()
+    {
+        var visitor = new TypeToTypeSlimConverter();
+        var longTypeSlim = visitor.Visit(typeof(long));
+        visitor.MapType(typeof(int), longTypeSlim);
+        var intTypeSlim = visitor.Visit(typeof(int));
+        Assert.AreEqual(intTypeSlim, longTypeSlim);
+        visitor.MapType(typeof(int), longTypeSlim);
+    }
 
-        [TestMethod]
-        public void TypeToTypeSlimConverter_Resolve_ThrowsInvalidOperation()
-        {
-            var visitor = new TypeToTypeSlimConverter();
-            var intTypeSlim = visitor.Visit(typeof(int));
-            var longTypeSlim = visitor.Visit(typeof(long));
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.MapType(typeof(int), longTypeSlim));
-        }
+    [TestMethod]
+    public void TypeToTypeSlimConverter_Resolve_ThrowsInvalidOperation()
+    {
+        var visitor = new TypeToTypeSlimConverter();
+        var intTypeSlim = visitor.Visit(typeof(int));
+        var longTypeSlim = visitor.Visit(typeof(long));
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.MapType(typeof(int), longTypeSlim));
+    }
 
-        [TestMethod]
-        public void TypeToTypeSlimConverter_GenericParameter()
-        {
-            var genericParameterType = typeof(List<>).GetGenericArguments()[0];
+    [TestMethod]
+    public void TypeToTypeSlimConverter_GenericParameter()
+    {
+        var genericParameterType = typeof(List<>).GetGenericArguments()[0];
 
-            var visitor = new TypeToTypeSlimConverter();
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(genericParameterType));
-        }
+        var visitor = new TypeToTypeSlimConverter();
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(genericParameterType));
     }
 }

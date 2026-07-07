@@ -5,20 +5,19 @@
 using System;
 using System.Reactive;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal sealed class Nop<T> : ObserverBase<T>
 {
-    internal sealed class Nop<T> : ObserverBase<T>
+    protected override void OnCompletedCore()
     {
-        protected override void OnCompletedCore()
-        {
-        }
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+    }
 
-        protected override void OnNextCore(T value)
-        {
-        }
+    protected override void OnNextCore(T value)
+    {
     }
 }

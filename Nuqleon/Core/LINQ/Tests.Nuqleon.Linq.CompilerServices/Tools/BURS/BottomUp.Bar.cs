@@ -8,24 +8,22 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
 using System.Linq.CompilerServices;
 
-namespace Tests.System.Linq.CompilerServices.Tools.BURS
+namespace Tests.System.Linq.CompilerServices.Tools.BURS;
+
+internal sealed class Bar
 {
-    internal sealed class Bar
-    {
-    }
+}
 
-    internal sealed class Foo
-    {
-    }
+internal sealed class Foo
+{
+}
 
-    internal sealed class BarWildcards : IWildcardFactory<ITree<Bar>>
+internal sealed class BarWildcards : IWildcardFactory<ITree<Bar>>
+{
+    public ITree<Bar> CreateWildcard(global::System.Linq.Expressions.ParameterExpression hole)
     {
-        public ITree<Bar> CreateWildcard(global::System.Linq.Expressions.ParameterExpression hole)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

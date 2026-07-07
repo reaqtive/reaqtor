@@ -8,43 +8,37 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.DataModel.TypeSystem;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
+namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem;
+
+[TestClass]
+public class DataTypeExceptionTests
 {
-    [TestClass]
-    public class DataTypeExceptionTests
+    [TestMethod]
+    public void DataTypeException_Constructors()
     {
-        [TestMethod]
-        public void DataTypeException_Constructors()
-        {
-            var ex1 = new DataTypeException();
-            Assert.IsNull(ex1.InnerException);
+        var ex1 = new DataTypeException();
+        Assert.IsNull(ex1.InnerException);
 
-            var ex2 = new DataTypeException("foo");
-            Assert.AreEqual("foo", ex2.Message);
-            Assert.IsNull(ex2.InnerException);
-            Assert.IsTrue(ex2.ToString().Contains("foo"));
+        var ex2 = new DataTypeException("foo");
+        Assert.AreEqual("foo", ex2.Message);
+        Assert.IsNull(ex2.InnerException);
+        Assert.IsTrue(ex2.ToString().Contains("foo"));
 
-            var iex = new Exception();
-            var ex3 = new DataTypeException("foo", iex);
-            Assert.AreEqual("foo", ex3.Message);
-            Assert.AreSame(iex, ex3.InnerException);
-            Assert.IsTrue(ex3.ToString().Contains("foo"));
+        var iex = new Exception();
+        var ex3 = new DataTypeException("foo", iex);
+        Assert.AreEqual("foo", ex3.Message);
+        Assert.AreSame(iex, ex3.InnerException);
+        Assert.IsTrue(ex3.ToString().Contains("foo"));
 
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)));
-            Assert.AreEqual("error", ex.ParamName);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)));
+        Assert.AreEqual("error", ex.ParamName);
 
-            var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
-            var ex4 = new DataTypeException(err);
-            Assert.AreSame(err, ex4.Error);
-            Assert.IsTrue(ex4.ToString().Contains("bar"));
-        }
-
+        var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
+        var ex4 = new DataTypeException(err);
+        Assert.AreSame(err, ex4.Error);
+        Assert.IsTrue(ex4.ToString().Contains("bar"));
     }
+
 }

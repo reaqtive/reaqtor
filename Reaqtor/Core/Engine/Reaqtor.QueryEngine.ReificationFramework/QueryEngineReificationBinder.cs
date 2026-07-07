@@ -12,325 +12,324 @@ using System.Reflection;
 using Reaqtor.ReificationFramework;
 using Reaqtor.TestingFramework;
 
-namespace Reaqtor.QueryEngine.ReificationFramework
+namespace Reaqtor.QueryEngine.ReificationFramework;
+
+public class QueryEngineReificationBinder : IReificationBinder<QueryEngineEnvironment>
 {
-    public class QueryEngineReificationBinder : IReificationBinder<QueryEngineEnvironment>
+    private static readonly PropertyInfo s_metadataCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.MetadataContext));
+    private static readonly PropertyInfo s_engineCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.EngineContext));
+
+    private readonly bool _templatize;
+
+    public QueryEngineReificationBinder(bool templatize = false)
     {
-        private static readonly PropertyInfo s_metadataCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.MetadataContext));
-        private static readonly PropertyInfo s_engineCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.EngineContext));
+        _templatize = templatize;
+    }
 
-        private readonly bool _templatize;
+    public Expression<Action<QueryEngineEnvironment>> Bind(ServiceOperation operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
 
-        public QueryEngineReificationBinder(bool templatize = false)
+        var reactiveProxyBinder = new ReactiveServiceOperationBinder();
+        var bound = reactiveProxyBinder.Visit(operation);
+
+        var envParam = Expression.Parameter(typeof(QueryEngineEnvironment), "env");
+        var contextExpr = operation.Kind is ServiceOperationKind.CreateSubscription or ServiceOperationKind.DeleteSubscription
+            ? Expression.MakeMemberAccess(envParam, s_engineCtx)
+            : Expression.MakeMemberAccess(envParam, s_metadataCtx);
+
+        var ctxParam = Expression.Parameter(typeof(IReactive), "ctx");
+        return Expression.Lambda<Action<QueryEngineEnvironment>>(
+            Expression.Block(
+                [ctxParam],
+                Expression.Assign(ctxParam, contextExpr),
+                Expression.Invoke(
+                    bound,
+                    ctxParam
+                )
+            ),
+            envParam
+        );
+    }
+
+    public Expression<Action<QueryEngineEnvironment>> Bind(QueryEngineOperation operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        return operation.Kind switch
         {
-            _templatize = templatize;
-        }
+            QueryEngineOperationKind.DifferentialCheckpoint => env => env.DifferentialCheckpoint(),
+            QueryEngineOperationKind.FullCheckpoint => env => env.FullCheckpoint(),
+            QueryEngineOperationKind.Recovery => env => env.Recovery(),
+            _ => throw new NotImplementedException(),
+        };
+    }
 
-        public Expression<Action<QueryEngineEnvironment>> Bind(ServiceOperation operation)
+    public Expression<Action<QueryEngineEnvironment>> Optimize(Expression<Action<QueryEngineEnvironment>> expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        var envParam = expression.Parameters[0];
+        var metadataParam = Expression.Parameter(typeof(IReactive), "mctx");
+        var engineParam = Expression.Parameter(typeof(IReactive), "ectx");
+        var ctxOptimizer = new ContextOptimizer(envParam, metadataParam, engineParam);
+        var optimized = (LambdaExpression)ctxOptimizer.Visit(expression);
+        if (optimized != expression)
         {
-            ArgumentNullException.ThrowIfNull(operation);
-
-            var reactiveProxyBinder = new ReactiveServiceOperationBinder();
-            var bound = reactiveProxyBinder.Visit(operation);
-
-            var envParam = Expression.Parameter(typeof(QueryEngineEnvironment), "env");
-            var contextExpr = operation.Kind is ServiceOperationKind.CreateSubscription or ServiceOperationKind.DeleteSubscription
-                ? Expression.MakeMemberAccess(envParam, s_engineCtx)
-                : Expression.MakeMemberAccess(envParam, s_metadataCtx);
-
-            var ctxParam = Expression.Parameter(typeof(IReactive), "ctx");
-            return Expression.Lambda<Action<QueryEngineEnvironment>>(
+            expression = Expression.Lambda<Action<QueryEngineEnvironment>>(
                 Expression.Block(
-                    [ctxParam],
-                    Expression.Assign(ctxParam, contextExpr),
-                    Expression.Invoke(
-                        bound,
-                        ctxParam
-                    )
+                    [metadataParam, engineParam],
+                    Expression.Assign(metadataParam, Expression.MakeMemberAccess(envParam, s_metadataCtx)),
+                    Expression.Assign(engineParam, Expression.MakeMemberAccess(envParam, s_engineCtx)),
+                    optimized.Body
                 ),
                 envParam
             );
         }
 
-        public Expression<Action<QueryEngineEnvironment>> Bind(QueryEngineOperation operation)
+        var optimizer = new ObserverOptimizer();
+        return (Expression<Action<QueryEngineEnvironment>>)optimizer.Visit(expression);
+    }
+
+    public QueryEngineEnvironment CreateEnvironment()
+    {
+        return new QueryEngineEnvironment(_templatize);
+    }
+
+    private class OptimizerBase : ScopedExpressionVisitor<List<OptimizedPair>>
+    {
+        private readonly Stack<IEnumerable<ParameterExpression>> _environment = new();
+        private readonly HashSet<ParameterExpression> _descoped = [];
+
+        protected override Expression VisitBlockCore(BlockExpression node)
         {
-            ArgumentNullException.ThrowIfNull(operation);
+            var result = (BlockExpression)base.VisitBlockCore(node);
 
-            return operation.Kind switch
+            var descoping = GetAllDescoping().ToList();
+            var descopingVars = descoping.Select(op => op.Variable);
+            var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
+
+            if (descoping.Count > 0)
             {
-                QueryEngineOperationKind.DifferentialCheckpoint => env => env.DifferentialCheckpoint(),
-                QueryEngineOperationKind.FullCheckpoint => env => env.FullCheckpoint(),
-                QueryEngineOperationKind.Recovery => env => env.Recovery(),
-                _ => throw new NotImplementedException(),
-            };
-        }
-
-        public Expression<Action<QueryEngineEnvironment>> Optimize(Expression<Action<QueryEngineEnvironment>> expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            var envParam = expression.Parameters[0];
-            var metadataParam = Expression.Parameter(typeof(IReactive), "mctx");
-            var engineParam = Expression.Parameter(typeof(IReactive), "ectx");
-            var ctxOptimizer = new ContextOptimizer(envParam, metadataParam, engineParam);
-            var optimized = (LambdaExpression)ctxOptimizer.Visit(expression);
-            if (optimized != expression)
-            {
-                expression = Expression.Lambda<Action<QueryEngineEnvironment>>(
-                    Expression.Block(
-                        [metadataParam, engineParam],
-                        Expression.Assign(metadataParam, Expression.MakeMemberAccess(envParam, s_metadataCtx)),
-                        Expression.Assign(engineParam, Expression.MakeMemberAccess(envParam, s_engineCtx)),
-                        optimized.Body
-                    ),
-                    envParam
+                return Expression.Block(
+                    result.Type,
+                    result.Variables.Concat(descopingVars),
+                    result.Expressions
+                        .TakeWhile(e => e.NodeType == ExpressionType.Assign)
+                        .Concat(descopingAsgns)
+                        .Concat(result.Expressions
+                            .SkipWhile(e => e.NodeType == ExpressionType.Assign))
                 );
             }
 
-            var optimizer = new ObserverOptimizer();
-            return (Expression<Action<QueryEngineEnvironment>>)optimizer.Visit(expression);
+            return result;
         }
 
-        public QueryEngineEnvironment CreateEnvironment()
+        protected override Expression VisitLambdaCore<T>(Expression<T> node)
         {
-            return new QueryEngineEnvironment(_templatize);
+            var result = (Expression<T>)base.VisitLambdaCore<T>(node);
+
+            var descoping = GetAllDescoping().ToList();
+            var descopingVars = descoping.Select(op => op.Variable);
+            var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
+            var blockExprs = new Expression[descoping.Count + 1];
+            blockExprs[descoping.Count] = result.Body;
+            for (var i = 0; i < descoping.Count; ++i)
+            {
+                var op = descoping[i];
+                blockExprs[i] = Expression.Assign(op.Variable, op.Expression);
+            }
+
+            if (descoping.Count > 0)
+            {
+                return Expression.Lambda<T>(
+                    Expression.Block(
+                        descopingVars,
+                        blockExprs
+                    ),
+                    result.Name,
+                    result.TailCall,
+                    result.Parameters
+                );
+            }
+
+            return result;
         }
 
-        private class OptimizerBase : ScopedExpressionVisitor<List<OptimizedPair>>
+        protected override void Push(IEnumerable<ParameterExpression> parameters)
         {
-            private readonly Stack<IEnumerable<ParameterExpression>> _environment = new();
-            private readonly HashSet<ParameterExpression> _descoped = [];
+            base.Push(parameters);
+            _environment.Push(parameters);
+        }
 
-            protected override Expression VisitBlockCore(BlockExpression node)
-            {
-                var result = (BlockExpression)base.VisitBlockCore(node);
+        protected override void Pop()
+        {
+            base.Pop();
+            _environment.Pop();
+        }
 
-                var descoping = GetAllDescoping().ToList();
-                var descopingVars = descoping.Select(op => op.Variable);
-                var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
+        protected override List<OptimizedPair> GetState(ParameterExpression parameter)
+        {
+            return [];
+        }
 
-                if (descoping.Count > 0)
-                {
-                    return Expression.Block(
-                        result.Type,
-                        result.Variables.Concat(descopingVars),
-                        result.Expressions
-                            .TakeWhile(e => e.NodeType == ExpressionType.Assign)
-                            .Concat(descopingAsgns)
-                            .Concat(result.Expressions
-                                .SkipWhile(e => e.NodeType == ExpressionType.Assign))
-                    );
-                }
+        protected bool TryAdd(Expression expression, out ParameterExpression parameter)
+        {
+            var fvs = FreeVariableScanner.Scan(expression);
+            parameter = Expression.Parameter(expression.Type);
 
-                return result;
-            }
-
-            protected override Expression VisitLambdaCore<T>(Expression<T> node)
-            {
-                var result = (Expression<T>)base.VisitLambdaCore<T>(node);
-
-                var descoping = GetAllDescoping().ToList();
-                var descopingVars = descoping.Select(op => op.Variable);
-                var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
-                var blockExprs = new Expression[descoping.Count + 1];
-                blockExprs[descoping.Count] = result.Body;
-                for (var i = 0; i < descoping.Count; ++i)
-                {
-                    var op = descoping[i];
-                    blockExprs[i] = Expression.Assign(op.Variable, op.Expression);
-                }
-
-                if (descoping.Count > 0)
-                {
-                    return Expression.Lambda<T>(
-                        Expression.Block(
-                            descopingVars,
-                            blockExprs
-                        ),
-                        result.Name,
-                        result.TailCall,
-                        result.Parameters
-                    );
-                }
-
-                return result;
-            }
-
-            protected override void Push(IEnumerable<ParameterExpression> parameters)
-            {
-                base.Push(parameters);
-                _environment.Push(parameters);
-            }
-
-            protected override void Pop()
-            {
-                base.Pop();
-                _environment.Pop();
-            }
-
-            protected override List<OptimizedPair> GetState(ParameterExpression parameter)
-            {
-                return [];
-            }
-
-            protected bool TryAdd(Expression expression, out ParameterExpression parameter)
-            {
-                var fvs = FreeVariableScanner.Scan(expression);
-                parameter = Expression.Parameter(expression.Type);
-
-                var optimizedPairs = default(List<OptimizedPair>);
+            var optimizedPairs = default(List<OptimizedPair>);
 #pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
-                if (fvs.Any(p => !TryLookup(p, out optimizedPairs)))
-                {
-                    parameter = null;
-                    return false;
-                }
+            if (fvs.Any(p => !TryLookup(p, out optimizedPairs)))
+            {
+                parameter = null;
+                return false;
+            }
 
-                var op = new OptimizedPair(parameter, expression);
-                foreach (var fv in fvs)
+            var op = new OptimizedPair(parameter, expression);
+            foreach (var fv in fvs)
 #pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
-                {
-                    TryLookup(fv, out optimizedPairs);
-                    optimizedPairs.Add(op);
-                }
-
-                return true;
+            {
+                TryLookup(fv, out optimizedPairs);
+                optimizedPairs.Add(op);
             }
 
-            private IEnumerable<OptimizedPair> GetAllDescoping()
+            return true;
+        }
+
+        private IEnumerable<OptimizedPair> GetAllDescoping()
+        {
+            var currentEnvironment = _environment.Peek();
+            var descoping = currentEnvironment.SelectMany(GetDescoping);
+
+            foreach (var descope in descoping)
             {
-                var currentEnvironment = _environment.Peek();
-                var descoping = currentEnvironment.SelectMany(GetDescoping);
-
-                foreach (var descope in descoping)
+                if (!_descoped.Contains(descope.Variable))
                 {
-                    if (!_descoped.Contains(descope.Variable))
-                    {
-                        _descoped.Add(descope.Variable);
-                        yield return descope;
-                    }
+                    _descoped.Add(descope.Variable);
+                    yield return descope;
                 }
-            }
-
-            private IEnumerable<OptimizedPair> GetDescoping(ParameterExpression expression)
-            {
-                if (TryLookup(expression, out var list))
-                {
-                    return list;
-                }
-
-                return [];
             }
         }
 
-        private sealed class ObserverOptimizer : OptimizerBase
+        private IEnumerable<OptimizedPair> GetDescoping(ParameterExpression expression)
         {
-            private static readonly MethodInfo s_getObv = ((MethodInfo)ReflectionHelpers.InfoOf((IReactive ctx) => ctx.GetObserver<object>(null))).GetGenericMethodDefinition();
-
-            protected override Expression VisitMethodCall(MethodCallExpression node)
+            if (TryLookup(expression, out var list))
             {
-                if (node.Method.IsGenericMethod
-                    && node.Method.GetGenericMethodDefinition() == s_getObv
-                    && node.Arguments[0].NodeType == ExpressionType.Constant
-                    && TryAdd(node, out var result))
-                {
-                    return result;
-                }
-
-                return base.VisitMethodCall(node);
+                return list;
             }
+
+            return [];
         }
+    }
 
-        private sealed class ContextOptimizer : ExpressionVisitor
+    private sealed class ObserverOptimizer : OptimizerBase
+    {
+        private static readonly MethodInfo s_getObv = ((MethodInfo)ReflectionHelpers.InfoOf((IReactive ctx) => ctx.GetObserver<object>(null))).GetGenericMethodDefinition();
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            private static readonly Expression s_empty = Expression.Empty();
-
-            private readonly ParameterExpression _envParam;
-            private readonly ParameterExpression _metadataParam;
-            private readonly ParameterExpression _engineParam;
-
-            private readonly List<ParameterExpression> _metadataReplacements;
-            private readonly List<ParameterExpression> _engineReplacements;
-
-            public ContextOptimizer(ParameterExpression envParam, ParameterExpression metadataParam, ParameterExpression engineParam)
+            if (node.Method.IsGenericMethod
+                && node.Method.GetGenericMethodDefinition() == s_getObv
+                && node.Arguments[0].NodeType == ExpressionType.Constant
+                && TryAdd(node, out var result))
             {
-                _envParam = envParam;
-                _metadataParam = metadataParam;
-                _engineParam = engineParam;
-
-                _metadataReplacements = [];
-                _engineReplacements = [];
-            }
-
-            protected override Expression VisitBinary(BinaryExpression node)
-            {
-                if (node.NodeType == ExpressionType.Assign
-                    && node.Left is ParameterExpression leftExpr
-                    && node.Right is MemberExpression rightExpr
-                    && rightExpr.Expression == _envParam)
-                {
-                    if (rightExpr.Member == s_metadataCtx)
-                    {
-                        _metadataReplacements.Add(leftExpr);
-                        return s_empty;
-                    }
-                    else if (rightExpr.Member == s_engineCtx)
-                    {
-                        _engineReplacements.Add(leftExpr);
-                        return s_empty;
-                    }
-                }
-
-                return base.VisitBinary(node);
-            }
-
-            protected override Expression VisitBlock(BlockExpression node)
-            {
-                var result = (BlockExpression)base.VisitBlock(node);
-
-                if (result.Variables.Contains(_metadataParam) || result.Variables.Contains(_engineParam))
-                {
-                    return Expression.Block(
-                        result.Type,
-                        result.Variables.Except([_metadataParam, _engineParam]),
-                        result.Expressions
-                    );
-                }
-
                 return result;
             }
 
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                return base.VisitLambda<T>(node);
-            }
-
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                if (_metadataReplacements.Contains(node))
-                {
-                    return _metadataParam;
-                }
-                else if (_engineReplacements.Contains(node))
-                {
-                    return _engineParam;
-                }
-
-                return base.VisitParameter(node);
-            }
+            return base.VisitMethodCall(node);
         }
+    }
 
-        private sealed class OptimizedPair
+    private sealed class ContextOptimizer : ExpressionVisitor
+    {
+        private static readonly Expression s_empty = Expression.Empty();
+
+        private readonly ParameterExpression _envParam;
+        private readonly ParameterExpression _metadataParam;
+        private readonly ParameterExpression _engineParam;
+
+        private readonly List<ParameterExpression> _metadataReplacements;
+        private readonly List<ParameterExpression> _engineReplacements;
+
+        public ContextOptimizer(ParameterExpression envParam, ParameterExpression metadataParam, ParameterExpression engineParam)
         {
-            public OptimizedPair(ParameterExpression variable, Expression expression)
+            _envParam = envParam;
+            _metadataParam = metadataParam;
+            _engineParam = engineParam;
+
+            _metadataReplacements = [];
+            _engineReplacements = [];
+        }
+
+        protected override Expression VisitBinary(BinaryExpression node)
+        {
+            if (node.NodeType == ExpressionType.Assign
+                && node.Left is ParameterExpression leftExpr
+                && node.Right is MemberExpression rightExpr
+                && rightExpr.Expression == _envParam)
             {
-                Variable = variable;
-                Expression = expression;
+                if (rightExpr.Member == s_metadataCtx)
+                {
+                    _metadataReplacements.Add(leftExpr);
+                    return s_empty;
+                }
+                else if (rightExpr.Member == s_engineCtx)
+                {
+                    _engineReplacements.Add(leftExpr);
+                    return s_empty;
+                }
             }
 
-            public ParameterExpression Variable { get; }
-
-            public Expression Expression { get; }
+            return base.VisitBinary(node);
         }
+
+        protected override Expression VisitBlock(BlockExpression node)
+        {
+            var result = (BlockExpression)base.VisitBlock(node);
+
+            if (result.Variables.Contains(_metadataParam) || result.Variables.Contains(_engineParam))
+            {
+                return Expression.Block(
+                    result.Type,
+                    result.Variables.Except([_metadataParam, _engineParam]),
+                    result.Expressions
+                );
+            }
+
+            return result;
+        }
+
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            return base.VisitLambda<T>(node);
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            if (_metadataReplacements.Contains(node))
+            {
+                return _metadataParam;
+            }
+            else if (_engineReplacements.Contains(node))
+            {
+                return _engineParam;
+            }
+
+            return base.VisitParameter(node);
+        }
+    }
+
+    private sealed class OptimizedPair
+    {
+        public OptimizedPair(ParameterExpression variable, Expression expression)
+        {
+            Variable = variable;
+            Expression = expression;
+        }
+
+        public ParameterExpression Variable { get; }
+
+        public Expression Expression { get; }
     }
 }

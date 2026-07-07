@@ -8,42 +8,41 @@
 // BD - December 2016 - Created this file.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Flags enum with options to control the degree of caching of reflection carried out by <see cref="CachingDefaultReflectionProvider"/>.
+/// </summary>
+[Flags]
+public enum ReflectionCachingOptions
 {
     /// <summary>
-    /// Flags enum with options to control the degree of caching of reflection carried out by <see cref="CachingDefaultReflectionProvider"/>.
+    /// Disables all caching.
     /// </summary>
-    [Flags]
-    public enum ReflectionCachingOptions
-    {
-        /// <summary>
-        /// Disables all caching.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Enables caching of GetCustomAttributes and related methods such as IsDefined.
-        /// </summary>
-        IntrospectionCustomAttributes = 1,
+    /// <summary>
+    /// Enables caching of GetCustomAttributes and related methods such as IsDefined.
+    /// </summary>
+    IntrospectionCustomAttributes = 1,
 
-        /// <summary>
-        /// Enables caching of GetFields, GetMethods, etc. methods.
-        /// </summary>
-        IntrospectionGetMethods = 2,
+    /// <summary>
+    /// Enables caching of GetFields, GetMethods, etc. methods.
+    /// </summary>
+    IntrospectionGetMethods = 2,
 
-        /// <summary>
-        /// Enables caching of FindInterfaces, FindTypes, and FindMembers.
-        /// </summary>
-        IntrospectionFindMethods = 4,
+    /// <summary>
+    /// Enables caching of FindInterfaces, FindTypes, and FindMembers.
+    /// </summary>
+    IntrospectionFindMethods = 4,
 
-        /// <summary>
-        /// Enables caching of MakeGeneric methods.
-        /// </summary>
-        CreationGenericObjects = 8,
+    /// <summary>
+    /// Enables caching of MakeGeneric methods.
+    /// </summary>
+    CreationGenericObjects = 8,
 
-        /// <summary>
-        /// Enables all caching options.
-        /// </summary>
-        All = IntrospectionCustomAttributes | IntrospectionGetMethods | IntrospectionFindMethods | CreationGenericObjects,
-    }
+    /// <summary>
+    /// Enables all caching options.
+    /// </summary>
+    All = IntrospectionCustomAttributes | IntrospectionGetMethods | IntrospectionFindMethods | CreationGenericObjects,
 }

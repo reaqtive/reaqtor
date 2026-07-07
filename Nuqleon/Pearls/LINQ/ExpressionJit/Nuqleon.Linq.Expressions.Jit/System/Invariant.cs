@@ -8,28 +8,27 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-namespace System
+namespace System;
+
+/// <summary>
+/// Provides a set of runtime assertion helpers.
+/// </summary>
+internal static class Invariant
 {
     /// <summary>
-    /// Provides a set of runtime assertion helpers.
+    /// Asserts that the specified <paramref name="condition"/> is <c>true</c>.
     /// </summary>
-    internal static class Invariant
+    /// <param name="condition">The condition to assert.</param>
+    public static void Assert(bool condition)
     {
-        /// <summary>
-        /// Asserts that the specified <paramref name="condition"/> is <c>true</c>.
-        /// </summary>
-        /// <param name="condition">The condition to assert.</param>
-        public static void Assert(bool condition)
+        if (!condition)
         {
-            if (!condition)
-            {
-                throw new InvalidOperationException("Runtime invariant broken.");
-            }
+            throw new InvalidOperationException("Runtime invariant broken.");
         }
-
-        /// <summary>
-        /// Returns an exception indicating that the code location should be unreachable.
-        /// </summary>
-        public static Exception Unreachable => new InvalidOperationException("Unreachable code.");
     }
+
+    /// <summary>
+    /// Returns an exception indicating that the code location should be unreachable.
+    /// </summary>
+    public static Exception Unreachable => new InvalidOperationException("Unreachable code.");
 }

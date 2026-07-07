@@ -10,26 +10,25 @@
 
 using System.Linq.Expressions;
 
-namespace Nuqleon.Json.Serialization
+namespace Nuqleon.Json.Serialization;
+
+/// <summary>
+/// Provides access to some cached expression tree nodes.
+/// </summary>
+internal static class ExpressionUtils
 {
     /// <summary>
-    /// Provides access to some cached expression tree nodes.
+    /// Gets a <see cref="ConstantExpression"/> instance with value <c>false</c>.
     /// </summary>
-    internal static class ExpressionUtils
-    {
-        /// <summary>
-        /// Gets a <see cref="ConstantExpression"/> instance with value <c>false</c>.
-        /// </summary>
-        public static readonly Expression ConstantFalse = Expression.Constant(false);
+    public static readonly Expression ConstantFalse = Expression.Constant(false);
 
-        /// <summary>
-        /// Gets a <see cref="ConstantExpression"/> instance with value <c>true</c>.
-        /// </summary>
-        public static readonly Expression ConstantTrue = Expression.Constant(true);
+    /// <summary>
+    /// Gets a <see cref="ConstantExpression"/> instance with value <c>true</c>.
+    /// </summary>
+    public static readonly Expression ConstantTrue = Expression.Constant(true);
 
-        /// <summary>
-        /// Gets a <see cref="DefaultExpression"/> instance of type <see cref="void"/>.
-        /// </summary>
-        public static readonly Expression Empty = Expression.Empty();
-    }
+    /// <summary>
+    /// Gets a <see cref="DefaultExpression"/> instance of type <see cref="void"/>.
+    /// </summary>
+    public static readonly Expression Empty = Expression.Empty();
 }

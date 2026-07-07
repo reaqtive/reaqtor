@@ -2,78 +2,74 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-
 using Reaqtive;
 
-namespace Reaqtor.Reactive
+namespace Reaqtor.Reactive;
+
+internal sealed class MultiSubjectObserverProxy<T> : Observer<T>
 {
-    internal sealed class MultiSubjectObserverProxy<T> : Observer<T>
-    {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
 #pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: a collection expression binds to the ISubscription[] constructor via an empty array allocation, tripping CA1825; the parameterless constructor avoids it.)
-        private readonly StableCompositeSubscription _inputs = new();
+    private readonly StableCompositeSubscription _inputs = new();
 #pragma warning restore IDE0028
 #pragma warning restore CA2213
-        private readonly Uri _uri;
+    private readonly Uri _uri;
 
-        private IObserver<T> _observer;
-        private ISubscription _observerAsSubscription;
-        private IOperator _observerAsOperator;
+    private IObserver<T> _observer;
+    private ISubscription _observerAsSubscription;
+    private IOperator _observerAsOperator;
 
-        public MultiSubjectObserverProxy(Uri uri) => _uri = uri;
+    public MultiSubjectObserverProxy(Uri uri) => _uri = uri;
 
-        #region IOperator
+    #region IOperator
 
-        protected override IEnumerable<ISubscription> OnSubscribe() => _inputs;
+    protected override IEnumerable<ISubscription> OnSubscribe() => _inputs;
 
-        public override void SetContext(IOperatorContext context)
+    public override void SetContext(IOperatorContext context)
+    {
+        base.SetContext(context);
+
+        _observer = context.ExecutionEnvironment.GetSubject<T, T>(_uri).CreateObserver();
+        _observerAsSubscription = _observer as ISubscription;
+
+        if (_observerAsSubscription != null)
         {
-            base.SetContext(context);
-
-            _observer = context.ExecutionEnvironment.GetSubject<T, T>(_uri).CreateObserver();
-            _observerAsSubscription = _observer as ISubscription;
-
-            if (_observerAsSubscription != null)
-            {
-                _inputs.Add(_observerAsSubscription);
-            }
-            else if ((_observerAsOperator = _observer as IOperator) != null)
-            {
-                _inputs.AddRange(_observerAsOperator.Inputs);
-                _observerAsOperator.SetContext(context);
-            }
+            _inputs.Add(_observerAsSubscription);
         }
-
-        protected override void OnStart()
+        else if ((_observerAsOperator = _observer as IOperator) != null)
         {
-            base.OnStart();
-
-            _observerAsOperator?.Start();
+            _inputs.AddRange(_observerAsOperator.Inputs);
+            _observerAsOperator.SetContext(context);
         }
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-
-            // TODO: if we ever switch to the SubscriptionVisitor
-            //       model for disposal, we should remove this.
-
-            _observerAsSubscription?.Dispose();
-            _observerAsOperator?.Dispose();
-        }
-
-        #endregion
-
-        #region IObserver<T>
-
-        protected override void OnNextCore(T value) => _observer.OnNext(value);
-
-        protected override void OnErrorCore(Exception error) => _observer.OnError(error);
-
-        protected override void OnCompletedCore() => _observer.OnCompleted();
-
-        #endregion
     }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
+
+        _observerAsOperator?.Start();
+    }
+
+    protected override void OnDispose()
+    {
+        base.OnDispose();
+
+        // TODO: if we ever switch to the SubscriptionVisitor
+        //       model for disposal, we should remove this.
+
+        _observerAsSubscription?.Dispose();
+        _observerAsOperator?.Dispose();
+    }
+
+    #endregion
+
+    #region IObserver<T>
+
+    protected override void OnNextCore(T value) => _observer.OnNext(value);
+
+    protected override void OnErrorCore(Exception error) => _observer.OnError(error);
+
+    protected override void OnCompletedCore() => _observer.OnCompleted();
+
+    #endregion
 }

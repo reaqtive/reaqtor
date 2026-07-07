@@ -2,54 +2,51 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Threading.Tasks;
+namespace System.Threading;
 
-namespace System.Threading
+internal sealed class AsyncLock : IDisposable
 {
-    internal sealed class AsyncLock : IDisposable
+    private readonly SemaphoreSlim _lock;
+
+    public AsyncLock() => _lock = new SemaphoreSlim(1);
+
+    public async Task<Releaser> EnterAsync()
     {
-        private readonly SemaphoreSlim _lock;
+        await _lock.WaitAsync().ConfigureAwait(false);
+        return new Releaser(this);
+    }
 
-        public AsyncLock() => _lock = new SemaphoreSlim(1);
+    private void Exit() => _lock.Release();
 
-        public async Task<Releaser> EnterAsync()
+    public void Dispose() => _lock.Dispose();
+
+    public
+#if !DEBUG
+        readonly
+#endif
+        struct Releaser : IDisposable
+    {
+        private readonly AsyncLock _lock;
+#if DEBUG
+        private static readonly object True = true;
+        private object _isDisposed;
+#endif
+
+        public Releaser(AsyncLock @lock)
         {
-            await _lock.WaitAsync().ConfigureAwait(false);
-            return new Releaser(this);
+            _lock = @lock;
+#if DEBUG
+            _isDisposed = false;
+#endif
         }
 
-        private void Exit() => _lock.Release();
-
-        public void Dispose() => _lock.Dispose();
-
-        public
-#if !DEBUG
-            readonly
-#endif
-            struct Releaser : IDisposable
+        public void Dispose()
         {
-            private readonly AsyncLock _lock;
 #if DEBUG
-            private static readonly object True = true;
-            private object _isDisposed;
+            if ((bool)Interlocked.Exchange(ref _isDisposed, True))
+                throw new ObjectDisposedException(nameof(AsyncLock));
 #endif
-
-            public Releaser(AsyncLock @lock)
-            {
-                _lock = @lock;
-#if DEBUG
-                _isDisposed = false;
-#endif
-            }
-
-            public void Dispose()
-            {
-#if DEBUG
-                if ((bool)Interlocked.Exchange(ref _isDisposed, True))
-                    throw new ObjectDisposedException(nameof(AsyncLock));
-#endif
-                _lock.Exit();
-            }
+            _lock.Exit();
         }
     }
 }

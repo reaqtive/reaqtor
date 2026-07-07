@@ -4,36 +4,35 @@
 
 using System;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+public sealed class MockSubscription : ISubscription
 {
-    public sealed class MockSubscription : ISubscription
+    private readonly Action _dispose;
+    private bool _disposed;
+
+    public MockSubscription(Action dispose)
     {
-        private readonly Action _dispose;
-        private bool _disposed;
+        _dispose = dispose ?? throw new ArgumentNullException(nameof(dispose));
+    }
 
-        public MockSubscription(Action dispose)
+    public MockSubscription(IDisposable disposable)
+    {
+        ArgumentNullException.ThrowIfNull(disposable);
+
+        _dispose = disposable.Dispose;
+    }
+
+    public void Accept(ISubscriptionVisitor visitor)
+    {
+    }
+
+    public void Dispose()
+    {
+        if (!_disposed)
         {
-            _dispose = dispose ?? throw new ArgumentNullException(nameof(dispose));
-        }
-
-        public MockSubscription(IDisposable disposable)
-        {
-            ArgumentNullException.ThrowIfNull(disposable);
-
-            _dispose = disposable.Dispose;
-        }
-
-        public void Accept(ISubscriptionVisitor visitor)
-        {
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _disposed = true;
-                _dispose();
-            }
+            _disposed = true;
+            _dispose();
         }
     }
 }

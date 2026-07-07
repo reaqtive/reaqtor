@@ -35,122 +35,121 @@
 
 using System.Linq.Expressions;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Normalizes predicates such that occurrences of bound parameters appear on the left-hand side of binary operators whenever possible.
+/// </summary>
+internal class PredicateNormalizer
 {
     /// <summary>
-    /// Normalizes predicates such that occurrences of bound parameters appear on the left-hand side of binary operators whenever possible.
+    /// Range variable for the predicates that get normalized.
     /// </summary>
-    internal class PredicateNormalizer
+    private readonly ParameterExpression _parameter;
+
+    /// <summary>
+    /// Creates a new predicate normalizer using the specified range variable for predicates.
+    /// </summary>
+    /// <param name="parameter">Range variable for the predicates that get normalized.</param>
+    public PredicateNormalizer(ParameterExpression parameter)
+    {
+        _parameter = parameter;
+    }
+
+    /// <summary>
+    /// Normalizes the given expression by moving occurrences of the range variable to the left-hand side of a binary operator whenever possible.
+    /// </summary>
+    /// <param name="node">Expression to normalize.</param>
+    /// <returns>Normalized expression.</returns>
+    public Expression Normalize(Expression node)
+    {
+        if (node is BinaryExpression b)
+        {
+            var mirror = default(ExpressionType?);
+
+            switch (b.NodeType)
+            {
+                case ExpressionType.Equal:
+                case ExpressionType.NotEqual:
+                    mirror = b.NodeType;
+                    break;
+                case ExpressionType.LessThan:
+                    mirror = ExpressionType.GreaterThan;
+                    break;
+                case ExpressionType.LessThanOrEqual:
+                    mirror = ExpressionType.GreaterThanOrEqual;
+                    break;
+                case ExpressionType.GreaterThan:
+                    mirror = ExpressionType.LessThan;
+                    break;
+                case ExpressionType.GreaterThanOrEqual:
+                    mirror = ExpressionType.LessThanOrEqual;
+                    break;
+            }
+
+            if (mirror != null)
+            {
+                var fvs1 = new BoundParameterScanner(_parameter);
+                fvs1.Visit(b.Left);
+                var lb = fvs1.Bound;
+
+                var fvs2 = new BoundParameterScanner(_parameter);
+                fvs2.Visit(b.Right);
+                var rb = fvs2.Bound;
+
+                if (rb && !lb)
+                {
+                    // TODO: omitted checks to ensure that the resulting operation is possible (e.g. checking for Int types)
+                    return Expression.MakeBinary(mirror.Value, b.Right, b.Left);
+                }
+            }
+        }
+
+        return node;
+    }
+
+    /// <summary>
+    /// Expression visitor to detect whether a given parameter is bound.
+    /// </summary>
+    private class BoundParameterScanner : ExpressionVisitor
     {
         /// <summary>
-        /// Range variable for the predicates that get normalized.
+        /// Parameter to check for bound occurrences in visited expressions.
         /// </summary>
-        private readonly ParameterExpression _parameter;
+        private readonly ParameterExpression _p;
 
         /// <summary>
-        /// Creates a new predicate normalizer using the specified range variable for predicates.
+        /// Creates a new bound parameter scanner to check whether the specified parameter is bound.
         /// </summary>
-        /// <param name="parameter">Range variable for the predicates that get normalized.</param>
-        public PredicateNormalizer(ParameterExpression parameter)
+        /// <param name="p">Parameter to check for bound occurrences in visited expressions.</param>
+        public BoundParameterScanner(ParameterExpression p)
         {
-            _parameter = parameter;
+            _p = p;
         }
 
         /// <summary>
-        /// Normalizes the given expression by moving occurrences of the range variable to the left-hand side of a binary operator whenever possible.
+        /// Gets a Boolean indicating whether the specified parameter was found to be bound in the visited expression.
         /// </summary>
-        /// <param name="node">Expression to normalize.</param>
-        /// <returns>Normalized expression.</returns>
-        public Expression Normalize(Expression node)
-        {
-            if (node is BinaryExpression b)
-            {
-                var mirror = default(ExpressionType?);
-
-                switch (b.NodeType)
-                {
-                    case ExpressionType.Equal:
-                    case ExpressionType.NotEqual:
-                        mirror = b.NodeType;
-                        break;
-                    case ExpressionType.LessThan:
-                        mirror = ExpressionType.GreaterThan;
-                        break;
-                    case ExpressionType.LessThanOrEqual:
-                        mirror = ExpressionType.GreaterThanOrEqual;
-                        break;
-                    case ExpressionType.GreaterThan:
-                        mirror = ExpressionType.LessThan;
-                        break;
-                    case ExpressionType.GreaterThanOrEqual:
-                        mirror = ExpressionType.LessThanOrEqual;
-                        break;
-                }
-
-                if (mirror != null)
-                {
-                    var fvs1 = new BoundParameterScanner(_parameter);
-                    fvs1.Visit(b.Left);
-                    var lb = fvs1.Bound;
-
-                    var fvs2 = new BoundParameterScanner(_parameter);
-                    fvs2.Visit(b.Right);
-                    var rb = fvs2.Bound;
-
-                    if (rb && !lb)
-                    {
-                        // TODO: omitted checks to ensure that the resulting operation is possible (e.g. checking for Int types)
-                        return Expression.MakeBinary(mirror.Value, b.Right, b.Left);
-                    }
-                }
-            }
-
-            return node;
-        }
+        /// <remarks>
+        /// <c>true</c> if the parameter was found to be bound; otherwise, <c>false</c>.
+        /// </remarks>
+        public bool Bound { get; private set; }
 
         /// <summary>
-        /// Expression visitor to detect whether a given parameter is bound.
+        /// Visits a parameter expression node to check whether it's bound.
         /// </summary>
-        private class BoundParameterScanner : ExpressionVisitor
+        /// <param name="node">Parameter expression to check.</param>
+        /// <returns>The original parameter expression.</returns>
+        protected override Expression VisitParameter(ParameterExpression node)
         {
-            /// <summary>
-            /// Parameter to check for bound occurrences in visited expressions.
-            /// </summary>
-            private readonly ParameterExpression _p;
+            // TODO: omitted scope checking; replace using ScopedExpressionVisitor
 
-            /// <summary>
-            /// Creates a new bound parameter scanner to check whether the specified parameter is bound.
-            /// </summary>
-            /// <param name="p">Parameter to check for bound occurrences in visited expressions.</param>
-            public BoundParameterScanner(ParameterExpression p)
+            if (node == _p)
             {
-                _p = p;
+                Bound = true;
             }
 
-            /// <summary>
-            /// Gets a Boolean indicating whether the specified parameter was found to be bound in the visited expression.
-            /// </summary>
-            /// <remarks>
-            /// <c>true</c> if the parameter was found to be bound; otherwise, <c>false</c>.
-            /// </remarks>
-            public bool Bound { get; private set; }
-
-            /// <summary>
-            /// Visits a parameter expression node to check whether it's bound.
-            /// </summary>
-            /// <param name="node">Parameter expression to check.</param>
-            /// <returns>The original parameter expression.</returns>
-            protected override Expression VisitParameter(ParameterExpression node)
-            {
-                // TODO: omitted scope checking; replace using ScopedExpressionVisitor
-
-                if (node == _p)
-                {
-                    Bound = true;
-                }
-
-                return base.VisitParameter(node);
-            }
+            return base.VisitParameter(node);
         }
     }
 }

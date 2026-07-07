@@ -8,31 +8,28 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor.Metadata;
 
-namespace Reaqtor.Metadata
+/// <summary>
+/// Interface representing a resource definition in a reactive processing service. Definitions are cold entities.
+/// </summary>
+/// <remarks>The IAsyncDisposable implementation will undefine the object represented by the definition.</remarks>
+public interface IAsyncReactiveDefinedResource : IAsyncReactiveResource
 {
     /// <summary>
-    /// Interface representing a resource definition in a reactive processing service. Definitions are cold entities.
+    /// Gets a flag indicating whether the definition is parameterized.
     /// </summary>
-    /// <remarks>The IAsyncDisposable implementation will undefine the object represented by the definition.</remarks>
-    public interface IAsyncReactiveDefinedResource : IAsyncReactiveResource
-    {
-        /// <summary>
-        /// Gets a flag indicating whether the definition is parameterized.
-        /// </summary>
-        /// <remarks>Type information of the parameter can be inferred through analysis of the expression tree.</remarks>
-        bool IsParameterized { get; }
+    /// <remarks>Type information of the parameter can be inferred through analysis of the expression tree.</remarks>
+    bool IsParameterized { get; }
 
-        /// <summary>
-        /// Gets the state that was passed during definition of the resource.
-        /// </summary>
-        /// <remarks>Implementers can provide statically typed accessors in derived types.</remarks>
-        object State { get; }
+    /// <summary>
+    /// Gets the state that was passed during definition of the resource.
+    /// </summary>
+    /// <remarks>Implementers can provide statically typed accessors in derived types.</remarks>
+    object State { get; }
 
-        /// <summary>
-        /// Gets the date and time when the resource was defined.
-        /// </summary>
-        DateTimeOffset DefinitionTime { get; }
-    }
+    /// <summary>
+    /// Gets the date and time when the resource was defined.
+    /// </summary>
+    DateTimeOffset DefinitionTime { get; }
 }

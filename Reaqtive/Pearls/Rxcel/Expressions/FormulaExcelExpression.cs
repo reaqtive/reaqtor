@@ -15,30 +15,29 @@
 
 using System.Linq;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class FormulaExcelExpression : ExcelExpression
 {
-    internal sealed class FormulaExcelExpression : ExcelExpression
+    internal FormulaExcelExpression(string name, params ExcelExpression[] args)
     {
-        internal FormulaExcelExpression(string name, params ExcelExpression[] args)
-        {
-            Name = name;
-            Arguments = args;
-        }
+        Name = name;
+        Arguments = args;
+    }
 
-        public override ExcelExpressionKind Kind => ExcelExpressionKind.Formula;
+    public override ExcelExpressionKind Kind => ExcelExpressionKind.Formula;
 
-        public string Name { get; }
+    public string Name { get; }
 
-        public ExcelExpression[] Arguments { get; }
+    public ExcelExpression[] Arguments { get; }
 
-        protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
-        {
-            return visitor.VisitFormula(this);
-        }
+    protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
+    {
+        return visitor.VisitFormula(this);
+    }
 
-        public override string ToString()
-        {
-            return Name + "(" + string.Join(", ", Arguments.Select(a => a.ToString())) + ")";
-        }
+    public override string ToString()
+    {
+        return Name + "(" + string.Join(", ", Arguments.Select(a => a.ToString())) + ")";
     }
 }

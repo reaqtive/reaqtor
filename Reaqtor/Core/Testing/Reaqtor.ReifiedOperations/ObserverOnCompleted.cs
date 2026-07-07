@@ -10,21 +10,20 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
-{
-    public class ObserverOnCompleted : ObserverOperation
-    {
-        public ObserverOnCompleted(Uri observerUri)
-            : base(ServiceOperationKind.ObserverOnCompleted, observerUri)
-        {
-        }
-    }
+namespace Reaqtor.TestingFramework;
 
-    public class ObserverOnCompleted<T> : ObserverOnCompleted
+public class ObserverOnCompleted : ObserverOperation
+{
+    public ObserverOnCompleted(Uri observerUri)
+        : base(ServiceOperationKind.ObserverOnCompleted, observerUri)
     {
-        public ObserverOnCompleted(Uri observerUri)
-            : base(observerUri)
-        {
-        }
+    }
+}
+
+public class ObserverOnCompleted<T> : ObserverOnCompleted
+{
+    public ObserverOnCompleted(Uri observerUri)
+        : base(observerUri)
+    {
     }
 }

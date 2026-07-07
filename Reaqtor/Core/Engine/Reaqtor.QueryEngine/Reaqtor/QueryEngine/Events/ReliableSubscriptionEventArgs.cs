@@ -4,25 +4,24 @@
 
 using Reaqtor.Metadata;
 
-namespace Reaqtor.QueryEngine.Events
+namespace Reaqtor.QueryEngine.Events;
+
+/// <summary>
+/// Event arguments involving a reliable subscription.
+/// </summary>
+internal sealed class ReliableSubscriptionEventArgs : ReactiveEntityEventArgs
 {
     /// <summary>
-    /// Event arguments involving a reliable subscription.
+    /// Creates a new instance of <see cref="ReliableSubscriptionEventArgs"/> class for the specified entity.
     /// </summary>
-    internal sealed class ReliableSubscriptionEventArgs : ReactiveEntityEventArgs
+    /// <param name="entity">The entity representing the reliable subscription.</param>
+    public ReliableSubscriptionEventArgs(ReliableSubscriptionEntity entity)
+        : base(entity.Uri, entity, ReactiveEntityKind.ReliableSubscription)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="ReliableSubscriptionEventArgs"/> class for the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity representing the reliable subscription.</param>
-        public ReliableSubscriptionEventArgs(ReliableSubscriptionEntity entity)
-            : base(entity.Uri, entity, ReactiveEntityKind.ReliableSubscription)
-        {
-        }
-
-        /// <summary>
-        /// Gets the reliable subscription entity.
-        /// </summary>
-        public new IReactiveSubscriptionProcess Entity => (IReactiveSubscriptionProcess)base.Entity;
     }
+
+    /// <summary>
+    /// Gets the reliable subscription entity.
+    /// </summary>
+    public new IReactiveSubscriptionProcess Entity => (IReactiveSubscriptionProcess)base.Entity;
 }

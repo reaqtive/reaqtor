@@ -4,18 +4,17 @@
 
 using System;
 
-namespace Reaqtor.Reliable.Client
+namespace Reaqtor.Reliable.Client;
+
+public abstract class ReliableReactiveObservableBase<T> : IReliableReactiveObservable<T>
 {
-    public abstract class ReliableReactiveObservableBase<T> : IReliableReactiveObservable<T>
+    public IReliableReactiveSubscription Subscribe(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state = null)
     {
-        public IReliableReactiveSubscription Subscribe(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(observer);
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
+        ArgumentNullException.ThrowIfNull(observer);
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-            return SubscribeCore(observer, subscriptionUri, state);
-        }
-
-        protected abstract IReliableReactiveSubscription SubscribeCore(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state);
+        return SubscribeCore(observer, subscriptionUri, state);
     }
+
+    protected abstract IReliableReactiveSubscription SubscribeCore(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state);
 }

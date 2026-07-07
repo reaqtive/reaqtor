@@ -16,65 +16,64 @@ using System.Threading.Tasks;
 
 using Reaqtor.QueryEngine;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Implementation of <see cref="IStateWriter"/> for the in-memory key/value store implementation in <see cref="Store"/>.
+/// </summary>
+public sealed class StateWriter : IStateWriter
 {
-    /// <summary>
-    /// Implementation of <see cref="IStateWriter"/> for the in-memory key/value store implementation in <see cref="Store"/>.
-    /// </summary>
-    public sealed class StateWriter : IStateWriter
+    private readonly Store _store;
+    private readonly List<StateWriterOperation> _log = [];
+
+    public StateWriter(Store store, CheckpointKind checkpointKind)
     {
-        private readonly Store _store;
-        private readonly List<StateWriterOperation> _log = [];
-
-        public StateWriter(Store store, CheckpointKind checkpointKind)
-        {
-            _store = store;
-            CheckpointKind = checkpointKind;
-        }
-
-        public CheckpointKind CheckpointKind { get; private set; }
-
-        public StateWriterOperation[] GetLog() => [.. _log];
-
-        public Task CommitAsync(CancellationToken token, IProgress<int> progress)
-        {
-            var log = default(StateWriterOperation[]);
-
-            lock (_log)
-            {
-                log = [.. _log];
-            }
-
-            foreach (var item in log)
-            {
-                item.Apply(_store);
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public void DeleteItem(string category, string key)
-        {
-            lock (_log)
-            {
-                _log.Add(new DeleteStateWriterOperation(category, key));
-            }
-        }
-
-        public void Dispose() { }
-
-        public Stream GetItemWriter(string category, string key)
-        {
-            var data = new MemoryStream();
-
-            lock (_log)
-            {
-                _log.Add(new AddOrUpdateStateWriterOperation(category, key, data));
-            }
-
-            return data;
-        }
-
-        public void Rollback() { }
+        _store = store;
+        CheckpointKind = checkpointKind;
     }
+
+    public CheckpointKind CheckpointKind { get; private set; }
+
+    public StateWriterOperation[] GetLog() => [.. _log];
+
+    public Task CommitAsync(CancellationToken token, IProgress<int> progress)
+    {
+        var log = default(StateWriterOperation[]);
+
+        lock (_log)
+        {
+            log = [.. _log];
+        }
+
+        foreach (var item in log)
+        {
+            item.Apply(_store);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public void DeleteItem(string category, string key)
+    {
+        lock (_log)
+        {
+            _log.Add(new DeleteStateWriterOperation(category, key));
+        }
+    }
+
+    public void Dispose() { }
+
+    public Stream GetItemWriter(string category, string key)
+    {
+        var data = new MemoryStream();
+
+        lock (_log)
+        {
+            _log.Add(new AddOrUpdateStateWriterOperation(category, key, data));
+        }
+
+        return data;
+    }
+
+    public void Rollback() { }
 }

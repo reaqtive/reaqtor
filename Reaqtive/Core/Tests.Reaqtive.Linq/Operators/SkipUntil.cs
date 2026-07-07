@@ -2,110 +2,105 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class SkipUntil : OperatorTestBase
 {
-    [TestClass]
-    public partial class SkipUntil : OperatorTestBase
+    [TestInitialize]
+    public void Initialize()
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            base.TestInitialize();
-        }
+        base.TestInitialize();
+    }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            base.TestCleanup();
-        }
+    [TestCleanup]
+    public void Cleanup()
+    {
+        base.TestCleanup();
+    }
 
-        [TestMethod]
-        public void SkipUntil_ArgumentChecking()
-        {
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil<int, int>(null, DummySubscribable<int>.Instance));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil<int, int>(DummySubscribable<int>.Instance, null));
+    [TestMethod]
+    public void SkipUntil_ArgumentChecking()
+    {
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil<int, int>(null, DummySubscribable<int>.Instance));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil<int, int>(DummySubscribable<int>.Instance, null));
 
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil(default(ISubscribable<int>), DateTimeOffset.Now));
-        }
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.SkipUntil(default(ISubscribable<int>), DateTimeOffset.Now));
+    }
 
-        [TestMethod]
-        public void SkipUntil_CheckpointStateWrittenCorrectlyAfterDispose()
-        {
-            // Check that state is written correctly after we dispose of the other
-            // subscription we are given.
-            var state = Scheduler.CreateStateContainer();
+    [TestMethod]
+    public void SkipUntil_CheckpointStateWrittenCorrectlyAfterDispose()
+    {
+        // Check that state is written correctly after we dispose of the other
+        // subscription we are given.
+        var state = Scheduler.CreateStateContainer();
 
-            var checkpoints = new[] {
-                OnSave(340, state),
-            };
+        var checkpoints = new[] {
+            OnSave(340, state),
+        };
 
-            var xs = Scheduler.CreateHotObservable(
-                OnNext(310, 1),
-                OnNext(350, 4),
-                OnNext(370, 5),
-                OnCompleted<int>(500)
-                );
-
-            var ys = Scheduler.CreateHotObservable(
-                OnNext(330, 2),
-                OnCompleted<int>(425)
+        var xs = Scheduler.CreateHotObservable(
+            OnNext(310, 1),
+            OnNext(350, 4),
+            OnNext(370, 5),
+            OnCompleted<int>(500)
             );
 
-            var res = Scheduler.Start(() =>
-                xs.SkipUntil(ys).Apply(Scheduler, checkpoints));
+        var ys = Scheduler.CreateHotObservable(
+            OnNext(330, 2),
+            OnCompleted<int>(425)
+        );
 
-            Assert.AreEqual(500, xs.Subscriptions[0].Unsubscribe);
-            Assert.AreEqual(330, ys.Subscriptions[0].Unsubscribe);
+        var res = Scheduler.Start(() =>
+            xs.SkipUntil(ys).Apply(Scheduler, checkpoints));
 
-            res.Messages.AssertEqual(
-                OnNext(350, 4),
-                OnNext(370, 5),
-                OnCompleted<int>(500));
+        Assert.AreEqual(500, xs.Subscriptions[0].Unsubscribe);
+        Assert.AreEqual(330, ys.Subscriptions[0].Unsubscribe);
 
-            var reader = state.CreateReader().Create(null);
+        res.Messages.AssertEqual(
+            OnNext(350, 4),
+            OnNext(370, 5),
+            OnCompleted<int>(500));
 
-            ReadOperatorHeader(reader);
+        var reader = state.CreateReader().Create(null);
 
-            var skipUntilIsDisposed = reader.Read<bool>();
-            var otherObserverHasSignaled = reader.Read<bool>();
-            var firstSubscriptionIsDisposed = reader.Read<bool>();
+        ReadOperatorHeader(reader);
 
-            ReadOperatorHeader(reader);
+        var skipUntilIsDisposed = reader.Read<bool>();
+        var otherObserverHasSignaled = reader.Read<bool>();
+        var firstSubscriptionIsDisposed = reader.Read<bool>();
 
-            var takeIsDisposed = reader.Read<bool>();
-            var remainingItemsToTake = reader.Read<int>();
+        ReadOperatorHeader(reader);
 
-            Assert.IsFalse(skipUntilIsDisposed);
-            Assert.IsTrue(otherObserverHasSignaled);
-            Assert.IsFalse(firstSubscriptionIsDisposed);
-            Assert.IsTrue(takeIsDisposed);
-            Assert.AreEqual(0, remainingItemsToTake);
-        }
+        var takeIsDisposed = reader.Read<bool>();
+        var remainingItemsToTake = reader.Read<int>();
 
-        private static void ReadOperatorHeader(IOperatorStateReader reader)
-        {
-            var operatorName = reader.Read<string>();
-            Assert.IsNotNull(operatorName);
+        Assert.IsFalse(skipUntilIsDisposed);
+        Assert.IsTrue(otherObserverHasSignaled);
+        Assert.IsFalse(firstSubscriptionIsDisposed);
+        Assert.IsTrue(takeIsDisposed);
+        Assert.AreEqual(0, remainingItemsToTake);
+    }
 
-            var operatorVersionMajor = reader.Read<int>();
-            Assert.IsTrue(operatorVersionMajor > 0);
+    private static void ReadOperatorHeader(IOperatorStateReader reader)
+    {
+        var operatorName = reader.Read<string>();
+        Assert.IsNotNull(operatorName);
 
-            var operatorVersionMinor = reader.Read<int>();
-            Assert.IsTrue(operatorVersionMinor >= 0);
+        var operatorVersionMajor = reader.Read<int>();
+        Assert.IsTrue(operatorVersionMajor > 0);
 
-            var operatorVersionBuild = reader.Read<int>();
-            Assert.IsTrue(operatorVersionBuild >= 0);
+        var operatorVersionMinor = reader.Read<int>();
+        Assert.IsTrue(operatorVersionMinor >= 0);
 
-            var operatorVersionRevision = reader.Read<int>();
-            Assert.IsTrue(operatorVersionRevision >= 0);
-        }
+        var operatorVersionBuild = reader.Read<int>();
+        Assert.IsTrue(operatorVersionBuild >= 0);
+
+        var operatorVersionRevision = reader.Read<int>();
+        Assert.IsTrue(operatorVersionRevision >= 0);
     }
 }

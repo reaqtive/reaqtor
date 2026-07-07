@@ -7,96 +7,95 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+/// <summary>
+/// Thread-safe state reader reading item from an in-memory state store.
+/// </summary>
+public sealed class InMemoryStateReader : IStateReader
 {
+    private readonly InMemoryStateStore _store;
+
+    private volatile bool _disposed;
+
     /// <summary>
-    /// Thread-safe state reader reading item from an in-memory state store.
+    /// Create a new instance of <see cref="InMemoryStateReader"/>.
     /// </summary>
-    public sealed class InMemoryStateReader : IStateReader
+    /// <param name="store">The store containing the state.</param>
+    public InMemoryStateReader(InMemoryStateStore store)
     {
-        private readonly InMemoryStateStore _store;
+        _store = store ?? throw new ArgumentNullException(nameof(store));
+    }
 
-        private volatile bool _disposed;
+    /// <summary>
+    /// Get all categories present in the store.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<string> GetCategories()
+    {
+        CheckDisposed();
 
-        /// <summary>
-        /// Create a new instance of <see cref="InMemoryStateReader"/>.
-        /// </summary>
-        /// <param name="store">The store containing the state.</param>
-        public InMemoryStateReader(InMemoryStateStore store)
+        return _store.GetCategories();
+    }
+
+    /// <summary>
+    /// Try retrieving the keys corresponding to the items of the provided <paramref name="category"/>.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <param name="keys">The keys of the items in the <paramref name="category"/>.</param>
+    /// <returns><b>true</b> if the <paramref name="category"/> exists, false otherwise.</returns>
+    public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    {
+        CheckDisposed();
+
+        var res = _store.TryGetItemKeys(category, out var allKeys);
+        if (res)
         {
-            _store = store ?? throw new ArgumentNullException(nameof(store));
-        }
-
-        /// <summary>
-        /// Get all categories present in the store.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<string> GetCategories()
-        {
-            CheckDisposed();
-
-            return _store.GetCategories();
-        }
-
-        /// <summary>
-        /// Try retrieving the keys corresponding to the items of the provided <paramref name="category"/>.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        /// <param name="keys">The keys of the items in the <paramref name="category"/>.</param>
-        /// <returns><b>true</b> if the <paramref name="category"/> exists, false otherwise.</returns>
-        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
-        {
-            CheckDisposed();
-
-            var res = _store.TryGetItemKeys(category, out var allKeys);
-            if (res)
-            {
-                keys = [.. allKeys.Except(_store.GetRemovedItems(category))];
-                return true;
-            }
-            else
-            {
-                keys = null;
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get a stream containing the content of the item identified by the provided <paramref name="category"/> and <paramref name="key"/>.
-        /// </summary>
-        /// <param name="category">The category.</param>
-        /// <param name="key">The item key.</param>
-        /// <param name="stream">The item content.</param>
-        /// <returns><b>true</b> if such an item is present, <b>false</b> otherwise.</returns>
-        public bool TryGetItemReader(string category, string key, out Stream stream)
-        {
-            CheckDisposed();
-
-            if (!_store.TryGetItem(category, key, out var value))
-            {
-                stream = default;
-                return false;
-            }
-
-            stream = new MemoryStream(value, writable: false);
+            keys = [.. allKeys.Except(_store.GetRemovedItems(category))];
             return true;
         }
-
-        /// <summary>
-        /// Dispose managed resource.
-        /// <remarks> The internal store is not cleared upon disposing.</remarks>
-        /// </summary>
-        public void Dispose()
+        else
         {
-            _disposed = true;
+            keys = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Get a stream containing the content of the item identified by the provided <paramref name="category"/> and <paramref name="key"/>.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <param name="key">The item key.</param>
+    /// <param name="stream">The item content.</param>
+    /// <returns><b>true</b> if such an item is present, <b>false</b> otherwise.</returns>
+    public bool TryGetItemReader(string category, string key, out Stream stream)
+    {
+        CheckDisposed();
+
+        if (!_store.TryGetItem(category, key, out var value))
+        {
+            stream = default;
+            return false;
         }
 
-        /// <summary>
-        /// Checks if the instance has been disposed.
-        /// </summary>
-        private void CheckDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-        }
+        stream = new MemoryStream(value, writable: false);
+        return true;
+    }
+
+    /// <summary>
+    /// Dispose managed resource.
+    /// <remarks> The internal store is not cleared upon disposing.</remarks>
+    /// </summary>
+    public void Dispose()
+    {
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Checks if the instance has been disposed.
+    /// </summary>
+    private void CheckDisposed()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
     }
 }

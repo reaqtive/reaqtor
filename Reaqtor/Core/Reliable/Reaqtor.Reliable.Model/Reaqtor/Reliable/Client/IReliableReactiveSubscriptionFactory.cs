@@ -4,15 +4,14 @@
 
 using System;
 
-namespace Reaqtor.Reliable.Client
-{
-    public interface IReliableReactiveSubscriptionFactory
-    {
-        IReliableReactiveSubscription Create(Uri uri, object state = null);
-    }
+namespace Reaqtor.Reliable.Client;
 
-    public interface IReliableReactiveSubscriptionFactory<TArgs>
-    {
-        IReliableReactiveSubscription Create(Uri uri, TArgs argument, object state = null);
-    }
+public interface IReliableReactiveSubscriptionFactory
+{
+    IReliableReactiveSubscription Create(Uri uri, object state = null);
+}
+
+public interface IReliableReactiveSubscriptionFactory<TArgs>
+{
+    IReliableReactiveSubscription Create(Uri uri, TArgs argument, object state = null);
 }

@@ -4,15 +4,14 @@
 
 using System.Linq.Expressions;
 
-namespace DelegatingBinder
-{
-    internal interface IQProvider
-    {
-        IService Service { get; } // NOTE: This conflates factories and remoting targets; the real IRP does separate those properly
+namespace DelegatingBinder;
 
-        IQbservable<T> CreateObservable<T>(Expression expression);
-        IQbserver<T> CreateObserver<T>(Expression expression);
-        IQubscription CreateSubscription(Expression expression);
-        IQubjectFactory<T> CreateQubjectFactory<T>(Expression expression);
-    }
+internal interface IQProvider
+{
+    IService Service { get; } // NOTE: This conflates factories and remoting targets; the real IRP does separate those properly
+
+    IQbservable<T> CreateObservable<T>(Expression expression);
+    IQbserver<T> CreateObserver<T>(Expression expression);
+    IQubscription CreateSubscription(Expression expression);
+    IQubjectFactory<T> CreateQubjectFactory<T>(Expression expression);
 }

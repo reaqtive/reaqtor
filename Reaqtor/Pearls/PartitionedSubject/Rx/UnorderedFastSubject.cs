@@ -13,45 +13,44 @@ using System.Collections.Concurrent;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 
-namespace PartitionedSubject
+namespace PartitionedSubject;
+
+internal class UnorderedFastSubject<T> : ISubject<T>
 {
-    internal class UnorderedFastSubject<T> : ISubject<T>
+    private readonly ConcurrentDictionary<IObserver<T>, object> _observers = new();
+
+    public void OnCompleted()
     {
-        private readonly ConcurrentDictionary<IObserver<T>, object> _observers = new();
-
-        public void OnCompleted()
+        foreach (var observer in _observers.Keys)
         {
-            foreach (var observer in _observers.Keys)
-            {
-                observer.OnCompleted();
-            }
+            observer.OnCompleted();
         }
+    }
 
-        public void OnError(Exception error)
+    public void OnError(Exception error)
+    {
+        foreach (var observer in _observers.Keys)
         {
-            foreach (var observer in _observers.Keys)
-            {
-                observer.OnError(error);
-            }
+            observer.OnError(error);
         }
+    }
 
-        public void OnNext(T value)
+    public void OnNext(T value)
+    {
+        foreach (var observer in _observers.Keys)
         {
-            foreach (var observer in _observers.Keys)
-            {
-                observer.OnNext(value);
-            }
+            observer.OnNext(value);
         }
+    }
 
-        public IDisposable Subscribe(IObserver<T> observer)
+    public IDisposable Subscribe(IObserver<T> observer)
+    {
+        if (!_observers.TryAdd(observer, null))
+            throw new InvalidOperationException("This subject requires unique observers.");
+
+        return Disposable.Create(() =>
         {
-            if (!_observers.TryAdd(observer, null))
-                throw new InvalidOperationException("This subject requires unique observers.");
-
-            return Disposable.Create(() =>
-            {
-                _observers.TryRemove(observer, out var ignored);
-            });
-        }
+            _observers.TryRemove(observer, out var ignored);
+        });
     }
 }

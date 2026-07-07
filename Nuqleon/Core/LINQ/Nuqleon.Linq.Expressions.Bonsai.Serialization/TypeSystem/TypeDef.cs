@@ -16,46 +16,45 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal abstract class TypeDef
 {
-    internal abstract class TypeDef
+    #region Fields
+
+    protected static readonly ReadOnlyCollection<TypeSlim> s_emptyTypeList = Array.Empty<TypeSlim>().ToReadOnly();
+
+    #endregion
+
+    #region Methods
+
+    public abstract Json.Expression ToJson(SerializationDomain domain);
+    public abstract TypeSlim ToType(DeserializationDomain domain, params TypeSlim[] genericArguments);
+
+    public static TypeDef FromJson(DeserializationDomain domain, Json.Expression expression)
     {
-        #region Fields
+        if (expression is not Json.ArrayExpression type)
+            throw new BonsaiParseException("Expected a JSON array containing a type definition.", expression);
 
-        protected static readonly ReadOnlyCollection<TypeSlim> s_emptyTypeList = Array.Empty<TypeSlim>().ToReadOnly();
+        if (type.ElementCount == 0)
+            throw new BonsaiParseException("Expected at least one JSON array element containing a type discriminator.", expression);
 
-        #endregion
+        var kind = type.GetElement(0);
+        if (kind.NodeType != Json.ExpressionType.String)
+            throw new BonsaiParseException("Expected a JSON string at 'node[0]' containing a type discriminator.", expression);
 
-        #region Methods
+        var typeDiscriminator = (string)((Json.ConstantExpression)kind).Value;
 
-        public abstract Json.Expression ToJson(SerializationDomain domain);
-        public abstract TypeSlim ToType(DeserializationDomain domain, params TypeSlim[] genericArguments);
-
-        public static TypeDef FromJson(DeserializationDomain domain, Json.Expression expression)
+        return typeDiscriminator switch
         {
-            if (expression is not Json.ArrayExpression type)
-                throw new BonsaiParseException("Expected a JSON array containing a type definition.", expression);
-
-            if (type.ElementCount == 0)
-                throw new BonsaiParseException("Expected at least one JSON array element containing a type discriminator.", expression);
-
-            var kind = type.GetElement(0);
-            if (kind.NodeType != Json.ExpressionType.String)
-                throw new BonsaiParseException("Expected a JSON string at 'node[0]' containing a type discriminator.", expression);
-
-            var typeDiscriminator = (string)((Json.ConstantExpression)kind).Value;
-
-            return typeDiscriminator switch
-            {
-                Discriminators.Type.Simple => SimpleTypeDef.FromJson(type),
-                Discriminators.Type.Generic => GenericTypeDef.FromJson(type),
-                Discriminators.Type.Array => ArrayTypeDef.FromJson(type),
-                Discriminators.Type.Anonymous => AnonymousStructuralTypeDef.FromJson(type),
-                Discriminators.Type.Record => RecordStructuralTypeDef.FromJson(domain, type),
-                _ => throw new BonsaiParseException(string.Format(CultureInfo.InvariantCulture, "Unexpected type discriminator '{0}' at 'node[0]'.", typeDiscriminator), expression),
-            };
-        }
-
-        #endregion
+            Discriminators.Type.Simple => SimpleTypeDef.FromJson(type),
+            Discriminators.Type.Generic => GenericTypeDef.FromJson(type),
+            Discriminators.Type.Array => ArrayTypeDef.FromJson(type),
+            Discriminators.Type.Anonymous => AnonymousStructuralTypeDef.FromJson(type),
+            Discriminators.Type.Record => RecordStructuralTypeDef.FromJson(domain, type),
+            _ => throw new BonsaiParseException(string.Format(CultureInfo.InvariantCulture, "Unexpected type discriminator '{0}' at 'node[0]'.", typeDiscriminator), expression),
+        };
     }
+
+    #endregion
 }

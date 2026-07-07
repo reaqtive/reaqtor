@@ -11,36 +11,35 @@
 
 using System.Reflection;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal abstract class MethodDef : DeclaredMemberDef
 {
-    internal abstract class MethodDef : DeclaredMemberDef
+    #region Constructors
+
+    protected MethodDef(TypeRef declaringType, MethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
+        : base(declaringType)
     {
-        #region Constructors
-
-        protected MethodDef(TypeRef declaringType, MethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
-            : base(declaringType)
-        {
-            Method = method;
-            ReturnType = returnType;
-            Parameters = parameters;
-        }
-
-        #endregion
-
-        #region Properties
-
-        protected MethodInfoSlim Method { get; }
-
-        public TypeRef ReturnType { get; }
-
-        public TypeRef[] Parameters { get; }
-
-        #endregion
-
-        #region Methods
-
-        public override MemberInfoSlim ToMember(DeserializationDomain domain) => Method;
-
-        #endregion
+        Method = method;
+        ReturnType = returnType;
+        Parameters = parameters;
     }
+
+    #endregion
+
+    #region Properties
+
+    protected MethodInfoSlim Method { get; }
+
+    public TypeRef ReturnType { get; }
+
+    public TypeRef[] Parameters { get; }
+
+    #endregion
+
+    #region Methods
+
+    public override MemberInfoSlim ToMember(DeserializationDomain domain) => Method;
+
+    #endregion
 }

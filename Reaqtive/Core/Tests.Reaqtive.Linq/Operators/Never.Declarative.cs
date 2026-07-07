@@ -10,26 +10,24 @@ using Reaqtor;
 using Reaqtor.TestingFramework;
 #endif
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Never : OperatorTestBase
 {
-    public partial class Never : OperatorTestBase
+    [TestMethod]
+    public void Never_Simple()
     {
-        [TestMethod]
-        public void Never_Simple()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var context = GetContext(client);
+            var context = GetContext(client);
 
-                var res = client.Start(() =>
-                    context.Never<int>()
-                );
+            var res = client.Start(() =>
+                context.Never<int>()
+            );
 
-                res.Messages.AssertEqual(
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+            );
+        });
     }
 }

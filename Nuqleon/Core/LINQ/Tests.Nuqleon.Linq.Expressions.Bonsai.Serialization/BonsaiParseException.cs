@@ -10,26 +10,23 @@
 
 using System.Linq.Expressions.Bonsai.Serialization;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Json = Nuqleon.Json.Expressions;
 
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class BonsaiParseExceptionTests
 {
-    [TestClass]
-    public class BonsaiParseExceptionTests
+    [TestMethod]
+    public void X()
     {
-        [TestMethod]
-        public void X()
-        {
-            var json = Json.Expression.Boolean(true);
+        var json = Json.Expression.Boolean(true);
 
-            var ex = new BonsaiParseException("foo", json);
+        var ex = new BonsaiParseException("foo", json);
 
-            Assert.AreEqual("foo", ex.Message);
-            Assert.AreSame(json, ex.Node);
+        Assert.AreEqual("foo", ex.Message);
+        Assert.AreSame(json, ex.Node);
 
-        }
     }
 }

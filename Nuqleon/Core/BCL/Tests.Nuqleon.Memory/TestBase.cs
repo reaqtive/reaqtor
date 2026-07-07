@@ -8,128 +8,122 @@
 //   BD - 07/02/2014 - Created test base class.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests;
 
-namespace Tests
+public class TestBase
 {
-    public class TestBase
+    private readonly ThreadLocal<Random> _random;
+
+    public TestBase()
     {
-        private readonly ThreadLocal<Random> _random;
+        var rnd = Random.Shared;
 
-        public TestBase()
+        _random = new ThreadLocal<Random>(() =>
         {
-            var rnd = Random.Shared;
-
-            _random = new ThreadLocal<Random>(() =>
+            lock (rnd)
             {
-                lock (rnd)
-                {
-                    return new Random(rnd.Next() * 17);
-                }
-            });
-        }
-
-        protected static TimeSpan Run<T, R>(Func<T> alloc, Func<T, R> extract, Action<T> release, Action<R> action, int threadCount, int iterationCount, bool noisy = false)
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            var gen0 = GC.CollectionCount(0);
-            var gen1 = GC.CollectionCount(1);
-            var gen2 = GC.CollectionCount(2);
-
-            var stopped = false;
-
-            var tr = new Thread(() =>
-            {
-                if (noisy)
-                {
-                    var mem = new List<byte[]>();
-                    while (!Volatile.Read(ref stopped))
-                    {
-                        mem.Add(new byte[1024]);
-                    }
-                }
-            });
-
-            tr.Start();
-
-            var n = 0;
-            var r = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref n) * 17));
-
-            var N = threadCount;
-            var M = iterationCount;
-
-            var cd = new CountdownEvent(N);
-
-            var sw = Stopwatch.StartNew();
-
-            for (var i = 0; i < N; i++)
-            {
-                new Thread(() =>
-                {
-                    for (var j = 0; j < M; j++)
-                    {
-                        var t = alloc();
-                        action(extract(t));
-                        release(t);
-                    }
-
-                    cd.Signal();
-                }).Start();
+                return new Random(rnd.Next() * 17);
             }
+        });
+    }
 
-            cd.Wait();
+    protected static TimeSpan Run<T, R>(Func<T> alloc, Func<T, R> extract, Action<T> release, Action<R> action, int threadCount, int iterationCount, bool noisy = false)
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
-            sw.Stop();
+        var gen0 = GC.CollectionCount(0);
+        var gen1 = GC.CollectionCount(1);
+        var gen2 = GC.CollectionCount(2);
 
-            Volatile.Write(ref stopped, true);
-            tr.Join();
+        var stopped = false;
 
-            gen0 = GC.CollectionCount(0) - gen0;
-            gen1 = GC.CollectionCount(1) - gen1;
-            gen2 = GC.CollectionCount(2) - gen2;
-
-            return sw.Elapsed;
-        }
-
-        protected Random GetRandom()
+        var tr = new Thread(() =>
         {
-            return _random.Value;
-        }
+            if (noisy)
+            {
+                var mem = new List<byte[]>();
+                while (!Volatile.Read(ref stopped))
+                {
+                    mem.Add(new byte[1024]);
+                }
+            }
+        });
 
-        protected static void TooBig<T, R>(Func<T> alloc, Func<T, R> getInstance, Action<R, int> bloat, int threshold)
-            where T : IDisposable
-            where R : class
+        tr.Start();
+
+        var n = 0;
+        var r = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref n) * 17));
+
+        var N = threadCount;
+        var M = iterationCount;
+
+        var cd = new CountdownEvent(N);
+
+        var sw = Stopwatch.StartNew();
+
+        for (var i = 0; i < N; i++)
         {
-            var res1 = alloc();
-            var it1 = getInstance(res1);
-            bloat(it1, threshold - 1);
-            res1.Dispose();
+            new Thread(() =>
+            {
+                for (var j = 0; j < M; j++)
+                {
+                    var t = alloc();
+                    action(extract(t));
+                    release(t);
+                }
 
-            var res2 = alloc();
-            var it2 = getInstance(res2);
-            res2.Dispose();
-
-            Assert.AreSame(it1, it2);
-
-            var res3 = alloc();
-            var it3 = getInstance(res3);
-            bloat(it3, threshold + 1);
-            res3.Dispose();
-
-            var res4 = alloc();
-            var it4 = getInstance(res4);
-            res4.Dispose();
-
-            Assert.AreNotSame(it3, it4);
-            Assert.AreNotSame(it1, it4);
+                cd.Signal();
+            }).Start();
         }
+
+        cd.Wait();
+
+        sw.Stop();
+
+        Volatile.Write(ref stopped, true);
+        tr.Join();
+
+        gen0 = GC.CollectionCount(0) - gen0;
+        gen1 = GC.CollectionCount(1) - gen1;
+        gen2 = GC.CollectionCount(2) - gen2;
+
+        return sw.Elapsed;
+    }
+
+    protected Random GetRandom()
+    {
+        return _random.Value;
+    }
+
+    protected static void TooBig<T, R>(Func<T> alloc, Func<T, R> getInstance, Action<R, int> bloat, int threshold)
+        where T : IDisposable
+        where R : class
+    {
+        var res1 = alloc();
+        var it1 = getInstance(res1);
+        bloat(it1, threshold - 1);
+        res1.Dispose();
+
+        var res2 = alloc();
+        var it2 = getInstance(res2);
+        res2.Dispose();
+
+        Assert.AreSame(it1, it2);
+
+        var res3 = alloc();
+        var it3 = getInstance(res3);
+        bloat(it3, threshold + 1);
+        res3.Dispose();
+
+        var res4 = alloc();
+        var it4 = getInstance(res4);
+        res4.Dispose();
+
+        Assert.AreNotSame(it3, it4);
+        Assert.AreNotSame(it1, it4);
     }
 }

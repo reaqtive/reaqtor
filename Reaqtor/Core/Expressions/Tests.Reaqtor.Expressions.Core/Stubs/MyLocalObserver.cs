@@ -8,27 +8,24 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
-
 using Reaqtor;
 
-namespace Tests.Reaqtor.Expressions.Core
+namespace Tests.Reaqtor.Expressions.Core;
+
+public sealed class MyLocalObserver<T> : ReactiveObserverBase<T>
 {
-    public sealed class MyLocalObserver<T> : ReactiveObserverBase<T>
+    protected override void OnNextCore(T value)
     {
-        protected override void OnNextCore(T value)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-            throw new NotImplementedException();
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+        throw new NotImplementedException();
+    }
 
-        protected override void OnCompletedCore()
-        {
-            throw new NotImplementedException();
-        }
+    protected override void OnCompletedCore()
+    {
+        throw new NotImplementedException();
     }
 }

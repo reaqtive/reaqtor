@@ -8,18 +8,16 @@
 // ER - June 2014 - Created this file.
 //
 
-using System;
 using System.Reflection;
 
-namespace Nuqleon.DataModel.CompilerServices.Bonsai
+namespace Nuqleon.DataModel.CompilerServices.Bonsai;
+
+internal sealed class TypeCarryingTypeToTypeSlimConverter : TypeToTypeSlimConverter
 {
-    internal sealed class TypeCarryingTypeToTypeSlimConverter : TypeToTypeSlimConverter
+    public override TypeSlim Visit(Type type)
     {
-        public override TypeSlim Visit(Type type)
-        {
-            var result = base.Visit(type);
-            result.CarryType(type);
-            return result;
-        }
+        var result = base.Visit(type);
+        result.CarryType(type);
+        return result;
     }
 }

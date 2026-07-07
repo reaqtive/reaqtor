@@ -8,25 +8,21 @@
 // ER - July 2013 - Created this file.
 //
 
-using System;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
+namespace Tests.System.Reflection;
+
+[TestClass]
+public class GenericParameterTypeSlimTests : TestBase
 {
-    [TestClass]
-    public class GenericParameterTypeSlimTests : TestBase
+    [TestMethod]
+    public void GenericParameterTypeSlim_ArgumentChecks()
     {
-        [TestMethod]
-        public void GenericParameterTypeSlim_ArgumentChecks()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentException>(() => TypeSlim.GenericParameter(name: null));
-            Assert.AreEqual("name", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => TypeSlim.GenericParameter(name: ""));
-            Assert.AreEqual("name", ex2.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => TypeSlim.GenericParameter(name: null));
+        Assert.AreEqual("name", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentException>(() => TypeSlim.GenericParameter(name: ""));
+        Assert.AreEqual("name", ex2.ParamName);
     }
 }

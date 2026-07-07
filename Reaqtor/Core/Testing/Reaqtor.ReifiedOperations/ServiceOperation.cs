@@ -11,21 +11,20 @@
 using System;
 using System.Globalization;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class ServiceOperation
 {
-    public class ServiceOperation
+    public ServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, object state)
     {
-        public ServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, object state)
-        {
-            Kind = kind;
-            TargetObjectUri = targetObjectUri;
-            State = state;
-        }
-
-        public ServiceOperationKind Kind { get; }
-        public Uri TargetObjectUri { get; }
-        public object State { get; }
-
-        public override string ToString() => string.Format(CultureInfo.InvariantCulture, "{0}({1}, {2})", Kind, TargetObjectUri, State);
+        Kind = kind;
+        TargetObjectUri = targetObjectUri;
+        State = state;
     }
+
+    public ServiceOperationKind Kind { get; }
+    public Uri TargetObjectUri { get; }
+    public object State { get; }
+
+    public override string ToString() => string.Format(CultureInfo.InvariantCulture, "{0}({1}, {2})", Kind, TargetObjectUri, State);
 }

@@ -10,27 +10,26 @@
 
 using System.Text;
 
-namespace Nuqleon.Json.Serialization
+namespace Nuqleon.Json.Serialization;
+
+internal partial class Emitter
 {
-    internal partial class Emitter
+    /// <summary>
+    /// Returns the JSON string literal representation for the specified <paramref name="value"/> using RFC 4627 escape rules.
+    /// </summary>
+    /// <param name="value">The string whose JSON string literal representation to obtain.</param>
+    /// <returns></returns>
+    /// <remarks>
+    /// This method is well-suited for usage at compile time for emitters. For runtime behavior, use EmitString instead.
+    /// </remarks>
+    internal static string ToJsonStringLiteral(string value)
     {
-        /// <summary>
-        /// Returns the JSON string literal representation for the specified <paramref name="value"/> using RFC 4627 escape rules.
-        /// </summary>
-        /// <param name="value">The string whose JSON string literal representation to obtain.</param>
-        /// <returns></returns>
-        /// <remarks>
-        /// This method is well-suited for usage at compile time for emitters. For runtime behavior, use EmitString instead.
-        /// </remarks>
-        internal static string ToJsonStringLiteral(string value)
-        {
-            using var psb = PooledStringBuilder.New();
+        using var psb = PooledStringBuilder.New();
 
-            var sb = psb.StringBuilder;
+        var sb = psb.StringBuilder;
 
-            EmitString(sb, value);
+        EmitString(sb, value);
 
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

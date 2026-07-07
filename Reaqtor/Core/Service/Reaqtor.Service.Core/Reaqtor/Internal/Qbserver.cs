@@ -8,33 +8,31 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class Qbserver<T> : ReactiveQbserverBase<T>
 {
-    internal class Qbserver<T> : ReactiveQbserverBase<T>
+    private readonly Lazy<IReactiveObserver<T>> _observer;
+
+    public Qbserver(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
     {
-        private readonly Lazy<IReactiveObserver<T>> _observer;
+        Expression = expression;
+        _observer = new Lazy<IReactiveObserver<T>>(Resolve);
+    }
 
-        public Qbserver(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-            _observer = new Lazy<IReactiveObserver<T>>(Resolve);
-        }
+    public override Expression Expression { get; }
 
-        public override Expression Expression { get; }
+    protected override void OnNextCore(T value) => _observer.Value.OnNext(value);
 
-        protected override void OnNextCore(T value) => _observer.Value.OnNext(value);
+    protected override void OnErrorCore(Exception error) => _observer.Value.OnError(error);
 
-        protected override void OnErrorCore(Exception error) => _observer.Value.OnError(error);
+    protected override void OnCompletedCore() => _observer.Value.OnCompleted();
 
-        protected override void OnCompletedCore() => _observer.Value.OnCompleted();
-
-        private IReactiveObserver<T> Resolve()
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).GetObserver<T>(this);
-        }
+    private IReactiveObserver<T> Resolve()
+    {
+        return ((ReactiveQueryProviderBase)base.Provider).GetObserver<T>(this);
     }
 }

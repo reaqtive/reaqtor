@@ -7,27 +7,26 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class KnownReliableQubscriptionFactory : ReliableQubscriptionFactory, IKnownResource
 {
-    public class KnownReliableQubscriptionFactory : ReliableQubscriptionFactory, IKnownResource
+    public KnownReliableQubscriptionFactory(Expression expression, Uri uri, IReliableQueryProvider provider)
+        : base(expression, provider)
     {
-        public KnownReliableQubscriptionFactory(Expression expression, Uri uri, IReliableQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = uri;
-        }
-
-        public Uri Uri { get; }
+        Uri = uri;
     }
 
-    public class KnownReliableQubscriptionFactory<TArg> : ReliableQubscriptionFactory<TArg>, IKnownResource
-    {
-        public KnownReliableQubscriptionFactory(Expression expression, Uri uri, IReliableQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = uri;
-        }
+    public Uri Uri { get; }
+}
 
-        public Uri Uri { get; }
+public class KnownReliableQubscriptionFactory<TArg> : ReliableQubscriptionFactory<TArg>, IKnownResource
+{
+    public KnownReliableQubscriptionFactory(Expression expression, Uri uri, IReliableQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = uri;
     }
+
+    public Uri Uri { get; }
 }

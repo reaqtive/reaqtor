@@ -8,17 +8,16 @@
 //   BD - 07/29/2015 - Created this type.
 //
 
-namespace System.Time
+namespace System.Time;
+
+/// <summary>
+/// Interface for stopwatch factories.
+/// </summary>
+public interface IStopwatchFactory
 {
     /// <summary>
-    /// Interface for stopwatch factories.
+    /// Creates a new stopwatch that has not been started.
     /// </summary>
-    public interface IStopwatchFactory
-    {
-        /// <summary>
-        /// Creates a new stopwatch that has not been started.
-        /// </summary>
-        /// <returns>New stopwatch instance.</returns>
-        IStopwatch Create();
-    }
+    /// <returns>New stopwatch instance.</returns>
+    IStopwatch Create();
 }

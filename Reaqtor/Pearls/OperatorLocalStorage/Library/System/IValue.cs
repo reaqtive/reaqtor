@@ -8,17 +8,16 @@
 // BD - January 2018
 //
 
-namespace System
+namespace System;
+
+/// <summary>
+/// Interface representing a value.
+/// </summary>
+/// <typeparam name="T">The type of the value.</typeparam>
+public interface IValue<T> : IReadOnlyValue<T>
 {
     /// <summary>
-    /// Interface representing a value.
+    /// Gets or sets the value.
     /// </summary>
-    /// <typeparam name="T">The type of the value.</typeparam>
-    public interface IValue<T> : IReadOnlyValue<T>
-    {
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        new T Value { get; set; }
-    }
+    new T Value { get; set; }
 }

@@ -4,86 +4,85 @@
 
 using System;
 
-namespace Reaqtive.TestingFramework
+namespace Reaqtive.TestingFramework;
+
+public enum SubscriptionActionKind
 {
-    public enum SubscriptionActionKind
+    LoadState,
+    SaveState,
+    Crash,
+    Recover,
+}
+
+public abstract class SubscriptionAction : IEquatable<SubscriptionAction>
+{
+    public SubscriptionActionKind Type { get; protected set; }
+
+    public override bool Equals(object obj) => obj is SubscriptionAction a && Equals(a);
+
+    public override int GetHashCode() => (int)Type;
+
+    public bool Equals(SubscriptionAction other)
     {
-        LoadState,
-        SaveState,
-        Crash,
-        Recover,
+        if (other == null)
+        {
+            return false;
+        }
+
+        return Type == other.Type;
     }
 
-    public abstract class SubscriptionAction : IEquatable<SubscriptionAction>
+    public virtual void Accept(ISubscription subscription)
     {
-        public SubscriptionActionKind Type { get; protected set; }
+    }
+}
 
-        public override bool Equals(object obj) => obj is SubscriptionAction a && Equals(a);
+internal class LoadState : SubscriptionAction
+{
+    private readonly IOperatorStateContainer _state;
 
-        public override int GetHashCode() => (int)Type;
-
-        public bool Equals(SubscriptionAction other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            return Type == other.Type;
-        }
-
-        public virtual void Accept(ISubscription subscription)
-        {
-        }
+    public LoadState(IOperatorStateContainer state)
+    {
+        Type = SubscriptionActionKind.LoadState;
+        _state = state;
     }
 
-    internal class LoadState : SubscriptionAction
+    public override void Accept(ISubscription subscription)
     {
-        private readonly IOperatorStateContainer _state;
+        var visitor = new SubscriptionStateVisitor(subscription);
+        visitor.LoadState(_state.CreateReader());
+    }
+}
 
-        public LoadState(IOperatorStateContainer state)
-        {
-            Type = SubscriptionActionKind.LoadState;
-            _state = state;
-        }
+internal class SaveState : SubscriptionAction
+{
+    private readonly IOperatorStateContainer _state;
 
-        public override void Accept(ISubscription subscription)
-        {
-            var visitor = new SubscriptionStateVisitor(subscription);
-            visitor.LoadState(_state.CreateReader());
-        }
+    public SaveState(IOperatorStateContainer state)
+    {
+        Type = SubscriptionActionKind.SaveState;
+        _state = state;
     }
 
-    internal class SaveState : SubscriptionAction
+    public override void Accept(ISubscription subscription)
     {
-        private readonly IOperatorStateContainer _state;
-
-        public SaveState(IOperatorStateContainer state)
-        {
-            Type = SubscriptionActionKind.SaveState;
-            _state = state;
-        }
-
-        public override void Accept(ISubscription subscription)
-        {
-            var visitor = new SubscriptionStateVisitor(subscription);
-            visitor.SaveState(_state.CreateWriter());
-        }
+        var visitor = new SubscriptionStateVisitor(subscription);
+        visitor.SaveState(_state.CreateWriter());
     }
+}
 
-    internal class Crash : SubscriptionAction
+internal class Crash : SubscriptionAction
+{
+    public Crash()
     {
-        public Crash()
-        {
-            Type = SubscriptionActionKind.Crash;
-        }
+        Type = SubscriptionActionKind.Crash;
     }
+}
 
-    internal class Recover : SubscriptionAction
+internal class Recover : SubscriptionAction
+{
+    public Recover()
     {
-        public Recover()
-        {
-            Type = SubscriptionActionKind.Recover;
-        }
+        Type = SubscriptionActionKind.Recover;
     }
 }

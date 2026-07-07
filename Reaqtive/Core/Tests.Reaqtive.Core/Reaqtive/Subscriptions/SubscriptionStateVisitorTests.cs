@@ -2,170 +2,165 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive;
 using Reaqtive.TestingFramework.Mocks;
 
-namespace Test.Reaqtive
+namespace Test.Reaqtive;
+
+[TestClass]
+public class SubscriptionStateVisitorTests
 {
-    [TestClass]
-    public class SubscriptionStateVisitorTests
+    [TestMethod]
+    public void SubscriptionStateVisitor_ArgumentChecking()
     {
-        [TestMethod]
-        public void SubscriptionStateVisitor_ArgumentChecking()
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(null));
+
+        var s = new SingleAssignmentSubscription();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).LoadState(null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).SaveState(null));
+    }
+
+    [TestMethod]
+    public void SubscriptionStateVisitor_Basics()
+    {
+        var state = new MockOperatorStateContainer();
+        var writerFactory = state.CreateWriter();
+        var readerFactory = state.CreateReader();
+
+        var xs = new SimpleSubject<int>();
+        var o = xs.CreateObserver();
+
+        var ys = new Take<int>(xs, 5);
+
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(null));
+            var s1 = ys.Subscribe(Observer.Create<int>(_ => { }, _ => { }, () => { }));
+            var v = new SubscriptionInitializeVisitor(s1);
+            v.Subscribe();
+            v.Start();
 
-            var s = new SingleAssignmentSubscription();
+            o.OnNext(42);
+            o.OnNext(43);
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).LoadState(null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).SaveState(null));
+            var sv = new SubscriptionStateVisitor(s1);
+
+            Assert.IsTrue(sv.HasStateChanged());
+
+            sv.SaveState(writerFactory);
+
+            Assert.IsTrue(sv.HasStateChanged());
+
+            sv.OnStateSaved();
+
+            Assert.IsFalse(sv.HasStateChanged());
+
+            o.OnNext(44);
+            o.OnNext(45);
+
+            Assert.IsTrue(sv.HasStateChanged());
         }
 
-        [TestMethod]
-        public void SubscriptionStateVisitor_Basics()
         {
-            var state = new MockOperatorStateContainer();
-            var writerFactory = state.CreateWriter();
-            var readerFactory = state.CreateReader();
+            var done = false;
 
-            var xs = new SimpleSubject<int>();
-            var o = xs.CreateObserver();
+            var s2 = ys.Subscribe(Observer.Create<int>(_ => { }, _ => { }, () => { done = true; }));
 
-            var ys = new Take<int>(xs, 5);
+            var sv = new SubscriptionStateVisitor(s2);
 
-            {
-                var s1 = ys.Subscribe(Observer.Create<int>(_ => { }, _ => { }, () => { }));
-                var v = new SubscriptionInitializeVisitor(s1);
-                v.Subscribe();
-                v.Start();
+            sv.LoadState(readerFactory);
 
-                o.OnNext(42);
-                o.OnNext(43);
+            var v = new SubscriptionInitializeVisitor(s2);
+            v.Subscribe();
+            v.Start();
 
-                var sv = new SubscriptionStateVisitor(s1);
+            o.OnNext(46);
+            Assert.IsFalse(done);
 
-                Assert.IsTrue(sv.HasStateChanged());
+            o.OnNext(47);
+            Assert.IsFalse(done);
 
-                sv.SaveState(writerFactory);
+            o.OnNext(48);
+            Assert.IsTrue(done);
+        }
+    }
 
-                Assert.IsTrue(sv.HasStateChanged());
+    // NB: The code below is a copy of Take<T> from Reaqtive.Linq, but is kept here for test layering purposes.
 
-                sv.OnStateSaved();
+    private sealed class Take<TResult> : SubscribableBase<TResult>
+    {
+        private readonly ISubscribable<TResult> _source;
+        private readonly int _count;
 
-                Assert.IsFalse(sv.HasStateChanged());
-
-                o.OnNext(44);
-                o.OnNext(45);
-
-                Assert.IsTrue(sv.HasStateChanged());
-            }
-
-            {
-                var done = false;
-
-                var s2 = ys.Subscribe(Observer.Create<int>(_ => { }, _ => { }, () => { done = true; }));
-
-                var sv = new SubscriptionStateVisitor(s2);
-
-                sv.LoadState(readerFactory);
-
-                var v = new SubscriptionInitializeVisitor(s2);
-                v.Subscribe();
-                v.Start();
-
-                o.OnNext(46);
-                Assert.IsFalse(done);
-
-                o.OnNext(47);
-                Assert.IsFalse(done);
-
-                o.OnNext(48);
-                Assert.IsTrue(done);
-            }
+        public Take(ISubscribable<TResult> source, int count)
+        {
+            _source = source;
+            _count = count;
         }
 
-        // NB: The code below is a copy of Take<T> from Reaqtive.Linq, but is kept here for test layering purposes.
-
-        private sealed class Take<TResult> : SubscribableBase<TResult>
+        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
         {
-            private readonly ISubscribable<TResult> _source;
-            private readonly int _count;
+            return new _(this, observer);
+        }
 
-            public Take(ISubscribable<TResult> source, int count)
+        private sealed class _ : StatefulUnaryOperator<Take<TResult>, TResult>, IObserver<TResult>
+        {
+            private int _remaining;
+
+            public _(Take<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
             {
-                _source = source;
-                _count = count;
+                _remaining = Params._count;
             }
 
-            protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+            public override string Name => "test:Take";
+
+            public override Version Version => new(1, 0, 0, 0);
+
+            public void OnCompleted()
             {
-                return new _(this, observer);
+                Output.OnCompleted();
+                Dispose();
             }
 
-            private sealed class _ : StatefulUnaryOperator<Take<TResult>, TResult>, IObserver<TResult>
+            public void OnError(Exception error)
             {
-                private int _remaining;
+                Output.OnError(error);
+                Dispose();
+            }
 
-                public _(Take<TResult> parent, IObserver<TResult> observer)
-                    : base(parent, observer)
+            public void OnNext(TResult value)
+            {
+                if (_remaining > 0)
                 {
-                    _remaining = Params._count;
-                }
+                    --_remaining;
+                    StateChanged = true;
 
-                public override string Name => "test:Take";
-
-                public override Version Version => new(1, 0, 0, 0);
-
-                public void OnCompleted()
-                {
-                    Output.OnCompleted();
-                    Dispose();
-                }
-
-                public void OnError(Exception error)
-                {
-                    Output.OnError(error);
-                    Dispose();
-                }
-
-                public void OnNext(TResult value)
-                {
-                    if (_remaining > 0)
+                    Output.OnNext(value);
+                    if (_remaining == 0)
                     {
-                        --_remaining;
-                        StateChanged = true;
-
-                        Output.OnNext(value);
-                        if (_remaining == 0)
-                        {
-                            Output.OnCompleted();
-                            Dispose();
-                        }
+                        Output.OnCompleted();
+                        Dispose();
                     }
                 }
+            }
 
-                protected override void LoadStateCore(IOperatorStateReader reader)
-                {
-                    base.LoadStateCore(reader);
+            protected override void LoadStateCore(IOperatorStateReader reader)
+            {
+                base.LoadStateCore(reader);
 
-                    _remaining = reader.Read<int>();
-                }
+                _remaining = reader.Read<int>();
+            }
 
-                protected override void SaveStateCore(IOperatorStateWriter writer)
-                {
-                    base.SaveStateCore(writer);
+            protected override void SaveStateCore(IOperatorStateWriter writer)
+            {
+                base.SaveStateCore(writer);
 
-                    writer.Write(_remaining);
-                }
+                writer.Write(_remaining);
+            }
 
-                protected override ISubscription OnSubscribe()
-                {
-                    return Params._source.Subscribe(this);
-                }
+            protected override ISubscription OnSubscribe()
+            {
+                return Params._source.Subscribe(this);
             }
         }
     }

@@ -9,41 +9,40 @@
 // ER - July 2013 - Small tweaks.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Enum describing the kind of a type.
+/// </summary>
+public enum TypeSlimKind
 {
     /// <summary>
-    /// Enum describing the kind of a type.
+    /// Simple type, i.e. not constructed from other types.
     /// </summary>
-    public enum TypeSlimKind
-    {
-        /// <summary>
-        /// Simple type, i.e. not constructed from other types.
-        /// </summary>
-        Simple,
+    Simple,
 
-        /// <summary>
-        /// Array type, consisting of an element type and a rank.
-        /// </summary>
-        Array,
+    /// <summary>
+    /// Array type, consisting of an element type and a rank.
+    /// </summary>
+    Array,
 
-        /// <summary>
-        /// Structural type, consisting of a set of named members.
-        /// </summary>
-        Structural,
+    /// <summary>
+    /// Structural type, consisting of a set of named members.
+    /// </summary>
+    Structural,
 
-        /// <summary>
-        /// Open generic type definition.
-        /// </summary>
-        GenericDefinition,
+    /// <summary>
+    /// Open generic type definition.
+    /// </summary>
+    GenericDefinition,
 
-        /// <summary>
-        /// Closed generic type, consisting of a type definition and type arguments.
-        /// </summary>
-        Generic,
+    /// <summary>
+    /// Closed generic type, consisting of a type definition and type arguments.
+    /// </summary>
+    Generic,
 
-        /// <summary>
-        /// Generic type parameter.
-        /// </summary>
-        GenericParameter,
-    }
+    /// <summary>
+    /// Generic type parameter.
+    /// </summary>
+    GenericParameter,
 }

@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class LookupStreamMetadata : LookupMetadataOperation
 {
-    public class LookupStreamMetadata : LookupMetadataOperation
+    public LookupStreamMetadata(Uri streamUri)
+        : base(ServiceOperationKind.LookupStreamMetadata, streamUri)
     {
-        public LookupStreamMetadata(Uri streamUri)
-            : base(ServiceOperationKind.LookupStreamMetadata, streamUri)
-        {
-        }
     }
 }

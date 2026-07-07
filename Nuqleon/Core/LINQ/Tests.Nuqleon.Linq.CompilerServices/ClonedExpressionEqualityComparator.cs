@@ -11,26 +11,25 @@
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-namespace Tests.System.Linq.CompilerServices
-{
-    internal sealed class ClonedExpressionEqualityComparator : ExpressionEqualityComparator
-    {
-        public override bool Equals(Expression x, Expression y)
-        {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-            else if (x == null || y == null)
-            {
-                return false;
-            }
+namespace Tests.System.Linq.CompilerServices;
 
-            return base.Equals(x, y) && (!object.ReferenceEquals(x, y) || x is ParameterExpression);
+internal sealed class ClonedExpressionEqualityComparator : ExpressionEqualityComparator
+{
+    public override bool Equals(Expression x, Expression y)
+    {
+        if (x == null && y == null)
+        {
+            return true;
+        }
+        else if (x == null || y == null)
+        {
+            return false;
         }
 
-        public override bool Equals(ElementInit x, ElementInit y) => base.Equals(x, y);
-
-        public override bool Equals(MemberBinding x, MemberBinding y) => base.Equals(x, y);
+        return base.Equals(x, y) && (!object.ReferenceEquals(x, y) || x is ParameterExpression);
     }
+
+    public override bool Equals(ElementInit x, ElementInit y) => base.Equals(x, y);
+
+    public override bool Equals(MemberBinding x, MemberBinding y) => base.Equals(x, y);
 }

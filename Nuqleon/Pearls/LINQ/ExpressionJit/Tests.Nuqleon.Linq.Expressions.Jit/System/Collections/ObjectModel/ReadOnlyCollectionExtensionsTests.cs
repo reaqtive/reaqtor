@@ -2,22 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Linq;
+namespace System.Collections.ObjectModel;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace System.Collections.ObjectModel
+[TestClass]
+public class ReadOnlyCollectionExtensionsTests
 {
-    [TestClass]
-    public class ReadOnlyCollectionExtensionsTests
+    [TestMethod]
+    public void AddFirst()
     {
-        [TestMethod]
-        public void AddFirst()
-        {
-            var xs = new ReadOnlyCollection<int>([3, 5, 7]);
-            var res = xs.AddFirst(2);
-            Assert.AreEqual(4, res.Count);
-            Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(res));
-        }
+        var xs = new ReadOnlyCollection<int>([3, 5, 7]);
+        var res = xs.AddFirst(2);
+        Assert.AreEqual(4, res.Count);
+        Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(res));
     }
 }

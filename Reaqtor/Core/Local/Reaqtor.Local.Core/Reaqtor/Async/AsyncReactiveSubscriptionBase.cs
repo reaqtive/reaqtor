@@ -8,14 +8,11 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Base class for subscriptions.
+/// </summary>
+public abstract class AsyncReactiveSubscriptionBase : AsyncDisposableBase, IAsyncReactiveSubscription
 {
-    /// <summary>
-    /// Base class for subscriptions.
-    /// </summary>
-    public abstract class AsyncReactiveSubscriptionBase : AsyncDisposableBase, IAsyncReactiveSubscription
-    {
-    }
 }

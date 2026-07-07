@@ -14,109 +14,107 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class GenericTypeDef : TypeDef
 {
-    internal sealed class GenericTypeDef : TypeDef
+    #region Fields
+
+    private readonly TypeRef _genericTypeDefinition;
+    private readonly TypeRef[] _genericTypeArguments;
+    private TypeSlim _type;
+
+    #endregion
+
+    #region Constructors
+
+    public GenericTypeDef(TypeRef genericTypeDefinition, params TypeRef[] genericTypeArguments)
     {
-        #region Fields
+        _genericTypeDefinition = genericTypeDefinition;
+        _genericTypeArguments = genericTypeArguments;
+    }
 
-        private readonly TypeRef _genericTypeDefinition;
-        private readonly TypeRef[] _genericTypeArguments;
-        private TypeSlim _type;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Constructors
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        var count = _genericTypeArguments.Length;
 
-        public GenericTypeDef(TypeRef genericTypeDefinition, params TypeRef[] genericTypeArguments)
+        var genericTypeArguments = new Json.Expression[count];
+        for (var i = 0; i < count; i++)
         {
-            _genericTypeDefinition = genericTypeDefinition;
-            _genericTypeArguments = genericTypeArguments;
+            genericTypeArguments[i] = _genericTypeArguments[i].ToJson();
         }
 
-        #endregion
+        return Json.Expression.Array(
+            Discriminators.Type.GenericDiscriminator,
+            _genericTypeDefinition.ToJson(),
+            Json.Expression.Array(genericTypeArguments)
+        );
+    }
 
-        #region Methods
+    public static GenericTypeDef FromJson(Json.ArrayExpression type)
+    {
+        if (type.ElementCount != 3)
+            throw new BonsaiParseException("Expected 3 JSON array elements for a generic type definition.", type);
 
-        public override Json.Expression ToJson(SerializationDomain domain)
+        var typeDef = TypeRef.FromJson(type.GetElement(1));
+
+        if (type.GetElement(2) is not Json.ArrayExpression args)
+            throw new BonsaiParseException("Expected a JSON array in 'node[2]' for the type arguments of a generic type definition.", type);
+
+        var n = args.ElementCount;
+
+        if (n < 1)
+            throw new BonsaiParseException("Expected at least 1 JSON array element in 'node[2]' for the type arguments of a generic type definition.", type);
+
+        var typeArgs = new TypeRef[n];
+
+        for (var i = 0; i < n; i++)
         {
-            var count = _genericTypeArguments.Length;
+            var arg = args.GetElement(i);
+            var typeRef = TypeRef.FromJson(arg);
+            typeArgs[i] = typeRef;
+        }
 
-            var genericTypeArguments = new Json.Expression[count];
-            for (var i = 0; i < count; i++)
+        return new GenericTypeDef(typeDef, typeArgs);
+    }
+
+    public override TypeSlim ToType(DeserializationDomain domain, TypeSlim[] genericArguments)
+    {
+        if (_type == null)
+        {
+            var def = domain.GetType(_genericTypeDefinition).ToType(domain, genericArguments);
+            GenericDefinitionTypeSlim genDef;
+
+            switch (def.Kind)
             {
-                genericTypeArguments[i] = _genericTypeArguments[i].ToJson();
+                case TypeSlimKind.Simple:
+                    var simple = (SimpleTypeSlim)def;
+                    genDef = TypeSlim.GenericDefinition(simple.Assembly, simple.Name);
+                    break;
+                default:
+                    throw new InvalidOperationException("Expected either simple type slim discriminator for generic definition type.");
             }
 
-            return Json.Expression.Array(
-                Discriminators.Type.GenericDiscriminator,
-                _genericTypeDefinition.ToJson(),
-                Json.Expression.Array(genericTypeArguments)
-            );
-        }
-
-        public static GenericTypeDef FromJson(Json.ArrayExpression type)
-        {
-            if (type.ElementCount != 3)
-                throw new BonsaiParseException("Expected 3 JSON array elements for a generic type definition.", type);
-
-            var typeDef = TypeRef.FromJson(type.GetElement(1));
-
-            if (type.GetElement(2) is not Json.ArrayExpression args)
-                throw new BonsaiParseException("Expected a JSON array in 'node[2]' for the type arguments of a generic type definition.", type);
-
-            var n = args.ElementCount;
-
-            if (n < 1)
-                throw new BonsaiParseException("Expected at least 1 JSON array element in 'node[2]' for the type arguments of a generic type definition.", type);
-
-            var typeArgs = new TypeRef[n];
+            var n = _genericTypeArguments.Length;
+            var argsList = new TypeSlim[n];
 
             for (var i = 0; i < n; i++)
             {
-                var arg = args.GetElement(i);
-                var typeRef = TypeRef.FromJson(arg);
-                typeArgs[i] = typeRef;
+                var arg = _genericTypeArguments[i];
+                var argType = domain.GetType(arg).ToType(domain, genericArguments);
+                argsList[i] = argType;
             }
 
-            return new GenericTypeDef(typeDef, typeArgs);
+            var args = new TrueReadOnlyCollection<TypeSlim>(/* transfer ownership */ argsList);
+            _type = TypeSlim.Generic(genDef, args);
         }
 
-        public override TypeSlim ToType(DeserializationDomain domain, TypeSlim[] genericArguments)
-        {
-            if (_type == null)
-            {
-                var def = domain.GetType(_genericTypeDefinition).ToType(domain, genericArguments);
-                GenericDefinitionTypeSlim genDef;
-
-                switch (def.Kind)
-                {
-                    case TypeSlimKind.Simple:
-                        var simple = (SimpleTypeSlim)def;
-                        genDef = TypeSlim.GenericDefinition(simple.Assembly, simple.Name);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Expected either simple type slim discriminator for generic definition type.");
-                }
-
-                var n = _genericTypeArguments.Length;
-                var argsList = new TypeSlim[n];
-
-                for (var i = 0; i < n; i++)
-                {
-                    var arg = _genericTypeArguments[i];
-                    var argType = domain.GetType(arg).ToType(domain, genericArguments);
-                    argsList[i] = argType;
-                }
-
-                var args = new TrueReadOnlyCollection<TypeSlim>(/* transfer ownership */ argsList);
-                _type = TypeSlim.Generic(genDef, args);
-            }
-
-            return _type;
-        }
-
-        #endregion
+        return _type;
     }
 
+    #endregion
 }

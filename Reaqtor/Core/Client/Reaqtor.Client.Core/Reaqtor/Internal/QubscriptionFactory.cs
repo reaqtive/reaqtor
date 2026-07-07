@@ -8,42 +8,38 @@
 // BD - Feburary 2016 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class QubscriptionFactory : AsyncReactiveQubscriptionFactoryBase
 {
-    internal class QubscriptionFactory : AsyncReactiveQubscriptionFactoryBase
+    public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateSubscriptionAsync(this, subscriptionUri, state, token);
-        }
+        Expression = expression;
     }
 
-    internal class QubscriptionFactory<TArgs> : AsyncReactiveQubscriptionFactoryBase<TArgs>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, object state, CancellationToken token)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateSubscriptionAsync(this, subscriptionUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
+internal class QubscriptionFactory<TArgs> : AsyncReactiveQubscriptionFactoryBase<TArgs>
+{
+    public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
+    }
 
-        protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArgs argument, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateSubscriptionAsync(this, argument, subscriptionUri, state, token);
-        }
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArgs argument, object state, CancellationToken token)
+    {
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateSubscriptionAsync(this, argument, subscriptionUri, state, token);
     }
 }

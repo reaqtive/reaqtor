@@ -12,26 +12,25 @@
 
 using System;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Attribute to annotate known resources.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+internal sealed class KnownResourceAttribute : Attribute
 {
     /// <summary>
-    /// Attribute to annotate known resources.
+    /// Creates a new known resource attribute using the specified resource identifier.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class KnownResourceAttribute : Attribute
+    /// <param name="id">Identifier of the known resource.</param>
+    public KnownResourceAttribute(string id)
     {
-        /// <summary>
-        /// Creates a new known resource attribute using the specified resource identifier.
-        /// </summary>
-        /// <param name="id">Identifier of the known resource.</param>
-        public KnownResourceAttribute(string id)
-        {
-            Id = id;
-        }
-
-        /// <summary>
-        /// Gets the identifier of the known resource.
-        /// </summary>
-        public string Id { get; }
+        Id = id;
     }
+
+    /// <summary>
+    /// Gets the identifier of the known resource.
+    /// </summary>
+    public string Id { get; }
 }

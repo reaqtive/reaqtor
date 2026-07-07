@@ -2,14 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
+namespace Reaqtor.QueryEngine.Events;
 
-namespace Reaqtor.QueryEngine.Events
+/// <summary>
+/// Event arguments for a <see cref="CheckpointingQueryEngine.SchedulerContinued"/> event.
+/// </summary>
+public class SchedulerContinuedEventArgs : EventArgs
 {
-    /// <summary>
-    /// Event arguments for a <see cref="CheckpointingQueryEngine.SchedulerContinued"/> event.
-    /// </summary>
-    public class SchedulerContinuedEventArgs : EventArgs
-    {
-    }
 }

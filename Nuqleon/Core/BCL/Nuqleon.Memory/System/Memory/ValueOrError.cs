@@ -10,32 +10,31 @@
 
 using System.Runtime.ExceptionServices;
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Provides a set of factory methods to create objects that represent a value or an error.
+/// </summary>
+public static class ValueOrError
 {
     /// <summary>
-    /// Provides a set of factory methods to create objects that represent a value or an error.
+    /// Creates an object that represents a value.
     /// </summary>
-    public static class ValueOrError
+    /// <typeparam name="T">Type of the value.</typeparam>
+    /// <param name="value">The value represented by the object.</param>
+    /// <returns>An object representing the specified <paramref name="value"/>.</returns>
+    public static IValueOrError<T> CreateValue<T>(T value) => new ValueOrErrorValue<T>(value);
+
+    /// <summary>
+    /// Creates an object that represents an error.
+    /// </summary>
+    /// <typeparam name="T">Type of the value.</typeparam>
+    /// <param name="exception">The error represented by the object.</param>
+    /// <returns>An object representing the specified <paramref name="exception"/>.</returns>
+    public static IValueOrError<T> CreateError<T>(Exception exception)
     {
-        /// <summary>
-        /// Creates an object that represents a value.
-        /// </summary>
-        /// <typeparam name="T">Type of the value.</typeparam>
-        /// <param name="value">The value represented by the object.</param>
-        /// <returns>An object representing the specified <paramref name="value"/>.</returns>
-        public static IValueOrError<T> CreateValue<T>(T value) => new ValueOrErrorValue<T>(value);
+        ArgumentNullException.ThrowIfNull(exception);
 
-        /// <summary>
-        /// Creates an object that represents an error.
-        /// </summary>
-        /// <typeparam name="T">Type of the value.</typeparam>
-        /// <param name="exception">The error represented by the object.</param>
-        /// <returns>An object representing the specified <paramref name="exception"/>.</returns>
-        public static IValueOrError<T> CreateError<T>(Exception exception)
-        {
-            ArgumentNullException.ThrowIfNull(exception);
-
-            return new ValueOrErrorError<T>(ExceptionDispatchInfo.Capture(exception));
-        }
+        return new ValueOrErrorError<T>(ExceptionDispatchInfo.Capture(exception));
     }
 }

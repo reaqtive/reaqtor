@@ -4,29 +4,28 @@
 
 using System.Collections.Generic;
 
-namespace System.Linq
+namespace System.Linq;
+
+internal static class EnumerableEx
 {
-    internal static class EnumerableEx
+    public static IEnumerable<T[]> Buffer<T>(this IEnumerable<T> source, int count)
     {
-        public static IEnumerable<T[]> Buffer<T>(this IEnumerable<T> source, int count)
+        var cur = new List<T>();
+
+        var i = 0;
+
+        foreach (var item in source)
         {
-            var cur = new List<T>();
+            cur.Add(item);
 
-            var i = 0;
-
-            foreach (var item in source)
+            if (++i == count)
             {
-                cur.Add(item);
-
-                if (++i == count)
-                {
-                    yield return cur.ToArray();
-                    cur.Clear();
-                    i = 0;
-                }
+                yield return cur.ToArray();
+                cur.Clear();
+                i = 0;
             }
-
-            yield return cur.ToArray();
         }
+
+        yield return cur.ToArray();
     }
 }

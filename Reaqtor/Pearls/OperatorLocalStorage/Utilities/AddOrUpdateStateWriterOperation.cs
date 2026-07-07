@@ -11,30 +11,29 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Utilities
+namespace Utilities;
+
+public sealed class AddOrUpdateStateWriterOperation : StateWriterOperation
 {
-    public sealed class AddOrUpdateStateWriterOperation : StateWriterOperation
+    private readonly MemoryStream _data;
+
+    public AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : base(category, key)
     {
-        private readonly MemoryStream _data;
+        _data = data;
+    }
 
-        public AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : base(category, key)
+    public override StateWriterOperationKind Kind => StateWriterOperationKind.AddOrUpdate;
+
+    public override void Apply(Store store)
+    {
+        var data = _data.ToArray();
+
+        if (!store.Data.TryGetValue(Category, out var table))
         {
-            _data = data;
+            table = [];
+            store.Data.Add(Category, table);
         }
 
-        public override StateWriterOperationKind Kind => StateWriterOperationKind.AddOrUpdate;
-
-        public override void Apply(Store store)
-        {
-            var data = _data.ToArray();
-
-            if (!store.Data.TryGetValue(Category, out var table))
-            {
-                table = [];
-                store.Data.Add(Category, table);
-            }
-
-            table[Key] = data;
-        }
+        table[Key] = data;
     }
 }

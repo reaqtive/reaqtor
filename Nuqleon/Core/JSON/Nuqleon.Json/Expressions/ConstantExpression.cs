@@ -8,23 +8,22 @@
 // BD - November 2009 - Created this file.
 //
 
-namespace Nuqleon.Json.Expressions
+namespace Nuqleon.Json.Expressions;
+
+/// <summary>
+/// Expression tree node representing a JSON constant value.
+/// </summary>
+public abstract class ConstantExpression : Expression
 {
     /// <summary>
-    /// Expression tree node representing a JSON constant value.
+    /// Creates a new constant expression tree node.
     /// </summary>
-    public abstract class ConstantExpression : Expression
+    internal ConstantExpression()
     {
-        /// <summary>
-        /// Creates a new constant expression tree node.
-        /// </summary>
-        internal ConstantExpression()
-        {
-        }
-
-        /// <summary>
-        /// Gets the value of constant represented by this expression tree node.
-        /// </summary>
-        public abstract object Value { get; }
     }
+
+    /// <summary>
+    /// Gets the value of constant represented by this expression tree node.
+    /// </summary>
+    public abstract object Value { get; }
 }

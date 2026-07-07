@@ -8,18 +8,15 @@
 // BD - August 2014 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.Reaqtor.Expressions.Core;
 
-namespace Tests.Reaqtor.Expressions.Core
+[TestClass]
+public class ReactiveQbserverTests
 {
-    [TestClass]
-    public class ReactiveQbserverTests
+    [TestMethod]
+    public void ReactiveQbserver_ElementType()
     {
-        [TestMethod]
-        public void ReactiveQbserver_ElementType()
-        {
-            var q = new MyReactiveQbserver<int>(null);
-            Assert.AreEqual(typeof(int), q.ElementType);
-        }
+        var q = new MyReactiveQbserver<int>(null);
+        Assert.AreEqual(typeof(int), q.ElementType);
     }
 }

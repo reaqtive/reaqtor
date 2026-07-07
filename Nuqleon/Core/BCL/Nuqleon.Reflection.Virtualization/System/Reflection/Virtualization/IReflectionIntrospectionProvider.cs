@@ -8,12 +8,11 @@
 // BD - December 2016 - Created this file.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Interface representing a reflection provider used to introspect reflection objects.
+/// </summary>
+public interface IReflectionIntrospectionProvider : IAssemblyIntrospectionProvider, IModuleIntrospectionProvider, ITypeIntrospectionProvider, IMemberInfoIntrospectionProvider, IFieldInfoIntrospectionProvider, IMethodInfoIntrospectionProvider, IMethodBaseIntrospectionProvider, IPropertyInfoIntrospectionProvider, IEventInfoIntrospectionProvider, IParameterInfoIntrospectionProvider
 {
-    /// <summary>
-    /// Interface representing a reflection provider used to introspect reflection objects.
-    /// </summary>
-    public interface IReflectionIntrospectionProvider : IAssemblyIntrospectionProvider, IModuleIntrospectionProvider, ITypeIntrospectionProvider, IMemberInfoIntrospectionProvider, IFieldInfoIntrospectionProvider, IMethodInfoIntrospectionProvider, IMethodBaseIntrospectionProvider, IPropertyInfoIntrospectionProvider, IEventInfoIntrospectionProvider, IParameterInfoIntrospectionProvider
-    {
-    }
 }

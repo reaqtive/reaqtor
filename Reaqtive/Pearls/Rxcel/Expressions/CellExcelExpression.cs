@@ -13,27 +13,26 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal sealed class CellExcelExpression : ExcelExpression
 {
-    internal sealed class CellExcelExpression : ExcelExpression
+    internal CellExcelExpression(string cell)
     {
-        internal CellExcelExpression(string cell)
-        {
-            Cell = cell;
-        }
+        Cell = cell;
+    }
 
-        public override ExcelExpressionKind Kind => ExcelExpressionKind.Cell;
+    public override ExcelExpressionKind Kind => ExcelExpressionKind.Cell;
 
-        public new string Cell { get; }
+    public new string Cell { get; }
 
-        protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
-        {
-            return visitor.VisitCell(this);
-        }
+    protected internal override TResult Accept<TResult>(ExcelExpressionVisitor<TResult> visitor)
+    {
+        return visitor.VisitCell(this);
+    }
 
-        public override string ToString()
-        {
-            return Cell;
-        }
+    public override string ToString()
+    {
+        return Cell;
     }
 }

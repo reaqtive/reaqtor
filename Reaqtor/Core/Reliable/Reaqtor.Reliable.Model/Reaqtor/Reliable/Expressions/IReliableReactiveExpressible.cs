@@ -4,10 +4,9 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public interface IReliableReactiveExpressible : IExpressible
 {
-    public interface IReliableReactiveExpressible : IExpressible
-    {
-        IReliableQueryProvider Provider { get; }
-    }
+    IReliableQueryProvider Provider { get; }
 }

@@ -4,11 +4,10 @@
 
 using System.Linq.Expressions;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal interface IQProviderBound
 {
-    internal interface IQProviderBound
-    {
-        Expression Expression { get; }
-        IQProvider Provider { get; }
-    }
+    Expression Expression { get; }
+    IQProvider Provider { get; }
 }

@@ -8,37 +8,33 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
+namespace Nuqleon.DataModel.TypeSystem;
 
-namespace Nuqleon.DataModel.TypeSystem
+internal sealed class StructuralDataTypeReference : StructuralDataType
 {
-    internal sealed class StructuralDataTypeReference : StructuralDataType
+    public StructuralDataTypeReference(Type type, StructuralDataTypeKinds kind)
+        : this(type, [], kind)
     {
-        public StructuralDataTypeReference(Type type, StructuralDataTypeKinds kind)
-            : this(type, [], kind)
-        {
-        }
-
-        /// <summary>
-        /// Constructor used to establish a mutable structural data type. Note
-        /// the use of `AsReadOnly()` in the call to the base constructor. This
-        /// usage relies on the fact that the underlying collection of the
-        /// ReadOnlyCollection that is generated will still be the original
-        /// list. Using that fact, we can expose the ReadOnlyCollection in the
-        /// base class, while exposing the mutable list in this builder class.
-        /// </summary>
-        /// <param name="type">The original type.</param>
-        /// <param name="properties">The mutable property collection.</param>
-        /// <param name="kind">The structural data type kind.</param>
-        private StructuralDataTypeReference(Type type, List<DataProperty> properties, StructuralDataTypeKinds kind)
-            : base(type, properties.AsReadOnly(), kind)
-        {
-            Properties = properties;
-        }
-
-        public new List<DataProperty> Properties { get; private set; }
-
-        public void Freeze() => Properties = null;
     }
+
+    /// <summary>
+    /// Constructor used to establish a mutable structural data type. Note
+    /// the use of `AsReadOnly()` in the call to the base constructor. This
+    /// usage relies on the fact that the underlying collection of the
+    /// ReadOnlyCollection that is generated will still be the original
+    /// list. Using that fact, we can expose the ReadOnlyCollection in the
+    /// base class, while exposing the mutable list in this builder class.
+    /// </summary>
+    /// <param name="type">The original type.</param>
+    /// <param name="properties">The mutable property collection.</param>
+    /// <param name="kind">The structural data type kind.</param>
+    private StructuralDataTypeReference(Type type, List<DataProperty> properties, StructuralDataTypeKinds kind)
+        : base(type, properties.AsReadOnly(), kind)
+    {
+        Properties = properties;
+    }
+
+    public new List<DataProperty> Properties { get; private set; }
+
+    public void Freeze() => Properties = null;
 }

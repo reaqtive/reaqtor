@@ -6,11 +6,10 @@ using System.Collections.Generic;
 
 using Reaqtive.Testing;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+public interface ITestableSubscribable<T> : ISubscribable<T>
 {
-    public interface ITestableSubscribable<T> : ISubscribable<T>
-    {
-        IList<Subscription> Subscriptions { get; }
-        IList<Recorded<Notification<T>>> ObserverMessages { get; }
-    }
+    IList<Subscription> Subscriptions { get; }
+    IList<Recorded<Notification<T>>> ObserverMessages { get; }
 }

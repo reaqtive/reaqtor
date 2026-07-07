@@ -6,18 +6,17 @@ using System;
 
 using Reaqtive;
 
-namespace Reaqtor.Reliable
+namespace Reaqtor.Reliable;
+
+public interface IReliableSubscription : ISubscription
 {
-    public interface IReliableSubscription : ISubscription
-    {
-        Uri ResubscribeUri { get; }
+    Uri ResubscribeUri { get; }
 
-        // Sequence IDs are inclusive and start from 0.
-        // Start replays from the given sequence ID (included).
-        void Start(long sequenceId);
+    // Sequence IDs are inclusive and start from 0.
+    // Start replays from the given sequence ID (included).
+    void Start(long sequenceId);
 
-        // Sequence IDs are inclusive and start from 0.
-        // Idempotent - allowing for double ACK of the same sequence ID.
-        void AcknowledgeRange(long sequenceId);
-    }
+    // Sequence IDs are inclusive and start from 0.
+    // Idempotent - allowing for double ACK of the same sequence ID.
+    void AcknowledgeRange(long sequenceId);
 }

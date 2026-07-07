@@ -10,116 +10,115 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace System.Linq.Expressions.Tests
+namespace System.Linq.Expressions.Tests;
+
+internal sealed class DynamicScopeTokenResolver : ITokenResolver
 {
-    internal sealed class DynamicScopeTokenResolver : ITokenResolver
+    private static readonly PropertyInfo s_indexer;
+    private static readonly FieldInfo s_scopeFi;
+
+    private static readonly Type s_genMethodInfoType;
+    private static readonly FieldInfo s_genmethFi1, s_genmethFi2;
+
+    private static readonly Type s_varArgMethodType;
+    private static readonly FieldInfo s_varargFi1, s_varargFi2;
+
+    private static readonly Type s_genFieldInfoType;
+    private static readonly FieldInfo s_genfieldFi1, s_genfieldFi2;
+
+    static DynamicScopeTokenResolver()
     {
-        private static readonly PropertyInfo s_indexer;
-        private static readonly FieldInfo s_scopeFi;
+        var dynamicScope = Type.GetType("System.Reflection.Emit.DynamicScope", throwOnError: true);
+        var dynamicILGenerator = Type.GetType("System.Reflection.Emit.DynamicILGenerator", throwOnError: true);
 
-        private static readonly Type s_genMethodInfoType;
-        private static readonly FieldInfo s_genmethFi1, s_genmethFi2;
+        s_indexer = dynamicScope.GetPropertyAssert("Item");
+        s_scopeFi = dynamicILGenerator.GetFieldAssert("m_scope");
 
-        private static readonly Type s_varArgMethodType;
-        private static readonly FieldInfo s_varargFi1, s_varargFi2;
+        s_varArgMethodType = Type.GetType("System.Reflection.Emit.VarArgMethod", throwOnError: true);
+        s_varargFi1 = s_varArgMethodType.GetFieldAssert("m_method");
+        s_varargFi2 = s_varArgMethodType.GetFieldAssert("m_signature");
 
-        private static readonly Type s_genFieldInfoType;
-        private static readonly FieldInfo s_genfieldFi1, s_genfieldFi2;
+        s_genMethodInfoType = Type.GetType("System.Reflection.Emit.GenericMethodInfo", throwOnError: true);
+        s_genmethFi1 = s_genMethodInfoType.GetFieldAssert("m_methodHandle");
+        s_genmethFi2 = s_genMethodInfoType.GetFieldAssert("m_context");
 
-        static DynamicScopeTokenResolver()
+        s_genFieldInfoType = Type.GetType("System.Reflection.Emit.GenericFieldInfo", throwOnError: false);
+        if (s_genFieldInfoType != null)
         {
-            var dynamicScope = Type.GetType("System.Reflection.Emit.DynamicScope", throwOnError: true);
-            var dynamicILGenerator = Type.GetType("System.Reflection.Emit.DynamicILGenerator", throwOnError: true);
-
-            s_indexer = dynamicScope.GetPropertyAssert("Item");
-            s_scopeFi = dynamicILGenerator.GetFieldAssert("m_scope");
-
-            s_varArgMethodType = Type.GetType("System.Reflection.Emit.VarArgMethod", throwOnError: true);
-            s_varargFi1 = s_varArgMethodType.GetFieldAssert("m_method");
-            s_varargFi2 = s_varArgMethodType.GetFieldAssert("m_signature");
-
-            s_genMethodInfoType = Type.GetType("System.Reflection.Emit.GenericMethodInfo", throwOnError: true);
-            s_genmethFi1 = s_genMethodInfoType.GetFieldAssert("m_methodHandle");
-            s_genmethFi2 = s_genMethodInfoType.GetFieldAssert("m_context");
-
-            s_genFieldInfoType = Type.GetType("System.Reflection.Emit.GenericFieldInfo", throwOnError: false);
-            if (s_genFieldInfoType != null)
-            {
-                s_genfieldFi1 = s_genFieldInfoType.GetFieldAssert("m_fieldHandle");
-                s_genfieldFi2 = s_genFieldInfoType.GetFieldAssert("m_context");
-            }
-            else
-            {
-                s_genfieldFi1 = s_genfieldFi2 = null;
-            }
+            s_genfieldFi1 = s_genFieldInfoType.GetFieldAssert("m_fieldHandle");
+            s_genfieldFi2 = s_genFieldInfoType.GetFieldAssert("m_context");
         }
-
-        private readonly object m_scope = null;
-
-        internal object this[int token] => s_indexer.GetValue(m_scope, new object[] { token });
-
-        public DynamicScopeTokenResolver(DynamicMethod dm)
+        else
         {
-            m_scope = s_scopeFi.GetValue(dm.GetILGenerator());
+            s_genfieldFi1 = s_genfieldFi2 = null;
         }
-
-        public string AsString(int token) => this[token] as string;
-
-        public FieldInfo AsField(int token)
-        {
-            var item = this[token];
-
-            if (item is RuntimeFieldHandle handle)
-                return FieldInfo.GetFieldFromHandle(handle);
-
-            if (item.GetType() == s_genFieldInfoType)
-            {
-                return FieldInfo.GetFieldFromHandle(
-                        (RuntimeFieldHandle)s_genfieldFi1.GetValue(item),
-                        (RuntimeTypeHandle)s_genfieldFi2.GetValue(item));
-            }
-
-            Debug.Fail(string.Format("unexpected type: {0}", item.GetType()));
-            return null;
-        }
-
-        public Type AsType(int token) => Type.GetTypeFromHandle((RuntimeTypeHandle)this[token]);
-
-        public MethodBase AsMethod(int token)
-        {
-            var item = this[token];
-
-            if (item is DynamicMethod)
-                return item as DynamicMethod;
-
-            if (item is RuntimeMethodHandle handle)
-                return MethodBase.GetMethodFromHandle(handle);
-
-            if (item.GetType() == s_genMethodInfoType)
-                return MethodBase.GetMethodFromHandle(
-                    (RuntimeMethodHandle)s_genmethFi1.GetValue(item),
-                    (RuntimeTypeHandle)s_genmethFi2.GetValue(item));
-
-            if (item.GetType() == s_varArgMethodType)
-                return (MethodInfo)s_varargFi1.GetValue(item);
-
-            Debug.Fail(string.Format("unexpected type: {0}", item.GetType()));
-            return null;
-        }
-
-        public MemberInfo AsMember(int token)
-        {
-            if ((token & 0x02000000) == 0x02000000)
-                return AsType(token).GetTypeInfo();
-            if ((token & 0x06000000) == 0x06000000)
-                return AsMethod(token);
-            if ((token & 0x04000000) == 0x04000000)
-                return AsField(token);
-
-            Debug.Fail(string.Format("unexpected token type: {0:x8}", token));
-            return null;
-        }
-
-        public byte[] AsSignature(int token) => this[token] as byte[];
     }
+
+    private readonly object m_scope = null;
+
+    internal object this[int token] => s_indexer.GetValue(m_scope, new object[] { token });
+
+    public DynamicScopeTokenResolver(DynamicMethod dm)
+    {
+        m_scope = s_scopeFi.GetValue(dm.GetILGenerator());
+    }
+
+    public string AsString(int token) => this[token] as string;
+
+    public FieldInfo AsField(int token)
+    {
+        var item = this[token];
+
+        if (item is RuntimeFieldHandle handle)
+            return FieldInfo.GetFieldFromHandle(handle);
+
+        if (item.GetType() == s_genFieldInfoType)
+        {
+            return FieldInfo.GetFieldFromHandle(
+                    (RuntimeFieldHandle)s_genfieldFi1.GetValue(item),
+                    (RuntimeTypeHandle)s_genfieldFi2.GetValue(item));
+        }
+
+        Debug.Fail(string.Format("unexpected type: {0}", item.GetType()));
+        return null;
+    }
+
+    public Type AsType(int token) => Type.GetTypeFromHandle((RuntimeTypeHandle)this[token]);
+
+    public MethodBase AsMethod(int token)
+    {
+        var item = this[token];
+
+        if (item is DynamicMethod)
+            return item as DynamicMethod;
+
+        if (item is RuntimeMethodHandle handle)
+            return MethodBase.GetMethodFromHandle(handle);
+
+        if (item.GetType() == s_genMethodInfoType)
+            return MethodBase.GetMethodFromHandle(
+                (RuntimeMethodHandle)s_genmethFi1.GetValue(item),
+                (RuntimeTypeHandle)s_genmethFi2.GetValue(item));
+
+        if (item.GetType() == s_varArgMethodType)
+            return (MethodInfo)s_varargFi1.GetValue(item);
+
+        Debug.Fail(string.Format("unexpected type: {0}", item.GetType()));
+        return null;
+    }
+
+    public MemberInfo AsMember(int token)
+    {
+        if ((token & 0x02000000) == 0x02000000)
+            return AsType(token).GetTypeInfo();
+        if ((token & 0x06000000) == 0x06000000)
+            return AsMethod(token);
+        if ((token & 0x04000000) == 0x04000000)
+            return AsField(token);
+
+        Debug.Fail(string.Format("unexpected token type: {0:x8}", token));
+        return null;
+    }
+
+    public byte[] AsSignature(int token) => this[token] as byte[];
 }

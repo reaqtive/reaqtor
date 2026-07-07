@@ -15,23 +15,22 @@ using Reaqtor.Reliable.Engine;
 using Reaqtor.Reliable.Expressions;
 using Reaqtor.Reliable.Service;
 
-namespace Tests.Reaqtor.Reliable
+namespace Tests.Reaqtor.Reliable;
+
+internal class TestReliableServiceContext : ReliableReactiveServiceContext
 {
-    internal class TestReliableServiceContext : ReliableReactiveServiceContext
+    public TestReliableServiceContext(IReliableReactiveEngineProvider serviceProvider)
+        : base(new TestExpressionServices(), serviceProvider)
     {
-        public TestReliableServiceContext(IReliableReactiveEngineProvider serviceProvider)
-            : base(new TestExpressionServices(), serviceProvider)
+    }
+
+    private sealed class TestExpressionServices : ReactiveExpressionServices
+    {
+        public TestExpressionServices()
+            : base(typeof(IReliableReactiveClient))
         {
         }
 
-        private sealed class TestExpressionServices : ReactiveExpressionServices
-        {
-            public TestExpressionServices()
-                : base(typeof(IReliableReactiveClient))
-            {
-            }
-
-            public override Expression Normalize(Expression expression) => base.Normalize(expression);
-        }
+        public override Expression Normalize(Expression expression) => base.Normalize(expression);
     }
 }

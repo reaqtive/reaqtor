@@ -8,115 +8,109 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.Expressions.Bonsai.Hashing;
 
-namespace Tests.System.Linq.Expressions.Bonsai.Hashing
+[TestClass]
+public class StableExpressionSlimHasherTests
 {
-    [TestClass]
-    public class StableExpressionSlimHasherTests
-    {
 #if DEBUG
-        private static readonly int minimumIterationCount = 8;
-        private static readonly TimeSpan maximumTestDuration = TimeSpan.FromSeconds(1);
+    private static readonly int minimumIterationCount = 8;
+    private static readonly TimeSpan maximumTestDuration = TimeSpan.FromSeconds(1);
 #else
-        private static readonly int minimumIterationCount = 8;
-        private static readonly TimeSpan maximumTestDuration = TimeSpan.FromSeconds(30);
+    private static readonly int minimumIterationCount = 8;
+    private static readonly TimeSpan maximumTestDuration = TimeSpan.FromSeconds(30);
 #endif
 
-        [TestMethod]
-        public void GetStableHashCode_Unique()
+    [TestMethod]
+    public void GetStableHashCode_Unique()
+    {
+        var set = new HashSet<int>();
+
+        foreach (var expr in TestCases.GetExpressionsUnique())
         {
-            var set = new HashSet<int>();
+            var h = TestCases.GetHashCode(expr);
 
-            foreach (var expr in TestCases.GetExpressionsUnique())
-            {
-                var h = TestCases.GetHashCode(expr);
-
-                Assert.IsTrue(set.Add(h), expr?.ToString() ?? "null");
-            }
+            Assert.IsTrue(set.Add(h), expr?.ToString() ?? "null");
         }
+    }
 
-        [TestMethod]
-        public void GetStableHashCode_Equivalent()
+    [TestMethod]
+    public void GetStableHashCode_Equivalent()
+    {
+        var set = new HashSet<int>();
+
+        foreach (var exprs in TestCases.GetExpressionsEquivalent())
         {
-            var set = new HashSet<int>();
-
-            foreach (var exprs in TestCases.GetExpressionsEquivalent())
-            {
-                var n = exprs.Select(TestCases.GetHashCode).Distinct().Count();
-                Assert.AreEqual(1, n, exprs.First().ToString());
-            }
+            var n = exprs.Select(TestCases.GetHashCode).Distinct().Count();
+            Assert.AreEqual(1, n, exprs.First().ToString());
         }
+    }
 
-        [TestMethod]
-        public void GetStableHashCode_All_StableLocally()
+    [TestMethod]
+    public void GetStableHashCode_All_StableLocally()
+    {
+        RepeatTest(() =>
         {
-            RepeatTest(() =>
-            {
-                var hs1 = TestCases.GetHashes();
-                var hs2 = TestCases.GetHashes();
+            var hs1 = TestCases.GetHashes();
+            var hs2 = TestCases.GetHashes();
 
-                AssertEqual(hs1, hs2);
-            });
-        }
+            AssertEqual(hs1, hs2);
+        });
+    }
 
 #if FALSE
-        [TestMethod]
-        public void GetStableHashCode_All_CrossProc()
+    [TestMethod]
+    public void GetStableHashCode_All_CrossProc()
+    {
+        var local = TestCases.GetHashes().ToArray();
+
+        RepeatTest(() =>
         {
-            var local = TestCases.GetHashes().ToArray();
+            var hs1 = TestCases.GetHashes();
+            var hs2 = GetHashesOutOfProc();
 
-            RepeatTest(() =>
-            {
-                var hs1 = TestCases.GetHashes();
-                var hs2 = GetHashesOutOfProc();
+            AssertEqual(hs1, hs2);
+        });
+    }
 
-                AssertEqual(hs1, hs2);
-            });
-        }
+    private static IEnumerable<int> GetHashesOutOfProc()
+    {
+        var location = new Uri(typeof(Program).Assembly.CodeBase).LocalPath;
 
-        private static IEnumerable<int> GetHashesOutOfProc()
+        var proc = new Process
         {
-            var location = new Uri(typeof(Program).Assembly.CodeBase).LocalPath;
-
-            var proc = new Process
+            StartInfo = new ProcessStartInfo(Path.GetFileName(location))
             {
-                StartInfo = new ProcessStartInfo(Path.GetFileName(location))
-                {
-                    RedirectStandardOutput = true,
-                    UseShellExecute = false,
-                    WorkingDirectory = Path.GetDirectoryName(location),
-                }
-            };
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                WorkingDirectory = Path.GetDirectoryName(location),
+            }
+        };
 
-            proc.Start();
+        proc.Start();
 
-            var res = proc.StandardOutput.ReadToEnd();
+        var res = proc.StandardOutput.ReadToEnd();
 
-            proc.WaitForExit();
+        proc.WaitForExit();
 
-            return res.Split('\r', '\n').Where(s => !string.IsNullOrEmpty(s)).Select(int.Parse).ToArray();
-        }
+        return res.Split('\r', '\n').Where(s => !string.IsNullOrEmpty(s)).Select(int.Parse).ToArray();
+    }
 #endif
 
-        private static void RepeatTest(Action test)
-        {
-            var sw = Stopwatch.StartNew();
+    private static void RepeatTest(Action test)
+    {
+        var sw = Stopwatch.StartNew();
 
-            for (var i = 0; i < minimumIterationCount || sw.Elapsed < maximumTestDuration; i++)
-            {
-                test();
-            }
-        }
-
-        private static void AssertEqual(IEnumerable<int> h1, IEnumerable<int> h2)
+        for (var i = 0; i < minimumIterationCount || sw.Elapsed < maximumTestDuration; i++)
         {
-            Assert.IsTrue(h1.SequenceEqual(h2));
+            test();
         }
+    }
+
+    private static void AssertEqual(IEnumerable<int> h1, IEnumerable<int> h2)
+    {
+        Assert.IsTrue(h1.SequenceEqual(h2));
     }
 }

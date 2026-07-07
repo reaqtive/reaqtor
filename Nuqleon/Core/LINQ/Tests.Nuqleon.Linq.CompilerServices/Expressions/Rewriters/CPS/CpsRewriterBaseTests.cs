@@ -8,58 +8,53 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.CompilerServices;
 
-namespace Tests.System.Linq.CompilerServices
+[TestClass]
+public class CpsRewriterBaseTests
 {
-    [TestClass]
-    public class CpsRewriterBaseTests
+    [TestMethod]
+    public void CpsRewriterBase_ProtectedNulls()
     {
-        [TestMethod]
-        public void CpsRewriterBase_ProtectedNulls()
+        new MyRewriter().Do();
+    }
+
+    private sealed class MyRewriter : CpsRewriterBase<string>
+    {
+        public void Do()
         {
-            new MyRewriter().Do();
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.RewriteCore(expression: null, ""));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.FindAsyncMethod(method: null));
+            Assert.AreEqual("method", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.GetAsyncMethodName(method: null));
+            Assert.AreEqual("method", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.CheckAsyncMethod(synchronousMethod: null, asynchronousMethod: null));
+            Assert.AreEqual("synchronousMethod", ex4.ParamName);
         }
 
-        private sealed class MyRewriter : CpsRewriterBase<string>
+        protected override IEnumerable<Type> GetContinuationParameters(MethodInfo method)
         {
-            public void Do()
-            {
-                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.RewriteCore(expression: null, ""));
-                Assert.AreEqual("expression", ex.ParamName);
-                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.FindAsyncMethod(method: null));
-                Assert.AreEqual("method", ex2.ParamName);
-                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.GetAsyncMethodName(method: null));
-                Assert.AreEqual("method", ex3.ParamName);
-                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.CheckAsyncMethod(synchronousMethod: null, asynchronousMethod: null));
-                Assert.AreEqual("synchronousMethod", ex4.ParamName);
-            }
+            throw new NotImplementedException();
+        }
 
-            protected override IEnumerable<Type> GetContinuationParameters(MethodInfo method)
-            {
-                throw new NotImplementedException();
-            }
+        protected override Expression MakeAsyncMethodCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments, string continuation)
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override Expression MakeAsyncMethodCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments, string continuation)
-            {
-                throw new NotImplementedException();
-            }
+        protected override string MakeContinuation(Expression remainder, ParameterExpression resultParameter, string currentContinuation)
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override string MakeContinuation(Expression remainder, ParameterExpression resultParameter, string currentContinuation)
-            {
-                throw new NotImplementedException();
-            }
-
-            protected override Expression InvokeContinuation(string continuation, Expression argument)
-            {
-                throw new NotImplementedException();
-            }
+        protected override Expression InvokeContinuation(string continuation, Expression argument)
+        {
+            throw new NotImplementedException();
         }
     }
 }

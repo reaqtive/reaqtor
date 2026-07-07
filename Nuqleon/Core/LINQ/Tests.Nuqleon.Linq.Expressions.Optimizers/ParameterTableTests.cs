@@ -8,134 +8,129 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.Expressions.Optimizers;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+[TestClass]
+public partial class ParameterTableTests
 {
-    [TestClass]
-    public partial class ParameterTableTests
+    [TestMethod]
+    public void ParameterTable_Add_ArgumentChecking()
     {
-        [TestMethod]
-        public void ParameterTable_Add_ArgumentChecking()
-        {
-            var pt = new ParameterTable();
+        var pt = new ParameterTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Contains_ArgumentChecking()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Contains_ArgumentChecking()
+    {
+        var pt = new ParameterTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Contains(default));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => pt.Contains(default));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_Contains()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_Contains()
+    {
+        var pt = new ParameterTable();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
+        var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
-            pt.Add(m.GetParameters()[0]);
+        pt.Add(m.GetParameters()[0]);
 
-            Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
-            Assert.IsFalse(pt.Contains(m.GetParameters()[1]));
-        }
+        Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
+        Assert.IsFalse(pt.Contains(m.GetParameters()[1]));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Call()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Call()
+    {
+        var pt = new ParameterTable();
 
-            pt.Add<int, string>(x => "".Substring(x, 0));
+        pt.Add<int, string>(x => "".Substring(x, 0));
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
+        var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
-            Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
-        }
+        Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_New()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_New()
+    {
+        var pt = new ParameterTable();
 
-            pt.Add<int, string>(x => new string('*', x));
+        pt.Add<int, string>(x => new string('*', x));
 
-            var c = typeof(string).GetConstructor([typeof(char), typeof(int)]);
+        var c = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
-            Assert.IsTrue(pt.Contains(c.GetParameters()[1]));
-        }
+        Assert.IsTrue(pt.Contains(c.GetParameters()[1]));
+    }
 
-        // REVIEW: For indexers, it may be useful to add ParameterInfo objects for both the indexer and the accessor(s).
+    // REVIEW: For indexers, it may be useful to add ParameterInfo objects for both the indexer and the accessor(s).
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Index1()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Index1()
+    {
+        var pt = new ParameterTable();
 
-            pt.Add<int, char>(x => ""[x]);
+        pt.Add<int, char>(x => ""[x]);
 
-            var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
+        var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
 
-            // NB: This reflects a quirk in C# bindings for expression tree APIs which predate the addition of IndexExpression.
-            Assert.IsTrue(pt.Contains(p.GetGetMethod().GetParameters()[0]));
-        }
+        // NB: This reflects a quirk in C# bindings for expression tree APIs which predate the addition of IndexExpression.
+        Assert.IsTrue(pt.Contains(p.GetGetMethod().GetParameters()[0]));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Index2()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Index2()
+    {
+        var pt = new ParameterTable();
 
-            var c = Expression.Parameter(typeof(int));
-            var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
+        var c = Expression.Parameter(typeof(int));
+        var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
 
-            pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, [c]), c));
+        pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, [c]), c));
 
-            Assert.IsTrue(pt.Contains(p.GetIndexParameters()[0]));
-        }
+        Assert.IsTrue(pt.Contains(p.GetIndexParameters()[0]));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Invalid_UseMoreThanOnce()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Invalid_UseMoreThanOnce()
+    {
+        var pt = new ParameterTable();
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
-        }
+        Assert.ThrowsExactly<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Invalid_NotUsed()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Invalid_NotUsed()
+    {
+        var pt = new ParameterTable();
 
-            Assert.ThrowsExactly<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
+    }
 
-        [TestMethod]
-        public void ParameterTable_Add_LambdaExpression_Invalid_NoParameters()
-        {
-            var pt = new ParameterTable();
+    [TestMethod]
+    public void ParameterTable_Add_LambdaExpression_Invalid_NoParameters()
+    {
+        var pt = new ParameterTable();
 
-            Assert.ThrowsExactly<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
+    }
 
-        [TestMethod]
-        public void ParameterTable_ReadOnly()
-        {
-            var pt = new ParameterTable();
-            var rpt = pt.ToReadOnly();
+    [TestMethod]
+    public void ParameterTable_ReadOnly()
+    {
+        var pt = new ParameterTable();
+        var rpt = pt.ToReadOnly();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
+        var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
-        }
+        Assert.ThrowsExactly<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
     }
 }

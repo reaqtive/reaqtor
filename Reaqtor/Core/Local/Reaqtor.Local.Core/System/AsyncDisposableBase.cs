@@ -8,36 +8,32 @@
 // BD - June 2013 - Created this file.
 //
 
-using System.Threading;
-using System.Threading.Tasks;
+namespace System;
 
-namespace System
+/// <summary>
+/// Base class for asynchronous resource disposables.
+/// </summary>
+public abstract class AsyncDisposableBase : IAsyncDisposable
 {
     /// <summary>
-    /// Base class for asynchronous resource disposables.
+    /// Disposes the resource asynchronously.
     /// </summary>
-    public abstract class AsyncDisposableBase : IAsyncDisposable
+    /// <returns>Task representing the eventual completion of the disposal request.</returns>
+    public async ValueTask DisposeAsync()
     {
-        /// <summary>
-        /// Disposes the resource asynchronously.
-        /// </summary>
-        /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public async ValueTask DisposeAsync()
-        {
-            //
-            // TODO: Enforce idempotent behavior? What about transient errors, cancellations, etc?
-            //       Should be allow retry but no concurrent calls? Do we rely on DisposeAsyncCore
-            //       being idempotent itself?
-            //
-            await DisposeAsyncCore(default).ConfigureAwait(false);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Disposes the resource asynchronously.
-        /// </summary>
-        /// <param name="token">Token to observe for cancellation of the disposal request.</param>
-        /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        protected abstract Task DisposeAsyncCore(CancellationToken token);
+        //
+        // TODO: Enforce idempotent behavior? What about transient errors, cancellations, etc?
+        //       Should be allow retry but no concurrent calls? Do we rely on DisposeAsyncCore
+        //       being idempotent itself?
+        //
+        await DisposeAsyncCore(default).ConfigureAwait(false);
+        GC.SuppressFinalize(this);
     }
+
+    /// <summary>
+    /// Disposes the resource asynchronously.
+    /// </summary>
+    /// <param name="token">Token to observe for cancellation of the disposal request.</param>
+    /// <returns>Task representing the eventual completion of the disposal request.</returns>
+    protected abstract Task DisposeAsyncCore(CancellationToken token);
 }

@@ -12,23 +12,22 @@ using System.Linq.Expressions;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Client
+namespace Tests.Reaqtor.Client;
+
+internal class TestClientContext : ReactiveClientContext
 {
-    internal class TestClientContext : ReactiveClientContext
+    public TestClientContext(IReactiveServiceProvider serviceProvider)
+        : base(new TestExpressionServices(), serviceProvider)
     {
-        public TestClientContext(IReactiveServiceProvider serviceProvider)
-            : base(new TestExpressionServices(), serviceProvider)
+    }
+
+    private sealed class TestExpressionServices : ReactiveExpressionServices
+    {
+        public TestExpressionServices()
+            : base(typeof(IReactiveClientProxy))
         {
         }
 
-        private sealed class TestExpressionServices : ReactiveExpressionServices
-        {
-            public TestExpressionServices()
-                : base(typeof(IReactiveClientProxy))
-            {
-            }
-
-            public override Expression Normalize(Expression expression) => base.Normalize(expression);
-        }
+        public override Expression Normalize(Expression expression) => base.Normalize(expression);
     }
 }

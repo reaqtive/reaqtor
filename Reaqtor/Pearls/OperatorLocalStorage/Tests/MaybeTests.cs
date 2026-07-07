@@ -8,31 +8,28 @@
 // BD - January 2018
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive.Storage;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class MaybeTests
 {
-    [TestClass]
-    public class MaybeTests
+    [TestMethod]
+    public void WithValue()
     {
-        [TestMethod]
-        public void WithValue()
-        {
-            var value = new Maybe<int>(42);
+        var value = new Maybe<int>(42);
 
-            Assert.IsTrue(value.HasValue);
-            Assert.AreEqual(42, value.Value);
-        }
+        Assert.IsTrue(value.HasValue);
+        Assert.AreEqual(42, value.Value);
+    }
 
-        [TestMethod]
-        public void WithoutValue()
-        {
-            var value = new Maybe<int>();
+    [TestMethod]
+    public void WithoutValue()
+    {
+        var value = new Maybe<int>();
 
-            Assert.IsFalse(value.HasValue);
-            Assert.AreEqual(0, value.Value);
-        }
+        Assert.IsFalse(value.HasValue);
+        Assert.AreEqual(0, value.Value);
     }
 }

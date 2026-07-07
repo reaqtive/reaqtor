@@ -7,38 +7,37 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Engine
+namespace Reaqtor.Reliable.Engine;
+
+public interface IReliableReactiveClientEngineProvider
 {
-    public interface IReliableReactiveClientEngineProvider
-    {
-        #region Observer
+    #region Observer
 
-        IReliableReactiveObserver<T> GetObserver<T>(Uri observerUri);
+    IReliableReactiveObserver<T> GetObserver<T>(Uri observerUri);
 
-        #endregion
+    #endregion
 
-        #region Subscription
+    #region Subscription
 
-        void CreateSubscription(Uri subscriptionUri, Expression subscription, object state);
+    void CreateSubscription(Uri subscriptionUri, Expression subscription, object state);
 
-        void DeleteSubscription(Uri subscriptionUri);
+    void DeleteSubscription(Uri subscriptionUri);
 
-        void StartSubscription(Uri subscriptionUri, long sequenceId);
+    void StartSubscription(Uri subscriptionUri, long sequenceId);
 
-        void AcknowledgeRange(Uri subscriptionUri, long sequenceId);
+    void AcknowledgeRange(Uri subscriptionUri, long sequenceId);
 
-        Uri GetSubscriptionResubscribeUri(Uri subscriptionUri);
+    Uri GetSubscriptionResubscribeUri(Uri subscriptionUri);
 
-        #endregion
+    #endregion
 
-        #region Stream
+    #region Stream
 
-        void CreateStream(Uri streamUri, Expression stream, object state);
+    void CreateStream(Uri streamUri, Expression stream, object state);
 
-        void DeleteStream(Uri streamUri);
+    void DeleteStream(Uri streamUri);
 
-        void CreateObserver(Uri streamUri);
+    void CreateObserver(Uri streamUri);
 
-        #endregion
-    }
+    #endregion
 }

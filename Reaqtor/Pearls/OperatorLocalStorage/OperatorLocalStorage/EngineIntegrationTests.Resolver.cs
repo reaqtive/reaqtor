@@ -8,26 +8,23 @@
 // BD - February 2018
 //
 
-using System;
-
 using Reaqtor;
 using Reaqtor.QueryEngine;
 using Reaqtor.Reliable.Expressions;
 
-namespace Playground
+namespace Playground;
+
+internal static partial class EngineIntegrationTests
 {
-    internal static partial class EngineIntegrationTests
+    /// <summary>
+    /// Trivial implementation of <see cref="IReactiveServiceResolver"/> which throws <see cref="NotImplementedException"/> for every method.
+    /// </summary>
+    private sealed class Resolver : IReactiveServiceResolver
     {
-        /// <summary>
-        /// Trivial implementation of <see cref="IReactiveServiceResolver"/> which throws <see cref="NotImplementedException"/> for every method.
-        /// </summary>
-        private sealed class Resolver : IReactiveServiceResolver
-        {
-            public bool TryResolve(Uri uri, out IReactive service) => throw new NotImplementedException();
+        public bool TryResolve(Uri uri, out IReactive service) => throw new NotImplementedException();
 
-            public bool TryResolve(Uri uri, out IReactiveProxy service) => throw new NotImplementedException();
+        public bool TryResolve(Uri uri, out IReactiveProxy service) => throw new NotImplementedException();
 
-            public bool TryResolveReliable(Uri uri, out IReliableReactive service) => throw new NotImplementedException();
-        }
+        public bool TryResolveReliable(Uri uri, out IReliableReactive service) => throw new NotImplementedException();
     }
 }

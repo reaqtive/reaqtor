@@ -8,164 +8,159 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
 using System.Collections;
-using System.Linq;
 using System.Linq.CompilerServices;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Linq.CompilerServices;
 
-namespace Tests.System.Linq.CompilerServices
+[TestClass]
+public class ScopedSymbolTableTests
 {
-    [TestClass]
-    public class ScopedSymbolTableTests
+    [TestMethod]
+    public void ScopedSymbolTable_ArgumentChecking()
     {
-        [TestMethod]
-        public void ScopedSymbolTable_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null));
-            Assert.AreEqual("symbolComparer", ex.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null));
+        Assert.AreEqual("symbolComparer", ex.ParamName);
+    }
 
-        [TestMethod]
-        public void ScopedSymbolTable_Basics()
-        {
-            var res = default(Indexed<Indexed<string>>);
+    [TestMethod]
+    public void ScopedSymbolTable_Basics()
+    {
+        var res = default(Indexed<Indexed<string>>);
 
-            var sst = new ScopedSymbolTable<string, string>
+        var sst = new ScopedSymbolTable<string, string>
+        {
+            { "glb", "val" }
+        };
+
+        var assertGlobal = new Action(() =>
+        {
+            Assert.IsTrue(sst.TryLookup("glb", out res));
+            Assert.AreEqual(-1, res.Index);
+            Assert.AreEqual(0, res.Value.Index);
+            Assert.AreEqual("val", res.Value.Value);
+
+            Assert.IsFalse(sst.TryLookup("blg", out res));
+        });
+
+        assertGlobal();
+
+        AssertPushPop(sst,
+            () =>
             {
-                { "glb", "val" }
-            };
+                assertGlobal();
 
-            var assertGlobal = new Action(() =>
+                Assert.IsFalse(sst.TryLookup("bar", out res));
+            },
+            () =>
             {
-                Assert.IsTrue(sst.TryLookup("glb", out res));
-                Assert.AreEqual(-1, res.Index);
-                Assert.AreEqual(0, res.Value.Index);
-                Assert.AreEqual("val", res.Value.Value);
+                sst.Add("bar", "foo");
+                sst.Add("baz", "qux");
 
-                Assert.IsFalse(sst.TryLookup("blg", out res));
-            });
+                AssertPushPop(sst,
+                    () =>
+                    {
+                        assertGlobal();
 
-            assertGlobal();
+                        Assert.IsTrue(sst.TryLookup("bar", out res));
+                        Assert.AreEqual(0, res.Index);
+                        Assert.AreEqual(0, res.Value.Index);
+                        Assert.AreEqual("foo", res.Value.Value);
 
-            AssertPushPop(sst,
-                () =>
-                {
-                    assertGlobal();
+                        Assert.IsTrue(sst.TryLookup("baz", out res));
+                        Assert.AreEqual(0, res.Index);
+                        Assert.AreEqual(1, res.Value.Index);
+                        Assert.AreEqual("qux", res.Value.Value);
+                    },
+                    () =>
+                    {
+                        sst.Add("foo", "bar");
+                        sst.Add("bar", "qux");
 
-                    Assert.IsFalse(sst.TryLookup("bar", out res));
-                },
-                () =>
-                {
-                    sst.Add("bar", "foo");
-                    sst.Add("baz", "qux");
+                        AssertPushPop(sst,
+                            () =>
+                            {
+                                assertGlobal();
 
-                    AssertPushPop(sst,
-                        () =>
-                        {
-                            assertGlobal();
+                                Assert.IsTrue(sst.TryLookup("foo", out res));
+                                Assert.AreEqual(0, res.Index);
+                                Assert.AreEqual(0, res.Value.Index);
+                                Assert.AreEqual("bar", res.Value.Value);
 
-                            Assert.IsTrue(sst.TryLookup("bar", out res));
-                            Assert.AreEqual(0, res.Index);
-                            Assert.AreEqual(0, res.Value.Index);
-                            Assert.AreEqual("foo", res.Value.Value);
+                                Assert.IsTrue(sst.TryLookup("bar", out res));
+                                Assert.AreEqual(0, res.Index);
+                                Assert.AreEqual(1, res.Value.Index);
+                                Assert.AreEqual("qux", res.Value.Value);
 
-                            Assert.IsTrue(sst.TryLookup("baz", out res));
-                            Assert.AreEqual(0, res.Index);
-                            Assert.AreEqual(1, res.Value.Index);
-                            Assert.AreEqual("qux", res.Value.Value);
-                        },
-                        () =>
-                        {
-                            sst.Add("foo", "bar");
-                            sst.Add("bar", "qux");
+                                Assert.IsTrue(sst.TryLookup("baz", out res));
+                                Assert.AreEqual(1, res.Index);
+                                Assert.AreEqual(1, res.Value.Index);
+                                Assert.AreEqual("qux", res.Value.Value);
+                            },
+                            () =>
+                            {
+                                sst.Add("qux", "baz");
 
-                            AssertPushPop(sst,
-                                () =>
-                                {
-                                    assertGlobal();
+                                AssertPushPop(sst,
+                                    () =>
+                                    {
+                                        assertGlobal();
 
-                                    Assert.IsTrue(sst.TryLookup("foo", out res));
-                                    Assert.AreEqual(0, res.Index);
-                                    Assert.AreEqual(0, res.Value.Index);
-                                    Assert.AreEqual("bar", res.Value.Value);
+                                        Assert.IsTrue(sst.TryLookup("qux", out res));
+                                        Assert.AreEqual(0, res.Index);
+                                        Assert.AreEqual(0, res.Value.Index);
+                                        Assert.AreEqual("baz", res.Value.Value);
 
-                                    Assert.IsTrue(sst.TryLookup("bar", out res));
-                                    Assert.AreEqual(0, res.Index);
-                                    Assert.AreEqual(1, res.Value.Index);
-                                    Assert.AreEqual("qux", res.Value.Value);
+                                        Assert.IsTrue(sst.TryLookup("foo", out res));
+                                        Assert.AreEqual(1, res.Index);
+                                        Assert.AreEqual(0, res.Value.Index);
+                                        Assert.AreEqual("bar", res.Value.Value);
 
-                                    Assert.IsTrue(sst.TryLookup("baz", out res));
-                                    Assert.AreEqual(1, res.Index);
-                                    Assert.AreEqual(1, res.Value.Index);
-                                    Assert.AreEqual("qux", res.Value.Value);
-                                },
-                                () =>
-                                {
-                                    sst.Add("qux", "baz");
+                                        Assert.IsTrue(sst.TryLookup("bar", out res));
+                                        Assert.AreEqual(1, res.Index);
+                                        Assert.AreEqual(1, res.Value.Index);
+                                        Assert.AreEqual("qux", res.Value.Value);
 
-                                    AssertPushPop(sst,
-                                        () =>
-                                        {
-                                            assertGlobal();
+                                        Assert.IsTrue(sst.TryLookup("baz", out res));
+                                        Assert.AreEqual(2, res.Index);
+                                        Assert.AreEqual(1, res.Value.Index);
+                                        Assert.AreEqual("qux", res.Value.Value);
+                                    },
+                                    () =>
+                                    {
+                                        // NOTE: The test method pushes a frame before entering, so we're off by 1 for the outer indices.
 
-                                            Assert.IsTrue(sst.TryLookup("qux", out res));
-                                            Assert.AreEqual(0, res.Index);
-                                            Assert.AreEqual(0, res.Value.Index);
-                                            Assert.AreEqual("baz", res.Value.Value);
+                                        Assert.IsNotNull(((IEnumerable)sst).GetEnumerator());
 
-                                            Assert.IsTrue(sst.TryLookup("foo", out res));
-                                            Assert.AreEqual(1, res.Index);
-                                            Assert.AreEqual(0, res.Value.Index);
-                                            Assert.AreEqual("bar", res.Value.Value);
+                                        var symbols = sst.SelectMany(ist => ist.Value, (o, i) => (Outer: o.Index, Inner: i.Index, Symbol: i.Value.Key, i.Value.Value)).ToArray();
 
-                                            Assert.IsTrue(sst.TryLookup("bar", out res));
-                                            Assert.AreEqual(1, res.Index);
-                                            Assert.AreEqual(1, res.Value.Index);
-                                            Assert.AreEqual("qux", res.Value.Value);
+                                        Assert.IsTrue(symbols.SequenceEqual(
+                                        [
+                                            ( Outer : 1, Inner : 0, Symbol : "qux", Value : "baz" ),
+                                            ( Outer : 2, Inner : 0, Symbol : "foo", Value : "bar" ),
+                                            ( Outer : 2, Inner : 1, Symbol : "bar", Value : "qux" ),
+                                            ( Outer : 3, Inner : 0, Symbol : "bar", Value : "foo" ),
+                                            ( Outer : 3, Inner : 1, Symbol : "baz", Value : "qux" ),
+                                            ( Outer : -1, Inner : 0, Symbol : "glb", Value : "val" ),
+                                        ]));
+                                    }
+                                );
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    }
 
-                                            Assert.IsTrue(sst.TryLookup("baz", out res));
-                                            Assert.AreEqual(2, res.Index);
-                                            Assert.AreEqual(1, res.Value.Index);
-                                            Assert.AreEqual("qux", res.Value.Value);
-                                        },
-                                        () =>
-                                        {
-                                            // NOTE: The test method pushes a frame before entering, so we're off by 1 for the outer indices.
+    private static void AssertPushPop(ScopedSymbolTable<string, string> sst, Action assertBeforeAfter, Action inner)
+    {
+        assertBeforeAfter();
 
-                                            Assert.IsNotNull(((IEnumerable)sst).GetEnumerator());
+        sst.Push();
+        inner();
+        sst.Pop();
 
-                                            var symbols = sst.SelectMany(ist => ist.Value, (o, i) => (Outer: o.Index, Inner: i.Index, Symbol: i.Value.Key, i.Value.Value)).ToArray();
-
-                                            Assert.IsTrue(symbols.SequenceEqual(
-                                            [
-                                                ( Outer : 1, Inner : 0, Symbol : "qux", Value : "baz" ),
-                                                ( Outer : 2, Inner : 0, Symbol : "foo", Value : "bar" ),
-                                                ( Outer : 2, Inner : 1, Symbol : "bar", Value : "qux" ),
-                                                ( Outer : 3, Inner : 0, Symbol : "bar", Value : "foo" ),
-                                                ( Outer : 3, Inner : 1, Symbol : "baz", Value : "qux" ),
-                                                ( Outer : -1, Inner : 0, Symbol : "glb", Value : "val" ),
-                                            ]));
-                                        }
-                                    );
-                                }
-                            );
-                        }
-                    );
-                }
-            );
-        }
-
-        private static void AssertPushPop(ScopedSymbolTable<string, string> sst, Action assertBeforeAfter, Action inner)
-        {
-            assertBeforeAfter();
-
-            sst.Push();
-            inner();
-            sst.Pop();
-
-            assertBeforeAfter();
-        }
+        assertBeforeAfter();
     }
 }

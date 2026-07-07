@@ -4,20 +4,19 @@
 
 using Reaqtor.Metadata;
 
-namespace Reaqtor.QueryEngine.Events
+namespace Reaqtor.QueryEngine.Events;
+
+/// <summary>
+/// Event arguments involving a subscription factory.
+/// </summary>
+internal sealed class SubscriptionFactoryEventArgs : ReactiveEntityEventArgs
 {
     /// <summary>
-    /// Event arguments involving a subscription factory.
+    /// Creates a new instance of <see cref="SubscriptionFactoryEventArgs"/> class for the specified entity.
     /// </summary>
-    internal sealed class SubscriptionFactoryEventArgs : ReactiveEntityEventArgs
+    /// <param name="entity">The entity representing the subscription factory.</param>
+    public SubscriptionFactoryEventArgs(IReactiveResource entity)
+        : base(entity.Uri, entity, ReactiveEntityKind.SubscriptionFactory)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="SubscriptionFactoryEventArgs"/> class for the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity representing the subscription factory.</param>
-        public SubscriptionFactoryEventArgs(IReactiveResource entity)
-            : base(entity.Uri, entity, ReactiveEntityKind.SubscriptionFactory)
-        {
-        }
     }
 }

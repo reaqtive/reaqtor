@@ -8,148 +8,140 @@
 // ER - July 2014 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using MijnEntiteiten;
 
 using Nuqleon.DataModel.CompilerServices;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices
+namespace Tests.Nuqleon.DataModel.CompilerServices;
+
+public partial class ExpressionEntityTypeRecordizerTests
 {
-    public partial class ExpressionEntityTypeRecordizerTests
+    private const int Repeat = 10;
+    private static readonly Random r = new(42);
+
+    [TestMethod]
+    public void Recordizer_Concurrency_Expressions()
     {
-        private const int Repeat = 10;
-        private static readonly Random r = new(42);
+        var recType = RuntimeCompiler.CreateRecordType([
+            new KeyValuePair<string, Type>("a", typeof(int)),
+            new KeyValuePair<string, Type>("b", typeof(Qux))
+        ], valueEquality: true);
 
-        [TestMethod]
-        public void Recordizer_Concurrency_Expressions()
+        var rec = Activator.CreateInstance(recType);
+        recType.GetProperty("a").SetValue(rec, 42);
+        recType.GetProperty("b").SetValue(rec, new Qux(43));
+
+        var baseCases = new Expression[]
         {
-            var recType = RuntimeCompiler.CreateRecordType([
-                new KeyValuePair<string, Type>("a", typeof(int)),
-                new KeyValuePair<string, Type>("b", typeof(Qux))
-            ], valueEquality: true);
-
-            var rec = Activator.CreateInstance(recType);
-            recType.GetProperty("a").SetValue(rec, 42);
-            recType.GetProperty("b").SetValue(rec, new Qux(43));
-
-            var baseCases = new Expression[]
-            {
-                (Expression<Func<Qux, int>>)(q => q.Baz),
+            (Expression<Func<Qux, int>>)(q => q.Baz),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux>>)(() => new Qux()),
-                (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
-                (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
-                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
-                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
-                (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
-                (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
-                (Expression<Action>)(() => FooIt<Qux>()),
-                (Expression<Func<Qux[]>>)(() => new Qux[1]),
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
-                (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
-                (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
+            (Expression<Func<Qux>>)(() => new Qux()),
+            (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
+            (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
+            (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
+            (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
+            (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
+            (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
+            (Expression<Action>)(() => FooIt<Qux>()),
+            (Expression<Func<Qux[]>>)(() => new Qux[1]),
+            (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
+            (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
+            (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
 
-                Expression.Constant(new Qux()),
-                Expression.Constant(new Qux(1)),
-                Expression.Constant(new Qux(1) { Foo = "bar" }),
+            Expression.Constant(new Qux()),
+            Expression.Constant(new Qux(1)),
+            Expression.Constant(new Qux(1) { Foo = "bar" }),
 
-                // There is a known issue with the following test related to
-                // collectible assemblies not being properly rooted when
-                // instances of array types are created.
-                //Expression.Constant(new Qux[1]),
+            // There is a known issue with the following test related to
+            // collectible assemblies not being properly rooted when
+            // instances of array types are created.
+            //Expression.Constant(new Qux[1]),
 
-                Expression.Constant(new Qux[] { new(1), new(2) }),
-                Expression.Constant(new List<Qux> { new(1), new(2) }),
-                Expression.Constant(42),
-                Expression.Constant("bar"),
-                Expression.Constant((Expression<Func<Qux, Qux>>)(x => x)),
+            Expression.Constant(new Qux[] { new(1), new(2) }),
+            Expression.Constant(new List<Qux> { new(1), new(2) }),
+            Expression.Constant(42),
+            Expression.Constant("bar"),
+            Expression.Constant((Expression<Func<Qux, Qux>>)(x => x)),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                Expression.Constant((Expression<Func<Qux[]>>)(() => new Qux[] { new(123) })),
+            Expression.Constant((Expression<Func<Qux[]>>)(() => new Qux[] { new(123) })),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
-                Expression.Constant(new Tuple<Qux, int>(new Qux(), 42)),
+            Expression.Constant(new Tuple<Qux, int>(new Qux(), 42)),
 
 #pragma warning disable IDE0050 // Convert to tuple. (Tests for anonymous types.)
-                Expression.Constant(new { a = 1, b = new Qux(42), c = "bar" }),
+            Expression.Constant(new { a = 1, b = new Qux(42), c = "bar" }),
 #pragma warning restore IDE0050 // Convert to tuple
 
-                Expression.Constant(rec),
+            Expression.Constant(rec),
 
-                Expression.Constant(value: null, typeof(Qux)),
+            Expression.Constant(value: null, typeof(Qux)),
 
-                Expression.Constant(new A { B = new B { Cs = [new C { D = 42, Es = [new E { F = 42 }] }] } }),
+            Expression.Constant(new A { B = new B { Cs = [new C { D = 42, Es = [new E { F = 42 }] }] } }),
 
-                (Expression<Func<IEnumerable<A>, IEnumerable<int>>>)(xs => from x in xs
-                                                                         let b = x.B
-                                                                         from c in b.Cs
-                                                                         let d = c.D
-                                                                         where d > 0
-                                                                         let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1, Es = new List<E> { new() { F = d * d } } } } } }
-                                                                         let z = new A { B = { Cs = new C[] { c, new() { D = d + 1, Es = { new E { F = d * d } } } } } }
-                                                                         where e.B.Cs[1].Es[0].F == z.B.Cs[1].Es[0].F
-                                                                         select 7 * e.B.Cs.Sum(y => y.D)),
+            (Expression<Func<IEnumerable<A>, IEnumerable<int>>>)(xs => from x in xs
+                                                                     let b = x.B
+                                                                     from c in b.Cs
+                                                                     let d = c.D
+                                                                     where d > 0
+                                                                     let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1, Es = new List<E> { new() { F = d * d } } } } } }
+                                                                     let z = new A { B = { Cs = new C[] { c, new() { D = d + 1, Es = { new E { F = d * d } } } } } }
+                                                                     where e.B.Cs[1].Es[0].F == z.B.Cs[1].Es[0].F
+                                                                     select 7 * e.B.Cs.Sum(y => y.D)),
 
-                Expression.Constant(new QuotedExpressionHolder { E = () => new E { F = 42 }.Equals(new E { F = 42 }) }),
+            Expression.Constant(new QuotedExpressionHolder { E = () => new E { F = 42 }.Equals(new E { F = 42 }) }),
 
-                (Expression<Func<Persoon1, bool>>)(p => p.Geslacht == Sex.Male),
+            (Expression<Func<Persoon1, bool>>)(p => p.Geslacht == Sex.Male),
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest(1)),
-                (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest { Foo = 1 }),
-                (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest(1) { Bar = 1.0 }),
-                (Expression<Func<FooSlim>>)(() => new FooSlim { Qux = { X = 1.0 } }),
-                (Expression<Func<Ocean, Planet>>)(ocean => new Planet { OceanDepth = ocean.Depth }),
-                (Expression<Func<ListPropertyTest>>)(() => new ListPropertyTest { List = { 1, 2, 3 } }),
-                (Expression<Func<Star>>)(() => new Star(new List<int> { 1, 2, 3 }) { Planets = { new Planet(10) } }),
-                (Expression<Func<UnchangedNewPropertyTest>>)(() => new UnchangedNewPropertyTest { Foo = new string("bar".ToArray()) }),
-                (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } }),
+            (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest(1)),
+            (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest { Foo = 1 }),
+            (Expression<Func<SimplePropertyTest>>)(() => new SimplePropertyTest(1) { Bar = 1.0 }),
+            (Expression<Func<FooSlim>>)(() => new FooSlim { Qux = { X = 1.0 } }),
+            (Expression<Func<Ocean, Planet>>)(ocean => new Planet { OceanDepth = ocean.Depth }),
+            (Expression<Func<ListPropertyTest>>)(() => new ListPropertyTest { List = { 1, 2, 3 } }),
+            (Expression<Func<Star>>)(() => new Star(new List<int> { 1, 2, 3 }) { Planets = { new Planet(10) } }),
+            (Expression<Func<UnchangedNewPropertyTest>>)(() => new UnchangedNewPropertyTest { Foo = new string("bar".ToArray()) }),
+            (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
-                (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } }),
+            (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } }),
 
-                Expression.Parameter(typeof(int)),
-                Expression.Constant(RecursiveClass.Create()),
-                (Expression<Func<string, int, Person>>)((name, age) => new Person { Name = name, Age = age }),
-            };
+            Expression.Parameter(typeof(int)),
+            Expression.Constant(RecursiveClass.Create()),
+            (Expression<Func<string, int, Person>>)((name, age) => new Person { Name = name, Age = age }),
+        };
 
-            var testCases = Enumerable.Repeat(baseCases, Repeat).SelectMany(x => x).OrderBy(_ => r.Next());
-            var helper = new SerializationHelper((lf, rf) => new RecordizingBonsaiSerializer(lf, rf));
-            Parallel.ForEach(
-                testCases,
-                testCase => AssertRoundtrip(testCase, helper));
-        }
+        var testCases = Enumerable.Repeat(baseCases, Repeat).SelectMany(x => x).OrderBy(_ => r.Next());
+        var helper = new SerializationHelper((lf, rf) => new RecordizingBonsaiSerializer(lf, rf));
+        Parallel.ForEach(
+            testCases,
+            testCase => AssertRoundtrip(testCase, helper));
+    }
 
-        private static void AssertRoundtrip(Expression expected, SerializationHelper helper)
-        {
-            var comparer = new ExpressionEqualityComparer(() => new RecordTreeComparator(new TypeComparator()));
+    private static void AssertRoundtrip(Expression expected, SerializationHelper helper)
+    {
+        var comparer = new ExpressionEqualityComparer(() => new RecordTreeComparator(new TypeComparator()));
 
-            // No shared state in fat recordizer
-            var etr = new ExpressionEntityTypeRecordizer();
-            var fatRecordized = etr.Apply(expected);
-            Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatRecordized.ToCSharpString(allowCompilerGeneratedNames: true)}");
+        // No shared state in fat recordizer
+        var etr = new ExpressionEntityTypeRecordizer();
+        var fatRecordized = etr.Apply(expected);
+        Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatRecordized.ToCSharpString(allowCompilerGeneratedNames: true)}");
 
-            // No shared state in fat anonymization
-            var eta = new ExpressionEntityTypeAnonymizer();
-            var fatAnonymized = etr.Apply(expected);
-            Assert.IsTrue(comparer.Equals(expected, fatAnonymized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatAnonymized.ToCSharpString(allowCompilerGeneratedNames: true)}");
+        // No shared state in fat anonymization
+        var eta = new ExpressionEntityTypeAnonymizer();
+        var fatAnonymized = etr.Apply(expected);
+        Assert.IsTrue(comparer.Equals(expected, fatAnonymized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatAnonymized.ToCSharpString(allowCompilerGeneratedNames: true)}");
 
-            // No shared state in slim recordizer
-            using var stream = new MemoryStream();
+        // No shared state in slim recordizer
+        using var stream = new MemoryStream();
 
-            helper.Serialize(expected, stream);
+        helper.Serialize(expected, stream);
 
-            stream.Position = 0;
+        stream.Position = 0;
 
-            var slim = helper.Deserialize<Expression>(stream);
-            Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Slim) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {slim.ToCSharpString(allowCompilerGeneratedNames: true)}");
-        }
+        var slim = helper.Deserialize<Expression>(stream);
+        Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Slim) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {slim.ToCSharpString(allowCompilerGeneratedNames: true)}");
     }
 }

@@ -10,33 +10,32 @@
 
 using System.Text;
 
-namespace System
+namespace System;
+
+internal static class FormattingHelpers
 {
-    internal static class FormattingHelpers
+    public static string EscapeFormatString(this string s)
     {
-        public static string EscapeFormatString(this string s)
+        var sb = default(StringBuilder);
+
+        for (var i = 0; i < s.Length; i++)
         {
-            var sb = default(StringBuilder);
+            var c = s[i];
 
-            for (var i = 0; i < s.Length; i++)
+            if (c is '{' or '}')
             {
-                var c = s[i];
-
-                if (c is '{' or '}')
+                if (sb == null)
                 {
-                    if (sb == null)
-                    {
-                        sb = new StringBuilder(s.Length + 2 /* likely another escape to follow */);
-                        sb.Append(s, 0, i);
-                    }
-
-                    sb.Append(c);
+                    sb = new StringBuilder(s.Length + 2 /* likely another escape to follow */);
+                    sb.Append(s, 0, i);
                 }
 
-                sb?.Append(c);
+                sb.Append(c);
             }
 
-            return sb?.ToString() ?? s;
+            sb?.Append(c);
         }
+
+        return sb?.ToString() ?? s;
     }
 }

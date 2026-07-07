@@ -4,24 +4,23 @@
 
 using System.Linq.Expressions;
 
-namespace Nuqleon.DataModel.Serialization.Binary
+namespace Nuqleon.DataModel.Serialization.Binary;
+
+internal static class ExpressionHelpers
 {
-    internal static class ExpressionHelpers
+    public static Expression For(Expression initialize, Expression conditional, Expression postIncrement, Expression action)
     {
-        public static Expression For(Expression initialize, Expression conditional, Expression postIncrement, Expression action)
-        {
-            var label = Expression.Label(typeof(void));
-            return Expression.Block(
-                initialize,
-                Expression.Loop(
-                    Expression.IfThenElse(
-                        conditional,
-                        Expression.Block(action, postIncrement),
-                        Expression.Break(label)
-                    ),
-                    label
-                )
-            );
-        }
+        var label = Expression.Label(typeof(void));
+        return Expression.Block(
+            initialize,
+            Expression.Loop(
+                Expression.IfThenElse(
+                    conditional,
+                    Expression.Block(action, postIncrement),
+                    Expression.Break(label)
+                ),
+                label
+            )
+        );
     }
 }

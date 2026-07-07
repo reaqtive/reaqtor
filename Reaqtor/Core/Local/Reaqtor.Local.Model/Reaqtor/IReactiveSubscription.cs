@@ -8,14 +8,11 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Interface to represent subscriptions of observers to observables.
+/// </summary>
+public interface IReactiveSubscription : IDisposable
 {
-    /// <summary>
-    /// Interface to represent subscriptions of observers to observables.
-    /// </summary>
-    public interface IReactiveSubscription : IDisposable
-    {
-    }
 }

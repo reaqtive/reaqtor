@@ -10,29 +10,26 @@
 
 using System.Memory;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests.System.Memory;
 
-namespace Tests.System.Memory
+[TestClass]
+public partial class DeconstructedTests
 {
-    [TestClass]
-    public partial class DeconstructedTests
+    [TestMethod]
+    public void Deconstructed_1Cached_Equality()
     {
-        [TestMethod]
-        public void Deconstructed_1Cached_Equality()
-        {
-            var d1 = Deconstructed.Create(1, 2);
-            var d2 = Deconstructed.Create(1, 2);
-            var d3 = Deconstructed.Create(int.MaxValue, 2);
-            var d4 = Deconstructed.Create(1, int.MaxValue);
+        var d1 = Deconstructed.Create(1, 2);
+        var d2 = Deconstructed.Create(1, 2);
+        var d3 = Deconstructed.Create(int.MaxValue, 2);
+        var d4 = Deconstructed.Create(1, int.MaxValue);
 
-            Assert.IsTrue(d1 == d2);
-            Assert.IsTrue(d1.Equals((object)d2));
-            Assert.IsFalse(d1.Equals(new object()));
-            Assert.IsTrue(d1 != d3);
-            Assert.IsFalse(d1 == d3);
-            Assert.IsFalse(d1 == d4);
+        Assert.IsTrue(d1 == d2);
+        Assert.IsTrue(d1.Equals((object)d2));
+        Assert.IsFalse(d1.Equals(new object()));
+        Assert.IsTrue(d1 != d3);
+        Assert.IsFalse(d1 == d3);
+        Assert.IsFalse(d1 == d4);
 
-            Assert.AreEqual(d1.GetHashCode(), d2.GetHashCode());
-        }
+        Assert.AreEqual(d1.GetHashCode(), d2.GetHashCode());
     }
 }

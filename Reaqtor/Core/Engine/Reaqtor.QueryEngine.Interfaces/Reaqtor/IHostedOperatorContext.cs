@@ -4,19 +4,18 @@
 
 using Reaqtive;
 
-namespace Reaqtor.Reactive
+namespace Reaqtor.Reactive;
+
+/// <summary>
+/// This is the context provided to each reactive operator after it is instantiated.
+/// Operators must interact with the environment only through this context to
+/// ensure that they can be properly hosted inside QueryEngines.
+/// </summary>
+public interface IHostedOperatorContext : IOperatorContext
 {
     /// <summary>
-    /// This is the context provided to each reactive operator after it is instantiated.
-    /// Operators must interact with the environment only through this context to
-    /// ensure that they can be properly hosted inside QueryEngines.
+    /// The reactive service hosting the operator. Operators can use it to create new,
+    /// or get a reference to an existing artifact (observable, observer, stream, subscription).
     /// </summary>
-    public interface IHostedOperatorContext : IOperatorContext
-    {
-        /// <summary>
-        /// The reactive service hosting the operator. Operators can use it to create new,
-        /// or get a reference to an existing artifact (observable, observer, stream, subscription).
-        /// </summary>
-        IReactive ReactiveService { get; }
-    }
+    IReactive ReactiveService { get; }
 }

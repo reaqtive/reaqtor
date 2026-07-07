@@ -4,20 +4,19 @@
 
 using System.Collections.Immutable;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+/// <summary>
+/// Base class for reified key/value store operations.
+/// </summary>
+/// <typeparam name="TKey">The type of the key.</typeparam>
+/// <typeparam name="TValue">The type of the value.</typeparam>
+public abstract class ReifiedOperation<TKey, TValue>
 {
     /// <summary>
-    /// Base class for reified key/value store operations.
+    /// Gets the type of the operation.
     /// </summary>
-    /// <typeparam name="TKey">The type of the key.</typeparam>
-    /// <typeparam name="TValue">The type of the value.</typeparam>
-    public abstract class ReifiedOperation<TKey, TValue>
-    {
-        /// <summary>
-        /// Gets the type of the operation.
-        /// </summary>
-        public abstract OperationType OperationType { get; }
+    public abstract OperationType OperationType { get; }
 
-        public abstract OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary);
-    }
+    public abstract OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary);
 }

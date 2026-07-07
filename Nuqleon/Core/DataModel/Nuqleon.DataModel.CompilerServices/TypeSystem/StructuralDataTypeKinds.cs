@@ -8,35 +8,32 @@
 // BD, ER - July 2013 - Created this file.
 //
 
-using System;
+namespace Nuqleon.DataModel.TypeSystem;
 
-namespace Nuqleon.DataModel.TypeSystem
+/// <summary>
+/// Enumeration of structural data type kinds.
+/// </summary>
+/// <remarks>This enumeration supports flags in order to allow for checkers that check for a subset of the allowed data model type kinds.</remarks>
+[Flags]
+public enum StructuralDataTypeKinds
 {
     /// <summary>
-    /// Enumeration of structural data type kinds.
+    /// Anonymous type.
     /// </summary>
-    /// <remarks>This enumeration supports flags in order to allow for checkers that check for a subset of the allowed data model type kinds.</remarks>
-    [Flags]
-    public enum StructuralDataTypeKinds
-    {
-        /// <summary>
-        /// Anonymous type.
-        /// </summary>
-        Anonymous = 1,
+    Anonymous = 1,
 
-        /// <summary>
-        /// Record type.
-        /// </summary>
-        Record = 2,
+    /// <summary>
+    /// Record type.
+    /// </summary>
+    Record = 2,
 
-        /// <summary>
-        /// User-defined entity type.
-        /// </summary>
-        Entity = 4,
+    /// <summary>
+    /// User-defined entity type.
+    /// </summary>
+    Entity = 4,
 
-        /// <summary>
-        /// Tuple type.
-        /// </summary>
-        Tuple = 8,
-    }
+    /// <summary>
+    /// Tuple type.
+    /// </summary>
+    Tuple = 8,
 }

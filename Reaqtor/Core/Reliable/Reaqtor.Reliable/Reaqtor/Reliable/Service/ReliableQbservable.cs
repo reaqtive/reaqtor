@@ -10,18 +10,17 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableQbservable<T> : ReliableQbservableBase<T>
 {
-    public class ReliableQbservable<T> : ReliableQbservableBase<T>
+    public ReliableQbservable(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQbservable(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableQubscription SubscribeCore(IReliableQbserver<T> observer, Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).Subscribe(this, observer, subscriptionUri, state);
+        Expression = expression;
     }
+
+    public override Expression Expression { get; }
+
+    protected override IReliableQubscription SubscribeCore(IReliableQbserver<T> observer, Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).Subscribe(this, observer, subscriptionUri, state);
 }

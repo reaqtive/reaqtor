@@ -4,16 +4,15 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Exposed version numbers of operator state.
+/// </summary>
+internal static class Versioning
 {
     /// <summary>
-    /// Exposed version numbers of operator state.
+    /// Version 1.0 of operator state.
     /// </summary>
-    internal static class Versioning
-    {
-        /// <summary>
-        /// Version 1.0 of operator state.
-        /// </summary>
-        public static readonly Version v1 = new(1, 0, 0, 0);
-    }
+    public static readonly Version v1 = new(1, 0, 0, 0);
 }

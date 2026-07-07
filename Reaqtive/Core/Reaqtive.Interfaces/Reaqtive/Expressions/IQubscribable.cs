@@ -4,25 +4,24 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtive.Expressions
+namespace Reaqtive.Expressions;
+
+/// <summary>
+/// Represents a subscribable source with an expression tree representation.
+/// </summary>
+/// <typeparam name="T">Type of the elements produced by the subscribable source.</typeparam>
+public interface IQubscribable<out T> : ISubscribable<T>
 {
     /// <summary>
-    /// Represents a subscribable source with an expression tree representation.
+    /// Gets the expression representing the subscribable resource.
     /// </summary>
-    /// <typeparam name="T">Type of the elements produced by the subscribable source.</typeparam>
-    public interface IQubscribable<out T> : ISubscribable<T>
+    Expression Expression
     {
-        /// <summary>
-        /// Gets the expression representing the subscribable resource.
-        /// </summary>
-        Expression Expression
-        {
-            get;
-        }
-
-        //
-        // TODO: Complete the IQ* space as a boundary condition with classic Rx's IQbservable<T> (for standalone usage).
-        //
-        //IQubscription Subscribe(IQbserver<T> observer);
+        get;
     }
+
+    //
+    // TODO: Complete the IQ* space as a boundary condition with classic Rx's IQbservable<T> (for standalone usage).
+    //
+    //IQubscription Subscribe(IQbserver<T> observer);
 }

@@ -8,82 +8,78 @@
 //   BD - 07/29/2015 - Wrote these tests.
 //
 
-using System;
 using System.Time;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Tests;
 
-namespace Tests
+[TestClass]
+public class ClockExtensionsTests
 {
-    [TestClass]
-    public class ClockExtensionsTests
+    [TestMethod]
+    public void ClockExtensions_ArgumentChecking()
     {
-        [TestMethod]
-        public void ClockExtensions_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.AssertMonotonic(clock: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.EnsureMonotonic(clock: null));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.AssertMonotonic(clock: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.EnsureMonotonic(clock: null));
+    }
 
-        [TestMethod]
-        public void ClockExtensions_AssertMonotonic()
-        {
-            var c = new VirtualTimeClock();
+    [TestMethod]
+    public void ClockExtensions_AssertMonotonic()
+    {
+        var c = new VirtualTimeClock();
 
-            var m = c.AssertMonotonic();
+        var m = c.AssertMonotonic();
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now += 10;
+        c.Now += 10;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now += 20;
+        c.Now += 20;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now -= 5;
+        c.Now -= 5;
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => m.Now);
+        Assert.ThrowsExactly<InvalidOperationException>(() => m.Now);
 
-            c.Now += 5;
+        c.Now += 5;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
-        }
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+    }
 
-        [TestMethod]
-        public void ClockExtensions_EnsureMonotonic()
-        {
-            var c = new VirtualTimeClock();
+    [TestMethod]
+    public void ClockExtensions_EnsureMonotonic()
+    {
+        var c = new VirtualTimeClock();
 
-            var m = c.EnsureMonotonic();
+        var m = c.EnsureMonotonic();
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now += 10;
+        c.Now += 10;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now += 20;
+        c.Now += 20;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
 
-            c.Now -= 5;
+        c.Now -= 5;
 
-            Assert.AreEqual(30, m.Now);
-            Assert.AreEqual(30, m.Now);
+        Assert.AreEqual(30, m.Now);
+        Assert.AreEqual(30, m.Now);
 
-            c.Now += 5;
+        c.Now += 5;
 
-            Assert.AreEqual(c.Now, m.Now);
-            Assert.AreEqual(c.Now, m.Now);
-        }
+        Assert.AreEqual(c.Now, m.Now);
+        Assert.AreEqual(c.Now, m.Now);
     }
 }

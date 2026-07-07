@@ -10,31 +10,30 @@
 
 using System.Diagnostics;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class StructuralTypeRef : TypeRef
 {
-    internal sealed class StructuralTypeRef : TypeRef
+    private int _index;
+
+    public StructuralTypeRef()
     {
-        private int _index;
+        _index = int.MinValue;
+    }
 
-        public StructuralTypeRef()
+    public override int Index
+    {
+        get
         {
-            _index = int.MinValue;
+            Debug.Assert(_index != int.MinValue);
+            return _index;
         }
+    }
 
-        public override int Index
-        {
-            get
-            {
-                Debug.Assert(_index != int.MinValue);
-                return _index;
-            }
-        }
-
-        public void SetIndex(int index)
-        {
-            Debug.Assert(index >= 0);
-            Debug.Assert(_index == int.MinValue);
-            _index = index;
-        }
+    public void SetIndex(int index)
+    {
+        Debug.Assert(index >= 0);
+        Debug.Assert(_index == int.MinValue);
+        _index = index;
     }
 }

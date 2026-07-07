@@ -8,19 +8,17 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
-{
-    internal sealed class KnownQubscription : Qubscription, IKnownResource
-    {
-        public KnownQubscription(Expression expression, Uri subscriptionUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = subscriptionUri;
-        }
+namespace Reaqtor;
 
-        public Uri Uri { get; }
+internal sealed class KnownQubscription : Qubscription, IKnownResource
+{
+    public KnownQubscription(Expression expression, Uri subscriptionUri, IReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = subscriptionUri;
     }
+
+    public Uri Uri { get; }
 }

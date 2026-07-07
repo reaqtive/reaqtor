@@ -5,24 +5,21 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1064 // Exceptions should be public. (Scoped to the query engine; should not escape.)
 
-using System;
+namespace Reaqtor.QueryEngine;
 
-namespace Reaqtor.QueryEngine
+internal class InvariantException : Exception
 {
-    internal class InvariantException : Exception
+    public InvariantException()
     {
-        public InvariantException()
-        {
-        }
+    }
 
-        public InvariantException(string message)
-            : base(message)
-        {
-        }
+    public InvariantException(string message)
+        : base(message)
+    {
+    }
 
-        public InvariantException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public InvariantException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

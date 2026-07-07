@@ -8,30 +8,27 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
+namespace System.Linq.CompilerServices;
 
-namespace System.Linq.CompilerServices
+internal sealed class LabeledTree<TSourceNodeType> : Tree<Label<TSourceNodeType>>
 {
-    internal sealed class LabeledTree<TSourceNodeType> : Tree<Label<TSourceNodeType>>
+    public LabeledTree(Label<TSourceNodeType> nodeType, IEnumerable<LabeledTree<TSourceNodeType>> children)
+        : base(nodeType, children)
     {
-        public LabeledTree(Label<TSourceNodeType> nodeType, IEnumerable<LabeledTree<TSourceNodeType>> children)
-            : base(nodeType, children)
+    }
+
+    public override string ToString() => Children.Count == 0 ? Value.ToString(withValue: false) + " " + Value.Tree.ToString() : base.ToString();
+
+    public override string ToString(int indent)
+    {
+        if (Children.Count == 0)
         {
+            var ind = new string(' ', indent * 2);
+            return ind + ToString();
         }
-
-        public override string ToString() => Children.Count == 0 ? Value.ToString(withValue: false) + " " + Value.Tree.ToString() : base.ToString();
-
-        public override string ToString(int indent)
+        else
         {
-            if (Children.Count == 0)
-            {
-                var ind = new string(' ', indent * 2);
-                return ind + ToString();
-            }
-            else
-            {
-                return base.ToString(indent);
-            }
+            return base.ToString(indent);
         }
     }
 }

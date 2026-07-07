@@ -8,18 +8,15 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
+namespace Reaqtor;
 
-namespace Reaqtor
+/// <summary>
+/// Interface for an observer represented by an expression tree.
+/// </summary>
+public interface IAsyncReactiveQbserver : IAsyncReactiveExpressible
 {
     /// <summary>
-    /// Interface for an observer represented by an expression tree.
+    /// Gets the type of the data received by the observer.
     /// </summary>
-    public interface IAsyncReactiveQbserver : IAsyncReactiveExpressible
-    {
-        /// <summary>
-        /// Gets the type of the data received by the observer.
-        /// </summary>
-        Type ElementType { get; }
-    }
+    Type ElementType { get; }
 }

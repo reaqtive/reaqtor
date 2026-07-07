@@ -8,25 +8,24 @@
 //   BD - 07/29/2015 - Created this type.
 //
 
-namespace System.Time
+namespace System.Time;
+
+/// <summary>
+/// Provides a set of extension methods for stopwatch factories.
+/// </summary>
+public static class StopwatchFactoryExtensions
 {
     /// <summary>
-    /// Provides a set of extension methods for stopwatch factories.
+    /// Creates a new stopwatch that gets started immediately before being returned to the called.
     /// </summary>
-    public static class StopwatchFactoryExtensions
+    /// <param name="factory">The factory used to create the stopwatch.</param>
+    /// <returns>New stopwach instance.</returns>
+    public static IStopwatch StartNew(this IStopwatchFactory factory)
     {
-        /// <summary>
-        /// Creates a new stopwatch that gets started immediately before being returned to the called.
-        /// </summary>
-        /// <param name="factory">The factory used to create the stopwatch.</param>
-        /// <returns>New stopwach instance.</returns>
-        public static IStopwatch StartNew(this IStopwatchFactory factory)
-        {
-            ArgumentNullException.ThrowIfNull(factory);
+        ArgumentNullException.ThrowIfNull(factory);
 
-            var sw = factory.Create();
-            sw.Start();
-            return sw;
-        }
+        var sw = factory.Create();
+        sw.Start();
+        return sw;
     }
 }

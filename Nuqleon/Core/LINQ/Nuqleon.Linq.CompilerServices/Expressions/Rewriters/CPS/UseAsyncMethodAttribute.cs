@@ -19,14 +19,13 @@
  * BD - 5/8/2013
  */
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Attribute used to indicate methods that should be rewritten to asynchronous variants, for use by any of the CPS rewriter classes.
+/// Each CPS rewriter class can define its own mapping between the method the attribute is applied to and its asynchronous variant.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class UseAsyncMethodAttribute : Attribute
 {
-    /// <summary>
-    /// Attribute used to indicate methods that should be rewritten to asynchronous variants, for use by any of the CPS rewriter classes.
-    /// Each CPS rewriter class can define its own mapping between the method the attribute is applied to and its asynchronous variant.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class UseAsyncMethodAttribute : Attribute
-    {
-    }
 }
