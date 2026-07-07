@@ -418,19 +418,19 @@ public class WeakMemoizationCacheFactoryTests
         var trim = res.AsTrimmableByArgumentAndResult();
         Assert.IsNotNull(trim);
 
-        trim.Trim(kv => kv.Key.StartsWith("2"));
+        trim.Trim(kv => kv.Key.StartsWith('2'));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("1"));
+        trim.Trim(kv => kv.Key.StartsWith('1'));
         Assert.AreEqual(0, res.Count);
 
         Assert.AreEqual("1!", res.GetOrAdd("1"));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("2"));
+        trim.Trim(kv => kv.Key.StartsWith('2'));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("1"));
+        trim.Trim(kv => kv.Key.StartsWith('1'));
         Assert.AreEqual(0, res.Count);
     }
 
@@ -944,19 +944,19 @@ public class WeakMemoizationCacheFactoryTests
         var trim = res.AsTrimmableByArgumentAndResult();
         Assert.IsNotNull(trim);
 
-        trim.Trim(kv => kv.Key.StartsWith("2"));
+        trim.Trim(kv => kv.Key.StartsWith('2'));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("1"));
+        trim.Trim(kv => kv.Key.StartsWith('1'));
         Assert.AreEqual(0, res.Count);
 
         Assert.AreEqual("1!", res.GetOrAdd("1"));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("2"));
+        trim.Trim(kv => kv.Key.StartsWith('2'));
         Assert.AreEqual(1, res.Count);
 
-        trim.Trim(kv => kv.Key.StartsWith("1"));
+        trim.Trim(kv => kv.Key.StartsWith('1'));
         Assert.AreEqual(0, res.Count);
     }
 

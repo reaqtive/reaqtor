@@ -91,7 +91,7 @@ public class Tests
                 Expression.Constant(3.0)
             },
             {
-                E(() => "bar".StartsWith("b") ? 42 : 43),
+                E(() => "bar".StartsWith('b') ? 42 : 43),
                 Expression.Constant(42)
             },
             {
@@ -145,7 +145,7 @@ public class Tests
                 E(() => 6 + "bar".Length)
             },
             {
-                E(() => "bar".StartsWith("b") ? Value(2) * Value(3) : 1 + "bar".Length),
+                E(() => "bar".StartsWith('b') ? Value(2) * Value(3) : 1 + "bar".Length),
                 //
                 // NB: Hand-rolled expression tree below due to breaking change in Roslyn where the conditional reduces to `6` prior to quotation.
                 //
