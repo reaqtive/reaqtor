@@ -9,48 +9,47 @@ using System.Linq.Expressions;
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public static class PartitionableSubscribableExtensions
 {
-    public static class PartitionableSubscribableExtensions
+    public static IPartitionableSubscribable<T> ToPartitionableSubscribable<T>(this ISubscribable<T> source)
     {
-        public static IPartitionableSubscribable<T> ToPartitionableSubscribable<T>(this ISubscribable<T> source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
-            return new SimplePartitionableSubscribable<T>(source);
-        }
+        return new SimplePartitionableSubscribable<T>(source);
+    }
 
-        public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, IKeySelector<TSource, TKey> keySelector)
-        {
-            ArgumentNullException.ThrowIfNull(source);
-            ArgumentNullException.ThrowIfNull(keySelector);
+    public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, IKeySelector<TSource, TKey> keySelector)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
-            return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, keySelector, null);
-        }
+        return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, keySelector, null);
+    }
 
-        public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
-        {
-            ArgumentNullException.ThrowIfNull(source);
-            ArgumentNullException.ThrowIfNull(keySelector);
+    public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
-            return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, new LambdaKeySelector<TSource, TKey>(keySelector), null);
-        }
+        return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, new LambdaKeySelector<TSource, TKey>(keySelector), null);
+    }
 
-        public static IPartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>> AddPartition<TSource, TKey, TInner, TNextKey>(this IPartitionableSubscribable<TSource, TKey, TInner> source, IKeySelector<TSource, TNextKey> keySelector)
-            where TInner : IImmutableBindingHolder<TInner, TSource>
-        {
-            ArgumentNullException.ThrowIfNull(source);
-            ArgumentNullException.ThrowIfNull(keySelector);
+    public static IPartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>> AddPartition<TSource, TKey, TInner, TNextKey>(this IPartitionableSubscribable<TSource, TKey, TInner> source, IKeySelector<TSource, TNextKey> keySelector)
+        where TInner : IImmutableBindingHolder<TInner, TSource>
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(keySelector);
 
-            return new SimplePartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>>(source, keySelector, null);
-        }
+        return new SimplePartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>>(source, keySelector, null);
+    }
 
-        public static TInner Bind<TSource, TKey, TInner>(this IPartitionableSubscribable<TSource, TKey, TInner> source, TKey key, IEqualityComparer<TKey> keyComparer)
-            where TInner : IImmutableBindingHolder<TInner, TSource>
-        {
-            ArgumentNullException.ThrowIfNull(source);
+    public static TInner Bind<TSource, TKey, TInner>(this IPartitionableSubscribable<TSource, TKey, TInner> source, TKey key, IEqualityComparer<TKey> keyComparer)
+        where TInner : IImmutableBindingHolder<TInner, TSource>
+    {
+        ArgumentNullException.ThrowIfNull(source);
 
-            return source.Parent.AppendBindings([new KeyBinding<TSource, TKey>(source.Selector, key, keyComparer), .. source.Bindings]);
-        }
+        return source.Parent.AppendBindings([new KeyBinding<TSource, TKey>(source.Selector, key, keyComparer), .. source.Bindings]);
     }
 }

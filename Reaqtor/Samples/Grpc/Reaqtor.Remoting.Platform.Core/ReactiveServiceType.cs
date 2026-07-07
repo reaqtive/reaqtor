@@ -8,16 +8,15 @@
 // ER - October 2013 - Created this file.
 //
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public enum ReactiveServiceType
 {
-    public enum ReactiveServiceType
-    {
-        DeployerService,
-        MetadataService,
-        QueryCoordinator,
-        QueryEvaluator,
-        MessagingService,
-        StateStoreService,
-        KeyValueStoreService,
-    }
+    DeployerService,
+    MetadataService,
+    QueryCoordinator,
+    QueryEvaluator,
+    MessagingService,
+    StateStoreService,
+    KeyValueStoreService,
 }

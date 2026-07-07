@@ -14,17 +14,16 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public interface IReactiveEnvironment : IDisposable
 {
-    public interface IReactiveEnvironment : IDisposable
-    {
-        MetadataStorageType StorageType { get; }
-        IReactiveMetadataService MetadataService { get; }
-        string AzureConnectionString { get; }
-        IReactiveMessagingService MessagingService { get; }
-        IReactiveStateStoreService StateStoreService { get; }
-        IKeyValueStoreService KeyValueStoreService { get; }
-        Task StartAsync(CancellationToken token);
-        Task StopAsync(CancellationToken token);
-    }
+    MetadataStorageType StorageType { get; }
+    IReactiveMetadataService MetadataService { get; }
+    string AzureConnectionString { get; }
+    IReactiveMessagingService MessagingService { get; }
+    IReactiveStateStoreService StateStoreService { get; }
+    IKeyValueStoreService KeyValueStoreService { get; }
+    Task StartAsync(CancellationToken token);
+    Task StopAsync(CancellationToken token);
 }

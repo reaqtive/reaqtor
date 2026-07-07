@@ -15,61 +15,60 @@ using System.Linq;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+public class StorageConnection : KeyValueStoreConnection<string, ConcurrentDictionary<string, StorageEntity>>, IReactiveStorageConnection
 {
-    public class StorageConnection : KeyValueStoreConnection<string, ConcurrentDictionary<string, StorageEntity>>, IReactiveStorageConnection
+    public void AddEntity(string collection, string key, StorageEntity entity)
     {
-        public void AddEntity(string collection, string key, StorageEntity entity)
+        if (!TryGetValue(collection, out var table))
         {
-            if (!TryGetValue(collection, out var table))
+            table = new ConcurrentDictionary<string, StorageEntity>();
+            if (!TryAdd(collection, table))
             {
-                table = new ConcurrentDictionary<string, StorageEntity>();
-                if (!TryAdd(collection, table))
-                {
-                    throw new ReactiveProcessingStorageException(
-                        ReactiveProcessingStorageException.ErrorCodes.OperationFailed,
-                        string.Format(CultureInfo.InvariantCulture, "Could not create table '{0}'.", collection),
-                        inner: null);
-                }
+                throw new ReactiveProcessingStorageException(
+                    ReactiveProcessingStorageException.ErrorCodes.OperationFailed,
+                    string.Format(CultureInfo.InvariantCulture, "Could not create table '{0}'.", collection),
+                    inner: null);
             }
-
-            if (table.ContainsKey(key))
-            {
-                throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.EntityAlreadyExists, message: null, inner: null);
-            }
-
-            table.TryAdd(key, entity);
         }
 
-        public void DeleteEntity(string collection, string key)
+        if (table.ContainsKey(key))
         {
-            if (!TryGetValue(collection, out var table) || !table.ContainsKey(key))
-            {
-                throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.EntityNotFound, message: null, inner: null);
-            }
-
-            table.TryRemove(key, out _);
+            throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.EntityAlreadyExists, message: null, inner: null);
         }
 
-        public bool TryGetEntity(string collection, string key, out StorageEntity entity)
-        {
-            if (!TryGetValue(collection, out var table))
-            {
-                entity = default;
-                return false;
-            }
+        table.TryAdd(key, entity);
+    }
 
-            return table.TryGetValue(key, out entity);
+    public void DeleteEntity(string collection, string key)
+    {
+        if (!TryGetValue(collection, out var table) || !table.ContainsKey(key))
+        {
+            throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.EntityNotFound, message: null, inner: null);
         }
 
-        public IList<StorageEntity> GetEntities(string collection)
-        {
-            if (!TryGetValue(collection, out var table))
-            {
-                throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.OperationFailed, message: null, inner: null);
-            }
+        table.TryRemove(key, out _);
+    }
 
-            return [.. table.Values];
+    public bool TryGetEntity(string collection, string key, out StorageEntity entity)
+    {
+        if (!TryGetValue(collection, out var table))
+        {
+            entity = default;
+            return false;
         }
+
+        return table.TryGetValue(key, out entity);
+    }
+
+    public IList<StorageEntity> GetEntities(string collection)
+    {
+        if (!TryGetValue(collection, out var table))
+        {
+            throw new ReactiveProcessingStorageException(ReactiveProcessingStorageException.ErrorCodes.OperationFailed, message: null, inner: null);
+        }
+
+        return [.. table.Values];
     }
 }

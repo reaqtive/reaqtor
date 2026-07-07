@@ -12,25 +12,24 @@ using System;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Client
+namespace Reaqtor.Remoting.Client;
+
+// NB (plan §3.4): de-MBR'd. The archived ClientAction derived from MarshalByRefObject (and overrode
+//     InitializeLifetimeService to disable lease expiry) so the QE could ship a client-authored Action lambda
+//     across the .NET Remoting boundary to run server-side. The scheduler now runs fully in-process (no
+//     transport), so the action is invoked directly; the MarshalByRefObject base and the lease override are
+//     removed, keeping only IRemoteAction.
+public class ClientAction : IRemoteAction
 {
-    // NB (plan §3.4): de-MBR'd. The archived ClientAction derived from MarshalByRefObject (and overrode
-    //     InitializeLifetimeService to disable lease expiry) so the QE could ship a client-authored Action lambda
-    //     across the .NET Remoting boundary to run server-side. The scheduler now runs fully in-process (no
-    //     transport), so the action is invoked directly; the MarshalByRefObject base and the lease override are
-    //     removed, keeping only IRemoteAction.
-    public class ClientAction : IRemoteAction
+    private readonly Action _action;
+
+    public ClientAction(Action action)
     {
-        private readonly Action _action;
+        _action = action;
+    }
 
-        public ClientAction(Action action)
-        {
-            _action = action;
-        }
-
-        public void Invoke()
-        {
-            _action();
-        }
+    public void Invoke()
+    {
+        _action();
     }
 }

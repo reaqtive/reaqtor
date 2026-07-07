@@ -13,62 +13,61 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public class InMemoryReactiveEnvironment : ReactiveEnvironmentBase
 {
-    public class InMemoryReactiveEnvironment : ReactiveEnvironmentBase
+    private readonly bool _stateStoreOnly;
+
+    public InMemoryReactiveEnvironment()
     {
-        private readonly bool _stateStoreOnly;
+        StorageType = MetadataStorageType.Remoting;
+        MetadataService = new InMemoryMetadataService();
+        MessagingService = new InMemoryMessagingService();
+        StateStoreService = new InMemoryStateStoreService();
+        KeyValueStoreService = new InMemoryKeyValueStoreService();
+    }
 
-        public InMemoryReactiveEnvironment()
+    public InMemoryReactiveEnvironment(string connectionString)
+    {
+        StorageType = MetadataStorageType.Azure;
+        AzureConnectionString = connectionString;
+        MessagingService = new InMemoryMessagingService();
+        StateStoreService = new InMemoryStateStoreService();
+        KeyValueStoreService = new InMemoryKeyValueStoreService();
+    }
+
+    public InMemoryReactiveEnvironment(IReactiveMetadataService metadataService, IReactiveMessagingService messagingService)
+    {
+        StorageType = MetadataStorageType.Remoting;
+        MetadataService = metadataService;
+        MessagingService = messagingService;
+        StateStoreService = new InMemoryStateStoreService();
+        KeyValueStoreService = new InMemoryKeyValueStoreService();
+        _stateStoreOnly = true;
+    }
+
+    public override IReactiveMetadataService MetadataService { get; }
+
+    public override IReactiveMessagingService MessagingService { get; }
+
+    public override IReactiveStateStoreService StateStoreService { get; }
+
+    public override IKeyValueStoreService KeyValueStoreService { get; }
+
+    public override MetadataStorageType StorageType { get; }
+
+    public override string AzureConnectionString { get; }
+
+    public override Task StartAsync(CancellationToken token)
+    {
+        if (_stateStoreOnly)
         {
-            StorageType = MetadataStorageType.Remoting;
-            MetadataService = new InMemoryMetadataService();
-            MessagingService = new InMemoryMessagingService();
-            StateStoreService = new InMemoryStateStoreService();
-            KeyValueStoreService = new InMemoryKeyValueStoreService();
+            return StateStoreService.StartAsync(token);
         }
-
-        public InMemoryReactiveEnvironment(string connectionString)
+        else
         {
-            StorageType = MetadataStorageType.Azure;
-            AzureConnectionString = connectionString;
-            MessagingService = new InMemoryMessagingService();
-            StateStoreService = new InMemoryStateStoreService();
-            KeyValueStoreService = new InMemoryKeyValueStoreService();
-        }
-
-        public InMemoryReactiveEnvironment(IReactiveMetadataService metadataService, IReactiveMessagingService messagingService)
-        {
-            StorageType = MetadataStorageType.Remoting;
-            MetadataService = metadataService;
-            MessagingService = messagingService;
-            StateStoreService = new InMemoryStateStoreService();
-            KeyValueStoreService = new InMemoryKeyValueStoreService();
-            _stateStoreOnly = true;
-        }
-
-        public override IReactiveMetadataService MetadataService { get; }
-
-        public override IReactiveMessagingService MessagingService { get; }
-
-        public override IReactiveStateStoreService StateStoreService { get; }
-
-        public override IKeyValueStoreService KeyValueStoreService { get; }
-
-        public override MetadataStorageType StorageType { get; }
-
-        public override string AzureConnectionString { get; }
-
-        public override Task StartAsync(CancellationToken token)
-        {
-            if (_stateStoreOnly)
-            {
-                return StateStoreService.StartAsync(token);
-            }
-            else
-            {
-                return base.StartAsync(token);
-            }
+            return base.StartAsync(token);
         }
     }
 }

@@ -11,76 +11,75 @@ using Reaqtive.Scheduler;
 
 using Reaqtor.Hosting.Shared.Serialization;
 
-namespace Reaqtor.Remoting.Deployable
+namespace Reaqtor.Remoting.Deployable;
+
+public class TraceObserver<T> : StatefulObserver<T>
 {
-    public class TraceObserver<T> : StatefulObserver<T>
+    private readonly string _prefix;
+    private IScheduler _scheduler;
+    private Uri _id;
+    private TraceSource _tracer;
+
+    public TraceObserver()
     {
-        private readonly string _prefix;
-        private IScheduler _scheduler;
-        private Uri _id;
-        private TraceSource _tracer;
+        _prefix = "";
+    }
 
-        public TraceObserver()
-        {
-            _prefix = "";
-        }
+    public TraceObserver(string prefix)
+    {
+        _prefix = "(" + prefix + ")";
+    }
 
-        public TraceObserver(string prefix)
-        {
-            _prefix = "(" + prefix + ")";
-        }
+    public override string Name => "rcr:Trace/v";
 
-        public override string Name => "rcr:Trace/v";
+    public override Version Version => new(1, 0, 0, 0);
 
-        public override Version Version => new(1, 0, 0, 0);
+    public override void SetContext(IOperatorContext context)
+    {
+        Debug.Assert(context != null);
 
-        public override void SetContext(IOperatorContext context)
-        {
-            Debug.Assert(context != null);
+        _scheduler = context.Scheduler;
+        _id = context.InstanceId;
+        _tracer = context.TraceSource;
 
-            _scheduler = context.Scheduler;
-            _id = context.InstanceId;
-            _tracer = context.TraceSource;
+        base.SetContext(context);
+    }
 
-            base.SetContext(context);
-        }
+    protected override void LoadStateCore(IOperatorStateReader reader)
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.LoadStateCore()", _scheduler.Now, _prefix, _id));
+    }
 
-        protected override void LoadStateCore(IOperatorStateReader reader)
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.LoadStateCore()", _scheduler.Now, _prefix, _id));
-        }
+    protected override void SaveStateCore(IOperatorStateWriter writer)
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.SaveStateCore()", _scheduler.Now, _prefix, _id));
+    }
 
-        protected override void SaveStateCore(IOperatorStateWriter writer)
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.SaveStateCore()", _scheduler.Now, _prefix, _id));
-        }
+    protected override void OnStart()
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnStart()", _scheduler.Now, _prefix, _id));
+        base.OnStart();
+    }
 
-        protected override void OnStart()
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnStart()", _scheduler.Now, _prefix, _id));
-            base.OnStart();
-        }
+    protected override void OnDispose()
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnDispose()", _scheduler.Now, _prefix, _id));
+        base.OnDispose();
+    }
 
-        protected override void OnDispose()
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnDispose()", _scheduler.Now, _prefix, _id));
-            base.OnDispose();
-        }
+    protected override void OnCompletedCore()
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnCompleted()", _scheduler.Now, _prefix, _id));
+    }
 
-        protected override void OnCompletedCore()
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {2} TraceObserver{1}.OnCompleted()", _scheduler.Now, _prefix, _id));
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {3} TraceObserver{1}.OnError({2})", _scheduler.Now, _prefix, error, _id));
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {3} TraceObserver{1}.OnError({2})", _scheduler.Now, _prefix, error, _id));
-        }
-
-        protected override void OnNextCore(T value)
-        {
-            var helpers = new SerializationHelpers();
-            _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {3} TraceObserver{1}.OnNext({2})", _scheduler.Now, _prefix, helpers.Serialize<T>(value), _id));
-        }
+    protected override void OnNextCore(T value)
+    {
+        var helpers = new SerializationHelpers();
+        _tracer.TraceInformation(string.Format(CultureInfo.InvariantCulture, "{0:o}> {3} TraceObserver{1}.OnNext({2})", _scheduler.Now, _prefix, helpers.Serialize<T>(value), _id));
     }
 }

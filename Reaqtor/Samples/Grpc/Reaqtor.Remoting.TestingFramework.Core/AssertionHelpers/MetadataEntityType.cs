@@ -8,13 +8,12 @@
 // ER - November 2013 - Created this file.
 //
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public enum MetadataEntityType
 {
-    public enum MetadataEntityType
-    {
-        Observable,
-        Observer,
-        StreamFactory,
-        SubscriptionFactory,
-    }
+    Observable,
+    Observer,
+    StreamFactory,
+    SubscriptionFactory,
 }

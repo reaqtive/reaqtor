@@ -8,9 +8,8 @@
 // ER - October 2013 - Created this file.
 //
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public interface IReactiveQueryCoordinator : IReactiveService
 {
-    public interface IReactiveQueryCoordinator : IReactiveService
-    {
-    }
 }

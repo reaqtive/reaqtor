@@ -4,15 +4,14 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtor.Remoting.Deployable.Streams
-{
-    public interface IImmutableBindingHolder<THolder, TSource>
-    {
-        THolder AppendBindings(IList<TypeErasedKeyBinding<TSource>> bindings);
+namespace Reaqtor.Remoting.Deployable.Streams;
 
-        IReadOnlyList<TypeErasedKeyBinding<TSource>> Bindings
-        {
-            get;
-        }
+public interface IImmutableBindingHolder<THolder, TSource>
+{
+    THolder AppendBindings(IList<TypeErasedKeyBinding<TSource>> bindings);
+
+    IReadOnlyList<TypeErasedKeyBinding<TSource>> Bindings
+    {
+        get;
     }
 }

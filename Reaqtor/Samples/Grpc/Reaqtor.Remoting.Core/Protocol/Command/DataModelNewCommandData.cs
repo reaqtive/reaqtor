@@ -6,17 +6,16 @@ using System;
 
 using Nuqleon.DataModel;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+internal sealed class DataModelNewCommandData<TExpression>
 {
-    internal sealed class DataModelNewCommandData<TExpression>
-    {
-        [Mapping("rx://artifact/uri")]
-        public Uri Uri { get; set; }
+    [Mapping("rx://artifact/uri")]
+    public Uri Uri { get; set; }
 
-        [Mapping("rx://artifact/expression")]
-        public TExpression Expression { get; set; }
+    [Mapping("rx://artifact/expression")]
+    public TExpression Expression { get; set; }
 
-        [Mapping("rx://artifact/state")]
-        public object State { get; set; }
-    }
+    [Mapping("rx://artifact/state")]
+    public object State { get; set; }
 }

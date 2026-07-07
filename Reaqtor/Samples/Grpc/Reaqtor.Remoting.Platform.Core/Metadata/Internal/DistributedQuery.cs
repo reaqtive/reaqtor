@@ -4,32 +4,31 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Representation of a distributed query that has a remote part and a local part.
+/// </summary>
+internal class DistributedQuery
 {
     /// <summary>
-    /// Representation of a distributed query that has a remote part and a local part.
+    /// Creates a new distributed query representation.
     /// </summary>
-    internal class DistributedQuery
+    /// <param name="remote">Remote part of the query.</param>
+    /// <param name="local">Local part of the query that will get applied to the results of the remote part.</param>
+    public DistributedQuery(Expression remote, LambdaExpression local)
     {
-        /// <summary>
-        /// Creates a new distributed query representation.
-        /// </summary>
-        /// <param name="remote">Remote part of the query.</param>
-        /// <param name="local">Local part of the query that will get applied to the results of the remote part.</param>
-        public DistributedQuery(Expression remote, LambdaExpression local)
-        {
-            Remote = remote;
-            Local = local;
-        }
-
-        /// <summary>
-        /// Gets the remote part of the query.
-        /// </summary>
-        public Expression Remote { get; }
-
-        /// <summary>
-        /// Gets the local part of the query that will get applied to the results of the remote part.
-        /// </summary>
-        public LambdaExpression Local { get; }
+        Remote = remote;
+        Local = local;
     }
+
+    /// <summary>
+    /// Gets the remote part of the query.
+    /// </summary>
+    public Expression Remote { get; }
+
+    /// <summary>
+    /// Gets the local part of the query that will get applied to the results of the remote part.
+    /// </summary>
+    public LambdaExpression Local { get; }
 }

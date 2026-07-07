@@ -7,30 +7,29 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public abstract class ReactivePlatformServiceBase : ReactiveServiceBase, IReactivePlatformService
 {
-    public abstract class ReactivePlatformServiceBase : ReactiveServiceBase, IReactivePlatformService
+    protected ReactivePlatformServiceBase(IReactivePlatform platform, IRunnable runnable, ReactiveServiceType serviceType)
+        : base(runnable, serviceType)
     {
-        protected ReactivePlatformServiceBase(IReactivePlatform platform, IRunnable runnable, ReactiveServiceType serviceType)
-            : base(runnable, serviceType)
-        {
-            Platform = platform;
-        }
+        Platform = platform;
+    }
 
-        public IReactivePlatform Platform { get; }
+    public IReactivePlatform Platform { get; }
 
-        public override async Task StartAsync(CancellationToken token)
-        {
-            await base.StartAsync(token).ConfigureAwait(false);
-            var instance = GetInstance<IRemotingReactiveServiceConnection>();
-            instance.Configure(Platform.Configuration);
-            instance.Start();
-        }
+    public override async Task StartAsync(CancellationToken token)
+    {
+        await base.StartAsync(token).ConfigureAwait(false);
+        var instance = GetInstance<IRemotingReactiveServiceConnection>();
+        instance.Configure(Platform.Configuration);
+        instance.Start();
+    }
 
-        public override Task StopAsync(CancellationToken token)
-        {
-            using (GetInstance<IRemotingReactiveServiceConnection>()) { }
-            return base.StopAsync(token);
-        }
+    public override Task StopAsync(CancellationToken token)
+    {
+        using (GetInstance<IRemotingReactiveServiceConnection>()) { }
+        return base.StopAsync(token);
     }
 }

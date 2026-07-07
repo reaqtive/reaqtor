@@ -9,137 +9,136 @@ using System.Threading.Tasks;
 using Reaqtor.QueryEngine;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.QueryEvaluator
+namespace Reaqtor.Remoting.QueryEvaluator;
+
+internal sealed class KeyValueStore : IKeyValueStore
 {
-    internal sealed class KeyValueStore : IKeyValueStore
+    private readonly ITransactionalKeyValueStoreConnection _connection;
+
+    public KeyValueStore(ITransactionalKeyValueStoreConnection connection)
+    {
+        _connection = connection;
+    }
+
+    public IKeyValueStoreTransaction CreateTransaction()
+    {
+        return new Transaction(_connection, _connection.CreateTransaction());
+    }
+
+    public IKeyValueTable<string, byte[]> GetTable(string name)
+    {
+        return new KeyValueTable(name);
+    }
+
+    private sealed class KeyValueTable : IKeyValueTable<string, byte[]>
+    {
+        private readonly string _prefix;
+
+        public KeyValueTable(string prefix)
+        {
+            _prefix = prefix;
+        }
+
+        public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction)
+        {
+            return new TransactedKeyValueTable(_prefix, transaction);
+        }
+    }
+
+    private sealed class TransactedKeyValueTable : ITransactedKeyValueTable<string, byte[]>
+    {
+        private readonly string _prefix;
+        private readonly IKeyValueStoreTransaction _transaction;
+
+        public TransactedKeyValueTable(string prefix, IKeyValueStoreTransaction transaction)
+        {
+            _prefix = prefix;
+            _transaction = transaction;
+        }
+
+        public byte[] this[string key] => _transaction[_prefix, key];
+
+        public void Add(string key, byte[] value)
+        {
+            _transaction.Add(_prefix, key, value);
+        }
+
+        public bool Contains(string key)
+        {
+            return _transaction.Contains(_prefix, key);
+        }
+
+        public void Update(string key, byte[] value)
+        {
+            _transaction.Update(_prefix, key, value);
+        }
+
+        public void Remove(string key)
+        {
+            _transaction.Remove(_prefix, key);
+        }
+
+        public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator()
+        {
+            return _transaction.GetEnumerator(_prefix);
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    private sealed class Transaction : IKeyValueStoreTransaction
     {
         private readonly ITransactionalKeyValueStoreConnection _connection;
 
-        public KeyValueStore(ITransactionalKeyValueStoreConnection connection)
+        public Transaction(ITransactionalKeyValueStoreConnection connection, long id)
         {
             _connection = connection;
+            Id = id;
         }
 
-        public IKeyValueStoreTransaction CreateTransaction()
+        public long Id { get; }
+
+        public byte[] this[string tableName, string key] => _connection[Id, tableName, key];
+
+        public void Add(string tableName, string key, byte[] value)
         {
-            return new Transaction(_connection, _connection.CreateTransaction());
+            _connection.Add(Id, tableName, key, value);
         }
 
-        public IKeyValueTable<string, byte[]> GetTable(string name)
+        public bool Contains(string tableName, string key)
         {
-            return new KeyValueTable(name);
+            return _connection.Contains(Id, tableName, key);
         }
 
-        private sealed class KeyValueTable : IKeyValueTable<string, byte[]>
+        public void Update(string tableName, string key, byte[] value)
         {
-            private readonly string _prefix;
-
-            public KeyValueTable(string prefix)
-            {
-                _prefix = prefix;
-            }
-
-            public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction)
-            {
-                return new TransactedKeyValueTable(_prefix, transaction);
-            }
+            _connection.Update(Id, tableName, key, value);
         }
 
-        private sealed class TransactedKeyValueTable : ITransactedKeyValueTable<string, byte[]>
+        public void Remove(string tableName, string key)
         {
-            private readonly string _prefix;
-            private readonly IKeyValueStoreTransaction _transaction;
-
-            public TransactedKeyValueTable(string prefix, IKeyValueStoreTransaction transaction)
-            {
-                _prefix = prefix;
-                _transaction = transaction;
-            }
-
-            public byte[] this[string key] => _transaction[_prefix, key];
-
-            public void Add(string key, byte[] value)
-            {
-                _transaction.Add(_prefix, key, value);
-            }
-
-            public bool Contains(string key)
-            {
-                return _transaction.Contains(_prefix, key);
-            }
-
-            public void Update(string key, byte[] value)
-            {
-                _transaction.Update(_prefix, key, value);
-            }
-
-            public void Remove(string key)
-            {
-                _transaction.Remove(_prefix, key);
-            }
-
-            public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator()
-            {
-                return _transaction.GetEnumerator(_prefix);
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+            _connection.Remove(Id, tableName, key);
         }
 
-        private sealed class Transaction : IKeyValueStoreTransaction
+        public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
         {
-            private readonly ITransactionalKeyValueStoreConnection _connection;
+            return _connection.GetEnumerator(Id, tableName);
+        }
 
-            public Transaction(ITransactionalKeyValueStoreConnection connection, long id)
-            {
-                _connection = connection;
-                Id = id;
-            }
+        public Task CommitAsync(CancellationToken token)
+        {
+            _connection.Commit(Id);
+            return Task.FromResult(true);
+        }
 
-            public long Id { get; }
+        public void Rollback()
+        {
+            _connection.Rollback(Id);
+        }
 
-            public byte[] this[string tableName, string key] => _connection[Id, tableName, key];
-
-            public void Add(string tableName, string key, byte[] value)
-            {
-                _connection.Add(Id, tableName, key, value);
-            }
-
-            public bool Contains(string tableName, string key)
-            {
-                return _connection.Contains(Id, tableName, key);
-            }
-
-            public void Update(string tableName, string key, byte[] value)
-            {
-                _connection.Update(Id, tableName, key, value);
-            }
-
-            public void Remove(string tableName, string key)
-            {
-                _connection.Remove(Id, tableName, key);
-            }
-
-            public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
-            {
-                return _connection.GetEnumerator(Id, tableName);
-            }
-
-            public Task CommitAsync(CancellationToken token)
-            {
-                _connection.Commit(Id);
-                return Task.FromResult(true);
-            }
-
-            public void Rollback()
-            {
-                _connection.Rollback(Id);
-            }
-
-            public void Dispose()
-            {
-                _connection.Dispose(Id);
-            }
+        public void Dispose()
+        {
+            _connection.Dispose(Id);
         }
     }
 }

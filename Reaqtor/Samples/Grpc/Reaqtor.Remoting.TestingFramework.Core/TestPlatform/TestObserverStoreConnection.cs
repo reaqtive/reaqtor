@@ -4,10 +4,9 @@
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public class TestObserverStoreConnection : KeyValueStoreConnection<string, ITestObserver<string>>
 {
-    public class TestObserverStoreConnection : KeyValueStoreConnection<string, ITestObserver<string>>
-    {
-        public const string ContextHandle = "TestObserverStoreConnection";
-    }
+    public const string ContextHandle = "TestObserverStoreConnection";
 }

@@ -4,16 +4,15 @@
 
 using System.Diagnostics;
 
-namespace Reaqtor.Remoting.Deployable
+namespace Reaqtor.Remoting.Deployable;
+
+/// <summary>
+/// Tracer for Platform Observables.
+/// </summary>
+internal static class Tracer
 {
     /// <summary>
-    /// Tracer for Platform Observables.
+    /// Gets the trace source.
     /// </summary>
-    internal static class Tracer
-    {
-        /// <summary>
-        /// Gets the trace source.
-        /// </summary>
-        public static TraceSource TraceSource => new("PlatformObservables");
-    }
+    public static TraceSource TraceSource => new("PlatformObservables");
 }

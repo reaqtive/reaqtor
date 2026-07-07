@@ -6,25 +6,24 @@ using System;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+public class StorageConnectionTableClient : ITableClient
 {
-    public class StorageConnectionTableClient : ITableClient
+    private readonly IReactiveStorageConnection _connection;
+
+    public StorageConnectionTableClient(IReactiveStorageConnection storageConnection)
     {
-        private readonly IReactiveStorageConnection _connection;
+        _connection = storageConnection ?? throw new ArgumentNullException(nameof(storageConnection));
+    }
 
-        public StorageConnectionTableClient(IReactiveStorageConnection storageConnection)
-        {
-            _connection = storageConnection ?? throw new ArgumentNullException(nameof(storageConnection));
-        }
+    public ITable GetTableReference(string tableName)
+    {
+        return new StorageConnectionTable(tableName, _connection);
+    }
 
-        public ITable GetTableReference(string tableName)
-        {
-            return new StorageConnectionTable(tableName, _connection);
-        }
-
-        public ITableServiceContext GetTableServiceContext()
-        {
-            return new StorageConnectionTableServiceContext(_connection);
-        }
+    public ITableServiceContext GetTableServiceContext()
+    {
+        return new StorageConnectionTableServiceContext(_connection);
     }
 }

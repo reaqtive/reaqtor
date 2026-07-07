@@ -10,16 +10,15 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IReactiveStorageConnection : IReactiveConnection
 {
-    public interface IReactiveStorageConnection : IReactiveConnection
-    {
-        void AddEntity(string collection, string key, StorageEntity entity);
+    void AddEntity(string collection, string key, StorageEntity entity);
 
-        void DeleteEntity(string collection, string key);
+    void DeleteEntity(string collection, string key);
 
-        bool TryGetEntity(string collection, string key, out StorageEntity entity);
+    bool TryGetEntity(string collection, string key, out StorageEntity entity);
 
-        IList<StorageEntity> GetEntities(string collection);
-    }
+    IList<StorageEntity> GetEntities(string collection);
 }

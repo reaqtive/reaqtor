@@ -16,66 +16,65 @@ using System.Threading.Tasks;
 using Reaqtor.Hosting.Shared.Serialization;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Client
+namespace Reaqtor.Remoting.Client;
+
+public class RemotingServiceProvider : ReactiveServiceProvider
 {
-    public class RemotingServiceProvider : ReactiveServiceProvider
+    private readonly Func<Type, Uri, object> _observerFactory;
+
+    public RemotingServiceProvider(IReactiveServiceConnection connection, Func<Type, Uri, object> observerFactory)
+        : this(connection)
     {
-        private readonly Func<Type, Uri, object> _observerFactory;
+        _observerFactory = observerFactory;
+    }
 
-        public RemotingServiceProvider(IReactiveServiceConnection connection, Func<Type, Uri, object> observerFactory)
-            : this(connection)
+    public RemotingServiceProvider(IReactiveServiceConnection connection)
+        : this(connection, new CommandTextFactory<Expression>(new ClientSerializationHelpers()))
+    {
+    }
+
+    private RemotingServiceProvider(IReactiveServiceConnection connection, CommandTextFactory<Expression> commandTextFactory)
+        : base(connection, commandTextFactory, commandTextFactory)
+    {
+    }
+
+    public override Task<IAsyncReactiveObserver<T>> GetObserverAsync<T>(Uri observerUri, CancellationToken token)
+    {
+        if (_observerFactory != null)
         {
-            _observerFactory = observerFactory;
+            var remoteObserverClient = (IObserver<T>)_observerFactory(typeof(T), observerUri);
+            var client = new RemoteObserverClient<T>(remoteObserverClient) as IAsyncReactiveObserver<T>;
+            return Task.FromResult(client);
         }
 
-        public RemotingServiceProvider(IReactiveServiceConnection connection)
-            : this(connection, new CommandTextFactory<Expression>(new ClientSerializationHelpers()))
+        throw new NotSupportedException("The get observer method is not supported on this service provider.");
+    }
+
+    private sealed class RemoteObserverClient<T> : IAsyncReactiveObserver<T>
+    {
+        private readonly IObserver<T> _remoteObserver;
+
+        public RemoteObserverClient(IObserver<T> remoteObserver)
         {
+            _remoteObserver = remoteObserver ?? throw new ArgumentNullException(nameof(remoteObserver));
         }
 
-        private RemotingServiceProvider(IReactiveServiceConnection connection, CommandTextFactory<Expression> commandTextFactory)
-            : base(connection, commandTextFactory, commandTextFactory)
+        public Task OnNextAsync(T value, CancellationToken token)
         {
+            _remoteObserver.OnNext(value);
+            return Task.FromResult(true);
         }
 
-        public override Task<IAsyncReactiveObserver<T>> GetObserverAsync<T>(Uri observerUri, CancellationToken token)
+        public Task OnErrorAsync(Exception error, CancellationToken token)
         {
-            if (_observerFactory != null)
-            {
-                var remoteObserverClient = (IObserver<T>)_observerFactory(typeof(T), observerUri);
-                var client = new RemoteObserverClient<T>(remoteObserverClient) as IAsyncReactiveObserver<T>;
-                return Task.FromResult(client);
-            }
-
-            throw new NotSupportedException("The get observer method is not supported on this service provider.");
+            _remoteObserver.OnError(error);
+            return Task.FromResult(true);
         }
 
-        private sealed class RemoteObserverClient<T> : IAsyncReactiveObserver<T>
+        public Task OnCompletedAsync(CancellationToken token)
         {
-            private readonly IObserver<T> _remoteObserver;
-
-            public RemoteObserverClient(IObserver<T> remoteObserver)
-            {
-                _remoteObserver = remoteObserver ?? throw new ArgumentNullException(nameof(remoteObserver));
-            }
-
-            public Task OnNextAsync(T value, CancellationToken token)
-            {
-                _remoteObserver.OnNext(value);
-                return Task.FromResult(true);
-            }
-
-            public Task OnErrorAsync(Exception error, CancellationToken token)
-            {
-                _remoteObserver.OnError(error);
-                return Task.FromResult(true);
-            }
-
-            public Task OnCompletedAsync(CancellationToken token)
-            {
-                _remoteObserver.OnCompleted();
-                return Task.FromResult(false);
-            }
+            _remoteObserver.OnCompleted();
+            return Task.FromResult(false);
         }
     }
 }

@@ -14,11 +14,10 @@ using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public interface ITestableQbservable<T> : IAsyncReactiveQbservable<T>
 {
-    public interface ITestableQbservable<T> : IAsyncReactiveQbservable<T>
-    {
-        IList<Subscription> Subscriptions { get; }
-        IList<Recorded<INotification<T>>> ObserverMessages { get; }
-    }
+    IList<Subscription> Subscriptions { get; }
+    IList<Recorded<INotification<T>>> ObserverMessages { get; }
 }

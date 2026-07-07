@@ -10,11 +10,10 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IReactiveMessagingConnection : IReactiveConnection
 {
-    public interface IReactiveMessagingConnection : IReactiveConnection
-    {
-        void Publish(string topic, INotification<byte[]> data);
-        IDisposable Subscribe(string topic, Action<INotification<byte[]>> receive);
-    }
+    void Publish(string topic, INotification<byte[]> data);
+    IDisposable Subscribe(string topic, Action<INotification<byte[]>> receive);
 }

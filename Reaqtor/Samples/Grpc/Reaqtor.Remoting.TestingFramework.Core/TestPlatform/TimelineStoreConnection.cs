@@ -8,10 +8,9 @@ using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public class TimelineStoreConnection : KeyValueStoreConnection<string, IList<Recorded<INotification<string>>>>
 {
-    public class TimelineStoreConnection : KeyValueStoreConnection<string, IList<Recorded<INotification<string>>>>
-    {
-        public const string ContextHandle = "TimelineStoreConnection";
-    }
+    public const string ContextHandle = "TimelineStoreConnection";
 }

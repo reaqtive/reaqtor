@@ -4,10 +4,9 @@
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public interface IPartitionedMultiSubject<T> : IMultiSubject<T>
 {
-    public interface IPartitionedMultiSubject<T> : IMultiSubject<T>
-    {
-        IPartitionableSubscribable<T> CreatePartitionableSubscribable();
-    }
+    IPartitionableSubscribable<T> CreatePartitionableSubscribable();
 }

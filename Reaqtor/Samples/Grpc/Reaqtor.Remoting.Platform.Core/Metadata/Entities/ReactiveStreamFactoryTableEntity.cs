@@ -6,53 +6,52 @@ using System;
 
 using Reaqtor.Metadata;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Table entity representing a stream factory.
+/// </summary>
+public class ReactiveStreamFactoryTableEntity : ReactiveDefinedResourceTableEntity, IReactiveStreamFactoryDefinition
 {
     /// <summary>
-    /// Table entity representing a stream factory.
+    /// Default constructor, required by the Azure Table query provider.
     /// </summary>
-    public class ReactiveStreamFactoryTableEntity : ReactiveDefinedResourceTableEntity, IReactiveStreamFactoryDefinition
+    public ReactiveStreamFactoryTableEntity()
     {
-        /// <summary>
-        /// Default constructor, required by the Azure Table query provider.
-        /// </summary>
-        public ReactiveStreamFactoryTableEntity()
-        {
-        }
+    }
 
-        /// <summary>
-        /// Gets the stream factory defined by the definition.
-        /// </summary>
-        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
-        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
-        /// <returns>Representation of the stream factory defined by the definition.</returns>
-        /// <remarks>
-        /// This method can be used in isolation from the client library. It's allowed to return an object that encapsulates
-        /// the definition using an expression tree, to be used for composition and delegation to other systems. The object
-        /// does not have to provide data operations, as is expected from the client library proxy objects.
-        /// </remarks>
-        public IReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
-        {
-            // CONSIDER: Revisit this limitaton; we don't have access to access the parent context here.
-            throw new NotSupportedException("The Azure metadata provider doesn't support operations on metadata entities.");
-        }
+    /// <summary>
+    /// Gets the stream factory defined by the definition.
+    /// </summary>
+    /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+    /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+    /// <returns>Representation of the stream factory defined by the definition.</returns>
+    /// <remarks>
+    /// This method can be used in isolation from the client library. It's allowed to return an object that encapsulates
+    /// the definition using an expression tree, to be used for composition and delegation to other systems. The object
+    /// does not have to provide data operations, as is expected from the client library proxy objects.
+    /// </remarks>
+    public IReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
+    {
+        // CONSIDER: Revisit this limitaton; we don't have access to access the parent context here.
+        throw new NotSupportedException("The Azure metadata provider doesn't support operations on metadata entities.");
+    }
 
-        /// <summary>
-        /// Gets the parameterized stream factory defined by the definition.
-        /// </summary>
-        /// <typeparam name="TArgs">Type of the parameter passed to the stream factory.</typeparam>
-        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
-        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
-        /// <returns>Representation of the parameterized stream factory defined by the definition.</returns>
-        /// <remarks>
-        /// This method can be used in isolation from the client library. It's allowed to return an object that encapsulates
-        /// the definition using an expression tree, to be used for composition and delegation to other systems. The object
-        /// does not have to provide data operations, as is expected from the client library proxy objects.
-        /// </remarks>
-        public IReactiveQubjectFactory<TInput, TOutput, TArgs> ToStreamFactory<TArgs, TInput, TOutput>()
-        {
-            // CONSIDER: Revisit this limitaton; we don't have access to access the parent context here.
-            throw new NotSupportedException("The Azure metadata provider doesn't support operations on metadata entities.");
-        }
+    /// <summary>
+    /// Gets the parameterized stream factory defined by the definition.
+    /// </summary>
+    /// <typeparam name="TArgs">Type of the parameter passed to the stream factory.</typeparam>
+    /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+    /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+    /// <returns>Representation of the parameterized stream factory defined by the definition.</returns>
+    /// <remarks>
+    /// This method can be used in isolation from the client library. It's allowed to return an object that encapsulates
+    /// the definition using an expression tree, to be used for composition and delegation to other systems. The object
+    /// does not have to provide data operations, as is expected from the client library proxy objects.
+    /// </remarks>
+    public IReactiveQubjectFactory<TInput, TOutput, TArgs> ToStreamFactory<TArgs, TInput, TOutput>()
+    {
+        // CONSIDER: Revisit this limitaton; we don't have access to access the parent context here.
+        throw new NotSupportedException("The Azure metadata provider doesn't support operations on metadata entities.");
     }
 }

@@ -17,72 +17,71 @@ using Reaqtive.TestingFramework;
 using Reaqtor.Remoting.Client;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public static class SchedulerExtensions
 {
-    public static class SchedulerExtensions
+    public static void ScheduleAbsolute(this ITestScheduler scheduler, long dueTime, Action action)
     {
-        public static void ScheduleAbsolute(this ITestScheduler scheduler, long dueTime, Action action)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(action);
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(action);
 
-            scheduler.ScheduleAbsolute(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
-        }
+        scheduler.ScheduleAbsolute(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
+    }
 
-        public static void ScheduleAbsolute(this ITestScheduler scheduler, long dueTime, Func<Task> asyncAction)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(asyncAction);
+    public static void ScheduleAbsolute(this ITestScheduler scheduler, long dueTime, Func<Task> asyncAction)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(asyncAction);
 
-            scheduler.ScheduleAbsolute(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
-        }
+        scheduler.ScheduleAbsolute(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, Action action)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(action);
+    public static void Schedule(this IScheduler scheduler, Action action)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(action);
 
-            scheduler.Schedule(new RemoteSchedulerTask(new ClientAction(action)));
-        }
+        scheduler.Schedule(new RemoteSchedulerTask(new ClientAction(action)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, Func<Task> asyncAction)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(asyncAction);
+    public static void Schedule(this IScheduler scheduler, Func<Task> asyncAction)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(asyncAction);
 
-            scheduler.Schedule(new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
-        }
+        scheduler.Schedule(new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, TimeSpan dueTime, Action action)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(action);
+    public static void Schedule(this IScheduler scheduler, TimeSpan dueTime, Action action)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(action);
 
-            scheduler.Schedule(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
-        }
+        scheduler.Schedule(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, TimeSpan dueTime, Func<Task> asyncAction)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(asyncAction);
+    public static void Schedule(this IScheduler scheduler, TimeSpan dueTime, Func<Task> asyncAction)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(asyncAction);
 
-            scheduler.Schedule(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
-        }
+        scheduler.Schedule(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, DateTimeOffset dueTime, Action action)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(action);
+    public static void Schedule(this IScheduler scheduler, DateTimeOffset dueTime, Action action)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(action);
 
-            scheduler.Schedule(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
-        }
+        scheduler.Schedule(dueTime, new RemoteSchedulerTask(new ClientAction(action)));
+    }
 
-        public static void Schedule(this IScheduler scheduler, DateTimeOffset dueTime, Func<Task> asyncAction)
-        {
-            ArgumentNullException.ThrowIfNull(scheduler);
-            ArgumentNullException.ThrowIfNull(asyncAction);
+    public static void Schedule(this IScheduler scheduler, DateTimeOffset dueTime, Func<Task> asyncAction)
+    {
+        ArgumentNullException.ThrowIfNull(scheduler);
+        ArgumentNullException.ThrowIfNull(asyncAction);
 
-            scheduler.Schedule(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
-        }
+        scheduler.Schedule(dueTime, new RemoteSchedulerTask(new AsyncClientAction(asyncAction)));
     }
 }

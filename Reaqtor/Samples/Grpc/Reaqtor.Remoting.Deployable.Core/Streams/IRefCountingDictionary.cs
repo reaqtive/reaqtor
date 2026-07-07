@@ -5,16 +5,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+internal interface IRefCountingDictionary<TKey, TValue>
 {
-    internal interface IRefCountingDictionary<TKey, TValue>
-    {
-        bool Release(TKey key, out TValue value);
+    bool Release(TKey key, out TValue value);
 
-        TValue AddRef(TKey key, Func<TKey, TValue> factory);
+    TValue AddRef(TKey key, Func<TKey, TValue> factory);
 
-        bool TryGetValue(TKey key, out TValue value);
+    bool TryGetValue(TKey key, out TValue value);
 
-        IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();
-    }
+    IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();
 }

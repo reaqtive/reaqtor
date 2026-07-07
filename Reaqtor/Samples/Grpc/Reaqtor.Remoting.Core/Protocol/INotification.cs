@@ -4,43 +4,42 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+/// <summary>
+/// Reified observer operation interface.
+/// </summary>
+/// <typeparam name="T">The observer notification type.</typeparam>
+public interface INotification<T> : IEquatable<INotification<T>>
 {
     /// <summary>
-    /// Reified observer operation interface.
+    /// The kind of notification.
     /// </summary>
-    /// <typeparam name="T">The observer notification type.</typeparam>
-    public interface INotification<T> : IEquatable<INotification<T>>
-    {
-        /// <summary>
-        /// The kind of notification.
-        /// </summary>
-        NotificationKind Kind { get; }
+    NotificationKind Kind { get; }
 
-        /// <summary>
-        /// The notification exception.
-        /// </summary>
-        Exception Exception { get; }
+    /// <summary>
+    /// The notification exception.
+    /// </summary>
+    Exception Exception { get; }
 
-        /// <summary>
-        /// <b>true</b> if the notification has a value, <b>false</b> otherwise.
-        /// </summary>
-        bool HasValue { get; }
+    /// <summary>
+    /// <b>true</b> if the notification has a value, <b>false</b> otherwise.
+    /// </summary>
+    bool HasValue { get; }
 
-        /// <summary>
-        /// <b>true</b> if the notification is predicate-based, <b>false</b> otherwise.
-        /// </summary>
-        bool HasPredicate { get; }
+    /// <summary>
+    /// <b>true</b> if the notification is predicate-based, <b>false</b> otherwise.
+    /// </summary>
+    bool HasPredicate { get; }
 
-        /// <summary>
-        /// The notification value.
-        /// </summary>
-        T Value { get; }
+    /// <summary>
+    /// The notification value.
+    /// </summary>
+    T Value { get; }
 
-        /// <summary>
-        /// Applies the notification to the given observer.
-        /// </summary>
-        /// <param name="observer">The observer.</param>
-        void Accept(IObserver<T> observer);
-    }
+    /// <summary>
+    /// Applies the notification to the given observer.
+    /// </summary>
+    /// <param name="observer">The observer.</param>
+    void Accept(IObserver<T> observer);
 }

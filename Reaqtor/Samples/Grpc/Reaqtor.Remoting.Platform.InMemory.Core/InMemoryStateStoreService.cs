@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.StateStore;
 
-namespace Reaqtor.Remoting.Platform
-{
-    internal sealed class InMemoryStateStoreService : ReactiveServiceBase, IReactiveStateStoreService
-    {
-        public InMemoryStateStoreService()
-#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
-            : base(new InMemoryRunnable(CreateStateStoreService), ReactiveServiceType.StateStoreService)
-#pragma warning restore CA2000
-        {
-        }
+namespace Reaqtor.Remoting.Platform;
 
-        private static Task<object> CreateStateStoreService(CancellationToken token)
-        {
-            return Task.FromResult<object>(new StateStoreConnection());
-        }
+internal sealed class InMemoryStateStoreService : ReactiveServiceBase, IReactiveStateStoreService
+{
+    public InMemoryStateStoreService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
+        : base(new InMemoryRunnable(CreateStateStoreService), ReactiveServiceType.StateStoreService)
+#pragma warning restore CA2000
+    {
+    }
+
+    private static Task<object> CreateStateStoreService(CancellationToken token)
+    {
+        return Task.FromResult<object>(new StateStoreConnection());
     }
 }

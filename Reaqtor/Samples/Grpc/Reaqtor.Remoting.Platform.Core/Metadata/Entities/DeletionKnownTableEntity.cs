@@ -4,21 +4,20 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Table entity derived class to use for deletion operations from URI only.
+/// </summary>
+public class DeletionKnownTableEntity : KnownTableEntity
 {
     /// <summary>
-    /// Table entity derived class to use for deletion operations from URI only.
+    /// Instantiates a table entity for deletion operations.
     /// </summary>
-    public class DeletionKnownTableEntity : KnownTableEntity
+    /// <param name="uri">The URI of the entity to delete.</param>
+    public DeletionKnownTableEntity(Uri uri)
+        : base(uri)
     {
-        /// <summary>
-        /// Instantiates a table entity for deletion operations.
-        /// </summary>
-        /// <param name="uri">The URI of the entity to delete.</param>
-        public DeletionKnownTableEntity(Uri uri)
-            : base(uri)
-        {
-            ETag = "*";
-        }
+        ETag = "*";
     }
 }

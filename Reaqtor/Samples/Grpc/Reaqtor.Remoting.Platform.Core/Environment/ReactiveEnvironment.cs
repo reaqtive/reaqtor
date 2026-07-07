@@ -10,38 +10,37 @@
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public class ReactiveEnvironment : ReactiveEnvironmentBase
 {
-    public class ReactiveEnvironment : ReactiveEnvironmentBase
+    public ReactiveEnvironment(IReactiveMetadataService metadataService, IReactiveMessagingService messagingService, IReactiveStateStoreService stateStoreService, IKeyValueStoreService keyValueStoreService)
     {
-        public ReactiveEnvironment(IReactiveMetadataService metadataService, IReactiveMessagingService messagingService, IReactiveStateStoreService stateStoreService, IKeyValueStoreService keyValueStoreService)
-        {
-            StorageType = MetadataStorageType.Remoting;
-            MetadataService = metadataService;
-            MessagingService = messagingService;
-            StateStoreService = stateStoreService;
-            KeyValueStoreService = keyValueStoreService;
-        }
-
-        public ReactiveEnvironment(string azureConnectionString, IReactiveMessagingService messagingService, IReactiveStateStoreService stateStoreService, IKeyValueStoreService keyValueStoreService)
-        {
-            StorageType = MetadataStorageType.Azure;
-            AzureConnectionString = azureConnectionString;
-            MessagingService = messagingService;
-            StateStoreService = stateStoreService;
-            KeyValueStoreService = keyValueStoreService;
-        }
-
-        public override IReactiveMetadataService MetadataService { get; }
-
-        public override IReactiveMessagingService MessagingService { get; }
-
-        public override IReactiveStateStoreService StateStoreService { get; }
-
-        public override IKeyValueStoreService KeyValueStoreService { get; }
-
-        public override MetadataStorageType StorageType { get; }
-
-        public override string AzureConnectionString { get; }
+        StorageType = MetadataStorageType.Remoting;
+        MetadataService = metadataService;
+        MessagingService = messagingService;
+        StateStoreService = stateStoreService;
+        KeyValueStoreService = keyValueStoreService;
     }
+
+    public ReactiveEnvironment(string azureConnectionString, IReactiveMessagingService messagingService, IReactiveStateStoreService stateStoreService, IKeyValueStoreService keyValueStoreService)
+    {
+        StorageType = MetadataStorageType.Azure;
+        AzureConnectionString = azureConnectionString;
+        MessagingService = messagingService;
+        StateStoreService = stateStoreService;
+        KeyValueStoreService = keyValueStoreService;
+    }
+
+    public override IReactiveMetadataService MetadataService { get; }
+
+    public override IReactiveMessagingService MessagingService { get; }
+
+    public override IReactiveStateStoreService StateStoreService { get; }
+
+    public override IKeyValueStoreService KeyValueStoreService { get; }
+
+    public override MetadataStorageType StorageType { get; }
+
+    public override string AzureConnectionString { get; }
 }

@@ -12,17 +12,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor.Remoting.Platform
-{
-    public interface IRunnable : IDisposable
-    {
-        bool IsRunning { get; }
-        object Instance { get; }
-        Task<int> RunAsync(CancellationToken token);
-    }
+namespace Reaqtor.Remoting.Platform;
 
-    public interface IRunnable<T> : IRunnable, IDisposable
-    {
-        T Target { get; }
-    }
+public interface IRunnable : IDisposable
+{
+    bool IsRunning { get; }
+    object Instance { get; }
+    Task<int> RunAsync(CancellationToken token);
+}
+
+public interface IRunnable<T> : IRunnable, IDisposable
+{
+    T Target { get; }
 }

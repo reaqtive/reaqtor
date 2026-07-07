@@ -4,20 +4,19 @@
 
 using System.Linq;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// An abstraction of storage table service context.
+/// </summary>
+public interface ITableServiceContext
 {
     /// <summary>
-    /// An abstraction of storage table service context.
+    /// Gets the IQueryable interface for a given entity set name.
     /// </summary>
-    public interface ITableServiceContext
-    {
-        /// <summary>
-        /// Gets the IQueryable interface for a given entity set name.
-        /// </summary>
-        /// <typeparam name="T">The entity type.</typeparam>
-        /// <param name="entitySetName">The entity set name.</param>
-        /// <returns>An IQueryable interface.</returns>
-        IQueryable<T> CreateQuery<T>(string entitySetName)
-            where T : new();
-    }
+    /// <typeparam name="T">The entity type.</typeparam>
+    /// <param name="entitySetName">The entity set name.</param>
+    /// <returns>An IQueryable interface.</returns>
+    IQueryable<T> CreateQuery<T>(string entitySetName)
+        where T : new();
 }

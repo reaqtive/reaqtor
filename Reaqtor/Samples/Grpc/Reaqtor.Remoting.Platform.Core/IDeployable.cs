@@ -2,10 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public interface IDeployable
 {
-    public interface IDeployable
-    {
-        void Execute(ReactiveClientContext context);
-    }
+    void Execute(ReactiveClientContext context);
 }

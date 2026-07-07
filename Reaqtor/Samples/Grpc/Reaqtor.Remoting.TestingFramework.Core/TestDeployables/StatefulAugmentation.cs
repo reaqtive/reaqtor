@@ -12,37 +12,36 @@ using System;
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+internal class StatefulAugmentation<TSource> : SubscribableBase<TSource>
 {
-    internal class StatefulAugmentation<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+
+    public StatefulAugmentation(ISubscribable<TSource> source)
     {
-        private readonly ISubscribable<TSource> _source;
+        _source = source;
+    }
 
-        public StatefulAugmentation(ISubscribable<TSource> source)
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<StatefulAugmentation<TSource>, TSource>
+    {
+        public _(StatefulAugmentation<TSource> parent, IObserver<TSource> observer)
+            : base(parent, observer)
         {
-            _source = source;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override Version Version => Versioning.v1;
+
+        public override string Name => "rx:AugmentTest";
+
+        protected override ISubscription OnSubscribe()
         {
-            return new _(this, observer);
-        }
-
-        private sealed class _ : StatefulUnaryOperator<StatefulAugmentation<TSource>, TSource>
-        {
-            public _(StatefulAugmentation<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
-
-            public override Version Version => Versioning.v1;
-
-            public override string Name => "rx:AugmentTest";
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(Output);
-            }
+            return Params._source.Subscribe(Output);
         }
     }
 }

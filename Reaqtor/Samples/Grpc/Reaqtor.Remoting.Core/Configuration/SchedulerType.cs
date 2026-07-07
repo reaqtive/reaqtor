@@ -10,32 +10,31 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+/// <summary>
+/// An enumeration for scheduler types.
+/// </summary>
+[Serializable]
+public enum SchedulerType
 {
     /// <summary>
-    /// An enumeration for scheduler types.
+    /// Denotes the default scheduler type.
     /// </summary>
-    [Serializable]
-    public enum SchedulerType
-    {
-        /// <summary>
-        /// Denotes the default scheduler type.
-        /// </summary>
-        Default = 0,
+    Default = 0,
 
-        /// <summary>
-        /// Denotes the test scheduler type.
-        /// </summary>
-        Test = 1,
+    /// <summary>
+    /// Denotes the test scheduler type.
+    /// </summary>
+    Test = 1,
 
-        /// <summary>
-        /// Denotes the logging scheduler type.
-        /// </summary>
-        Logging = 2,
+    /// <summary>
+    /// Denotes the logging scheduler type.
+    /// </summary>
+    Logging = 2,
 
-        /// <summary>
-        /// Denotes the shared static scheduler.
-        /// </summary>
-        Static = 3,
-    }
+    /// <summary>
+    /// Denotes the shared static scheduler.
+    /// </summary>
+    Static = 3,
 }

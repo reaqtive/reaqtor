@@ -9,53 +9,52 @@ using System.IO;
 using Reaqtor.QueryEngine;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.QueryEvaluator
+namespace Reaqtor.Remoting.QueryEvaluator;
+
+internal sealed class StateStoreConnectionStateReader : IStateReader
 {
-    internal sealed class StateStoreConnectionStateReader : IStateReader
+    private readonly IReactiveStateStoreConnection _connection;
+    private volatile bool _disposed;
+
+    public StateStoreConnectionStateReader(IReactiveStateStoreConnection connection)
     {
-        private readonly IReactiveStateStoreConnection _connection;
-        private volatile bool _disposed;
+        _connection = connection;
+    }
 
-        public StateStoreConnectionStateReader(IReactiveStateStoreConnection connection)
+    public IEnumerable<string> GetCategories()
+    {
+        CheckDisposed();
+
+        return _connection.GetCategories();
+    }
+
+    public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    {
+        CheckDisposed();
+
+        return _connection.TryGetItemKeys(category, out keys);
+    }
+
+    public bool TryGetItemReader(string category, string key, out Stream stream)
+    {
+        CheckDisposed();
+
+        if (!_connection.TryGetItem(category, key, out var value))
         {
-            _connection = connection;
+            stream = default;
+            return false;
         }
+        stream = new MemoryStream(CompressionUtils.Decompress(value), writable: false);
+        return true;
+    }
 
-        public IEnumerable<string> GetCategories()
-        {
-            CheckDisposed();
+    private void CheckDisposed()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+    }
 
-            return _connection.GetCategories();
-        }
-
-        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
-        {
-            CheckDisposed();
-
-            return _connection.TryGetItemKeys(category, out keys);
-        }
-
-        public bool TryGetItemReader(string category, string key, out Stream stream)
-        {
-            CheckDisposed();
-
-            if (!_connection.TryGetItem(category, key, out var value))
-            {
-                stream = default;
-                return false;
-            }
-            stream = new MemoryStream(CompressionUtils.Decompress(value), writable: false);
-            return true;
-        }
-
-        private void CheckDisposed()
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-        }
-
-        public void Dispose()
-        {
-            _disposed = true;
-        }
+    public void Dispose()
+    {
+        _disposed = true;
     }
 }

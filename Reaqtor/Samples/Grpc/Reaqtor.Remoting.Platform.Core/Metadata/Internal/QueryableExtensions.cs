@@ -5,24 +5,23 @@
 using System;
 using System.Linq;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Provides an extension method to insert a local/remote query execution transition marker.
+/// </summary>
+internal static class QueryableExtensions
 {
     /// <summary>
-    /// Provides an extension method to insert a local/remote query execution transition marker.
+    /// Marker to indicate the transition from remote query execution of the specified query to local execution of further query compositions.
     /// </summary>
-    internal static class QueryableExtensions
+    /// <typeparam name="T">Element type of the query result.</typeparam>
+    /// <param name="source">Query to execute remotely but to hide from accepting further query composition.</param>
+    /// <returns>Query object that hides the original query and causes further query composition to execute locally.</returns>
+    public static IQueryable<T> ToLocal<T>(this IQueryable<T> source)
     {
-        /// <summary>
-        /// Marker to indicate the transition from remote query execution of the specified query to local execution of further query compositions.
-        /// </summary>
-        /// <typeparam name="T">Element type of the query result.</typeparam>
-        /// <param name="source">Query to execute remotely but to hide from accepting further query composition.</param>
-        /// <returns>Query object that hides the original query and causes further query composition to execute locally.</returns>
-        public static IQueryable<T> ToLocal<T>(this IQueryable<T> source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
-            return source.AsEnumerable().Select(_ => _).AsQueryable();
-        }
+        return source.AsEnumerable().Select(_ => _).AsQueryable();
     }
 }

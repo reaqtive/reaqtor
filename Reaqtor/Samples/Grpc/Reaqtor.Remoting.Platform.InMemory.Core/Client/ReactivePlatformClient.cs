@@ -11,20 +11,19 @@
 using Reaqtor.Remoting.Client;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public class ReactivePlatformClient : ReactivePlatformClientBase
 {
-    public class ReactivePlatformClient : ReactivePlatformClientBase
+    public ReactivePlatformClient(IReactivePlatform platform)
+        : base(platform)
     {
-        public ReactivePlatformClient(IReactivePlatform platform)
-            : base(platform)
-        {
-        }
-
-        public ReactivePlatformClient(IRemotingReactiveServiceConnection queryCoordinator, IReactiveMessagingConnection messaging)
-            : base(queryCoordinator, messaging)
-        {
-        }
-
-        public override ReactiveClientContext Context => new RemotingClientContext(ExpressionServices, ServiceProvider);
     }
+
+    public ReactivePlatformClient(IRemotingReactiveServiceConnection queryCoordinator, IReactiveMessagingConnection messaging)
+        : base(queryCoordinator, messaging)
+    {
+    }
+
+    public override ReactiveClientContext Context => new RemotingClientContext(ExpressionServices, ServiceProvider);
 }

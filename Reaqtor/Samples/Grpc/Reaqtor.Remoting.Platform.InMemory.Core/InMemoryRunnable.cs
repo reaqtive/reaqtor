@@ -12,43 +12,42 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public sealed class InMemoryRunnable : IRunnable<Func<CancellationToken, Task<object>>>
 {
-    public sealed class InMemoryRunnable : IRunnable<Func<CancellationToken, Task<object>>>
+    public InMemoryRunnable(Func<CancellationToken, Task<object>> task)
     {
-        public InMemoryRunnable(Func<CancellationToken, Task<object>> task)
+        Target = task;
+    }
+
+    public Func<CancellationToken, Task<object>> Target { get; }
+
+    public bool IsRunning { get; private set; }
+
+    public object Instance { get; private set; }
+
+    public Task<int> RunAsync(CancellationToken token)
+    {
+        if (!IsRunning)
         {
-            Target = task;
+            IsRunning = true;
+            return Target(token).ContinueWith(t =>
+                {
+                    Instance = t.Result;
+                    IsRunning = false;
+                    return 0;
+                }, TaskScheduler.Default);
         }
-
-        public Func<CancellationToken, Task<object>> Target { get; }
-
-        public bool IsRunning { get; private set; }
-
-        public object Instance { get; private set; }
-
-        public Task<int> RunAsync(CancellationToken token)
+        else
         {
-            if (!IsRunning)
-            {
-                IsRunning = true;
-                return Target(token).ContinueWith(t =>
-                    {
-                        Instance = t.Result;
-                        IsRunning = false;
-                        return 0;
-                    }, TaskScheduler.Default);
-            }
-            else
-            {
-                throw new InvalidOperationException("Task is already running.");
-            }
+            throw new InvalidOperationException("Task is already running.");
         }
+    }
 
-        public void Dispose()
-        {
-            IsRunning = false;
-            Instance = null;
-        }
+    public void Dispose()
+    {
+        IsRunning = false;
+        Instance = null;
     }
 }

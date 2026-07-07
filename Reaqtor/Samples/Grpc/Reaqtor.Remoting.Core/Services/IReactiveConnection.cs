@@ -8,10 +8,9 @@
 // ER - August 2014 - Created this file.
 //
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IReactiveConnection
 {
-    public interface IReactiveConnection
-    {
-        void Ping();
-    }
+    void Ping();
 }

@@ -10,58 +10,57 @@ using System.Threading.Tasks;
 
 using Reaqtor.Hosting.Shared.Serialization;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public class CommandTextFactory<TExpression> : ICommandTextFactory<TExpression>, ICommandResponseParser
 {
-    public class CommandTextFactory<TExpression> : ICommandTextFactory<TExpression>, ICommandResponseParser
+    private readonly SerializationHelpers _serializer;
+
+    public CommandTextFactory()
+        : this(new SerializationHelpers())
     {
-        private readonly SerializationHelpers _serializer;
+    }
 
-        public CommandTextFactory()
-            : this(new SerializationHelpers())
+    public CommandTextFactory(SerializationHelpers serializer)
+    {
+        _serializer = serializer;
+    }
+
+    public string CreateNewText(NewCommandData<TExpression> data)
+    {
+        var mappedData = new DataModelNewCommandData<TExpression>
         {
-        }
+            Expression = data.Expression,
+            State = data.State,
+            Uri = data.Uri,
+        };
 
-        public CommandTextFactory(SerializationHelpers serializer)
-        {
-            _serializer = serializer;
-        }
+        return _serializer.Serialize(mappedData);
+    }
 
-        public string CreateNewText(NewCommandData<TExpression> data)
-        {
-            var mappedData = new DataModelNewCommandData<TExpression>
-            {
-                Expression = data.Expression,
-                State = data.State,
-                Uri = data.Uri,
-            };
+    public string CreateRemoveText(Uri uri)
+    {
+        return _serializer.Serialize(uri);
+    }
 
-            return _serializer.Serialize(mappedData);
-        }
+    public string CreateGetText(Expression expression)
+    {
+        return _serializer.Serialize(expression);
+    }
 
-        public string CreateRemoveText(Uri uri)
-        {
-            return _serializer.Serialize(uri);
-        }
+    public async Task<T> ParseResponseAsync<T>(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(request);
 
-        public string CreateGetText(Expression expression)
-        {
-            return _serializer.Serialize(expression);
-        }
+        var response = await request.ConfigureAwait(false);
+        return _serializer.Deserialize<T>(response);
+    }
 
-        public async Task<T> ParseResponseAsync<T>(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
-        {
-            ArgumentNullException.ThrowIfNull(request);
+    public async Task ParseResponseAsync(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(request);
 
-            var response = await request.ConfigureAwait(false);
-            return _serializer.Deserialize<T>(response);
-        }
-
-        public async Task ParseResponseAsync(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
-        {
-            ArgumentNullException.ThrowIfNull(request);
-
-            var response = await request.ConfigureAwait(false);
-            Debug.Assert(response == "OK");
-        }
+        var response = await request.ConfigureAwait(false);
+        Debug.Assert(response == "OK");
     }
 }

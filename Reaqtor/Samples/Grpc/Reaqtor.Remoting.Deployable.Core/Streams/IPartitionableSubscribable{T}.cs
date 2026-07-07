@@ -4,9 +4,8 @@
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public interface IPartitionableSubscribable<TSource> : IImmutableBindingHolder<IPartitionableSubscribable<TSource>, TSource>, ISubscribable<TSource>
 {
-    public interface IPartitionableSubscribable<TSource> : IImmutableBindingHolder<IPartitionableSubscribable<TSource>, TSource>, ISubscribable<TSource>
-    {
-    }
 }

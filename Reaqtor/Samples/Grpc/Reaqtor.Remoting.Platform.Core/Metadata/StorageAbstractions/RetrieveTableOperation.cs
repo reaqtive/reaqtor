@@ -5,20 +5,19 @@
 // NB: ADAPTATION (plan §2.6): removed `using Microsoft.Azure.Cosmos.Table;`. ITableEntity and TableOperationType
 //     bind to the local Cosmos-free abstractions in this namespace.
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Represents an insert operation on a table.
+/// </summary>
+public class RetrieveTableOperation : TableOperationBase
 {
     /// <summary>
-    /// Represents an insert operation on a table.
+    /// Constructs a retrieve table operation.
     /// </summary>
-    public class RetrieveTableOperation : TableOperationBase
+    /// <param name="entity">The entity to retrieve.</param>
+    public RetrieveTableOperation(ITableEntity entity)
+        : base(entity, TableOperationType.Retrieve)
     {
-        /// <summary>
-        /// Constructs a retrieve table operation.
-        /// </summary>
-        /// <param name="entity">The entity to retrieve.</param>
-        public RetrieveTableOperation(ITableEntity entity)
-            : base(entity, TableOperationType.Retrieve)
-        {
-        }
     }
 }

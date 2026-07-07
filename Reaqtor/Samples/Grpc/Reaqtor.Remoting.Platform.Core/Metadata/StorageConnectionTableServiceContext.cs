@@ -6,21 +6,20 @@ using System.Linq;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+public class StorageConnectionTableServiceContext : ITableServiceContext
 {
-    public class StorageConnectionTableServiceContext : ITableServiceContext
+    private readonly IReactiveStorageConnection _connection;
+
+    public StorageConnectionTableServiceContext(IReactiveStorageConnection connection)
     {
-        private readonly IReactiveStorageConnection _connection;
+        _connection = connection;
+    }
 
-        public StorageConnectionTableServiceContext(IReactiveStorageConnection connection)
-        {
-            _connection = connection;
-        }
-
-        public IQueryable<T> CreateQuery<T>(string entitySetName)
-            where T : new()
-        {
-            return new StorageConnectionQueryable<T>(entitySetName, _connection);
-        }
+    public IQueryable<T> CreateQuery<T>(string entitySetName)
+        where T : new()
+    {
+        return new StorageConnectionQueryable<T>(entitySetName, _connection);
     }
 }

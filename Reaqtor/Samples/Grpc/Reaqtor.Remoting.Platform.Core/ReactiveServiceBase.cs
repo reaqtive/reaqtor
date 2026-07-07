@@ -12,92 +12,91 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public abstract class ReactiveServiceBase : IReactiveService
 {
-    public abstract class ReactiveServiceBase : IReactiveService
+    protected ReactiveServiceBase(IRunnable runnable, ReactiveServiceType serviceType)
     {
-        protected ReactiveServiceBase(IRunnable runnable, ReactiveServiceType serviceType)
+        Runnable = runnable;
+        ServiceType = serviceType;
+    }
+
+    public IRunnable Runnable { get; }
+
+    public ReactiveServiceType ServiceType { get; }
+
+    public virtual async Task StartAsync(CancellationToken token)
+    {
+        await Runnable.RunAsync(token).ConfigureAwait(false);
+    }
+
+    public virtual Task StopAsync(CancellationToken token)
+    {
+        Runnable.Dispose();
+        return Task.FromResult(true);
+    }
+
+    public void Register(IReactiveService service)
+    {
+        ArgumentNullException.ThrowIfNull(service);
+
+        switch (service.ServiceType)
         {
-            Runnable = runnable;
-            ServiceType = serviceType;
+            case ReactiveServiceType.QueryCoordinator:
+                RegisterQueryCoordinator((IReactiveQueryCoordinator)service);
+                break;
+            case ReactiveServiceType.QueryEvaluator:
+                RegisterQueryEvaluator((IReactiveQueryEvaluator)service);
+                break;
+            case ReactiveServiceType.MetadataService:
+                RegisterMetadataService((IReactiveMetadataService)service);
+                break;
+            case ReactiveServiceType.MessagingService:
+                RegisterMessagingService((IReactiveMessagingService)service);
+                break;
+            case ReactiveServiceType.StateStoreService:
+                RegisterStateStoreService((IReactiveStateStoreService)service);
+                break;
+            case ReactiveServiceType.KeyValueStoreService:
+                RegisterKeyValueStoreService((IKeyValueStoreService)service);
+                break;
+            default:
+                RegisterOtherService(service);
+                break;
         }
+    }
 
-        public IRunnable Runnable { get; }
+    protected virtual void RegisterQueryCoordinator(IReactiveQueryCoordinator service)
+    {
+    }
 
-        public ReactiveServiceType ServiceType { get; }
+    protected virtual void RegisterQueryEvaluator(IReactiveQueryEvaluator service)
+    {
+    }
 
-        public virtual async Task StartAsync(CancellationToken token)
-        {
-            await Runnable.RunAsync(token).ConfigureAwait(false);
-        }
+    protected virtual void RegisterMetadataService(IReactiveMetadataService service)
+    {
+    }
 
-        public virtual Task StopAsync(CancellationToken token)
-        {
-            Runnable.Dispose();
-            return Task.FromResult(true);
-        }
+    protected virtual void RegisterMessagingService(IReactiveMessagingService service)
+    {
+    }
 
-        public void Register(IReactiveService service)
-        {
-            ArgumentNullException.ThrowIfNull(service);
+    protected virtual void RegisterStateStoreService(IReactiveStateStoreService service)
+    {
+    }
 
-            switch (service.ServiceType)
-            {
-                case ReactiveServiceType.QueryCoordinator:
-                    RegisterQueryCoordinator((IReactiveQueryCoordinator)service);
-                    break;
-                case ReactiveServiceType.QueryEvaluator:
-                    RegisterQueryEvaluator((IReactiveQueryEvaluator)service);
-                    break;
-                case ReactiveServiceType.MetadataService:
-                    RegisterMetadataService((IReactiveMetadataService)service);
-                    break;
-                case ReactiveServiceType.MessagingService:
-                    RegisterMessagingService((IReactiveMessagingService)service);
-                    break;
-                case ReactiveServiceType.StateStoreService:
-                    RegisterStateStoreService((IReactiveStateStoreService)service);
-                    break;
-                case ReactiveServiceType.KeyValueStoreService:
-                    RegisterKeyValueStoreService((IKeyValueStoreService)service);
-                    break;
-                default:
-                    RegisterOtherService(service);
-                    break;
-            }
-        }
+    protected virtual void RegisterKeyValueStoreService(IKeyValueStoreService service)
+    {
+    }
 
-        protected virtual void RegisterQueryCoordinator(IReactiveQueryCoordinator service)
-        {
-        }
+    protected virtual void RegisterOtherService(IReactiveService service)
+    {
+    }
 
-        protected virtual void RegisterQueryEvaluator(IReactiveQueryEvaluator service)
-        {
-        }
-
-        protected virtual void RegisterMetadataService(IReactiveMetadataService service)
-        {
-        }
-
-        protected virtual void RegisterMessagingService(IReactiveMessagingService service)
-        {
-        }
-
-        protected virtual void RegisterStateStoreService(IReactiveStateStoreService service)
-        {
-        }
-
-        protected virtual void RegisterKeyValueStoreService(IKeyValueStoreService service)
-        {
-        }
-
-        protected virtual void RegisterOtherService(IReactiveService service)
-        {
-        }
-
-        public virtual TInstance GetInstance<TInstance>()
-        {
-            return (TInstance)Runnable.Instance;
-        }
+    public virtual TInstance GetInstance<TInstance>()
+    {
+        return (TInstance)Runnable.Instance;
     }
 }

@@ -8,40 +8,39 @@ using System;
 //     TableOperationType below bind to the local Cosmos-free abstractions already present in this namespace
 //     (see the sibling files in Metadata/StorageAbstractions/).
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Base class for table operations.
+/// </summary>
+public abstract class TableOperationBase : ITableOperation
 {
     /// <summary>
-    /// Base class for table operations.
+    /// Base constructor for table operations.
     /// </summary>
-    public abstract class TableOperationBase : ITableOperation
+    /// <param name="entity">The entity to perform the operation on.</param>
+    /// <param name="type">The type of table operation.</param>
+    protected TableOperationBase(ITableEntity entity, TableOperationType type)
     {
-        /// <summary>
-        /// Base constructor for table operations.
-        /// </summary>
-        /// <param name="entity">The entity to perform the operation on.</param>
-        /// <param name="type">The type of table operation.</param>
-        protected TableOperationBase(ITableEntity entity, TableOperationType type)
-        {
-            Entity = entity ?? throw new ArgumentNullException(nameof(entity));
-            Type = type;
-        }
+        Entity = entity ?? throw new ArgumentNullException(nameof(entity));
+        Type = type;
+    }
 
-        /// <summary>
-        /// The entity to perform the operation on.
-        /// </summary>
-        public ITableEntity Entity
-        {
-            get;
-            private set;
-        }
+    /// <summary>
+    /// The entity to perform the operation on.
+    /// </summary>
+    public ITableEntity Entity
+    {
+        get;
+        private set;
+    }
 
-        /// <summary>
-        /// The type of table operation.
-        /// </summary>
-        public TableOperationType Type
-        {
-            get;
-            private set;
-        }
+    /// <summary>
+    /// The type of table operation.
+    /// </summary>
+    public TableOperationType Type
+    {
+        get;
+        private set;
     }
 }

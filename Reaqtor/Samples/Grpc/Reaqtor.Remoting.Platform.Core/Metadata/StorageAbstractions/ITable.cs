@@ -4,37 +4,36 @@
 
 using System.Threading.Tasks;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// An abstraction of a storage table that can execute operations.
+/// </summary>
+/// <remarks>
+/// Ported from the archived <c>Reaqtor.Remoting.Platform</c>. The original signatures took
+/// <c>Microsoft.Azure.Cosmos.Table.TableRequestOptions</c> and returned its <c>TableResult</c>; the Cosmos
+/// dependency has been removed (plan §2.6). The optional request-options parameter (always passed
+/// <c>null</c>/defaulted by the in-memory storage layer) is dropped, and <see cref="ITableOperation"/> /
+/// <see cref="TableResult"/> are the local Cosmos-free equivalents.
+/// </remarks>
+public interface ITable
 {
     /// <summary>
-    /// An abstraction of a storage table that can execute operations.
+    /// Creates the table if it does not exist.
     /// </summary>
-    /// <remarks>
-    /// Ported from the archived <c>Reaqtor.Remoting.Platform</c>. The original signatures took
-    /// <c>Microsoft.Azure.Cosmos.Table.TableRequestOptions</c> and returned its <c>TableResult</c>; the Cosmos
-    /// dependency has been removed (plan §2.6). The optional request-options parameter (always passed
-    /// <c>null</c>/defaulted by the in-memory storage layer) is dropped, and <see cref="ITableOperation"/> /
-    /// <see cref="TableResult"/> are the local Cosmos-free equivalents.
-    /// </remarks>
-    public interface ITable
-    {
-        /// <summary>
-        /// Creates the table if it does not exist.
-        /// </summary>
-        /// <param name="state">The state.</param>
-        /// <returns>
-        /// true if table created, false otherwise.
-        /// </returns>
-        Task<bool> CreateIfNotExistsAsync(object state);
+    /// <param name="state">The state.</param>
+    /// <returns>
+    /// true if table created, false otherwise.
+    /// </returns>
+    Task<bool> CreateIfNotExistsAsync(object state);
 
-        /// <summary>
-        /// Executes a table operation on the table.
-        /// </summary>
-        /// <param name="operation">The operation to execute.</param>
-        /// <param name="state">The state.</param>
-        /// <returns>
-        /// The result of the operation.
-        /// </returns>
-        Task<TableResult> ExecuteAsync(ITableOperation operation, object state);
-    }
+    /// <summary>
+    /// Executes a table operation on the table.
+    /// </summary>
+    /// <param name="operation">The operation to execute.</param>
+    /// <param name="state">The state.</param>
+    /// <returns>
+    /// The result of the operation.
+    /// </returns>
+    Task<TableResult> ExecuteAsync(ITableOperation operation, object state);
 }

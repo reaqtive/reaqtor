@@ -15,127 +15,126 @@ using System.Threading.Tasks;
 using Reaqtive.Scheduler;
 using Reaqtive.TestingFramework;
 
-namespace Reaqtor.Remoting.QueryEvaluator
+namespace Reaqtor.Remoting.QueryEvaluator;
+
+//
+// ADAPTATION (plan §3.4, adaptation #3): the archived SchedulerProxy derived from MarshalByRefObject so a client
+// could control the QE's TestScheduler and ship Action lambdas to run server-side across the .NET Remoting boundary.
+// Virtual-time scheduling is NOT remoted over gRPC (closures can't be marshaled); the engine uses a local scheduler.
+// We therefore drop MarshalByRefObject (no System.Runtime.Remoting on net10.0) but KEEP the type and every other
+// member byte-for-byte: it is still the local engine-scheduler wrapper that unifies ITestScheduler /
+// ILoggingScheduler<long> / ISchedulerExceptionHandler and disposes the physical-scheduler terminator, on which the
+// in-process virtual-time tests rely.
+//
+public sealed class SchedulerProxy : ITestScheduler, ILoggingScheduler<long>, ISchedulerExceptionHandler
 {
-    //
-    // ADAPTATION (plan §3.4, adaptation #3): the archived SchedulerProxy derived from MarshalByRefObject so a client
-    // could control the QE's TestScheduler and ship Action lambdas to run server-side across the .NET Remoting boundary.
-    // Virtual-time scheduling is NOT remoted over gRPC (closures can't be marshaled); the engine uses a local scheduler.
-    // We therefore drop MarshalByRefObject (no System.Runtime.Remoting on net10.0) but KEEP the type and every other
-    // member byte-for-byte: it is still the local engine-scheduler wrapper that unifies ITestScheduler /
-    // ILoggingScheduler<long> / ISchedulerExceptionHandler and disposes the physical-scheduler terminator, on which the
-    // in-process virtual-time tests rely.
-    //
-    public sealed class SchedulerProxy : ITestScheduler, ILoggingScheduler<long>, ISchedulerExceptionHandler
+    private readonly IScheduler _logicalScheduler;
+    private readonly IDisposable _terminator;
+
+    public SchedulerProxy(IScheduler logicalScheduler, IDisposable terminator)
+        : this(logicalScheduler)
     {
-        private readonly IScheduler _logicalScheduler;
-        private readonly IDisposable _terminator;
+        _terminator = terminator;
+    }
 
-        public SchedulerProxy(IScheduler logicalScheduler, IDisposable terminator)
-            : this(logicalScheduler)
+    public SchedulerProxy(IScheduler logicalScheduler)
+    {
+        _logicalScheduler = logicalScheduler;
+    }
+
+    #region ITestScheduler
+
+    public void ScheduleAbsolute(long dueTime, ISchedulerTask task)
+    {
+        ((TestScheduler)_logicalScheduler).ScheduleAbsolute(dueTime, task);
+    }
+
+    public void Start()
+    {
+        ((TestScheduler)_logicalScheduler).Start();
+    }
+
+    public long Clock => ((TestScheduler)_logicalScheduler).Clock;
+
+    #endregion
+
+    #region ILoggingScheduler<long>
+
+    public IEnumerable<long> ScheduledTimes => ((ILoggingScheduler<long>)_logicalScheduler).ScheduledTimes;
+
+    #endregion
+
+    public DateTimeOffset Now => _logicalScheduler.Now;
+
+    public IScheduler CreateChildScheduler()
+    {
+        return new SchedulerProxy(_logicalScheduler.CreateChildScheduler(), terminator: null);
+    }
+
+    public void Schedule(ISchedulerTask task)
+    {
+        _logicalScheduler.Schedule(task);
+    }
+
+    public void Schedule(TimeSpan dueTime, ISchedulerTask task)
+    {
+        _logicalScheduler.Schedule(dueTime, task);
+    }
+
+    public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
+    {
+        _logicalScheduler.Schedule(dueTime, task);
+    }
+
+    public Task PauseAsync()
+    {
+        return _logicalScheduler.PauseAsync();
+    }
+
+    public void Continue()
+    {
+        _logicalScheduler.Continue();
+    }
+
+    public void RecalculatePriority()
+    {
+        _logicalScheduler.RecalculatePriority();
+    }
+
+    public void Dispose()
+    {
+        if (_terminator != null)
         {
-            _terminator = terminator;
+            _logicalScheduler.PauseAsync().Wait();
         }
 
-        public SchedulerProxy(IScheduler logicalScheduler)
+        _logicalScheduler.Dispose();
+
+        _terminator?.Dispose();
+    }
+
+    public bool CheckAccess()
+    {
+        return _logicalScheduler.CheckAccess();
+    }
+
+    public void VerifyAccess()
+    {
+        _logicalScheduler.VerifyAccess();
+    }
+
+    public event EventHandler<SchedulerUnhandledExceptionEventArgs> UnhandledException;
+
+    bool ISchedulerExceptionHandler.TryCatch(Exception error, IWorkItem task)
+    {
+        var handler = UnhandledException;
+        if (handler != null)
         {
-            _logicalScheduler = logicalScheduler;
+            var e = new SchedulerUnhandledExceptionEventArgs(task.Scheduler, error);
+            handler(this, e);
+            return e.Handled;
         }
 
-        #region ITestScheduler
-
-        public void ScheduleAbsolute(long dueTime, ISchedulerTask task)
-        {
-            ((TestScheduler)_logicalScheduler).ScheduleAbsolute(dueTime, task);
-        }
-
-        public void Start()
-        {
-            ((TestScheduler)_logicalScheduler).Start();
-        }
-
-        public long Clock => ((TestScheduler)_logicalScheduler).Clock;
-
-        #endregion
-
-        #region ILoggingScheduler<long>
-
-        public IEnumerable<long> ScheduledTimes => ((ILoggingScheduler<long>)_logicalScheduler).ScheduledTimes;
-
-        #endregion
-
-        public DateTimeOffset Now => _logicalScheduler.Now;
-
-        public IScheduler CreateChildScheduler()
-        {
-            return new SchedulerProxy(_logicalScheduler.CreateChildScheduler(), terminator: null);
-        }
-
-        public void Schedule(ISchedulerTask task)
-        {
-            _logicalScheduler.Schedule(task);
-        }
-
-        public void Schedule(TimeSpan dueTime, ISchedulerTask task)
-        {
-            _logicalScheduler.Schedule(dueTime, task);
-        }
-
-        public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
-        {
-            _logicalScheduler.Schedule(dueTime, task);
-        }
-
-        public Task PauseAsync()
-        {
-            return _logicalScheduler.PauseAsync();
-        }
-
-        public void Continue()
-        {
-            _logicalScheduler.Continue();
-        }
-
-        public void RecalculatePriority()
-        {
-            _logicalScheduler.RecalculatePriority();
-        }
-
-        public void Dispose()
-        {
-            if (_terminator != null)
-            {
-                _logicalScheduler.PauseAsync().Wait();
-            }
-
-            _logicalScheduler.Dispose();
-
-            _terminator?.Dispose();
-        }
-
-        public bool CheckAccess()
-        {
-            return _logicalScheduler.CheckAccess();
-        }
-
-        public void VerifyAccess()
-        {
-            _logicalScheduler.VerifyAccess();
-        }
-
-        public event EventHandler<SchedulerUnhandledExceptionEventArgs> UnhandledException;
-
-        bool ISchedulerExceptionHandler.TryCatch(Exception error, IWorkItem task)
-        {
-            var handler = UnhandledException;
-            if (handler != null)
-            {
-                var e = new SchedulerUnhandledExceptionEventArgs(task.Scheduler, error);
-                handler(this, e);
-                return e.Handled;
-            }
-
-            return false;
-        }
+        return false;
     }
 }

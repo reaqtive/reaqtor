@@ -7,23 +7,22 @@ using System;
 using Reaqtor.QueryEngine;
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Remoting
+namespace Reaqtor.Remoting;
+
+internal sealed class MockReactiveServiceResolver : IReactiveServiceResolver
 {
-    internal sealed class MockReactiveServiceResolver : IReactiveServiceResolver
+    public bool TryResolve(Uri uri, out IReactive service)
     {
-        public bool TryResolve(Uri uri, out IReactive service)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
+    }
 
-        public bool TryResolve(Uri uri, out IReactiveProxy service)
-        {
-            throw new NotImplementedException();
-        }
+    public bool TryResolve(Uri uri, out IReactiveProxy service)
+    {
+        throw new NotImplementedException();
+    }
 
-        public bool TryResolveReliable(Uri uri, out IReliableReactive service)
-        {
-            throw new NotImplementedException();
-        }
+    public bool TryResolveReliable(Uri uri, out IReliableReactive service)
+    {
+        throw new NotImplementedException();
     }
 }

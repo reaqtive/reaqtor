@@ -10,45 +10,44 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public abstract class RemotingReactiveServiceConnectionBase : ReactiveConnectionBase, IRemotingReactiveServiceConnection
 {
-    public abstract class RemotingReactiveServiceConnectionBase : ReactiveConnectionBase, IRemotingReactiveServiceConnection
+    public IReactiveServiceConnection Connection
     {
-        public IReactiveServiceConnection Connection
-        {
-            get;
-            set;
-        }
-
-        public abstract void Configure(IReactivePlatformConfiguration configuration);
-
-        public IReactiveServiceCommandRemoting CreateCommand(CommandVerb verb, CommandNoun noun, string commandText)
-        {
-            var connection = Connection;
-            if (connection == null)
-            {
-                throw new InvalidOperationException("Inner connection is not set. Did you configure and start the service?");
-            }
-
-            return new ReactiveServiceCommandService(connection.CreateCommand(verb, noun, commandText));
-        }
-
-        public abstract void Start();
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                DisposeCore();
-            }
-        }
-
-        protected abstract void DisposeCore();
+        get;
+        set;
     }
+
+    public abstract void Configure(IReactivePlatformConfiguration configuration);
+
+    public IReactiveServiceCommandRemoting CreateCommand(CommandVerb verb, CommandNoun noun, string commandText)
+    {
+        var connection = Connection;
+        if (connection == null)
+        {
+            throw new InvalidOperationException("Inner connection is not set. Did you configure and start the service?");
+        }
+
+        return new ReactiveServiceCommandService(connection.CreateCommand(verb, noun, commandText));
+    }
+
+    public abstract void Start();
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DisposeCore();
+        }
+    }
+
+    protected abstract void DisposeCore();
 }

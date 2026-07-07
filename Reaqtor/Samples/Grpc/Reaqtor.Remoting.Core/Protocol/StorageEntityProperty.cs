@@ -10,21 +10,20 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
-{
-    [Serializable]
-    public class StorageEntityProperty
-    {
-        public int Type
-        {
-            get;
-            set;
-        }
+namespace Reaqtor.Remoting.Protocol;
 
-        public string Data
-        {
-            get;
-            set;
-        }
+[Serializable]
+public class StorageEntityProperty
+{
+    public int Type
+    {
+        get;
+        set;
+    }
+
+    public string Data
+    {
+        get;
+        set;
     }
 }

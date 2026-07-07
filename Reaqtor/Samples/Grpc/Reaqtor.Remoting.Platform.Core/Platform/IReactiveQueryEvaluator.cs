@@ -10,13 +10,12 @@
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public interface IReactiveQueryEvaluator : IReactiveService
 {
-    public interface IReactiveQueryEvaluator : IReactiveService
-    {
-        IScheduler Scheduler { get; }
-        void Checkpoint();
-        void Unload();
-        void Recover();
-    }
+    IScheduler Scheduler { get; }
+    void Checkpoint();
+    void Unload();
+    void Recover();
 }

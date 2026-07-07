@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public interface IReactivePlatformClient
 {
-    public interface IReactivePlatformClient
-    {
-        IReactivePlatform Platform { get; }
-        ReactiveClientContext Context { get; }
-        IReactiveMetadataProxy MetadataProxy { get; }
-        object GetRemoteObserver(Type elementType, Uri uri);
-    }
+    IReactivePlatform Platform { get; }
+    ReactiveClientContext Context { get; }
+    IReactiveMetadataProxy MetadataProxy { get; }
+    object GetRemoteObserver(Type elementType, Uri uri);
 }

@@ -2,10 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public interface IKeySelector<in T, out TResult>
 {
-    public interface IKeySelector<in T, out TResult>
-    {
-        TResult Invoke(T arg);
-    }
+    TResult Invoke(T arg);
 }

@@ -12,19 +12,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Reaqtor.Remoting.TestingFramework
-{
-    public class VirtualTimeAgenda<TContext> : List<VirtualTimeEvent<TContext>>
-        where TContext : ReactiveClientContext
-    {
-        public void Add(long ticks, Action<TContext> scheduledEvent)
-        {
-            Add(new VirtualTimeEvent<TContext> { Time = ticks, Event = scheduledEvent });
-        }
+namespace Reaqtor.Remoting.TestingFramework;
 
-        public void Add(long ticks, Func<TContext, Task> scheduledEvent)
-        {
-            Add(new VirtualTimeEvent<TContext> { Time = ticks, AsyncEvent = scheduledEvent, IsAsync = true });
-        }
+public class VirtualTimeAgenda<TContext> : List<VirtualTimeEvent<TContext>>
+    where TContext : ReactiveClientContext
+{
+    public void Add(long ticks, Action<TContext> scheduledEvent)
+    {
+        Add(new VirtualTimeEvent<TContext> { Time = ticks, Event = scheduledEvent });
+    }
+
+    public void Add(long ticks, Func<TContext, Task> scheduledEvent)
+    {
+        Add(new VirtualTimeEvent<TContext> { Time = ticks, AsyncEvent = scheduledEvent, IsAsync = true });
     }
 }

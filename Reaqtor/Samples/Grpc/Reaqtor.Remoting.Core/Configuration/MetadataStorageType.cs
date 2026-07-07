@@ -10,12 +10,11 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+[Serializable]
+public enum MetadataStorageType
 {
-    [Serializable]
-    public enum MetadataStorageType
-    {
-        Remoting = 0,
-        Azure = 1,
-    }
+    Remoting = 0,
+    Azure = 1,
 }

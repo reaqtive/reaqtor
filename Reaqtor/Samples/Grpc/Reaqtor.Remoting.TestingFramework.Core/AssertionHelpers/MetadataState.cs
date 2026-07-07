@@ -11,12 +11,11 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public class MetadataState
 {
-    public class MetadataState
-    {
-        public MetadataEntityType Type { get; set; }
-        public Uri Uri { get; set; }
-        public Expression Expression { get; set; }
-    }
+    public MetadataEntityType Type { get; set; }
+    public Uri Uri { get; set; }
+    public Expression Expression { get; set; }
 }

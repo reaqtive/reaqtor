@@ -13,21 +13,20 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
-{
-    internal sealed class InMemoryQueryEvaluator<TQueryEvaluator> : ReactiveQueryEvaluatorBase, IReactiveQueryEvaluator
-        where TQueryEvaluator : IReactiveQueryEvaluatorConnection, new()
-    {
-        public InMemoryQueryEvaluator(IReactivePlatform platform)
-#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
-            : base(platform, new InMemoryRunnable(CreateQueryEvaluator), ReactiveServiceType.QueryEvaluator)
-#pragma warning restore CA2000
-        {
-        }
+namespace Reaqtor.Remoting.Platform;
 
-        private static Task<object> CreateQueryEvaluator(CancellationToken token)
-        {
-            return Task.FromResult<object>(new TQueryEvaluator());
-        }
+internal sealed class InMemoryQueryEvaluator<TQueryEvaluator> : ReactiveQueryEvaluatorBase, IReactiveQueryEvaluator
+    where TQueryEvaluator : IReactiveQueryEvaluatorConnection, new()
+{
+    public InMemoryQueryEvaluator(IReactivePlatform platform)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
+        : base(platform, new InMemoryRunnable(CreateQueryEvaluator), ReactiveServiceType.QueryEvaluator)
+#pragma warning restore CA2000
+    {
+    }
+
+    private static Task<object> CreateQueryEvaluator(CancellationToken token)
+    {
+        return Task.FromResult<object>(new TQueryEvaluator());
     }
 }

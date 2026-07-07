@@ -15,139 +15,138 @@ using Reaqtive.Testing;
 using Reaqtor.Hosting.Shared.Serialization;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+[KnownType]
+public sealed class TestObserver<T> : IObserver<T>, IOperator, ISubscription
 {
-    [KnownType]
-    public sealed class TestObserver<T> : IObserver<T>, IOperator, ISubscription
+    #region Constructors & Fields
+
+    private readonly SerializationHelpers _helpers;
+    private readonly Uri _name;
+
+    private TestObserverStoreConnection _observerStore;
+
+    public TestObserver(Uri name)
     {
-        #region Constructors & Fields
+        _name = name;
+        _helpers = new SerializationHelpers();
+    }
 
-        private readonly SerializationHelpers _helpers;
-        private readonly Uri _name;
+    #endregion
 
-        private TestObserverStoreConnection _observerStore;
+    #region Properties
 
-        public TestObserver(Uri name)
+    private Impl Recorder
+    {
+        get
         {
-            _name = name;
-            _helpers = new SerializationHelpers();
-        }
-
-        #endregion
-
-        #region Properties
-
-        private Impl Recorder
-        {
-            get
+            if (!_observerStore.TryGetValue(_name.ToCanonicalString(), out var recorder))
             {
-                if (!_observerStore.TryGetValue(_name.ToCanonicalString(), out var recorder))
-                {
-                    recorder = new Impl();
-                    _observerStore.TryAdd(_name.ToCanonicalString(), recorder);
-                }
-                return (Impl)recorder;
+                recorder = new Impl();
+                _observerStore.TryAdd(_name.ToCanonicalString(), recorder);
             }
+            return (Impl)recorder;
+        }
+    }
+
+    #endregion
+
+    #region IObserver
+
+    public void OnCompleted()
+    {
+        Recorder.OnCompleted();
+    }
+
+    public void OnError(Exception error)
+    {
+        Recorder.OnError(error);
+    }
+
+    public void OnNext(T value)
+    {
+        Recorder.OnNext(_helpers.Serialize<T>(value));
+    }
+
+    #endregion
+
+    #region ISubscription
+
+    public void Accept(ISubscriptionVisitor visitor)
+    {
+        Debug.Assert(visitor != null);
+        visitor.Visit(this);
+    }
+
+    #endregion
+
+    #region IOperator
+
+    public void Subscribe() { }
+
+    public void SetContext(IOperatorContext context)
+    {
+        Debug.Assert(context != null);
+        context.TryGetElement<TestObserverStoreConnection>(
+            TestObserverStoreConnection.ContextHandle,
+            out _observerStore);
+        Debug.Assert(_observerStore != null);
+        Recorder.Scheduler = context.Scheduler;
+    }
+
+    public IEnumerable<ISubscription> Inputs => [];
+
+    public void Start()
+    {
+    }
+
+    public void Dispose()
+    {
+    }
+
+    #endregion
+
+    #region ITestObserver<string>
+
+    // NB: de-MBR'd. The archived recorder derived from MarshalByRefObject (and overrode
+    //     InitializeLifetimeService to disable lease expiry) so the test client could read the recorded
+    //     messages back across the .NET Remoting boundary. Recording now happens in-process, so the
+    //     MarshalByRefObject base and the lease override are removed (keeping only ITestObserver<string>).
+    private sealed class Impl : ITestObserver<string>
+    {
+        private readonly List<Recorded<INotification<string>>> _messages;
+
+        public Impl()
+        {
+            _messages = [];
         }
 
-        #endregion
+        public IScheduler Scheduler
+        {
+            get;
+            set;
+        }
 
-        #region IObserver
+        public IList<Recorded<INotification<string>>> Messages => _messages;
+
+        private long Now => Scheduler != null ? Scheduler.Now.Ticks : -1L;
 
         public void OnCompleted()
         {
-            Recorder.OnCompleted();
+            _messages.Add(ObserverMessage.OnCompleted<string>(Now));
         }
 
         public void OnError(Exception error)
         {
-            Recorder.OnError(error);
+            _messages.Add(ObserverMessage.OnError<string>(Now, error));
         }
 
-        public void OnNext(T value)
+        public void OnNext(string value)
         {
-            Recorder.OnNext(_helpers.Serialize<T>(value));
+            _messages.Add(ObserverMessage.OnNext<string>(Now, value));
         }
-
-        #endregion
-
-        #region ISubscription
-
-        public void Accept(ISubscriptionVisitor visitor)
-        {
-            Debug.Assert(visitor != null);
-            visitor.Visit(this);
-        }
-
-        #endregion
-
-        #region IOperator
-
-        public void Subscribe() { }
-
-        public void SetContext(IOperatorContext context)
-        {
-            Debug.Assert(context != null);
-            context.TryGetElement<TestObserverStoreConnection>(
-                TestObserverStoreConnection.ContextHandle,
-                out _observerStore);
-            Debug.Assert(_observerStore != null);
-            Recorder.Scheduler = context.Scheduler;
-        }
-
-        public IEnumerable<ISubscription> Inputs => [];
-
-        public void Start()
-        {
-        }
-
-        public void Dispose()
-        {
-        }
-
-        #endregion
-
-        #region ITestObserver<string>
-
-        // NB: de-MBR'd. The archived recorder derived from MarshalByRefObject (and overrode
-        //     InitializeLifetimeService to disable lease expiry) so the test client could read the recorded
-        //     messages back across the .NET Remoting boundary. Recording now happens in-process, so the
-        //     MarshalByRefObject base and the lease override are removed (keeping only ITestObserver<string>).
-        private sealed class Impl : ITestObserver<string>
-        {
-            private readonly List<Recorded<INotification<string>>> _messages;
-
-            public Impl()
-            {
-                _messages = [];
-            }
-
-            public IScheduler Scheduler
-            {
-                get;
-                set;
-            }
-
-            public IList<Recorded<INotification<string>>> Messages => _messages;
-
-            private long Now => Scheduler != null ? Scheduler.Now.Ticks : -1L;
-
-            public void OnCompleted()
-            {
-                _messages.Add(ObserverMessage.OnCompleted<string>(Now));
-            }
-
-            public void OnError(Exception error)
-            {
-                _messages.Add(ObserverMessage.OnError<string>(Now, error));
-            }
-
-            public void OnNext(string value)
-            {
-                _messages.Add(ObserverMessage.OnNext<string>(Now, value));
-            }
-        }
-
-        #endregion
     }
+
+    #endregion
 }

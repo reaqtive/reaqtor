@@ -14,50 +14,49 @@ using System.Reflection;
 
 using Reaqtor.Hosting.Shared.Serialization;
 
-namespace Reaqtor.Remoting.TestingFramework
-{
-    public static class TestDeployableExtensions
-    {
-        [KnownResource(Constants.Test.StatefulAugmentationObservable.String)]
-        public static IAsyncReactiveQbservable<T> StatefulAugmentation<T>(this IAsyncReactiveQbservable<T> source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+namespace Reaqtor.Remoting.TestingFramework;
 
-            return source.Provider.CreateQbservable<T>(
-                Expression.Call(
-                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)),
-                    source.Expression));
+public static class TestDeployableExtensions
+{
+    [KnownResource(Constants.Test.StatefulAugmentationObservable.String)]
+    public static IAsyncReactiveQbservable<T> StatefulAugmentation<T>(this IAsyncReactiveQbservable<T> source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return source.Provider.CreateQbservable<T>(
+            Expression.Call(
+                ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)),
+                source.Expression));
+    }
+
+    // NB: de-MBR'd. The archived RemoteObserver derived from MarshalByRefObject (and overrode
+    //     InitializeLifetimeService to disable lease expiry) so a client-side observer could be handed across
+    //     the .NET Remoting boundary. Observers now run in-process, so the MarshalByRefObject base and the
+    //     lease override are removed (keeping only IObserver<string>).
+    private sealed class RemoteObserver<T> : IObserver<string>
+    {
+        private readonly SerializationHelpers serializer = new();
+
+        private readonly IObserver<T> _localObserver;
+
+        public RemoteObserver(IObserver<T> localObserver)
+        {
+            _localObserver = localObserver;
         }
 
-        // NB: de-MBR'd. The archived RemoteObserver derived from MarshalByRefObject (and overrode
-        //     InitializeLifetimeService to disable lease expiry) so a client-side observer could be handed across
-        //     the .NET Remoting boundary. Observers now run in-process, so the MarshalByRefObject base and the
-        //     lease override are removed (keeping only IObserver<string>).
-        private sealed class RemoteObserver<T> : IObserver<string>
+        public void OnCompleted()
         {
-            private readonly SerializationHelpers serializer = new();
+            _localObserver.OnCompleted();
+        }
 
-            private readonly IObserver<T> _localObserver;
+        public void OnError(Exception error)
+        {
+            _localObserver.OnError(error);
+        }
 
-            public RemoteObserver(IObserver<T> localObserver)
-            {
-                _localObserver = localObserver;
-            }
-
-            public void OnCompleted()
-            {
-                _localObserver.OnCompleted();
-            }
-
-            public void OnError(Exception error)
-            {
-                _localObserver.OnError(error);
-            }
-
-            public void OnNext(string value)
-            {
-                _localObserver.OnNext(serializer.Deserialize<T>(value));
-            }
+        public void OnNext(string value)
+        {
+            _localObserver.OnNext(serializer.Deserialize<T>(value));
         }
     }
 }

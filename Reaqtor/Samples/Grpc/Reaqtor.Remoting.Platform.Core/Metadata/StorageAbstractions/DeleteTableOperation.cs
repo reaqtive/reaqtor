@@ -5,20 +5,19 @@
 // NB: ADAPTATION (plan §2.6): removed `using Microsoft.Azure.Cosmos.Table;`. ITableEntity and TableOperationType
 //     bind to the local Cosmos-free abstractions in this namespace.
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+/// <summary>
+/// Represents a delete operation on a table.
+/// </summary>
+public class DeleteTableOperation : TableOperationBase
 {
     /// <summary>
-    /// Represents a delete operation on a table.
+    /// Constructs a delete table operation.
     /// </summary>
-    public class DeleteTableOperation : TableOperationBase
+    /// <param name="entity">The entity to delete.</param>
+    public DeleteTableOperation(ITableEntity entity)
+        : base(entity, TableOperationType.Delete)
     {
-        /// <summary>
-        /// Constructs a delete table operation.
-        /// </summary>
-        /// <param name="entity">The entity to delete.</param>
-        public DeleteTableOperation(ITableEntity entity)
-            : base(entity, TableOperationType.Delete)
-        {
-        }
     }
 }

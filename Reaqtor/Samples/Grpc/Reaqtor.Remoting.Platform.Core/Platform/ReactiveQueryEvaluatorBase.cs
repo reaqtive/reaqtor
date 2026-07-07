@@ -12,30 +12,29 @@ using Reaqtive.Scheduler;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Platform
+namespace Reaqtor.Remoting.Platform;
+
+public abstract class ReactiveQueryEvaluatorBase : ReactivePlatformServiceBase, IReactiveQueryEvaluator
 {
-    public abstract class ReactiveQueryEvaluatorBase : ReactivePlatformServiceBase, IReactiveQueryEvaluator
+    protected ReactiveQueryEvaluatorBase(IReactivePlatform platform, IRunnable runnable, ReactiveServiceType serviceType)
+        : base(platform, runnable, serviceType)
     {
-        protected ReactiveQueryEvaluatorBase(IReactivePlatform platform, IRunnable runnable, ReactiveServiceType serviceType)
-            : base(platform, runnable, serviceType)
-        {
-        }
+    }
 
-        public IScheduler Scheduler => GetInstance<IReactiveQueryEvaluatorConnection>().Scheduler;
+    public IScheduler Scheduler => GetInstance<IReactiveQueryEvaluatorConnection>().Scheduler;
 
-        public void Checkpoint()
-        {
-            GetInstance<IReactiveQueryEvaluatorConnection>().Checkpoint();
-        }
+    public void Checkpoint()
+    {
+        GetInstance<IReactiveQueryEvaluatorConnection>().Checkpoint();
+    }
 
-        public void Unload()
-        {
-            GetInstance<IReactiveQueryEvaluatorConnection>().Unload();
-        }
+    public void Unload()
+    {
+        GetInstance<IReactiveQueryEvaluatorConnection>().Unload();
+    }
 
-        public void Recover()
-        {
-            GetInstance<IReactiveQueryEvaluatorConnection>().Recover();
-        }
+    public void Recover()
+    {
+        GetInstance<IReactiveQueryEvaluatorConnection>().Recover();
     }
 }

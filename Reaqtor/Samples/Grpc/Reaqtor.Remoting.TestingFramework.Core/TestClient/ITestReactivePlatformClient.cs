@@ -17,14 +17,13 @@ using Reaqtor.Hosting.Shared.Tools;
 using Reaqtor.Remoting.Platform;
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public interface ITestReactivePlatformClient : IReactivePlatformClient, IDisposable
 {
-    public interface ITestReactivePlatformClient : IReactivePlatformClient, IDisposable
-    {
-        ITestScheduler Scheduler { get; }
-        ITestableQbservable<T> CreateHotObservable<T>(params Recorded<INotification<T>>[] messages);
-        ITestableQbservable<T> CreateColdObservable<T>(params Recorded<INotification<T>>[] messages);
-        ITestObserver<T> Start<T>(Func<IAsyncReactiveQbservable<T>> create, long created, long subscribed, long disposed);
-        void CleanupEntity(Uri subscriptionUri, ReactiveEntityType entityType);
-    }
+    ITestScheduler Scheduler { get; }
+    ITestableQbservable<T> CreateHotObservable<T>(params Recorded<INotification<T>>[] messages);
+    ITestableQbservable<T> CreateColdObservable<T>(params Recorded<INotification<T>>[] messages);
+    ITestObserver<T> Start<T>(Func<IAsyncReactiveQbservable<T>> create, long created, long subscribed, long disposed);
+    void CleanupEntity(Uri subscriptionUri, ReactiveEntityType entityType);
 }

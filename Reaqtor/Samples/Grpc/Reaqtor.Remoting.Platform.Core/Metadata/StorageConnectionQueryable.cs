@@ -14,170 +14,169 @@ using System.Reflection;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.Metadata
+namespace Reaqtor.Remoting.Metadata;
+
+public class StorageConnectionQueryable<T> : IQueryable<T>
+    where T : new()
 {
-    public class StorageConnectionQueryable<T> : IQueryable<T>
-        where T : new()
+    private readonly string _name;
+    private readonly IReactiveStorageConnection _connection;
+
+    public StorageConnectionQueryable(string name, IReactiveStorageConnection connection)
+    {
+        _name = name;
+        _connection = connection;
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        var list = new List<T>();
+        foreach (var entity in _connection.GetEntities(_name))
+        {
+            list.Add(Convert<T>(entity));
+        }
+        return list.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public Type ElementType => typeof(T);
+
+    public Expression Expression => Expression.Parameter(GetType(), _name);
+
+    public IQueryProvider Provider => new StorageConnectionQueryProvider(_name, _connection);
+
+    private static TConvert Convert<TConvert>(StorageEntity entity)
+    {
+        var newEntity = Activator.CreateInstance<TConvert>();
+        foreach (var property in entity.Properties)
+        {
+            var tProperty = typeof(TConvert).GetProperty(property.Key);
+            if (tProperty == null)
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Could not find property with name '{0}' on type '{1}'.", property.Key, typeof(T)));
+            SetProperty(tProperty, newEntity, property.Value);
+        }
+        return newEntity;
+    }
+
+    private static void SetProperty(PropertyInfo property, object obj, StorageEntityProperty data)
+    {
+        switch ((StorageEntityPropertyType)data.Type)
+        {
+            case StorageEntityPropertyType.Boolean:
+                Assert(property.PropertyType, typeof(bool));
+                property.SetValue(obj, bool.Parse(data.Data));
+                break;
+            case StorageEntityPropertyType.DateTime:
+                Assert(property.PropertyType, typeof(DateTimeOffset));
+                property.SetValue(obj, new DateTimeOffset(new DateTime(long.Parse(data.Data, CultureInfo.InvariantCulture), DateTimeKind.Utc)));
+                break;
+            case StorageEntityPropertyType.Double:
+                Assert(property.PropertyType, typeof(double));
+                property.SetValue(obj, double.Parse(data.Data, CultureInfo.InvariantCulture));
+                break;
+            case StorageEntityPropertyType.Guid:
+                Assert(property.PropertyType, typeof(Guid));
+                property.SetValue(obj, Guid.Parse(data.Data));
+                break;
+            case StorageEntityPropertyType.Int32:
+                Assert(property.PropertyType, typeof(int));
+                property.SetValue(obj, int.Parse(data.Data, CultureInfo.InvariantCulture));
+                break;
+            case StorageEntityPropertyType.Int64:
+                Assert(property.PropertyType, typeof(long));
+                property.SetValue(obj, long.Parse(data.Data, CultureInfo.InvariantCulture));
+                break;
+            case StorageEntityPropertyType.String:
+                Assert(property.PropertyType, typeof(string));
+                property.SetValue(obj, data.Data);
+                break;
+            default:
+                throw new NotImplementedException("Could not parse data.");
+        }
+    }
+
+    private static void Assert(Type actual, Type expected)
+    {
+        if (actual != expected)
+            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Property types '{0}' and '{1}' are not equivalent.", actual, expected));
+    }
+
+    private sealed class StorageConnectionQueryProvider : IQueryProvider
     {
         private readonly string _name;
         private readonly IReactiveStorageConnection _connection;
 
-        public StorageConnectionQueryable(string name, IReactiveStorageConnection connection)
+        public StorageConnectionQueryProvider(string name, IReactiveStorageConnection connection)
         {
             _name = name;
             _connection = connection;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            var list = new List<T>();
-            foreach (var entity in _connection.GetEntities(_name))
+            var finder = new PropertyComparisonValueFinder<string>("RowKey");
+            finder.Visit(expression);
+            if (finder.Value != null)
             {
-                list.Add(Convert<T>(entity));
+                return _connection.TryGetEntity(_name, finder.Value, out var entity)
+                    ? new List<TElement> { Convert<TElement>(entity) }.AsQueryable()
+                    : new List<TElement>().AsQueryable();
             }
-            return list.GetEnumerator();
+            else
+            {
+                var entities = _connection.GetEntities(_name).Select(e => Convert<TElement>(e)).AsQueryable();
+                var freeVariables = FreeVariableScanner.Scan(expression).ToArray();
+                if (freeVariables.Length == 1)
+                {
+                    Debug.Assert(freeVariables[0].Name == _name);
+                    var substitutor = new ParameterSubstitutor(freeVariables[0], Expression.Constant(entities));
+                    return substitutor.Visit(expression).Evaluate<IQueryable<TElement>>();
+                }
+            }
+
+            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Expression '{0}' not supported.", expression.ToTraceString()));
         }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public Type ElementType => typeof(T);
-
-        public Expression Expression => Expression.Parameter(GetType(), _name);
-
-        public IQueryProvider Provider => new StorageConnectionQueryProvider(_name, _connection);
-
-        private static TConvert Convert<TConvert>(StorageEntity entity)
+        public IQueryable CreateQuery(Expression expression)
         {
-            var newEntity = Activator.CreateInstance<TConvert>();
-            foreach (var property in entity.Properties)
-            {
-                var tProperty = typeof(TConvert).GetProperty(property.Key);
-                if (tProperty == null)
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Could not find property with name '{0}' on type '{1}'.", property.Key, typeof(T)));
-                SetProperty(tProperty, newEntity, property.Value);
-            }
-            return newEntity;
+            return CreateQuery<object>(expression);
         }
 
-        private static void SetProperty(PropertyInfo property, object obj, StorageEntityProperty data)
+        public TResult Execute<TResult>(Expression expression)
         {
-            switch ((StorageEntityPropertyType)data.Type)
-            {
-                case StorageEntityPropertyType.Boolean:
-                    Assert(property.PropertyType, typeof(bool));
-                    property.SetValue(obj, bool.Parse(data.Data));
-                    break;
-                case StorageEntityPropertyType.DateTime:
-                    Assert(property.PropertyType, typeof(DateTimeOffset));
-                    property.SetValue(obj, new DateTimeOffset(new DateTime(long.Parse(data.Data, CultureInfo.InvariantCulture), DateTimeKind.Utc)));
-                    break;
-                case StorageEntityPropertyType.Double:
-                    Assert(property.PropertyType, typeof(double));
-                    property.SetValue(obj, double.Parse(data.Data, CultureInfo.InvariantCulture));
-                    break;
-                case StorageEntityPropertyType.Guid:
-                    Assert(property.PropertyType, typeof(Guid));
-                    property.SetValue(obj, Guid.Parse(data.Data));
-                    break;
-                case StorageEntityPropertyType.Int32:
-                    Assert(property.PropertyType, typeof(int));
-                    property.SetValue(obj, int.Parse(data.Data, CultureInfo.InvariantCulture));
-                    break;
-                case StorageEntityPropertyType.Int64:
-                    Assert(property.PropertyType, typeof(long));
-                    property.SetValue(obj, long.Parse(data.Data, CultureInfo.InvariantCulture));
-                    break;
-                case StorageEntityPropertyType.String:
-                    Assert(property.PropertyType, typeof(string));
-                    property.SetValue(obj, data.Data);
-                    break;
-                default:
-                    throw new NotImplementedException("Could not parse data.");
-            }
+            return (TResult)expression.Evaluate();
         }
 
-        private static void Assert(Type actual, Type expected)
+        public object Execute(Expression expression)
         {
-            if (actual != expected)
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Property types '{0}' and '{1}' are not equivalent.", actual, expected));
+            return Execute<object>(expression);
         }
 
-        private sealed class StorageConnectionQueryProvider : IQueryProvider
+        private sealed class ParameterSubstitutor : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly string _name;
-            private readonly IReactiveStorageConnection _connection;
+            private readonly ParameterExpression _parameter;
+            private readonly Expression _replacement;
 
-            public StorageConnectionQueryProvider(string name, IReactiveStorageConnection connection)
+            public ParameterSubstitutor(ParameterExpression parameter, Expression replacement)
             {
-                _name = name;
-                _connection = connection;
+                _parameter = parameter;
+                _replacement = replacement;
             }
 
-            public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+            protected override Expression VisitParameter(ParameterExpression node)
             {
-                var finder = new PropertyComparisonValueFinder<string>("RowKey");
-                finder.Visit(expression);
-                if (finder.Value != null)
+                if (!TryLookup(node, out _) && node == _parameter)
                 {
-                    return _connection.TryGetEntity(_name, finder.Value, out var entity)
-                        ? new List<TElement> { Convert<TElement>(entity) }.AsQueryable()
-                        : new List<TElement>().AsQueryable();
-                }
-                else
-                {
-                    var entities = _connection.GetEntities(_name).Select(e => Convert<TElement>(e)).AsQueryable();
-                    var freeVariables = FreeVariableScanner.Scan(expression).ToArray();
-                    if (freeVariables.Length == 1)
-                    {
-                        Debug.Assert(freeVariables[0].Name == _name);
-                        var substitutor = new ParameterSubstitutor(freeVariables[0], Expression.Constant(entities));
-                        return substitutor.Visit(expression).Evaluate<IQueryable<TElement>>();
-                    }
+                    return _replacement;
                 }
 
-                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Expression '{0}' not supported.", expression.ToTraceString()));
+                return base.VisitParameter(node);
             }
 
-            public IQueryable CreateQuery(Expression expression)
+            protected override ParameterExpression GetState(ParameterExpression parameter)
             {
-                return CreateQuery<object>(expression);
-            }
-
-            public TResult Execute<TResult>(Expression expression)
-            {
-                return (TResult)expression.Evaluate();
-            }
-
-            public object Execute(Expression expression)
-            {
-                return Execute<object>(expression);
-            }
-
-            private sealed class ParameterSubstitutor : ScopedExpressionVisitor<ParameterExpression>
-            {
-                private readonly ParameterExpression _parameter;
-                private readonly Expression _replacement;
-
-                public ParameterSubstitutor(ParameterExpression parameter, Expression replacement)
-                {
-                    _parameter = parameter;
-                    _replacement = replacement;
-                }
-
-                protected override Expression VisitParameter(ParameterExpression node)
-                {
-                    if (!TryLookup(node, out _) && node == _parameter)
-                    {
-                        return _replacement;
-                    }
-
-                    return base.VisitParameter(node);
-                }
-
-                protected override ParameterExpression GetState(ParameterExpression parameter)
-                {
-                    return parameter;
-                }
+                return parameter;
             }
         }
     }

@@ -4,13 +4,12 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Deployable.Streams
-{
-    public abstract class TypeErasedKeyBinding<TElement>
-    {
-        // Seals this class outside of the assembly
-        internal TypeErasedKeyBinding() { }
+namespace Reaqtor.Remoting.Deployable.Streams;
 
-        public abstract Type KeyType { get; }
-    }
+public abstract class TypeErasedKeyBinding<TElement>
+{
+    // Seals this class outside of the assembly
+    internal TypeErasedKeyBinding() { }
+
+    public abstract Type KeyType { get; }
 }

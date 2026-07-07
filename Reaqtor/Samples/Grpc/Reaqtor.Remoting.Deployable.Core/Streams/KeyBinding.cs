@@ -5,23 +5,22 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public class KeyBinding<TElement, TKey> : TypeErasedKeyBinding<TElement>
 {
-    public class KeyBinding<TElement, TKey> : TypeErasedKeyBinding<TElement>
+    public KeyBinding(IKeySelector<TElement, TKey> keySelector, TKey key, IEqualityComparer<TKey> keyComparer)
     {
-        public KeyBinding(IKeySelector<TElement, TKey> keySelector, TKey key, IEqualityComparer<TKey> keyComparer)
-        {
-            KeySelector = keySelector;
-            Key = key;
-            KeyComparer = keyComparer;
-        }
-
-        public override Type KeyType => typeof(TKey);
-
-        public IKeySelector<TElement, TKey> KeySelector { get; }
-
-        public TKey Key { get; }
-
-        public IEqualityComparer<TKey> KeyComparer { get; }
+        KeySelector = keySelector;
+        Key = key;
+        KeyComparer = keyComparer;
     }
+
+    public override Type KeyType => typeof(TKey);
+
+    public IKeySelector<TElement, TKey> KeySelector { get; }
+
+    public TKey Key { get; }
+
+    public IEqualityComparer<TKey> KeyComparer { get; }
 }

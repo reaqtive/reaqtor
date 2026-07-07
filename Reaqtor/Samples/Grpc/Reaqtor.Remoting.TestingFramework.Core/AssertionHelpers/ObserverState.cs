@@ -15,15 +15,14 @@ using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
-{
-    public class ObserverState<T> : List<Recorded<INotification<T>>>
-    {
-        public ObserverState(Uri uri)
-        {
-            Uri = uri;
-        }
+namespace Reaqtor.Remoting.TestingFramework;
 
-        public Uri Uri { get; }
+public class ObserverState<T> : List<Recorded<INotification<T>>>
+{
+    public ObserverState(Uri uri)
+    {
+        Uri = uri;
     }
+
+    public Uri Uri { get; }
 }

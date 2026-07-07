@@ -10,14 +10,13 @@
 
 using System;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IRemotingReactiveServiceConnection : IReactiveConnection, IDisposable
 {
-    public interface IRemotingReactiveServiceConnection : IReactiveConnection, IDisposable
-    {
-        void Configure(IReactivePlatformConfiguration configuration);
+    void Configure(IReactivePlatformConfiguration configuration);
 
-        IReactiveServiceCommandRemoting CreateCommand(CommandVerb verb, CommandNoun noun, string commandText);
+    IReactiveServiceCommandRemoting CreateCommand(CommandVerb verb, CommandNoun noun, string commandText);
 
-        void Start();
-    }
+    void Start();
 }

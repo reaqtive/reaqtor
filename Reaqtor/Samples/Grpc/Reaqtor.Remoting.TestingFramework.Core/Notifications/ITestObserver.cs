@@ -15,10 +15,9 @@ using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public interface ITestObserver<T> : IObserver<T>
 {
-    public interface ITestObserver<T> : IObserver<T>
-    {
-        IList<Recorded<INotification<T>>> Messages { get; }
-    }
+    IList<Recorded<INotification<T>>> Messages { get; }
 }

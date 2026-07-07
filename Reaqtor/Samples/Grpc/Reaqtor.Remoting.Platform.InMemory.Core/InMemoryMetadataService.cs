@@ -13,20 +13,19 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Metadata;
 
-namespace Reaqtor.Remoting.Platform
-{
-    internal sealed class InMemoryMetadataService : ReactiveServiceBase, IReactiveMetadataService
-    {
-        public InMemoryMetadataService()
-#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
-            : base(new InMemoryRunnable(CreateMetadataService), ReactiveServiceType.MetadataService)
-#pragma warning restore CA2000
-        {
-        }
+namespace Reaqtor.Remoting.Platform;
 
-        private static Task<object> CreateMetadataService(CancellationToken token)
-        {
-            return Task.FromResult<object>(new StorageConnection());
-        }
+internal sealed class InMemoryMetadataService : ReactiveServiceBase, IReactiveMetadataService
+{
+    public InMemoryMetadataService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
+        : base(new InMemoryRunnable(CreateMetadataService), ReactiveServiceType.MetadataService)
+#pragma warning restore CA2000
+    {
+    }
+
+    private static Task<object> CreateMetadataService(CancellationToken token)
+    {
+        return Task.FromResult<object>(new StorageConnection());
     }
 }

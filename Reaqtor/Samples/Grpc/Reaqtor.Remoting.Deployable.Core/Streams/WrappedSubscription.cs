@@ -7,43 +7,42 @@ using System.Threading;
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+internal class WrappedSubscription : ISubscription
 {
-    internal class WrappedSubscription : ISubscription
+    private readonly ISubscription _inner;
+    private Action _dispose;
+
+    private WrappedSubscription(ISubscription inner, Action dispose)
     {
-        private readonly ISubscription _inner;
-        private Action _dispose;
+        _inner = inner;
+        _dispose = dispose;
+    }
 
-        private WrappedSubscription(ISubscription inner, Action dispose)
+    public static ISubscription Create(ISubscription inner)
+    {
+        return inner;
+    }
+
+    public static ISubscription Create(ISubscription inner, Action dispose)
+    {
+        return new WrappedSubscription(inner, dispose);
+    }
+
+    public void Accept(ISubscriptionVisitor visitor)
+    {
+        _inner.Accept(visitor);
+    }
+
+    public void Dispose()
+    {
+        Action action = Interlocked.Exchange(ref _dispose, null);
+
+        if (action != null)
         {
-            _inner = inner;
-            _dispose = dispose;
-        }
-
-        public static ISubscription Create(ISubscription inner)
-        {
-            return inner;
-        }
-
-        public static ISubscription Create(ISubscription inner, Action dispose)
-        {
-            return new WrappedSubscription(inner, dispose);
-        }
-
-        public void Accept(ISubscriptionVisitor visitor)
-        {
-            _inner.Accept(visitor);
-        }
-
-        public void Dispose()
-        {
-            Action action = Interlocked.Exchange(ref _dispose, null);
-
-            if (action != null)
-            {
-                _inner.Dispose();
-                action();
-            }
+            _inner.Dispose();
+            action();
         }
     }
 }

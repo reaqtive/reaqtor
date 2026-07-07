@@ -8,10 +8,9 @@
 // ER - October 2013 - Created this file.
 //
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IRemoteAction
 {
-    public interface IRemoteAction
-    {
-        void Invoke();
-    }
+    void Invoke();
 }

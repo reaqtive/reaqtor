@@ -10,24 +10,23 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IReactiveStateStoreConnection : IReactiveConnection
 {
-    public interface IReactiveStateStoreConnection : IReactiveConnection
-    {
-        IEnumerable<string> GetCategories();
+    IEnumerable<string> GetCategories();
 
-        bool TryGetItemKeys(string category, out IEnumerable<string> keys);
+    bool TryGetItemKeys(string category, out IEnumerable<string> keys);
 
-        bool TryGetItem(string category, string key, out byte[] value);
+    bool TryGetItem(string category, string key, out byte[] value);
 
-        void AddOrUpdateItem(string category, string key, byte[] value);
+    void AddOrUpdateItem(string category, string key, byte[] value);
 
-        void RemoveItem(string category, string key);
+    void RemoveItem(string category, string key);
 
-        void Clear();
+    void Clear();
 
-        byte[] SerializeStateStore();
+    byte[] SerializeStateStore();
 
-        void DeserializeStateStore(byte[] bytes);
-    }
+    void DeserializeStateStore(byte[] bytes);
 }

@@ -10,35 +10,34 @@
 
 using System.Collections.Concurrent;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public class KeyValueStoreConnection<TKey, TValue> : ReactiveConnectionBase, IKeyValueStoreConnection<TKey, TValue>
 {
-    public class KeyValueStoreConnection<TKey, TValue> : ReactiveConnectionBase, IKeyValueStoreConnection<TKey, TValue>
+    private readonly ConcurrentDictionary<TKey, TValue> _store;
+
+    public KeyValueStoreConnection()
     {
-        private readonly ConcurrentDictionary<TKey, TValue> _store;
+        _store = new ConcurrentDictionary<TKey, TValue>();
+    }
 
-        public KeyValueStoreConnection()
-        {
-            _store = new ConcurrentDictionary<TKey, TValue>();
-        }
+    public bool TryAdd(TKey key, TValue value)
+    {
+        return _store.TryAdd(key, value);
+    }
 
-        public bool TryAdd(TKey key, TValue value)
-        {
-            return _store.TryAdd(key, value);
-        }
+    public bool TryRemove(TKey key, out TValue value)
+    {
+        return _store.TryRemove(key, out value);
+    }
 
-        public bool TryRemove(TKey key, out TValue value)
-        {
-            return _store.TryRemove(key, out value);
-        }
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+        return _store.TryGetValue(key, out value);
+    }
 
-        public bool TryGetValue(TKey key, out TValue value)
-        {
-            return _store.TryGetValue(key, out value);
-        }
-
-        public void Clear()
-        {
-            _store.Clear();
-        }
+    public void Clear()
+    {
+        _store.Clear();
     }
 }

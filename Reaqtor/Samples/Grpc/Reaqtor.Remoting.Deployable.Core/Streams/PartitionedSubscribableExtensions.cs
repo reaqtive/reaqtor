@@ -13,48 +13,47 @@ using Reaqtive;
 
 using Reaqtor.Reactive.Expressions;
 
-namespace Reaqtor.Remoting.Deployable.Streams
+namespace Reaqtor.Remoting.Deployable.Streams;
+
+public static class PartitionedSubscribableExtensions
 {
-    public static class PartitionedSubscribableExtensions
+    private static class EqualityComparerReflectionHelper<T>
     {
-        private static class EqualityComparerReflectionHelper<T>
+        public static readonly MethodInfo EqualsMethod =
+            ((MethodInfo)ReflectionHelpers.InfoOf((IEqualityComparer<T> c) => c.Equals(default, default)));
+    }
+
+    public static ISubscribable<T> Partition<T, TKey>(this ISubscribable<T> source, Expression filter, IEqualityComparer<TKey> keyComparer, TKey value)
+    {
+        return Partition(source, (Expression<Func<T, TKey>>)filter, keyComparer, value);
+    }
+
+    public static ISubscribable<T> Partition<T, TKey>(this ISubscribable<T> source, Expression<Func<T, TKey>> filter, IEqualityComparer<TKey> keyComparer, TKey value)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(filter);
+        ArgumentNullException.ThrowIfNull(keyComparer);
+
+        if (source is QuotedSubscribable<T> quotedPartitionableSubscribable)
         {
-            public static readonly MethodInfo EqualsMethod =
-                ((MethodInfo)ReflectionHelpers.InfoOf((IEqualityComparer<T> c) => c.Equals(default, default)));
+            source = quotedPartitionableSubscribable.Value;
         }
 
-        public static ISubscribable<T> Partition<T, TKey>(this ISubscribable<T> source, Expression filter, IEqualityComparer<TKey> keyComparer, TKey value)
+        if (source is IPartitionableSubscribable<T> partitionableSubscribable)
         {
-            return Partition(source, (Expression<Func<T, TKey>>)filter, keyComparer, value);
+            return partitionableSubscribable.AddPartition(filter).Bind(value, keyComparer);
         }
 
-        public static ISubscribable<T> Partition<T, TKey>(this ISubscribable<T> source, Expression<Func<T, TKey>> filter, IEqualityComparer<TKey> keyComparer, TKey value)
+        if (source is IPartitionedMultiSubject<T> partitionedMultiSubject)
         {
-            ArgumentNullException.ThrowIfNull(source);
-            ArgumentNullException.ThrowIfNull(filter);
-            ArgumentNullException.ThrowIfNull(keyComparer);
-
-            if (source is QuotedSubscribable<T> quotedPartitionableSubscribable)
-            {
-                source = quotedPartitionableSubscribable.Value;
-            }
-
-            if (source is IPartitionableSubscribable<T> partitionableSubscribable)
-            {
-                return partitionableSubscribable.AddPartition(filter).Bind(value, keyComparer);
-            }
-
-            if (source is IPartitionedMultiSubject<T> partitionedMultiSubject)
-            {
-                return partitionedMultiSubject.CreatePartitionableSubscribable().AddPartition(filter).Bind(value, keyComparer);
-            }
-
-            // This is the case where the input is not a partitionable artifact. In practice we should only delegate if the input is partitionable,
-            // so this case should not be hit.
-            var eq = EqualityComparerReflectionHelper<TKey>.EqualsMethod;
-            var p = filter.Parameters.Single();
-            var f = Expression.Lambda<Func<T, bool>>(Expression.Call(Expression.Constant(keyComparer), eq, filter.Body, Expression.Constant(value)), p);
-            return source.Where(f.Compile());
+            return partitionedMultiSubject.CreatePartitionableSubscribable().AddPartition(filter).Bind(value, keyComparer);
         }
+
+        // This is the case where the input is not a partitionable artifact. In practice we should only delegate if the input is partitionable,
+        // so this case should not be hit.
+        var eq = EqualityComparerReflectionHelper<TKey>.EqualsMethod;
+        var p = filter.Parameters.Single();
+        var f = Expression.Lambda<Func<T, bool>>(Expression.Call(Expression.Constant(keyComparer), eq, filter.Body, Expression.Constant(value)), p);
+        return source.Where(f.Compile());
     }
 }

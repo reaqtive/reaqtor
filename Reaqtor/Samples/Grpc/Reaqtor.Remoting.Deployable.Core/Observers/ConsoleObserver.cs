@@ -10,47 +10,46 @@ using Reaqtive.Scheduler;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
-namespace Reaqtor.Remoting.Deployable
+namespace Reaqtor.Remoting.Deployable;
+
+public class ConsoleObserver<T> : Observer<T>
 {
-    public class ConsoleObserver<T> : Observer<T>
+    private readonly string _prefix;
+    private IScheduler _scheduler;
+    private Uri _id;
+
+    public ConsoleObserver()
     {
-        private readonly string _prefix;
-        private IScheduler _scheduler;
-        private Uri _id;
+        _prefix = "";
+    }
 
-        public ConsoleObserver()
-        {
-            _prefix = "";
-        }
+    public ConsoleObserver(string prefix)
+    {
+        _prefix = "(" + prefix + ")";
+    }
 
-        public ConsoleObserver(string prefix)
-        {
-            _prefix = "(" + prefix + ")";
-        }
+    public override void SetContext(IOperatorContext context)
+    {
+        Debug.Assert(context != null);
 
-        public override void SetContext(IOperatorContext context)
-        {
-            Debug.Assert(context != null);
+        _scheduler = context.Scheduler;
+        _id = context.InstanceId;
 
-            _scheduler = context.Scheduler;
-            _id = context.InstanceId;
+        base.SetContext(context);
+    }
 
-            base.SetContext(context);
-        }
+    protected override void OnCompletedCore()
+    {
+        Console.WriteLine("{0:o}> {2} ConsoleObserver{1}.OnCompleted()", _scheduler.Now, _prefix, _id);
+    }
 
-        protected override void OnCompletedCore()
-        {
-            Console.WriteLine("{0:o}> {2} ConsoleObserver{1}.OnCompleted()", _scheduler.Now, _prefix, _id);
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+        Console.WriteLine("{0:o}> {3} ConsoleObserver{1}.OnError({2})", _scheduler.Now, _prefix, error, _id);
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-            Console.WriteLine("{0:o}> {3} ConsoleObserver{1}.OnError({2})", _scheduler.Now, _prefix, error, _id);
-        }
-
-        protected override void OnNextCore(T value)
-        {
-            Console.WriteLine("{0:o}> {3} ConsoleObserver{1}.OnNext({2})", _scheduler.Now, _prefix, value, _id);
-        }
+    protected override void OnNextCore(T value)
+    {
+        Console.WriteLine("{0:o}> {3} ConsoleObserver{1}.OnNext({2})", _scheduler.Now, _prefix, value, _id);
     }
 }

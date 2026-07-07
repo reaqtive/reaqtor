@@ -13,20 +13,19 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Messaging;
 
-namespace Reaqtor.Remoting.Platform
-{
-    internal sealed class InMemoryMessagingService : ReactiveServiceBase, IReactiveMessagingService
-    {
-        public InMemoryMessagingService()
-#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
-            : base(new InMemoryRunnable(CreateMessagingService), ReactiveServiceType.MessagingService)
-#pragma warning restore CA2000
-        {
-        }
+namespace Reaqtor.Remoting.Platform;
 
-        private static Task<object> CreateMessagingService(CancellationToken token)
-        {
-            return Task.FromResult<object>(new MessagingConnection());
-        }
+internal sealed class InMemoryMessagingService : ReactiveServiceBase, IReactiveMessagingService
+{
+    public InMemoryMessagingService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
+        : base(new InMemoryRunnable(CreateMessagingService), ReactiveServiceType.MessagingService)
+#pragma warning restore CA2000
+    {
+    }
+
+    private static Task<object> CreateMessagingService(CancellationToken token)
+    {
+        return Task.FromResult<object>(new MessagingConnection());
     }
 }

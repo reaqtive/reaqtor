@@ -15,71 +15,70 @@ using System.Linq;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.StateStore
+namespace Reaqtor.Remoting.StateStore;
+
+public class StateStoreConnection : ReactiveConnectionBase, IReactiveStateStoreConnection
 {
-    public class StateStoreConnection : ReactiveConnectionBase, IReactiveStateStoreConnection
+    private const string StateStoreId = "CheckpointConnectionStateStore";
+
+    private InMemoryStateStore _stateStore;
+
+    public StateStoreConnection()
     {
-        private const string StateStoreId = "CheckpointConnectionStateStore";
+        _stateStore = new InMemoryStateStore(StateStoreId);
+    }
 
-        private InMemoryStateStore _stateStore;
+    public IEnumerable<string> GetCategories()
+    {
+        return [.. _stateStore.GetCategories()];
+    }
 
-        public StateStoreConnection()
+    public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    {
+        if (_stateStore.TryGetItemKeys(category, out keys))
         {
-            _stateStore = new InMemoryStateStore(StateStoreId);
+            keys = [.. keys];
+            return true;
         }
+        return false;
+    }
 
-        public IEnumerable<string> GetCategories()
-        {
-            return [.. _stateStore.GetCategories()];
-        }
+    public bool TryGetItem(string category, string key, out byte[] value)
+    {
+        return _stateStore.TryGetItem(category, key, out value);
+    }
 
-        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
-        {
-            if (_stateStore.TryGetItemKeys(category, out keys))
-            {
-                keys = [.. keys];
-                return true;
-            }
-            return false;
-        }
+    public void AddOrUpdateItem(string category, string key, byte[] value)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+        ArgumentNullException.ThrowIfNull(key);
 
-        public bool TryGetItem(string category, string key, out byte[] value)
-        {
-            return _stateStore.TryGetItem(category, key, out value);
-        }
+        _stateStore.AddOrUpdateItem(category, key, value);
+    }
 
-        public void AddOrUpdateItem(string category, string key, byte[] value)
-        {
-            ArgumentNullException.ThrowIfNull(category);
-            ArgumentNullException.ThrowIfNull(key);
+    public void RemoveItem(string category, string key)
+    {
+        ArgumentNullException.ThrowIfNull(category);
+        ArgumentNullException.ThrowIfNull(key);
 
-            _stateStore.AddOrUpdateItem(category, key, value);
-        }
+        _stateStore.RemoveItem(category, key);
+    }
 
-        public void RemoveItem(string category, string key)
-        {
-            ArgumentNullException.ThrowIfNull(category);
-            ArgumentNullException.ThrowIfNull(key);
+    public void Clear()
+    {
+        _stateStore.Clear();
+    }
 
-            _stateStore.RemoveItem(category, key);
-        }
+    public byte[] SerializeStateStore()
+    {
+        using var stream = new MemoryStream();
+        _stateStore.Save(stream);
+        return stream.ToArray();
+    }
 
-        public void Clear()
-        {
-            _stateStore.Clear();
-        }
-
-        public byte[] SerializeStateStore()
-        {
-            using var stream = new MemoryStream();
-            _stateStore.Save(stream);
-            return stream.ToArray();
-        }
-
-        public void DeserializeStateStore(byte[] bytes)
-        {
-            using var stream = new MemoryStream(bytes);
-            _stateStore = InMemoryStateStore.Load(stream);
-        }
+    public void DeserializeStateStore(byte[] bytes)
+    {
+        using var stream = new MemoryStream(bytes);
+        _stateStore = InMemoryStateStore.Load(stream);
     }
 }

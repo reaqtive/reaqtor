@@ -8,16 +8,15 @@
 // ER - December 2013 - Created this file.
 //
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+public interface IKeyValueStoreConnection<TKey, TValue>
 {
-    public interface IKeyValueStoreConnection<TKey, TValue>
-    {
-        bool TryAdd(TKey key, TValue value);
+    bool TryAdd(TKey key, TValue value);
 
-        bool TryRemove(TKey key, out TValue value);
+    bool TryRemove(TKey key, out TValue value);
 
-        bool TryGetValue(TKey key, out TValue value);
+    bool TryGetValue(TKey key, out TValue value);
 
-        void Clear();
-    }
+    void Clear();
 }

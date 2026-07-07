@@ -12,18 +12,17 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Reaqtor.Remoting.Protocol
+namespace Reaqtor.Remoting.Protocol;
+
+[Serializable]
+public class StorageEntity
 {
-    [Serializable]
-    public class StorageEntity
+    private readonly Dictionary<string, StorageEntityProperty> _properties;
+
+    public StorageEntity(Dictionary<string, StorageEntityProperty> properties)
     {
-        private readonly Dictionary<string, StorageEntityProperty> _properties;
-
-        public StorageEntity(Dictionary<string, StorageEntityProperty> properties)
-        {
-            _properties = properties;
-        }
-
-        public ReadOnlyDictionary<string, StorageEntityProperty> Properties => new(_properties);
+        _properties = properties;
     }
+
+    public ReadOnlyDictionary<string, StorageEntityProperty> Properties => new(_properties);
 }

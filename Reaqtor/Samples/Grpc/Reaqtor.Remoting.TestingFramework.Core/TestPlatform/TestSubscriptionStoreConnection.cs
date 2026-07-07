@@ -8,10 +8,9 @@ using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
 
-namespace Reaqtor.Remoting.TestingFramework
+namespace Reaqtor.Remoting.TestingFramework;
+
+public class TestSubscriptionStoreConnection : KeyValueStoreConnection<string, IList<Subscription>>
 {
-    public class TestSubscriptionStoreConnection : KeyValueStoreConnection<string, IList<Subscription>>
-    {
-        public const string ContextHandle = "TestSubscriptionStoreConnection";
-    }
+    public const string ContextHandle = "TestSubscriptionStoreConnection";
 }

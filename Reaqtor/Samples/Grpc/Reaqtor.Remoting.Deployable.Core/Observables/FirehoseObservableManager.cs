@@ -8,59 +8,58 @@ using System.Reactive.Linq;
 
 using Reaqtive;
 
-namespace Reaqtor.Remoting.Deployable
+namespace Reaqtor.Remoting.Deployable;
+
+/// <summary>
+/// Manager for the firehose observable instances
+/// </summary>
+public static class FirehoseObservableManager
 {
     /// <summary>
-    /// Manager for the firehose observable instances
+    /// Holds the firehose observable instances mapped per Stream Uri
     /// </summary>
-    public static class FirehoseObservableManager
+    private static readonly ConcurrentDictionary<string, object> FirehosePerTopic = new();
+
+    /// <summary>
+    /// Returns an instance of <see cref="FirehoseObservable{TResult}"/> for the specified topic message topic
+    /// </summary>
+    /// <typeparam name="TResult">the types of objects pumping out of the firehose</typeparam>
+    /// <param name="messageTopic">the topic of the firehose messages</param>
+    /// <returns>an <see cref="IObservable{TResult}"/> instance</returns>
+    public static IObservable<TResult> GetFirehoseObservable<TResult>(Uri messageTopic)
     {
-        /// <summary>
-        /// Holds the firehose observable instances mapped per Stream Uri
-        /// </summary>
-        private static readonly ConcurrentDictionary<string, object> FirehosePerTopic = new();
+        ArgumentNullException.ThrowIfNull(messageTopic);
 
-        /// <summary>
-        /// Returns an instance of <see cref="FirehoseObservable{TResult}"/> for the specified topic message topic
-        /// </summary>
-        /// <typeparam name="TResult">the types of objects pumping out of the firehose</typeparam>
-        /// <param name="messageTopic">the topic of the firehose messages</param>
-        /// <returns>an <see cref="IObservable{TResult}"/> instance</returns>
-        public static IObservable<TResult> GetFirehoseObservable<TResult>(Uri messageTopic)
-        {
-            ArgumentNullException.ThrowIfNull(messageTopic);
+        var canonicalMessageTopic = messageTopic.ToCanonicalString();
+        return (IObservable<TResult>)FirehosePerTopic.GetOrAdd(
+            canonicalMessageTopic,
+            _ =>
+            {
+                Tracer.TraceSource.TraceInformation(
+                    "Creating a firehose instance for the ({0}) stream", canonicalMessageTopic);
+                return
+                    new FirehoseObservable<TResult>(messageTopic).Finally(
+                        () => RemoveFirehose(canonicalMessageTopic)).Publish().RefCount();
+            });
+    }
 
-            var canonicalMessageTopic = messageTopic.ToCanonicalString();
-            return (IObservable<TResult>)FirehosePerTopic.GetOrAdd(
-                canonicalMessageTopic,
-                _ =>
-                {
-                    Tracer.TraceSource.TraceInformation(
-                        "Creating a firehose instance for the ({0}) stream", canonicalMessageTopic);
-                    return
-                        new FirehoseObservable<TResult>(messageTopic).Finally(
-                            () => RemoveFirehose(canonicalMessageTopic)).Publish().RefCount();
-                });
-        }
+    /// <summary>
+    /// Cleans up the firehose per topic map when the last firehose instance of this topic was disposed
+    /// </summary>
+    /// <param name="messageTopic">the topic used for all the messages going through that firehose instance that just got disposed</param>
+    private static void RemoveFirehose(string messageTopic)
+    {
+        Tracer.TraceSource.TraceInformation(
+            "Removing the last firehose reference for the ({0}) stream", messageTopic);
 
-        /// <summary>
-        /// Cleans up the firehose per topic map when the last firehose instance of this topic was disposed
-        /// </summary>
-        /// <param name="messageTopic">the topic used for all the messages going through that firehose instance that just got disposed</param>
-        private static void RemoveFirehose(string messageTopic)
-        {
-            Tracer.TraceSource.TraceInformation(
-                "Removing the last firehose reference for the ({0}) stream", messageTopic);
+        bool removalSuccess = FirehosePerTopic.TryRemove(messageTopic, out _);
 
-            bool removalSuccess = FirehosePerTopic.TryRemove(messageTopic, out _);
-
-            Tracer.TraceSource.TraceEvent(
-                System.Diagnostics.TraceEventType.Verbose,
-                0,
-                removalSuccess
-                    ? "Successfully removed the last firehose reference for the ({0}) stream"
-                    : "Failed to remove the last firehose reference for the ({0}) stream",
-                messageTopic);
-        }
+        Tracer.TraceSource.TraceEvent(
+            System.Diagnostics.TraceEventType.Verbose,
+            0,
+            removalSuccess
+                ? "Successfully removed the last firehose reference for the ({0}) stream"
+                : "Failed to remove the last firehose reference for the ({0}) stream",
+            messageTopic);
     }
 }

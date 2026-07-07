@@ -9,70 +9,69 @@ using System.Linq;
 
 using Reaqtor.Reliable;
 
-namespace Reaqtor.Remoting.QueryEvaluator.Operators
+namespace Reaqtor.Remoting.QueryEvaluator.Operators;
+
+public class ToReliableObservable<T> : IReliableObservable<T>
 {
-    public class ToReliableObservable<T> : IReliableObservable<T>
+    //
+    // NB (plan §2.5, adaptation #5): the archived ToReliableObservable<T> shared its Values across (formerly
+    //     cross-AppDomain) instances via AppDomain.CurrentDomain.GetData/SetData(_name). There is no AppDomain on
+    //     net10.0, so the ledger is replaced with an in-process static store keyed by the same name, exactly as the
+    //     ported ThroughputObserver<T> (Reaqtor.Remoting.Deployable.Core) replaces its AppDomain slot. The indexer
+    //     get/set on the ConcurrentDictionary gives the same "last writer wins" overwrite that SetData provided and
+    //     the same read-back that GetData provided, so every ToReliableObservable<T> constructed with the same name
+    //     observes the same values.
+    //
+    private static readonly ConcurrentDictionary<string, object> s_values = new();
+
+    private readonly string _name;
+
+    public ToReliableObservable(string name, params T[] values)
     {
-        //
-        // NB (plan §2.5, adaptation #5): the archived ToReliableObservable<T> shared its Values across (formerly
-        //     cross-AppDomain) instances via AppDomain.CurrentDomain.GetData/SetData(_name). There is no AppDomain on
-        //     net10.0, so the ledger is replaced with an in-process static store keyed by the same name, exactly as the
-        //     ported ThroughputObserver<T> (Reaqtor.Remoting.Deployable.Core) replaces its AppDomain slot. The indexer
-        //     get/set on the ConcurrentDictionary gives the same "last writer wins" overwrite that SetData provided and
-        //     the same read-back that GetData provided, so every ToReliableObservable<T> constructed with the same name
-        //     observes the same values.
-        //
-        private static readonly ConcurrentDictionary<string, object> s_values = new();
+        _name = name;
+        Values = values;
+    }
 
-        private readonly string _name;
+    public IReadOnlyList<T> Values
+    {
+        get => (IReadOnlyList<T>)s_values[_name];
+        private set => s_values[_name] = value;
+    }
 
-        public ToReliableObservable(string name, params T[] values)
+    public IReliableSubscription Subscribe(IReliableObserver<T> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : ReliableSubscriptionBase
+    {
+        private readonly ToReliableObservable<T> _parent;
+        private readonly IReliableObserver<T> _observer;
+
+
+        public _(ToReliableObservable<T> parent, IReliableObserver<T> observer)
         {
-            _name = name;
-            Values = values;
+            _parent = parent;
+            _observer = observer;
         }
 
-        public IReadOnlyList<T> Values
+        public override Uri ResubscribeUri => throw new NotImplementedException();
+
+        public override void Start(long sequenceId)
         {
-            get => (IReadOnlyList<T>)s_values[_name];
-            private set => s_values[_name] = value;
+            var id = sequenceId;
+            foreach (var value in _parent.Values.Skip((int)sequenceId))
+            {
+                _observer.OnNext(value, id++);
+            }
         }
 
-        public IReliableSubscription Subscribe(IReliableObserver<T> observer)
+        public override void AcknowledgeRange(long sequenceId)
         {
-            return new _(this, observer);
         }
 
-        private sealed class _ : ReliableSubscriptionBase
+        public override void DisposeCore()
         {
-            private readonly ToReliableObservable<T> _parent;
-            private readonly IReliableObserver<T> _observer;
-
-
-            public _(ToReliableObservable<T> parent, IReliableObserver<T> observer)
-            {
-                _parent = parent;
-                _observer = observer;
-            }
-
-            public override Uri ResubscribeUri => throw new NotImplementedException();
-
-            public override void Start(long sequenceId)
-            {
-                var id = sequenceId;
-                foreach (var value in _parent.Values.Skip((int)sequenceId))
-                {
-                    _observer.OnNext(value, id++);
-                }
-            }
-
-            public override void AcknowledgeRange(long sequenceId)
-            {
-            }
-
-            public override void DisposeCore()
-            {
-            }
         }
     }
 }
