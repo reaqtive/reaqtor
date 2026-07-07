@@ -44,7 +44,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new Add(
             new Mul(
@@ -96,7 +96,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -144,7 +144,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -195,7 +195,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -249,7 +249,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(

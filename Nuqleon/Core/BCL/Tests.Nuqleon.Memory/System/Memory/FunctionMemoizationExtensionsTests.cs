@@ -137,7 +137,7 @@ public partial class FunctionMemoizationExtensionsTests
             Assert.AreEqual(2, n);
             Assert.AreEqual(1, res.Cache.Count);
 
-            Assert.IsTrue(!string.IsNullOrEmpty(res.Cache.DebugView));
+            Assert.IsFalse(string.IsNullOrEmpty(res.Cache.DebugView));
         }
     }
 

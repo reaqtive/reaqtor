@@ -61,7 +61,7 @@ public partial class BottomUpOptimizerTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = !(!BoolConst.True & !BoolConst.False);
 
@@ -110,7 +110,7 @@ public partial class BottomUpOptimizerTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = !(!BoolConst.True & !BoolConst.False);
 
