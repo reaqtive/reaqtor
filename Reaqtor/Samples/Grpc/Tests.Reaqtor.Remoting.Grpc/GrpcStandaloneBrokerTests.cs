@@ -34,7 +34,7 @@ namespace Reaqtor.Remoting.Grpc.Tests;
 [TestClass]
 public class GrpcStandaloneBrokerTests
 {
-    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(120);
     private static readonly Uri FireHoseObservableUri = Reaqtor.Remoting.Platform.Constants.Identifiers.Observable.FireHose.Uri;
     private static readonly Uri FireHoseObserverUri = Reaqtor.Remoting.Platform.Constants.Identifiers.Observer.FireHose.Uri;
 

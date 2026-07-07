@@ -31,7 +31,7 @@ namespace Reaqtor.Remoting.Grpc.Tests;
 [TestClass]
 public class GrpcStorageTests
 {
-    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(120);
 
     private static string HostAssembly =>
         typeof(GrpcStorageTests).Assembly

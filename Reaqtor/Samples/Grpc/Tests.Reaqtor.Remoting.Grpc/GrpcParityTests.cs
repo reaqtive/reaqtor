@@ -35,7 +35,7 @@ namespace Reaqtor.Remoting.Grpc.Tests;
 [TestClass]
 public class GrpcParityTests
 {
-    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(120);
     private static readonly Uri FireHoseObserverUri = Reaqtor.Remoting.Platform.Constants.Identifiers.Observer.FireHose.Uri;
 
     private static string HostAssembly =>

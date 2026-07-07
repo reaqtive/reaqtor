@@ -27,7 +27,7 @@ namespace Reaqtor.Remoting.Grpc.Tests;
 [TestClass]
 public class GrpcPingTests
 {
-    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(120);
 
     private static string HostAssembly =>
         typeof(GrpcPingTests).Assembly

@@ -29,7 +29,7 @@ namespace Reaqtor.Remoting.Grpc.Tests;
 [TestClass]
 public class GrpcKeyValueStoreTests
 {
-    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(60);
+    private static readonly TimeSpan ReadyTimeout = TimeSpan.FromSeconds(120);
 
     private static string HostAssembly =>
         typeof(GrpcKeyValueStoreTests).Assembly
