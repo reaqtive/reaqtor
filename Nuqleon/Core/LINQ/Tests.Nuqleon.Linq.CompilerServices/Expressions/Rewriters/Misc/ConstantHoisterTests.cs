@@ -16,8 +16,14 @@ using System.Text.RegularExpressions;
 namespace Tests.System.Linq.CompilerServices;
 
 [TestClass]
-public class ConstantHoisterTests
+public partial class ConstantHoisterTests
 {
+    [GeneratedRegex(@"\<\>f__AnonymousType[\da-fA-F]*")]
+    private static partial Regex AnonymousTypeRegex();
+
+    [GeneratedRegex(@"\<\>h__TransparentIdentifier[\da-fA-F]*")]
+    private static partial Regex TransparentIdentifierRegex();
+
     [TestMethod]
     public void ConstantHoister_ArgumentChecking()
     {
@@ -132,8 +138,8 @@ public class ConstantHoisterTests
         Assert.AreEqual("int @p0 = 1;\r\nint @p1 = 0;\r\nstring @p2 = \"Foo\";\r\nreturn (IEnumerable<int> xs) => xs.Select((int x) => new { x, y = x + @p0 }).Where(t => t.y > @p1).Select(t => new { t, s = t.x.ToString() }).Where(t => !t.s.EndsWith(@p2)).Select(t => t.s.Substring(@p1, @p0) + @p2);\r\n", c.ToCSharpString());
 
         var t = c.ToString();
-        var u = Regex.Replace(t, @"\<\>f__AnonymousType[\da-fA-F]*", "anon");
-        var v = Regex.Replace(u, @"\<\>h__TransparentIdentifier[\da-fA-F]*", "tran");
+        var u = AnonymousTypeRegex().Replace(t, "anon");
+        var v = TransparentIdentifierRegex().Replace(u, "tran");
 
         Assert.AreEqual("(xs => xs.Select(x => new anon`2(x = x, y = (x + @p0))).Where(tran => (tran.y > @p1)).Select(tran => new anon`2(tran = tran, s = tran.x.ToString())).Where(tran => Not(tran.s.EndsWith(@p2))).Select(tran => (tran.s.Substring(@p1, @p0) + @p2)))[|@p0 : System.Int32 = 1, @p1 : System.Int32 = 0, @p2 : System.String = \"Foo\"|]", v);
 
@@ -223,7 +229,11 @@ public class ConstantHoisterTests
 #pragma warning restore IDE0034
 
         var e1 = (Expression<Func<string>>)(() => string.Format("{0}:{1}", new object[] { 123, "foo" }));
+        // SYSLIB1045: 'new Regex("abc")' is intentional expression-tree test data (the constant-hoisting
+        // subject); converting it to a [GeneratedRegex] method call would change the tree under test.
+#pragma warning disable SYSLIB1045
         var e2 = (Expression<Func<bool>>)(() => new Regex("abc").IsMatch("bar"));
+#pragma warning restore SYSLIB1045
         var e3 = (Expression<Func<int>>)(() => "qux".Length);
         var e4 = (Expression<Func<string>>)(() => "baz".ToUpper());
         var e5 = (Expression<Func<string>>)(() => string.Concat("bar", "foo"));

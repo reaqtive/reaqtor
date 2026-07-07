@@ -30,6 +30,9 @@ namespace Tests;
 [TestClass]
 public partial class Tests
 {
+    [GeneratedRegex("Constant\\((.*?),(.*?)\\)")]
+    private static partial Regex ConstantValueRegex();
+
     #region Constant
 
     [TestMethod]
@@ -3627,8 +3630,8 @@ public partial class Tests
         var sbc = backCompatSerializer.Serialize(d);
         var sbd = backCompatSerializer.Deserialize(sbc);
 
-        var expectedString = Regex.Replace(slim.ToString(), "Constant\\((.*?),(.*?)\\)", "Constant(value,$2)");
-        var actualString = Regex.Replace(sbd.ToString(), "Constant\\((.*?),(.*?)\\)", "Constant(value,$2)");
+        var expectedString = ConstantValueRegex().Replace(slim.ToString(), "Constant(value,$2)");
+        var actualString = ConstantValueRegex().Replace(sbd.ToString(), "Constant(value,$2)");
 
         Assert.AreEqual(expectedString, actualString);
 
