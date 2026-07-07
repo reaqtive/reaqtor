@@ -10,6 +10,12 @@
 
 namespace Tests;
 
+// CA2263 (prefer the generic overload) is intentional here: this test deliberately exercises BOTH the
+// generic GetService<T>() and the non-generic GetService(Type) extension overloads to verify they behave
+// identically, so the typeof(object) call must stay to cover the Type-based overload (using the generic
+// form would make it a duplicate of the line above and drop that coverage).
+#pragma warning disable CA2263
+
 [TestClass]
 public class ServiceProviderExtensionsTests
 {
