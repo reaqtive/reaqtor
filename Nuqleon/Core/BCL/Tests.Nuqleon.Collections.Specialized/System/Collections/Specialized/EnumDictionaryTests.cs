@@ -173,7 +173,7 @@ public class EnumDictionaryTests
         {
             var key = (ExpressionType)rand.Next(values.Length);
 
-            if (systemDictionary.ContainsKey(key))
+            if (!systemDictionary.TryAdd(key, true))
             {
                 if (rand.Next(2) == 0)
                 {
@@ -188,7 +188,6 @@ public class EnumDictionaryTests
             }
             else
             {
-                systemDictionary.Add(key, true);
                 enumDictionary.Add(key, true);
             }
 
