@@ -156,6 +156,16 @@ dotnet_diagnostic.CA1508.severity = none
 # justifies acting on a specific site.
 dotnet_diagnostic.CA1859.severity = none
 
+# MSTEST0049: Flow TestContext cancellation token. ~596 sites, ~2/3 of them in T4-generated arity tests.
+# The shipped code fixer re-resolves overloads (it rewrote CheckpointAsync(sw) -> CheckpointAsync(sw,
+# token) - a *different* overload - silently changing traced behaviour and breaking two QueryEngine
+# tests), and a manual fix needs TestContext plumbing the base fixtures lack plus token-threading through
+# static helpers. The cancellation payoff on these fast, mostly-blocking test calls does not justify that
+# churn/risk, so the rule is excluded (severity none, like the CA rules above) pending a safe adoption.
+# Full analysis, the overload-switching hazard, and the adoption options are tracked in GitHub issue #164
+# (https://github.com/reaqtive/reaqtor/issues/164).
+dotnet_diagnostic.MSTEST0049.severity = none
+
 # IDE warnings (with suppression of some nuisances)
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_diagnostic.IDE0001.severity = none # `Name can be simplified.` often reduces clarity.
