@@ -45,11 +45,13 @@ public class MemoizedDelegateTests
         Assert.IsFalse(m22.Equals(m12));
         Assert.IsFalse(m22.Equals(m21));
 
-        Assert.AreEqual(c11, m11);
-        Assert.AreEqual(c11, m11);
+#pragma warning disable MSTEST0037 // These intentionally test the ==/!= operators (Equals is covered above); the suggested Assert.AreEqual/AreNotEqual call object.Equals instead and would collapse each operator pair into a duplicate assertion.
+        Assert.IsTrue(m11 == c11);
+        Assert.IsFalse(m11 != c11);
 
-        Assert.AreNotEqual(m12, m11);
-        Assert.AreNotEqual(m12, m11);
+        Assert.IsTrue(m11 != m12);
+        Assert.IsFalse(m11 == m12);
+#pragma warning restore MSTEST0037
 
         Assert.AreEqual(m11.GetHashCode(), c11.GetHashCode());
 
