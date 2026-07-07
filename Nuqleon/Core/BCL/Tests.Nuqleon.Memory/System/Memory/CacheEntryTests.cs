@@ -152,7 +152,7 @@ public class CacheEntryTests
 
         var sb = new StringBuilder();
         entry.ToDebugView(sb, "");
-        Assert.IsTrue(sb.ToString().Contains("=") && sb.ToString().Contains("DEGRADATION"));
+        Assert.IsTrue(sb.ToString().Contains('=') && sb.ToString().Contains("DEGRADATION"));
 
         entry.HitCount++;
         Assert.AreEqual(31415926535897931L / 2, entry.AverageAccessTime.Ticks);
