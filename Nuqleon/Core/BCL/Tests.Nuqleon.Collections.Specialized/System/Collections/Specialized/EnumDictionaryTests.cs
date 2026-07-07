@@ -43,165 +43,37 @@ public class EnumDictionaryTests
         var enumDictionary = EnumDictionary.Create<ExpressionType, bool>();
         var values = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToArray();
 
-        try
-        {
-            enumDictionary.Add((ExpressionType)(-1), true);
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Add((ExpressionType)(-1), true)).ParamName);
 
-        try
-        {
-            enumDictionary.Add((ExpressionType)(values.Length), true);
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Add((ExpressionType)(values.Length), true)).ParamName);
 
-        try
-        {
-            enumDictionary[(ExpressionType)(-1)] = true;
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary[(ExpressionType)(-1)] = true).ParamName);
 
-        try
-        {
-            enumDictionary[(ExpressionType)(values.Length)] = true;
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary[(ExpressionType)(values.Length)] = true).ParamName);
 
-        try
-        {
-            var dummy = enumDictionary[(ExpressionType)(-1)];
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = enumDictionary[(ExpressionType)(-1)]).ParamName);
 
-        try
-        {
-            var dummy = enumDictionary[(ExpressionType)(values.Length)];
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = enumDictionary[(ExpressionType)(values.Length)]).ParamName);
 
-        try
-        {
-            enumDictionary.ContainsKey((ExpressionType)(-1));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.ContainsKey((ExpressionType)(-1))).ParamName);
 
-        try
-        {
-            enumDictionary.ContainsKey((ExpressionType)(values.Length));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.ContainsKey((ExpressionType)(values.Length))).ParamName);
 
-        try
-        {
-            enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>((ExpressionType)(-1), true));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("item", e.ParamName);
-        }
+        Assert.AreEqual("item", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>((ExpressionType)(-1), true))).ParamName);
 
-        try
-        {
-            enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>((ExpressionType)(values.Length), true));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("item", e.ParamName);
-        }
+        Assert.AreEqual("item", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>((ExpressionType)(values.Length), true))).ParamName);
 
-        try
-        {
-            enumDictionary.Remove((ExpressionType)(-1));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Remove((ExpressionType)(-1))).ParamName);
 
-        try
-        {
-            enumDictionary.Remove((ExpressionType)(values.Length));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("key", e.ParamName);
-        }
+        Assert.AreEqual("key", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Remove((ExpressionType)(values.Length))).ParamName);
 
-        try
-        {
-            enumDictionary.Remove(new KeyValuePair<ExpressionType, bool>((ExpressionType)(-1), true));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("item", e.ParamName);
-        }
+        Assert.AreEqual("item", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Remove(new KeyValuePair<ExpressionType, bool>((ExpressionType)(-1), true))).ParamName);
 
-        try
-        {
-            enumDictionary.Remove(new KeyValuePair<ExpressionType, bool>((ExpressionType)(values.Length), true));
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("item", e.ParamName);
-        }
+        Assert.AreEqual("item", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.Remove(new KeyValuePair<ExpressionType, bool>((ExpressionType)(values.Length), true))).ParamName);
 
-        try
-        {
-            enumDictionary.CopyTo(array: null, -1);
-            Assert.Fail();
-        }
-        catch (ArgumentNullException e)
-        {
-            Assert.AreEqual("array", e.ParamName);
-        }
+        Assert.AreEqual("array", Assert.ThrowsExactly<ArgumentNullException>(() => enumDictionary.CopyTo(array: null, -1)).ParamName);
 
-        try
-        {
-            enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], -1);
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("index", e.ParamName);
-        }
+        Assert.AreEqual("index", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], -1)).ParamName);
 
         enumDictionary = EnumDictionary.Create<ExpressionType, bool>();
 
@@ -210,30 +82,14 @@ public class EnumDictionaryTests
         // System.Collections.Generic.Dictionary<TKey, TValue>
         enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], 1);
 
-        try
-        {
-            enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], 3);
-            Assert.Fail();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            Assert.AreEqual("index", e.ParamName);
-        }
+        Assert.AreEqual("index", Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], 3)).ParamName);
 
         ExpressionType val0 = 0;
         ExpressionType val1 = (ExpressionType)1;
 
         enumDictionary.Add(val0, true);
         enumDictionary.Add(val1, true);
-        try
-        {
-            enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], 0);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual(typeof(ArgumentException), e.GetType());
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => enumDictionary.CopyTo(new KeyValuePair<ExpressionType, bool>[1], 0));
     }
 
     [TestMethod]
@@ -257,55 +113,15 @@ public class EnumDictionaryTests
     [TestMethod]
     public void EnumDictionary_Parameter_Validation()
     {
-        try
-        {
-            _ = new EnumDictionary<int, bool, BitArraySlim<ByteArray1>>(default);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => _ = new EnumDictionary<int, bool, BitArraySlim<ByteArray1>>(default)).ParamName);
 
-        try
-        {
-            _ = new EnumDictionary<Foo, bool, BitArraySlim<ByteArray1>>(default);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => _ = new EnumDictionary<Foo, bool, BitArraySlim<ByteArray1>>(default)).ParamName);
 
-        try
-        {
-            _ = new EnumDictionary<Bar, bool, BitArraySlim<ByteArray1>>(default);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => _ = new EnumDictionary<Bar, bool, BitArraySlim<ByteArray1>>(default)).ParamName);
 
-        try
-        {
-            _ = new EnumDictionary<Baz, bool, BitArraySlim<ByteArray1>>(default);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => _ = new EnumDictionary<Baz, bool, BitArraySlim<ByteArray1>>(default)).ParamName);
 
-        try
-        {
-            _ = new EnumDictionary<ExpressionType, bool, BitArraySlim<ByteArray1>>(default);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("bitArray", e.ParamName);
-        }
+        Assert.AreEqual("bitArray", Assert.ThrowsExactly<ArgumentException>(() => _ = new EnumDictionary<ExpressionType, bool, BitArraySlim<ByteArray1>>(default)).ParamName);
     }
 
     private enum Foo : long
@@ -403,15 +219,7 @@ public class EnumDictionaryTests
         var enumDictionary = EnumDictionary.Create<ExpressionType, bool>();
         enumDictionary.Add(ExpressionType.Add, true);
 
-        try
-        {
-            enumDictionary.Add(ExpressionType.Add, true);
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual(typeof(ArgumentException), e.GetType());
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => enumDictionary.Add(ExpressionType.Add, true));
     }
 
     [TestMethod]
