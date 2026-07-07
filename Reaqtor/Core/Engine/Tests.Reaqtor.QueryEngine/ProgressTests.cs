@@ -478,7 +478,7 @@ public class ProgressTests
 
         var p = Progress.Create<int>(x => { res = x; }).SplitWeight();
 
-        Assert.AreEqual(0, p.Length);
+        Assert.IsEmpty(p);
     }
 
     [TestMethod]
@@ -488,7 +488,7 @@ public class ProgressTests
 
         var p = Progress.Create<int>(x => { res = x; }).SplitWeight(20, 30, 40, 10);
 
-        Assert.AreEqual(4, p.Length);
+        Assert.HasCount(4, p);
         var p1 = p[0];
         var p2 = p[1];
         var p3 = p[2];

@@ -327,7 +327,7 @@ public class EvaluationTests
 
         var del = Expression.Lambda(exp).Compile(new SimpleCompiledDelegateCache());
 
-        Assert.AreEqual(17, ((Array)del.DynamicInvoke()).Length);
+        Assert.HasCount(17, (Array)del.DynamicInvoke());
     }
 
     [TestMethod]

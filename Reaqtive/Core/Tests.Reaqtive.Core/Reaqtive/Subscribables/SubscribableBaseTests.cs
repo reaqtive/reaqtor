@@ -39,11 +39,11 @@ public class SubscribableBaseTests
         sub.Observer.OnCompleted();
 
         var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
-        Assert.IsTrue(ex2.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex2.Message);
         var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex3.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex3.Message);
         var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex4.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex4.Message);
 
         Assert.AreEqual(42, res);
     }
@@ -62,7 +62,7 @@ public class SubscribableBaseTests
             },
             ex =>
             {
-                Assert.IsTrue(ex.Message == "foo");
+                Assert.AreEqual("foo", ex.Message);
                 res *= -1;
             },
             () =>
@@ -77,11 +77,11 @@ public class SubscribableBaseTests
         sub.Observer.OnError(new Exception("foo"));
 
         var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
-        Assert.IsTrue(ex2.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex2.Message);
         var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex3.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex3.Message);
         var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex4.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex4.Message);
 
         Assert.AreEqual(42, res);
     }
@@ -116,11 +116,11 @@ public class SubscribableBaseTests
         s.WaitOne();
 
         var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
-        Assert.IsTrue(ex2.Message.Contains("processing"));
+        Assert.Contains("processing", ex2.Message);
         var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex3.Message.Contains("processing"));
+        Assert.Contains("processing", ex3.Message);
         var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex4.Message.Contains("processing"));
+        Assert.Contains("processing", ex4.Message);
 
         e.Set();
         t.Wait();
@@ -159,21 +159,21 @@ public class SubscribableBaseTests
         s.WaitOne();
 
         var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
-        Assert.IsTrue(ex2.Message.Contains("processing"));
+        Assert.Contains("processing", ex2.Message);
         var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex3.Message.Contains("processing"));
+        Assert.Contains("processing", ex3.Message);
         var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex4.Message.Contains("processing"));
+        Assert.Contains("processing", ex4.Message);
 
         e.Set();
         t.Wait();
 
         var ex5 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
-        Assert.IsTrue(ex5.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex5.Message);
         var ex6 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex6.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex6.Message);
         var ex7 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex7.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex7.Message);
     }
 
     [TestMethod]
@@ -206,21 +206,21 @@ public class SubscribableBaseTests
         s.WaitOne();
 
         var ex2 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(43));
-        Assert.IsTrue(ex2.Message.Contains("processing"));
+        Assert.Contains("processing", ex2.Message);
         var ex3 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex3.Message.Contains("processing"));
+        Assert.Contains("processing", ex3.Message);
         var ex4 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex4.Message.Contains("processing"));
+        Assert.Contains("processing", ex4.Message);
 
         e.Set();
         t.Wait();
 
         var ex5 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnNext(42));
-        Assert.IsTrue(ex5.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex5.Message);
         var ex6 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnError(new Exception()));
-        Assert.IsTrue(ex6.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex6.Message);
         var ex7 = Assert.ThrowsExactly<InvalidOperationException>(() => sub.Observer.OnCompleted());
-        Assert.IsTrue(ex7.Message.Contains("terminated"));
+        Assert.Contains("terminated", ex7.Message);
     }
 
     private sealed class MySubscribable : SubscribableBase<int>

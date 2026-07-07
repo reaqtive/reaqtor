@@ -45,11 +45,11 @@ public class MemoizedDelegateTests
         Assert.IsFalse(m22.Equals(m12));
         Assert.IsFalse(m22.Equals(m21));
 
-        Assert.IsTrue(m11 == c11);
-        Assert.IsFalse(m11 != c11);
+        Assert.AreEqual(c11, m11);
+        Assert.AreEqual(c11, m11);
 
-        Assert.IsTrue(m11 != m12);
-        Assert.IsFalse(m11 == m12);
+        Assert.AreNotEqual(m12, m11);
+        Assert.AreNotEqual(m12, m11);
 
         Assert.AreEqual(m11.GetHashCode(), c11.GetHashCode());
 

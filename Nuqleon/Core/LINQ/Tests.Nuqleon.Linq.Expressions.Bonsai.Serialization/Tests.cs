@@ -1585,7 +1585,7 @@ public partial class Tests
         Assert.AreEqual(a.Type, r.Type);
         Assert.AreEqual(a.NodeType, r.NodeType);
         Assert.AreEqual(a.Comparison, r.Comparison);
-        Assert.AreEqual(a.Cases.Count, r.Cases.Count);
+        Assert.HasCount(a.Cases.Count, r.Cases);
 
         for (int i = 0; i < a.Cases.Count; ++i)
         {
@@ -2043,7 +2043,7 @@ public partial class Tests
 
         Assert.IsTrue(new ExpressionEqualityComparer(() => new GlobalParameterSafeComparator()).Equals(a.Body, r.Body));
 
-        Assert.AreEqual(a.Handlers.Count, r.Handlers.Count);
+        Assert.HasCount(a.Handlers.Count, r.Handlers);
         for (int i = 0; i < a.Handlers.Count; ++i)
         {
             var handlerA = a.Handlers[i];

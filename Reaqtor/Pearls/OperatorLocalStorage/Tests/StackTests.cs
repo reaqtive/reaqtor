@@ -304,7 +304,7 @@ public class StackTest : PersistedTestBase
         // Assert the stack element count.
         //
 
-        Assert.AreEqual(0, bar.Count);
+        Assert.IsEmpty(bar);
     });
 
     [TestMethod]
@@ -345,7 +345,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -397,7 +397,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -464,7 +464,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -527,7 +527,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -596,7 +596,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(5, stack.Count);
+            Assert.HasCount(5, stack);
             Assert.IsTrue(new[] { 11, 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -661,7 +661,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(5, stack.Count);
+            Assert.HasCount(5, stack);
             Assert.IsTrue(new[] { 11, 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -730,7 +730,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -795,7 +795,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 7, 5, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -860,7 +860,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(2, stack.Count);
+            Assert.HasCount(2, stack);
             Assert.IsTrue(new[] { 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -923,7 +923,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(2, stack.Count);
+            Assert.HasCount(2, stack);
             Assert.IsTrue(new[] { 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -988,7 +988,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(1, stack.Count);
+            Assert.HasCount(1, stack);
             Assert.IsTrue(new[] { 2 }.SequenceEqual(stack));
         }
     });
@@ -1053,7 +1053,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(1, stack.Count);
+            Assert.HasCount(1, stack);
             Assert.IsTrue(new[] { 2 }.SequenceEqual(stack));
         }
     });
@@ -1120,7 +1120,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(2, stack.Count);
+            Assert.HasCount(2, stack);
             Assert.IsTrue(new[] { 7, 2 }.SequenceEqual(stack));
         }
     });
@@ -1186,7 +1186,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(2, stack.Count);
+            Assert.HasCount(2, stack);
             Assert.IsTrue(new[] { 7, 2 }.SequenceEqual(stack));
         }
     });
@@ -1257,7 +1257,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 13, 7, 3, 2 }.SequenceEqual(stack));
         }
     });
@@ -1325,7 +1325,7 @@ public class StackTest : PersistedTestBase
         {
             var stack = s.Space.GetStack<int>("bar");
 
-            Assert.AreEqual(4, stack.Count);
+            Assert.HasCount(4, stack);
             Assert.IsTrue(new[] { 13, 7, 3, 2 }.SequenceEqual(stack));
         }
     });

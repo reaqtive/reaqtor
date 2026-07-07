@@ -66,7 +66,7 @@ public class WeakCacheDictionaryTests
         Assert.AreEqual(2, n);
 
 #if DEBUG
-        Assert.IsTrue(cd.Keys.Any(x => x == null));
+        Assert.Contains(x => x == null, cd.Keys);
 #endif
     }
 
@@ -79,7 +79,7 @@ public class WeakCacheDictionaryTests
 
         for (var i = 1; i <= 10; i++)
         {
-            Assert.IsTrue(GetOrAdd(cd).Contains("Obj"));
+            Assert.Contains("Obj", GetOrAdd(cd));
 
             GC.Collect();
             GC.WaitForPendingFinalizers();

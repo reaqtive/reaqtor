@@ -372,7 +372,7 @@ public class ToSubscribable : TestBase
 
     private static void AssertSchedulerThread()
     {
-        Assert.IsTrue(Thread.CurrentThread.Name.StartsWith("Reaqtive.Scheduler.Worker"));
+        Assert.StartsWith("Reaqtive.Scheduler.Worker", Thread.CurrentThread.Name);
     }
 
     private static IObservable<T> Hide<T>(IObservable<T> observable)

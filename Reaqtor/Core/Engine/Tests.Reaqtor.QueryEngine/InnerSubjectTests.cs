@@ -86,7 +86,7 @@ public class InnerSubjectTests
 
         var subject = GetSubject(id, svc);
 
-        Assert.AreEqual(0, subject.Inputs.Count());
+        Assert.IsEmpty(subject.Inputs);
     }
 
     [TestMethod]
@@ -191,7 +191,7 @@ public class InnerSubjectTests
 
         subject.Seal();
 
-        Assert.IsTrue(svc.DeletedStreams.Count == 0);
+        Assert.IsEmpty(svc.DeletedStreams);
 
         observer.OnNext(42);
         observer.OnNext(43);
@@ -200,7 +200,7 @@ public class InnerSubjectTests
         Assert.IsTrue(new[] { 42, 43 }.SequenceEqual(res));
         Assert.IsTrue(done);
 
-        Assert.IsTrue(svc.DeletedStreams.Count == 0);
+        Assert.IsEmpty(svc.DeletedStreams);
 
         sub.Dispose();
 
@@ -270,19 +270,19 @@ public class InnerSubjectTests
 
         subject.Seal();
 
-        Assert.IsTrue(svc.DeletedStreams.Count == 0);
+        Assert.IsEmpty(svc.DeletedStreams);
 
         observer.OnNext(42);
 
         subs[1].Dispose();
 
-        Assert.IsTrue(svc.DeletedStreams.Count == 0);
+        Assert.IsEmpty(svc.DeletedStreams);
 
         observer.OnNext(43);
 
         subs[0].Dispose();
 
-        Assert.IsTrue(svc.DeletedStreams.Count == 0);
+        Assert.IsEmpty(svc.DeletedStreams);
 
         var err = new Exception();
 

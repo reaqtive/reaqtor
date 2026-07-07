@@ -135,14 +135,14 @@ public class BitArrayTests
 
                 for (var j = 0; j < capacity; j++)
                 {
-                    Assert.AreEqual(true, arr[j]);
+                    Assert.IsTrue(arr[j]);
                 }
 
                 arr.SetAll(false);
 
                 for (var j = 0; j < capacity; j++)
                 {
-                    Assert.AreEqual(false, arr[j]);
+                    Assert.IsFalse(arr[j]);
                 }
 
                 // The difference from above is that we set all to false first then set to true
@@ -151,14 +151,14 @@ public class BitArrayTests
 
                 for (var j = 0; j < capacity; j++)
                 {
-                    Assert.AreEqual(false, arr[j]);
+                    Assert.IsFalse(arr[j]);
                 }
 
                 arr.SetAll(true);
 
                 for (var j = 0; j < capacity; j++)
                 {
-                    Assert.AreEqual(true, arr[j]);
+                    Assert.IsTrue(arr[j]);
                 }
             }
         }

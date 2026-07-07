@@ -88,7 +88,7 @@ public class PersistedTestBase
 #pragma warning disable CA1822 // Mark members as static
         public void AssertEdits(StateWriterOperation[] actual, params (StateWriterOperationKind kind, string category, string key)[] expected)
         {
-            Assert.AreEqual(expected.Length, actual.Length);
+            Assert.HasCount(expected.Length, actual);
 
             for (var i = 0; i < actual.Length; i++)
             {

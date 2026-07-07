@@ -97,7 +97,7 @@ public class BottomUpExpressionRewriterTests
         var f = new ExpressionTreeWildcardFactory();
         var w = f.CreateWildcard(p);
 
-        Assert.AreEqual(0, w.Children.Count);
+        Assert.IsEmpty(w.Children);
 
         Assert.AreEqual(ExpressionTreeNodeType.Expression, w.Value.NodeType);
         var n = (ExpressionExpressionTreeNode)w.Value;

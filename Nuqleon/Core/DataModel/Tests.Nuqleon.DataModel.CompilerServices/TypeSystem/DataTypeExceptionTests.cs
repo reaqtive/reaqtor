@@ -24,13 +24,13 @@ public class DataTypeExceptionTests
         var ex2 = new DataTypeException("foo");
         Assert.AreEqual("foo", ex2.Message);
         Assert.IsNull(ex2.InnerException);
-        Assert.IsTrue(ex2.ToString().Contains("foo"));
+        Assert.Contains("foo", ex2.ToString());
 
         var iex = new Exception();
         var ex3 = new DataTypeException("foo", iex);
         Assert.AreEqual("foo", ex3.Message);
         Assert.AreSame(iex, ex3.InnerException);
-        Assert.IsTrue(ex3.ToString().Contains("foo"));
+        Assert.Contains("foo", ex3.ToString());
 
         var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)));
         Assert.AreEqual("error", ex.ParamName);
@@ -38,7 +38,7 @@ public class DataTypeExceptionTests
         var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
         var ex4 = new DataTypeException(err);
         Assert.AreSame(err, ex4.Error);
-        Assert.IsTrue(ex4.ToString().Contains("bar"));
+        Assert.Contains("bar", ex4.ToString());
     }
 
 }

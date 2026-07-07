@@ -141,7 +141,7 @@ public class StatefulUnaryOperatorTests
 
         // Seems a bit inconsistent that the subscription has zero inputs
         // but it returns a nop subscription from its unary property..
-        Assert.AreEqual(0, mo.Inputs.Count());
+        Assert.IsEmpty(mo.Inputs);
         Assert.IsNotNull(mo.Input);
     }
 

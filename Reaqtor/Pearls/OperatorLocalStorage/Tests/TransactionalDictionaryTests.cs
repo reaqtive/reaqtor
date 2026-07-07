@@ -32,7 +32,7 @@ public class TransactionalDictionaryTests
         Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[1]);
         Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[2]);
 
-        Assert.IsFalse(d.Any());
+        Assert.IsEmpty(d);
 
         Assert.IsFalse(d.Remove(0));
         Assert.IsFalse(d.Remove(1));
@@ -75,7 +75,7 @@ public class TransactionalDictionaryTests
 
         Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[42]);
 
-        Assert.IsFalse(d.Any());
+        Assert.IsEmpty(d);
     }
 
     [TestMethod]

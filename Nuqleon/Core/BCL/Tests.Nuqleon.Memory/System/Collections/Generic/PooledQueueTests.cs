@@ -141,7 +141,7 @@ public class PooledQueueTests : TestBase
 
             var queue = obj.Queue;
 
-            Assert.AreEqual(0, queue.Count);
+            Assert.IsEmpty(queue);
 
             queue.Enqueue("qux");
             queue.Enqueue("foo");
@@ -161,7 +161,7 @@ public class PooledQueueTests : TestBase
 
             var queue = obj.Queue;
 
-            Assert.AreEqual(0, queue.Count);
+            Assert.IsEmpty(queue);
 
             queue.Enqueue("qux");
             queue.Enqueue("foo");
@@ -179,7 +179,7 @@ public class PooledQueueTests : TestBase
         {
             var queue = PooledQueue<string>.GetInstance();
 
-            Assert.AreEqual(0, queue.Count);
+            Assert.IsEmpty(queue);
 
             queue.Enqueue("qux");
             queue.Enqueue("foo");

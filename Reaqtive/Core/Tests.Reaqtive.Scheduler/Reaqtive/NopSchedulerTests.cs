@@ -57,7 +57,7 @@ public class NopSchedulerTests
         Assert.IsFalse(hasError);
 
         var d = o.Now - DateTimeOffset.UtcNow;
-        Assert.IsTrue(d < TimeSpan.FromMinutes(1));
+        Assert.IsLessThan(TimeSpan.FromMinutes(1), d);
 
         n.Dispose();
         o.Dispose();

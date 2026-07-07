@@ -12,7 +12,7 @@ public class ArrayExtensionsTests
     {
         var xs = new[] { 42 };
         var res = xs.RemoveFirst();
-        Assert.AreEqual(0, res.Length);
+        Assert.IsEmpty(res);
         Assert.AreSame([], res);
     }
 
@@ -21,7 +21,7 @@ public class ArrayExtensionsTests
     {
         var xs = new[] { 42, 43 };
         var res = xs.RemoveFirst();
-        Assert.AreEqual(1, res.Length);
+        Assert.HasCount(1, res);
         Assert.AreEqual(43, res[0]);
     }
 
@@ -30,7 +30,7 @@ public class ArrayExtensionsTests
     {
         var xs = new[] { 2, 3, 5, 7 };
         var res = xs.RemoveFirst();
-        Assert.AreEqual(3, res.Length);
+        Assert.HasCount(3, res);
         Assert.IsTrue(new[] { 3, 5, 7 }.SequenceEqual(res));
     }
 
@@ -39,7 +39,7 @@ public class ArrayExtensionsTests
     {
         var xs = Array.Empty<int>();
         var res = xs.Map(x => x * 2);
-        Assert.AreEqual(0, xs.Length);
+        Assert.IsEmpty(xs);
         Assert.AreSame([], res);
     }
 
@@ -48,7 +48,7 @@ public class ArrayExtensionsTests
     {
         var xs = new[] { 1, 2, 3, 4 };
         var res = xs.Map(x => x * 2);
-        Assert.AreEqual(4, xs.Length);
+        Assert.HasCount(4, xs);
         Assert.IsTrue(new[] { 2, 4, 6, 8 }.SequenceEqual(res));
     }
 }

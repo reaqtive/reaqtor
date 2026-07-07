@@ -335,11 +335,11 @@ public class EnumDictionaryTests
 
         enumDictionary.Clear();
 
-        Assert.AreEqual(0, enumDictionary.Count);
-        Assert.AreEqual(false, enumDictionary.Keys.Any());
-        Assert.AreEqual(false, enumDictionary.Values.Any());
-        Assert.AreEqual(false, enumDictionary.Any());
-        Assert.AreEqual(false, enumDictionary.Keys.Any());
+        Assert.IsEmpty(enumDictionary);
+        Assert.IsFalse(enumDictionary.Keys.Any());
+        Assert.IsFalse(enumDictionary.Values.Any());
+        Assert.IsFalse(enumDictionary.Any());
+        Assert.IsFalse(enumDictionary.Keys.Any());
     }
 
     [TestMethod]
@@ -380,7 +380,7 @@ public class EnumDictionaryTests
             foreach (var kvp in enumDictionary)
             {
                 count++;
-                Assert.IsTrue(systemDictionary.Contains(kvp));
+                Assert.Contains(kvp, systemDictionary);
             }
 
             Assert.AreEqual(systemDictionary.Count, count);
@@ -390,7 +390,7 @@ public class EnumDictionaryTests
             {
                 count++;
                 Assert.IsTrue(kvp is KeyValuePair<ExpressionType, bool>);
-                Assert.IsTrue(systemDictionary.Contains((KeyValuePair<ExpressionType, bool>)kvp));
+                Assert.Contains((KeyValuePair<ExpressionType, bool>)kvp, systemDictionary);
             }
 
             Assert.AreEqual(systemDictionary.Count, count);
@@ -567,8 +567,8 @@ public class EnumDictionaryTests
             foreach (var kvp in systemDictionary)
             {
                 count++;
-                Assert.IsTrue(enumDictionary.Contains(kvp));
-                Assert.IsFalse(enumDictionary.Contains(new KeyValuePair<ExpressionType, bool>(kvp.Key, !kvp.Value)));
+                Assert.Contains(kvp, enumDictionary);
+                Assert.DoesNotContain(new KeyValuePair<ExpressionType, bool>(kvp.Key, !kvp.Value), enumDictionary);
             }
 
             foreach (var value in values.Where(val => !systemDictionary.ContainsKey(val)))

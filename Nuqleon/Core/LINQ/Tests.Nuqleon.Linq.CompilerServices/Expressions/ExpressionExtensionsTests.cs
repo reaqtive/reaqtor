@@ -601,7 +601,7 @@ public class ExpressionExtensionsTests
 
         var res = e.ToCSharp();
 
-        Assert.AreEqual(3, res.Constants.Count);
+        Assert.HasCount(3, res.Constants);
         Assert.AreSame(d, res.Constants["__c0"].Value);
         Assert.AreEqual(n, res.Constants["__c1"].Value);
         Assert.AreEqual(n, res.Constants["__c2"].Value);
@@ -818,7 +818,7 @@ public class ExpressionExtensionsTests
 
         var res = e.ToCSharp();
 
-        Assert.AreEqual(1, res.GlobalVariables.Count);
+        Assert.HasCount(1, res.GlobalVariables);
         Assert.AreSame(e, res.GlobalVariables[0]);
     }
 

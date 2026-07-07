@@ -49,10 +49,10 @@ public class StructuralSubstitutingTypeComparatorTests
         var comparer = new StructuralSubstitutingTypeComparator();
 
         Assert.IsTrue(comparer.Equals(type1, type1));
-        Assert.AreEqual(0, comparer.Substitutions.Count);
+        Assert.IsEmpty(comparer.Substitutions);
         Assert.IsTrue(comparer.Equals(type1, type2));
         Assert.AreEqual(type1, comparer.Substitutions[type2]);
-        Assert.AreEqual(1, comparer.Substitutions.Count);
+        Assert.HasCount(1, comparer.Substitutions);
     }
 
     [TestMethod]

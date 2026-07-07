@@ -45,7 +45,7 @@ public class ObjectSetTests
 
         var arr = set.ToArray();
 
-        Assert.AreEqual(0, arr.Length);
+        Assert.IsEmpty(arr);
 
         //
         // Remove

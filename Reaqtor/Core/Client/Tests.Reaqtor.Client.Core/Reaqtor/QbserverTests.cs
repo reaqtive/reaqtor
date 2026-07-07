@@ -66,7 +66,7 @@ public class QbserverTests
 
         Assert.IsNotNull(ioe);
 
-        Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
+        Assert.Contains("Concurrent calls", ioe.Message);
 
         var ex2 = Assert.ThrowsExactly<AggregateException>(() =>
             {
@@ -76,7 +76,7 @@ public class QbserverTests
 
         Assert.IsNotNull(ioe2);
 
-        Assert.IsTrue(ioe2.Message.Contains("Concurrent calls"));
+        Assert.Contains("Concurrent calls", ioe2.Message);
 
         var ex3 = Assert.ThrowsExactly<AggregateException>(() =>
             {
@@ -86,7 +86,7 @@ public class QbserverTests
 
         Assert.IsNotNull(ioe3);
 
-        Assert.IsTrue(ioe3.Message.Contains("Concurrent calls"));
+        Assert.Contains("Concurrent calls", ioe3.Message);
 
         var iv = new MyObserver<int>();
 

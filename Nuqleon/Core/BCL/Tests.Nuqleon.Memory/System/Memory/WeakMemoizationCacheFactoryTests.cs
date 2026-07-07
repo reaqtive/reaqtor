@@ -167,7 +167,7 @@ public class WeakMemoizationCacheFactoryTests
 
                 var cache = mcf.Create<Obj, string>(x => x.ToString(), MemoizationOptions.None);
 
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
+                Assert.Contains("Obj", GetOrAdd(cache));
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -563,9 +563,9 @@ public class WeakMemoizationCacheFactoryTests
 
                 var cache = mcf.Create<Obj, string>(x => x.ToString(), MemoizationOptions.None);
 
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
                 Assert.AreEqual(3, cache.Count);
 
                 GC.Collect();
@@ -573,12 +573,12 @@ public class WeakMemoizationCacheFactoryTests
 
                 Assert.AreEqual(3, Obj.FinalizeCount);
 
-                Assert.IsTrue(cache.DebugView.Contains("(empty slot)"));
+                Assert.Contains("(empty slot)", cache.DebugView);
                 Assert.AreEqual(3, cache.Count);
 
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj")); // causes pruning
+                Assert.Contains("Obj", GetOrAdd(cache)); // causes pruning
 
-                Assert.IsFalse(cache.DebugView.Contains("(empty slot)"));
+                Assert.DoesNotContain("(empty slot)", cache.DebugView);
                 Assert.AreEqual(1, cache.Count);
             }
             finally
@@ -603,9 +603,9 @@ public class WeakMemoizationCacheFactoryTests
                 var trim = cache.AsTrimmableByArgumentAndResult();
                 Assert.IsNotNull(trim);
 
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
                 Assert.AreEqual(3, cache.Count);
 
                 GC.Collect();
@@ -613,12 +613,12 @@ public class WeakMemoizationCacheFactoryTests
 
                 Assert.AreEqual(3, Obj.FinalizeCount);
 
-                Assert.IsTrue(cache.DebugView.Contains("(empty slot)"));
+                Assert.Contains("(empty slot)", cache.DebugView);
                 Assert.AreEqual(3, cache.Count);
 
                 trim.Trim(_ => false); // causes pruning
 
-                Assert.IsFalse(cache.DebugView.Contains("(empty slot)"));
+                Assert.DoesNotContain("(empty slot)", cache.DebugView);
                 Assert.AreEqual(0, cache.Count);
             }
             finally
@@ -1034,9 +1034,9 @@ public class WeakMemoizationCacheFactoryTests
                 var trim = cache.AsTrimmableByArgumentAndResult();
                 Assert.IsNotNull(trim);
 
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
-                Assert.IsTrue(GetOrAdd(cache).Contains("Obj"));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
+                Assert.Contains("Obj", GetOrAdd(cache));
                 Assert.AreEqual(3, cache.Count);
 
                 GC.Collect();
@@ -1044,12 +1044,12 @@ public class WeakMemoizationCacheFactoryTests
 
                 Assert.AreEqual(3, Obj.FinalizeCount);
 
-                Assert.IsTrue(cache.DebugView.Contains("(empty slot)"));
+                Assert.Contains("(empty slot)", cache.DebugView);
                 Assert.AreEqual(3, cache.Count);
 
                 trim.Trim(_ => false); // causes pruning
 
-                Assert.IsFalse(cache.DebugView.Contains("(empty slot)"));
+                Assert.DoesNotContain("(empty slot)", cache.DebugView);
                 Assert.AreEqual(0, cache.Count);
             }
             finally

@@ -557,7 +557,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
         Assert.IsNotNull(v1);
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        Assert.AreEqual(0, v1.Values.Count);
+        Assert.IsEmpty(v1.Values);
 
         var o1s = o1.Synchronize(qe.Scheduler);
 
@@ -578,7 +578,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.AreEqual(0, o1.SubscriptionCount);
 
-        Assert.AreEqual(10, v1.Values.Count);
+        Assert.HasCount(10, v1.Values);
 
         for (int i = 0; i < 10; i++)
         {
@@ -654,7 +654,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsTrue(res.Completed);
         Assert.IsFalse(res.Error);
-        Assert.AreEqual(1, res.Values.Count);
+        Assert.HasCount(1, res.Values);
     }
 
     [TestMethod]
@@ -679,7 +679,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(res.Completed);
         Assert.IsFalse(res.Error);
-        Assert.AreEqual(1, res.Values.Count);
+        Assert.HasCount(1, res.Values);
     }
 
     [TestMethod]
@@ -715,7 +715,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
         s2s.OnNext(4);
 
         var res = s3.Values;
-        Assert.AreEqual(1, res.Count);
+        Assert.HasCount(1, res);
         Assert.AreEqual(7, res[0]);
 
         sub1.Dispose();
@@ -759,12 +759,12 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
         s2v.OnNext(99);  // throttle signal
         s1v.OnNext(4);
 
-        Assert.AreEqual(1, s3.Values.Count);
+        Assert.HasCount(1, s3.Values);
         Assert.AreEqual(3, s3.Values[0]);
 
         s1v.OnCompleted();
 
-        Assert.AreEqual(2, s3.Values.Count);
+        Assert.HasCount(2, s3.Values);
         Assert.AreEqual(4, s3.Values[1]);
 
         sub1.Dispose();
@@ -949,12 +949,12 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
             var ios = qe.ReactiveService.Observables.ToList();
             var upstreamObservables = ios.Where(io => io.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-            Assert.AreEqual(1, upstreamObservables.Count);
+            Assert.HasCount(1, upstreamObservables);
             var upstreamSubscriptions = subs.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-            Assert.AreEqual(1, upstreamSubscriptions.Count);
+            Assert.HasCount(1, upstreamSubscriptions);
             var streams = qe.ReactiveService.Streams.ToList();
             var bridges = streams.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-            Assert.AreEqual(1, bridges.Count);
+            Assert.HasCount(1, bridges);
             var ivs = qe.ReactiveService.Observers.ToList();
             var testObserver = ivs.Where(kv => kv.Value.Uri == testIvUri).Select(kv => kv.Value).SingleOrDefault();
             Assert.IsNotNull(testObserver);

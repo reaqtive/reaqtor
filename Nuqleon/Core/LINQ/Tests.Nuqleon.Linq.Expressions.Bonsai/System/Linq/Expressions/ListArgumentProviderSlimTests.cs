@@ -55,7 +55,7 @@ public class ListArgumentProviderSlimTests
 
         Assert.AreEqual(0, argProvider.IndexOf(a0));
         Assert.AreEqual(1, argProvider.IndexOf(a1));
-        Assert.IsTrue(argProvider.IndexOf(d) < 0);
+        Assert.IsLessThan(0, argProvider.IndexOf(d));
 
         var arr = new ExpressionSlim[5];
         argProvider.CopyTo(arr, 2);

@@ -47,7 +47,7 @@ public class QuotationTests
 
         Assert.IsFalse(c.HasAccessed);
 
-        Assert.IsTrue(q.ToString().Contains("42"));
+        Assert.Contains("42", q.ToString());
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public class QuotationTests
 
         Assert.IsTrue(c.HasAccessed);
 
-        Assert.IsTrue(q.ToString().Contains("42"));
+        Assert.Contains("42", q.ToString());
     }
 
     [TestMethod]

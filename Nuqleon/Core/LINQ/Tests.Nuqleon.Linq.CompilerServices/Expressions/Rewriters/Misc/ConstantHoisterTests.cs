@@ -49,7 +49,7 @@ public class ConstantHoisterTests
         var b = Expression.Constant(new Bar());
         var c = Expression.Equal(b, b);
         var res = HoistAndEval(c);
-        Assert.AreEqual(1, res.Environment.Count);
+        Assert.HasCount(1, res.Environment);
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class ConstantHoisterTests
         var b = Expression.Constant(new Bar());
         var c = Expression.NotEqual(b, b);
         var res = HoistAndEval(c);
-        Assert.AreEqual(1, res.Environment.Count);
+        Assert.HasCount(1, res.Environment);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class ConstantHoisterTests
         var b = Expression.Constant(new Bar());
         var c = Expression.Call(b, (MethodInfo)ReflectionHelpers.InfoOf((Bar _) => _.Equals(_)), b);
         var res = HoistAndEval(c);
-        Assert.AreEqual(1, res.Environment.Count);
+        Assert.HasCount(1, res.Environment);
     }
 
     [TestMethod]
@@ -75,7 +75,7 @@ public class ConstantHoisterTests
     {
         var e = Expression.Add(Expression.Constant(new Bar()), Expression.Constant(new Foo()));
         var res = ConstantHoister.Hoist(e, useDefaultForNull: false);
-        Assert.AreEqual(2, res.Environment.Count);
+        Assert.HasCount(2, res.Environment);
     }
 
     [TestMethod]
@@ -83,7 +83,7 @@ public class ConstantHoisterTests
     {
         var c = Expression.Constant(value: null, typeof(string));
         var res = ConstantHoister.Hoist(c, useDefaultForNull: false);
-        Assert.AreEqual(1, res.Environment.Count);
+        Assert.HasCount(1, res.Environment);
         var e = res.Environment.Single();
         Assert.AreEqual(c.Type, e.Key.Type);
         Assert.AreEqual(default(string), e.Value);
@@ -94,7 +94,7 @@ public class ConstantHoisterTests
     {
         var c = Expression.Constant(value: null, typeof(int?));
         var res = ConstantHoister.Hoist(c, useDefaultForNull: false);
-        Assert.AreEqual(1, res.Environment.Count);
+        Assert.HasCount(1, res.Environment);
         var e = res.Environment.Single();
         Assert.AreEqual(c.Type, e.Key.Type);
         Assert.AreEqual(default(int?), e.Value);
@@ -105,7 +105,7 @@ public class ConstantHoisterTests
     {
         var c = Expression.Constant(value: null, typeof(string));
         var res = ConstantHoister.Hoist(c, useDefaultForNull: true);
-        Assert.AreEqual(0, res.Environment.Count);
+        Assert.IsEmpty(res.Environment);
         var e = res.Expression as DefaultExpression;
         Assert.IsNotNull(e);
         Assert.AreEqual(c.Type, e.Type);
@@ -121,10 +121,10 @@ public class ConstantHoisterTests
 #pragma warning restore IDE0079
         var c = ConstantHoister.Hoist(e, useDefaultForNull: false);
 
-        Assert.AreEqual(3, c.Environment.Count);
-        Assert.IsTrue(c.Environment.Values.Contains(0));
-        Assert.IsTrue(c.Environment.Values.Contains(1));
-        Assert.IsTrue(c.Environment.Values.Contains("Foo"));
+        Assert.HasCount(3, c.Environment);
+        Assert.Contains(0, c.Environment.Values);
+        Assert.Contains(1, c.Environment.Values);
+        Assert.Contains("Foo", c.Environment.Values);
 
         var i = (Expression)c.ToInvocation();
 
@@ -160,7 +160,7 @@ public class ConstantHoisterTests
         });
         Assert.AreEqual(typeof(ArgumentException), ex.GetType());
 
-        Assert.IsTrue(ex.Message.Contains("not a method call, new, or member access"));
+        Assert.Contains("not a method call, new, or member access", ex.Message);
 
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() =>
         {
@@ -170,7 +170,7 @@ public class ConstantHoisterTests
         });
         Assert.AreEqual(typeof(ArgumentException), ex2.GetType());
 
-        Assert.IsTrue(ex2.Message.Contains("not a constant or a default expression"));
+        Assert.Contains("not a constant or a default expression", ex2.Message);
 
         var ex3 = Assert.ThrowsExactly<ArgumentException>(() =>
         {
@@ -180,7 +180,7 @@ public class ConstantHoisterTests
         });
         Assert.AreEqual(typeof(ArgumentException), ex3.GetType());
 
-        Assert.IsTrue(ex3.Message.Contains("no holes for constants"));
+        Assert.Contains("no holes for constants", ex3.Message);
 
         var ex4 = Assert.ThrowsExactly<ArgumentException>(() =>
         {
@@ -190,7 +190,7 @@ public class ConstantHoisterTests
         });
         Assert.AreEqual(typeof(ArgumentException), ex4.GetType());
 
-        Assert.IsTrue(ex4.Message.Contains("not used"));
+        Assert.Contains("not used", ex4.Message);
 
         var ex5 = Assert.ThrowsExactly<ArgumentException>(() =>
         {
@@ -200,7 +200,7 @@ public class ConstantHoisterTests
         });
         Assert.AreEqual(typeof(ArgumentException), ex5.GetType());
 
-        Assert.IsTrue(ex5.Message.Contains("used multiple times"));
+        Assert.Contains("used multiple times", ex5.Message);
 #pragma warning restore IDE0034 // Simplify 'default' expression
 #pragma warning restore IDE0004 // Cast is redundant.
     }
@@ -234,18 +234,18 @@ public class ConstantHoisterTests
         var r4 = HoistAndEval(hoister, e4.Body);
         var r5 = HoistAndEval(hoister, e5.Body);
 
-        Assert.AreEqual(2, r1.Environment.Count);
-        Assert.IsTrue(r1.Environment.Values.OfType<int>().Any(v => v == 123));
-        Assert.IsTrue(r1.Environment.Values.OfType<string>().Any(v => v == "foo"));
+        Assert.HasCount(2, r1.Environment);
+        Assert.Contains(v => v == 123, r1.Environment.Values.OfType<int>());
+        Assert.Contains(v => v == "foo", r1.Environment.Values.OfType<string>());
 
-        Assert.AreEqual(1, r2.Environment.Count);
-        Assert.IsTrue(r2.Environment.Values.OfType<string>().Any(v => v == "bar"));
+        Assert.HasCount(1, r2.Environment);
+        Assert.Contains(v => v == "bar", r2.Environment.Values.OfType<string>());
 
-        Assert.AreEqual(0, r3.Environment.Count);
+        Assert.IsEmpty(r3.Environment);
 
-        Assert.AreEqual(0, r4.Environment.Count);
+        Assert.IsEmpty(r4.Environment);
 
-        Assert.AreEqual(0, r5.Environment.Count);
+        Assert.IsEmpty(r5.Environment);
     }
 
     [TestMethod]

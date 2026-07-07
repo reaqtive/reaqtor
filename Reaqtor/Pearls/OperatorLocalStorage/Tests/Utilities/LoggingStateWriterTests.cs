@@ -61,7 +61,7 @@ public class LoggingStateWriterTests
             "Dispose()/Stop",
         })
         {
-            Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
+            Assert.Contains(entry, log, "Not found: '" + entry + "'");
         }
     }
 
@@ -109,7 +109,7 @@ public class LoggingStateWriterTests
             "Dispose()/Stop",
         })
         {
-            Assert.IsTrue(log.Contains(entry), "Not found: '" + entry + "'");
+            Assert.Contains(entry, log, "Not found: '" + entry + "'");
         }
     }
 

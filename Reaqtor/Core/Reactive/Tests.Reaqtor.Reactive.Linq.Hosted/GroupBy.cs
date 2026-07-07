@@ -185,8 +185,8 @@ public partial class GroupBy : TestBase
                 }).Apply(s);
 
                 Assert.IsNotNull(ds);
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
                 Assert.AreEqual(0, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/group")));
             });
 
@@ -200,9 +200,9 @@ public partial class GroupBy : TestBase
                 }).Apply(s);
 
                 Assert.IsNotNull(ds);
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/group")));
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tunnel/group"), ds);
             });
 
             for (var t = 225; t < 300; t += 10)
@@ -217,8 +217,8 @@ public partial class GroupBy : TestBase
                     }).Apply(s);
 
                     Assert.IsNotNull(ds);
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
                     Assert.AreEqual(2, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/group")));
                 });
             }

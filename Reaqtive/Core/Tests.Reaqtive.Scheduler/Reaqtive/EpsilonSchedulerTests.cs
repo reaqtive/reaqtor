@@ -603,7 +603,7 @@ public sealed class EpsilonSchedulerTests
             }
             else
             {
-                Assert.AreEqual(true, Volatile.Read(ref firstHasCalled));
+                Assert.IsTrue(Volatile.Read(ref firstHasCalled));
             }
 
             while (!q.IsEmpty)

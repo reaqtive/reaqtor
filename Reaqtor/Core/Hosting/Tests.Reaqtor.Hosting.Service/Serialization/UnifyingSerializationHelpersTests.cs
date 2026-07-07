@@ -26,7 +26,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQbservable<int>).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
@@ -38,7 +38,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQbserver<int>).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQubjectFactory<int, int>).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQubscriptionFactory).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
@@ -74,7 +74,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQubject<int, int>).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class UnifyingSerializationHelpersTests
 
         var parameter = ExpressionSlim.Parameter(typeof(IAsyncReactiveQubscription).ToTypeSlim(), uri.ToCanonicalString());
         var mappings = UnifyingSerializationHelpers.FindAndUnify(parameter, metadata);
-        Assert.AreEqual(0, mappings.Count());
+        Assert.IsEmpty(mappings);
     }
 
     [TestMethod]

@@ -152,7 +152,7 @@ public class SlimReflectionHelpersTests : TestBase
     private static void AssertAreSameGenericDefinitionMethod(MethodInfo methodInfo, GenericDefinitionMethodInfoSlim genericDefinitionMethodInfoSlim)
     {
         Assert.AreEqual(methodInfo.Name, genericDefinitionMethodInfoSlim.Name);
-        Assert.AreEqual(methodInfo.GetGenericArguments().Length, genericDefinitionMethodInfoSlim.GenericParameterTypes.Count);
+        Assert.HasCount(methodInfo.GetGenericArguments().Length, genericDefinitionMethodInfoSlim.GenericParameterTypes);
     }
 
     private static void AssertAreSameGenericMethod(MethodInfo methodInfo, GenericMethodInfoSlim genericMethodInfoSlim)

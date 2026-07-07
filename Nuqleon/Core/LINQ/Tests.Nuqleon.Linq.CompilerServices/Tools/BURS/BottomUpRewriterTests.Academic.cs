@@ -213,7 +213,7 @@ public partial class BottomUpRewriterTests
 
         var res = burw.Rewrite(e);
 
-        Assert.IsTrue(res.ToString().Contains("Lazy"));
+        Assert.Contains("Lazy", res.ToString());
         Assert.AreEqual(e.Eval(), res.Eval());
     }
 

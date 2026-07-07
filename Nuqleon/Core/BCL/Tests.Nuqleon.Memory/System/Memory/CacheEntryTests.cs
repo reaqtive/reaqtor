@@ -114,7 +114,7 @@ public class CacheEntryTests
 
             var sb = new StringBuilder();
             entry.ToDebugView(sb, "");
-            Assert.IsTrue(sb.ToString().Contains("="));
+            Assert.Contains("=", sb.ToString());
         }
     }
 

@@ -18,7 +18,7 @@ public class UnboundVariableScannerTests
 
         uvs.Visit(e);
 
-        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+        Assert.IsEmpty(uvs.UnboundVariables);
     }
 
     [TestMethod]
@@ -31,7 +31,7 @@ public class UnboundVariableScannerTests
 
         uvs.Visit(e);
 
-        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+        Assert.IsEmpty(uvs.UnboundVariables);
     }
 
     [TestMethod]
@@ -44,7 +44,7 @@ public class UnboundVariableScannerTests
 
         uvs.Visit(e);
 
-        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+        Assert.IsEmpty(uvs.UnboundVariables);
     }
 
     [TestMethod]

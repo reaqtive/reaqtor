@@ -257,8 +257,8 @@ public class Tests
         Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(int), typeof(int)], modifiers: null));
 
         var isNullOrEmpty = p.GetMethod(typeof(string), nameof(string.IsNullOrEmpty));
-        Assert.AreEqual(true, isNullOrEmpty.Invoke(null, [""]));
-        Assert.AreEqual(false, isNullOrEmpty.Invoke(null, ["bar"]));
+        Assert.IsTrue((bool?)isNullOrEmpty.Invoke(null, [""]));
+        Assert.IsFalse((bool?)isNullOrEmpty.Invoke(null, ["bar"]));
 
         Assert.AreEqual(isNullOrEmpty, p.GetMethod(typeof(string), nameof(string.IsNullOrEmpty), BindingFlags.Public | BindingFlags.Static));
 
