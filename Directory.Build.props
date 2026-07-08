@@ -164,6 +164,19 @@
   </PropertyGroup>
 
   <!--
+    MSTest analyzers at their package default (MSTestAnalysisMode=Default) leave rules such as
+    MSTEST0001 at 'suggestion', which TreatWarningsAsErrors cannot promote. Several of those rules
+    also report at compilation level with no source span, so `dotnet format` cannot see them either
+    (that is how 40 MSTEST0001 diagnostics accumulated unnoticed, visible only in the IDE).
+    'Recommended' raises them to warning, and TreatWarningsAsErrors then makes them build errors, so
+    the tier cannot rot again. Verified: 0 warnings solution-wide at this mode. Do NOT use 'All' -
+    it reports 610 (MSTEST0004 x608, MSTEST0026 x2), a separate triage.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <MSTestAnalysisMode>Recommended</MSTestAnalysisMode>
+  </PropertyGroup>
+
+  <!--
     CA1861 (prefer 'static readonly' fields over constant array arguments) targets hot-path performance;
     in unit test projects the constant arrays are one-shot test data, so the rule is noise there. It is
     excluded for test projects but stays active for shipping code, where hoisting is worth acting on.
