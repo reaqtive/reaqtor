@@ -121,7 +121,8 @@ public class InnerSubjectTests
         subject.Seal();
 
         var ctx = CreateOperatorContext(new Uri("tests://qux/1"), svc, new MiniScheduler());
-        Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(s1).Initialize(ctx));
+        var visitor = new SubscriptionInitializeVisitor(s1);
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Initialize(ctx));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
     }

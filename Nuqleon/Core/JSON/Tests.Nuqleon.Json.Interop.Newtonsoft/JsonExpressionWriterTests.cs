@@ -603,19 +603,22 @@ public class JsonExpressionWriterTests
         AssertNotSupported(w => w.WriteEndConstructor());
         AssertNotSupported(w => w.WriteUndefined());
 
-        Assert.ThrowsExactly<NotSupportedException>(() => new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat }.WriteValue(DateTime.Now));
+        var w1 = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
+        Assert.ThrowsExactly<NotSupportedException>(() => w1.WriteValue(DateTime.Now));
 
-        Assert.ThrowsExactly<NotSupportedException>(() => new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat }.WriteValue(DateTimeOffset.Now));
+        var w2 = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
+        Assert.ThrowsExactly<NotSupportedException>(() => w2.WriteValue(DateTimeOffset.Now));
     }
 
     [TestMethod]
     public void JsonExpressionWriter_InvalidOperation_EndArray()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new JsonExpressionWriter().WriteEndArray());
+        var w1 = new JsonExpressionWriter();
+        Assert.ThrowsExactly<InvalidOperationException>(() => w1.WriteEndArray());
 
-        var w = new JsonExpressionWriter();
-        w.WriteValue(1);
-        Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndArray());
+        var w2 = new JsonExpressionWriter();
+        w2.WriteValue(1);
+        Assert.ThrowsExactly<InvalidOperationException>(() => w2.WriteEndArray());
     }
 
     [TestMethod]
@@ -637,11 +640,12 @@ public class JsonExpressionWriterTests
     [TestMethod]
     public void JsonExpressionWriter_InvalidOperation_EndObject()
     {
-        Assert.ThrowsExactly<InvalidOperationException>(() => new JsonExpressionWriter().WriteEndObject());
+        var w1 = new JsonExpressionWriter();
+        Assert.ThrowsExactly<InvalidOperationException>(() => w1.WriteEndObject());
 
-        var w = new JsonExpressionWriter();
-        w.WriteValue(1);
-        Assert.ThrowsExactly<InvalidOperationException>(() => w.WriteEndObject());
+        var w2 = new JsonExpressionWriter();
+        w2.WriteValue(1);
+        Assert.ThrowsExactly<InvalidOperationException>(() => w2.WriteEndObject());
     }
 
     [TestMethod]
