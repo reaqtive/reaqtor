@@ -31,6 +31,50 @@
                 arguments: install -g dotnet-reportgenerator-globaltool
               displayName: Install ReportGenerator tool
 
+            # TEMPORARY DIAGNOSTICS - remove before merge. See https://github.com/reaqtive/reaqtor/pull/156.
+            #
+            # Two tests (GrpcParityTests.Grpc_Queries_Parity_With_InProc_Oracle and
+            # GrpcRicherWorkloadTests.Grpc_Richer_Workloads_Parity_With_InProc_Oracle) fail on the
+            # hosted Linux agent, and only there, with:
+            #
+            #   System.InvalidProgramException: Common Language Runtime detected an invalid program.
+            #     at Reaqtor.QueryEngine.ReactiveEntity.Cache(ICache`1 cache)
+            #
+            # Deterministic: 4/4 Linux Reaqtor jobs across builds 128792 and 128797, both configurations.
+            # Not reproducible in a local Linux container matching the agent on OS (ubuntu-24.04), SDK
+            # (10.0.301), runtime (10.0.9), pinned packages, core count, and this exact command line -
+            # 1448/1448 pass there, and ReactiveEntity.Cache reports line-rate="1" in the emitted
+            # cobertura, i.e. it is instrumented and executed without incident.
+            #
+            # Only the *in-proc* oracle half of each parity test fails; the gRPC half drives the same
+            # engine code in a child process and passes. --coverage attaches an in-process collector to
+            # the test host only, which is the standing hypothesis. These steps discriminate: if the
+            # no-coverage run is green and the with-coverage run is red, coverage instrumentation is the
+            # trigger. If both are red, it is not, and the environment dump is the next lead.
+            - ${{ if and(eq(pool.name, 'Linux'), eq(project, 'Reaqtor')) }}:
+              - bash: |
+                  echo "--- nproc: $(nproc)"
+                  echo "--- dotnet --info"
+                  dotnet --info
+                  echo "--- dotnet --list-runtimes"
+                  dotnet --list-runtimes
+                  echo "--- DOTNET_/NUGET_/CORECLR_ environment"
+                  env | grep -E '^(DOTNET|NUGET|CORECLR)_' | sort
+                  echo "--- cpu flags"
+                  grep -m1 '^flags' /proc/cpuinfo
+                displayName: Diag - environment
+                continueOnError: true
+
+              - bash: dotnet test Samples/Grpc/Tests.Reaqtor.Remoting.Grpc/Tests.Reaqtor.Remoting.Grpc.csproj -c ${{ configuration }}
+                workingDirectory: ${{ project }}
+                displayName: Diag - gRPC tests WITHOUT coverage
+                continueOnError: true
+
+              - bash: dotnet test Samples/Grpc/Tests.Reaqtor.Remoting.Grpc/Tests.Reaqtor.Remoting.Grpc.csproj -c ${{ configuration }} --coverage --coverage-settings $(Build.SourcesDirectory)/codecoverage.runsettings --coverage-output-format cobertura
+                workingDirectory: ${{ project }}
+                displayName: Diag - gRPC tests WITH coverage
+                continueOnError: true
+
             # Tests run on Microsoft.Testing.Platform (see global.json "test.runner"). VSTest-style
             # arguments are translated to their MTP equivalents: --collect "XPlat Code Coverage" ->
             # --coverage (Microsoft.Testing.Extensions.CodeCoverage), --blame-hang-timeout ->
