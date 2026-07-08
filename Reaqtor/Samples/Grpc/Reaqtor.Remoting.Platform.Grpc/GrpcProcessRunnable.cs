@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
@@ -58,6 +59,7 @@ public sealed class GrpcProcessRunnable : IDisposable
         var resolvedPort = port ?? GetFreeTcpPort();
 
         var startInfo = new ProcessStartInfo("dotnet") { UseShellExecute = false };
+        ScrubProfilerEnvironment(startInfo);
         startInfo.ArgumentList.Add(hostAssemblyPath);
         startInfo.ArgumentList.Add(resolvedPort.ToString(CultureInfo.InvariantCulture));
 
@@ -71,6 +73,68 @@ public sealed class GrpcProcessRunnable : IDisposable
 
         var process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start the gRPC host process.");
         return new GrpcProcessRunnable(process, resolvedPort);
+    }
+
+    /// <summary>
+    /// Environment variables through which a CLR profiler (and, specifically, the code-coverage
+    /// instrumentation engine) attaches itself to a .NET process. Matched by prefix.
+    /// </summary>
+    private static readonly string[] ProfilerEnvironmentPrefixes =
+    [
+        "CORECLR_ENABLE_PROFILING",
+        "CORECLR_PROFILER",
+        "COR_ENABLE_PROFILING",
+        "COR_PROFILER",
+        "MicrosoftInstrumentationEngine_",
+        "CODE_COVERAGE_",
+        "MICROSOFT_CODE_COVERAGE",
+    ];
+
+    /// <summary>
+    /// Prevents the launched host from inheriting the parent's CLR-profiler environment.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Under <c>dotnet test --coverage</c> the code-coverage collector attaches an instrumentation
+    /// profiler to the test host via <c>CORECLR_*</c> environment variables. Because
+    /// <see cref="ProcessStartInfo.UseShellExecute"/> is <c>false</c>, a child process inherits that
+    /// environment and the profiler attaches to every short-lived gRPC host we spawn.
+    /// </para>
+    /// <para>
+    /// On the hosted Linux CI agent that corrupts the *parent's* instrumented modules: once a child
+    /// has run, the test host's first JIT of <c>Reaqtor.QueryEngine.ReactiveEntity.Cache</c> fails with
+    /// <c>InvalidProgramException</c>. It reproduces only on that agent, only with <c>--coverage</c>, and
+    /// only in this test project — the sole one that spawns child processes. The same instrumented
+    /// method JITs correctly in test hosts that do not.
+    /// </para>
+    /// <para>
+    /// Scrubbing the variables is right independently of the bug: these hosts are deployment artifacts
+    /// under test, their coverage is not consumed by the run, and attaching an instrumentation engine to
+    /// each one only slows the tests down.
+    /// </para>
+    /// </remarks>
+    private static void ScrubProfilerEnvironment(ProcessStartInfo startInfo)
+    {
+        var environment = startInfo.Environment;
+
+        var stale = new List<string>();
+
+        foreach (var key in environment.Keys)
+        {
+            foreach (var prefix in ProfilerEnvironmentPrefixes)
+            {
+                if (key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    stale.Add(key);
+                    break;
+                }
+            }
+        }
+
+        foreach (var key in stale)
+        {
+            environment.Remove(key);
+        }
     }
 
     /// <summary>Polls <c>Ping</c> until the host answers or the timeout elapses.</summary>
