@@ -12,7 +12,7 @@ public class ReadOnlyCollectionExtensionsTests
     {
         var xs = new ReadOnlyCollection<int>([3, 5, 7]);
         var res = xs.AddFirst(2);
-        Assert.AreEqual(4, res.Count);
+        Assert.HasCount(4, res);
         Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(res));
     }
 }

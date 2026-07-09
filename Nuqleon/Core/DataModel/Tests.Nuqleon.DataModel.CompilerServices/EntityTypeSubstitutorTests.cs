@@ -47,7 +47,7 @@ public class EntityTypeSubstitutorTests
             foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
             {
                 var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
-                Assert.IsTrue(ex.Message.Contains("Grmbl"));
+                Assert.Contains("Grmbl", ex.Message);
             }
         }
     }
@@ -70,7 +70,7 @@ public class EntityTypeSubstitutorTests
             foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
             {
                 var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
-                Assert.IsTrue(ex.Message.Contains("Grmbl"));
+                Assert.Contains("Grmbl", ex.Message);
             }
         }
     }
@@ -131,7 +131,7 @@ public class EntityTypeSubstitutorTests
             {
                 // rewrite unsuccessful
                 var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
-                Assert.IsTrue(ex.Message.Contains("Grmbl"));
+                Assert.Contains("Grmbl", ex.Message);
             }
         }
     }

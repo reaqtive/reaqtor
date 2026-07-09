@@ -29,7 +29,9 @@ public class IndexedTests
         AssertNotEqual(i1, i4);
         AssertNotEqual(i2, i4);
 
+#pragma warning disable MSTEST0037 // The suggested 'Assert.IsNotNull' is always-true here (MSTEST0032): Indexed<T> is a value type. Keep AreNotEqual to exercise boxed inequality against null.
         Assert.AreNotEqual<object>(null, i1);
+#pragma warning restore MSTEST0037
         Assert.AreNotEqual<object>("foo", i1);
     }
 

@@ -167,7 +167,7 @@ public class CompositeSubscriptionTests
             --n;
 
             Assert.AreEqual(n, cs.Count);
-            Assert.AreEqual(n, cs.Count());
+            Assert.HasCount(n, cs);
         }
 
         var ds2 = Enumerable.Range(0, N).Select(i => (i, s: new MySub())).ToList();
@@ -207,7 +207,7 @@ public class CompositeSubscriptionTests
             --n;
 
             Assert.AreEqual(n, cs.Count);
-            Assert.AreEqual(n, cs.Count());
+            Assert.HasCount(n, cs);
         }
 
         var ts = es.Skip(Q).ToList();

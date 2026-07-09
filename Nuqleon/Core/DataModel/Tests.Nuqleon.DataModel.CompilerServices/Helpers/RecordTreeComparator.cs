@@ -175,13 +175,12 @@ internal class RecordTreeComparator : ExpressionComparator
 
         foreach (var kvp in xEntities)
         {
-            if (!yEntities.ContainsKey(kvp.Key))
+            if (!yEntities.TryGetValue(kvp.Key, out var yEntity))
             {
                 return false;
             }
 
             var xEntity = kvp.Value;
-            var yEntity = yEntities[kvp.Key];
 
             if (xEntity.HasExpression && yEntity.HasExpression &&
                 (!Equals(xEntity.Expression, yEntity.Expression) || !Equals(xEntity.Type, yEntity.Type)))

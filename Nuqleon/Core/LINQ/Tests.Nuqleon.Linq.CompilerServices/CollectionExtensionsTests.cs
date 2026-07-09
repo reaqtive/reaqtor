@@ -53,15 +53,15 @@ public class CollectionExtensionsTests
         var xs = new List<int> { 2, 3, 5 };
 
         var ro = xs.ToReadOnly();
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
 
         xs.Add(7);
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
 
         xs.Clear();
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
     }
 
@@ -72,15 +72,15 @@ public class CollectionExtensionsTests
         var ys = xs.Select(x => x);
 
         var ro = ys.ToReadOnly();
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
 
         xs.Add(7);
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
 
         xs.Clear();
-        Assert.AreEqual(3, ro.Count);
+        Assert.HasCount(3, ro);
         Assert.IsTrue(new[] { 2, 3, 5 }.SequenceEqual(ro));
     }
 
@@ -126,7 +126,7 @@ public class CollectionExtensionsTests
 
         var ys = CollectionExtensions.AsArray(xs);
 
-        Assert.AreEqual(0, ys.Length);
+        Assert.IsEmpty(ys);
     }
 
     [TestMethod]
@@ -156,7 +156,7 @@ public class CollectionExtensionsTests
 
         var ys = CollectionExtensions.AsCollection(xs);
 
-        Assert.AreEqual(0, ys.Count);
+        Assert.IsEmpty(ys);
     }
 
     [TestMethod]
@@ -206,6 +206,6 @@ public class CollectionExtensionsTests
 
     private static void AssertEmpty<T>(ReadOnlyCollection<T> c)
     {
-        Assert.AreEqual(0, c.Count);
+        Assert.IsEmpty(c);
     }
 }

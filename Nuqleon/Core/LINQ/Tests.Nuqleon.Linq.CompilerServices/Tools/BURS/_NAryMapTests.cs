@@ -83,8 +83,8 @@ public class _NAryMapTests
             entries.Add(kv);
         }
 
-        Assert.AreEqual(2, entries.Count);
-        Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual([19, 23])).Value == "Answer 1");
-        Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual([19, 24])).Value == "Answer 2");
+        Assert.HasCount(2, entries);
+        Assert.AreEqual("Answer 1", entries.Single(kv => kv.Key.SequenceEqual([19, 23])).Value);
+        Assert.AreEqual("Answer 2", entries.Single(kv => kv.Key.SequenceEqual([19, 24])).Value);
     }
 }

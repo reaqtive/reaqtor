@@ -457,15 +457,15 @@ public class ObjectPoolTests
     {
         var pool = new ObjectPool<MyFreeable>(() => new MyFreeable());
 
-        Assert.IsTrue(!string.IsNullOrEmpty(pool.DebugView));
+        Assert.IsFalse(string.IsNullOrEmpty(pool.DebugView));
 
         var obj = pool.Allocate();
 
-        Assert.IsTrue(!string.IsNullOrEmpty(pool.DebugView));
+        Assert.IsFalse(string.IsNullOrEmpty(pool.DebugView));
 
         pool.Free(obj);
 
-        Assert.IsTrue(!string.IsNullOrEmpty(pool.DebugView));
+        Assert.IsFalse(string.IsNullOrEmpty(pool.DebugView));
     }
 #endif
 

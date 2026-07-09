@@ -78,10 +78,10 @@ public class ExpressionTupletizerTests
                 if (u.Type.GetGenericTypeDefinition() == typeof(Tuple<,,,,,,,>))
                 {
                     u = f.Arguments.Last();
-                    Assert.IsTrue(u.Type.Name.StartsWith("Tuple"));
+                    Assert.StartsWith("Tuple", u.Type.Name);
 
                     Assert.IsTrue(f.Members.Take(7).Select(m => m.Name).SequenceEqual(Enumerable.Range(1, 7).Select(j => "Item" + j)));
-                    Assert.IsTrue(f.Members.Last().Name == "Rest");
+                    Assert.AreEqual("Rest", f.Members.Last().Name);
                     n--;
                 }
                 else
@@ -148,7 +148,7 @@ public class ExpressionTupletizerTests
 
                 if (n == 1)
                 {
-                    Assert.IsTrue(g.Parameters[0].Type.FullName.StartsWith("System.Tuple`"), "Parameter type: " + f.ToString());
+                    Assert.StartsWith("System.Tuple`", g.Parameters[0].Type.FullName, "Parameter type: " + f.ToString());
                 }
 
                 var h = ExpressionTupletizer.Unpack(g);
@@ -203,7 +203,7 @@ public class ExpressionTupletizerTests
                 var g = pack(f);
 
                 var n = g.Parameters.Count;
-                Assert.IsTrue(n == 1, "Parameter count: " + f.ToString());
+                Assert.AreEqual(1, n, "Parameter count: " + f.ToString());
 
                 if (n == 1)
                 {
@@ -215,7 +215,7 @@ public class ExpressionTupletizerTests
                     }
                     else
                     {
-                        Assert.IsTrue(p.Type.FullName.StartsWith("System.Tuple`"), "Parameter type: " + f.ToString());
+                        Assert.StartsWith("System.Tuple`", p.Type.FullName, "Parameter type: " + f.ToString());
                     }
                 }
 
@@ -332,7 +332,7 @@ public class ExpressionTupletizerTests
         Assert.AreSame(expression.Parameters, parameters);
 #else
         Assert.IsTrue(new ExpressionEqualityComparer(() => new GlobalParameterSafeComparator()).Equals(expression.Body, body));
-        Assert.AreEqual(0, parameters.Count());
+        Assert.IsEmpty(parameters);
 #endif
 
         Unpack(expression, typeof(void), out body, out parameters);
@@ -341,7 +341,7 @@ public class ExpressionTupletizerTests
         Assert.AreSame(expression.Parameters, parameters);
 #else
         Assert.IsTrue(new ExpressionEqualityComparer(() => new GlobalParameterSafeComparator()).Equals(expression.Body, body));
-        Assert.AreEqual(0, parameters.Count());
+        Assert.IsEmpty(parameters);
 #endif
     }
 
@@ -374,7 +374,7 @@ public class ExpressionTupletizerTests
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Pack([((Expression<Action<string>>)(s => Console.WriteLine(s))).Body]));
         Assert.AreEqual("expressions", ex.ParamName);
 
-        Assert.IsTrue(ex.Message.Contains("WriteLine"));
+        Assert.Contains("WriteLine", ex.Message);
     }
 
     [TestMethod]

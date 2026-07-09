@@ -35,7 +35,7 @@ public class ExceptionTests
         Assert.AreSame(qe, ex.QueryEngineUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
         Assert.AreEqual(param, ex.ParamName);
-        Assert.IsTrue(ex.Message.Contains("already exists"));
+        Assert.Contains("already exists", ex.Message);
     }
 
     [TestMethod]
@@ -53,7 +53,7 @@ public class ExceptionTests
         Assert.AreSame(qe, ex.QueryEngineUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
         Assert.AreEqual(param, ex.ParamName);
-        Assert.IsTrue(ex.Message.Contains("already exists"));
+        Assert.Contains("already exists", ex.Message);
         Assert.AreSame(inner, ex.InnerException);
     }
 
@@ -85,7 +85,7 @@ public class ExceptionTests
         Assert.AreSame(qe, ex.QueryEngineUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
         Assert.AreEqual(param, ex.ParamName);
-        Assert.IsTrue(ex.Message.Contains("could not be found"));
+        Assert.Contains("could not be found", ex.Message);
     }
 
     [TestMethod]
@@ -103,7 +103,7 @@ public class ExceptionTests
         Assert.AreSame(qe, ex.QueryEngineUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
         Assert.AreEqual(param, ex.ParamName);
-        Assert.IsTrue(ex.Message.Contains("could not be found"));
+        Assert.Contains("could not be found", ex.Message);
         Assert.AreSame(inner, ex.InnerException);
     }
 
@@ -130,7 +130,7 @@ public class ExceptionTests
 
         Assert.AreSame(id, ex.EntityUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-        Assert.IsTrue(ex.Message.Contains("failed to load"));
+        Assert.Contains("failed to load", ex.Message);
     }
 
     [TestMethod]
@@ -144,7 +144,7 @@ public class ExceptionTests
 
         Assert.AreSame(id, ex.EntityUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-        Assert.IsTrue(ex.Message.Contains("failed to load"));
+        Assert.Contains("failed to load", ex.Message);
         Assert.AreSame(inner, ex.InnerException);
     }
 
@@ -171,7 +171,7 @@ public class ExceptionTests
 
         Assert.AreSame(id, ex.EntityUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-        Assert.IsTrue(ex.Message.Contains("failed to save"));
+        Assert.Contains("failed to save", ex.Message);
     }
 
     [TestMethod]
@@ -185,7 +185,7 @@ public class ExceptionTests
 
         Assert.AreSame(id, ex.EntityUri);
         Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-        Assert.IsTrue(ex.Message.Contains("failed to save"));
+        Assert.Contains("failed to save", ex.Message);
         Assert.AreSame(inner, ex.InnerException);
     }
 
@@ -199,7 +199,7 @@ public class ExceptionTests
     {
         var ex = new EngineUnloadedException();
 
-        Assert.IsTrue(ex.Message.Contains("unloaded"));
+        Assert.Contains("unloaded", ex.Message);
     }
 
     [TestMethod]
@@ -217,7 +217,7 @@ public class ExceptionTests
         var ex = new EngineUnloadedException(ie);
 
         Assert.AreSame(ie, ex.InnerException);
-        Assert.IsTrue(ex.Message.Contains("unloaded"));
+        Assert.Contains("unloaded", ex.Message);
     }
 
     [TestMethod]

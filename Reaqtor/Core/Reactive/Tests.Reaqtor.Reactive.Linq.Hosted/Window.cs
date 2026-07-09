@@ -137,9 +137,9 @@ public partial class Window : TestBase
                     }).Apply(s);
 
                     Assert.IsNotNull(ds);
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tunnel/window"), ds);
                 });
             }
 
@@ -187,9 +187,9 @@ public partial class Window : TestBase
                 }).Apply(s);
 
                 Assert.IsNotNull(ds);
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tunnel/window"), ds);
             });
 
             foreach (var t in new[] { 235, 255, 275 })
@@ -204,8 +204,8 @@ public partial class Window : TestBase
                     }).Apply(s);
 
                     Assert.IsNotNull(ds);
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
                     Assert.AreEqual(2, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
                 });
             }
@@ -256,9 +256,9 @@ public partial class Window : TestBase
                     }).Apply(s);
 
                     Assert.IsNotNull(ds);
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tunnel/window"), ds);
                 });
             }
 
@@ -306,9 +306,9 @@ public partial class Window : TestBase
                 }).Apply(s);
 
                 Assert.IsNotNull(ds);
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
-                Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
+                Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tunnel/window"), ds);
             });
 
             foreach (var t in new[] { 235, 255, 275 })
@@ -323,8 +323,8 @@ public partial class Window : TestBase
                     }).Apply(s);
 
                     Assert.IsNotNull(ds);
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://tollbooth")));
-                    Assert.AreEqual(1, ds.Count(d => d.OriginalString.StartsWith("rx://collector")));
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://tollbooth"), ds);
+                    Assert.ContainsSingle(d => d.OriginalString.StartsWith("rx://collector"), ds);
                     Assert.AreEqual(2, ds.Count(d => d.OriginalString.StartsWith("rx://tunnel/window")));
                 });
             }

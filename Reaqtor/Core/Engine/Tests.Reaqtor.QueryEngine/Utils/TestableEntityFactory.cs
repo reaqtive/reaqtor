@@ -19,40 +19,42 @@ public static class TestableEntityFactory
 
     public static IObserver<T> CreateObserver<T>(string id)
     {
-        if (!Observers.ContainsKey(id))
+        if (!Observers.TryGetValue(id, out var observer))
         {
-            Observers.Add(id, Scheduler.CreateObserver<T>());
+            observer = Scheduler.CreateObserver<T>();
+            Observers.Add(id, observer);
         }
-        return Observers[id] as IObserver<T>;
+        return observer as IObserver<T>;
     }
 
     public static ITestableObserver<T> GetObserver<T>(string id)
     {
-        if (!Observers.ContainsKey(id))
+        if (!Observers.TryGetValue(id, out var observer))
         {
             return null;
         }
 
-        return Observers[id] as ITestableObserver<T>;
+        return observer as ITestableObserver<T>;
     }
 
     public static ISubscribable<T> CreateColdSubscribable<T>(string id, Recorded<Notification<T>>[] messages)
     {
-        if (!Subscribables.ContainsKey(id))
+        if (!Subscribables.TryGetValue(id, out var subscribable))
         {
-            Subscribables.Add(id, Scheduler.CreateColdObservable(messages));
+            subscribable = Scheduler.CreateColdObservable(messages);
+            Subscribables.Add(id, subscribable);
         }
-        return Subscribables[id] as ISubscribable<T>;
+        return subscribable as ISubscribable<T>;
     }
 
     public static ITestableSubscribable<T> GetSubscribable<T>(string id)
     {
-        if (!Subscribables.ContainsKey(id))
+        if (!Subscribables.TryGetValue(id, out var subscribable))
         {
             return null;
         }
 
-        return Subscribables[id] as ITestableSubscribable<T>;
+        return subscribable as ITestableSubscribable<T>;
     }
 
     public static void Clear()

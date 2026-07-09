@@ -37,8 +37,8 @@ public class TreeTests
 
         Assert.AreEqual(42, tree.Value);
         Assert.AreEqual(42, ((ITree)tree).Value);
-        Assert.AreEqual(0, tree.Children.Count);
-        Assert.AreEqual(0, ((ITree)tree).Children.Count);
+        Assert.IsEmpty(tree.Children);
+        Assert.IsEmpty(((ITree)tree).Children);
 
         Assert.AreEqual("42()", tree.ToString());
         Assert.AreEqual("42()", tree.ToString(indent: 0));
@@ -50,7 +50,7 @@ public class TreeTests
         var tree = new Tree<string>(value: null);
 
         Assert.IsNull(tree.Value);
-        Assert.AreEqual(0, tree.Children.Count);
+        Assert.IsEmpty(tree.Children);
 
         Assert.AreEqual("<null>()", tree.ToString());
         Assert.AreEqual("<null>()", tree.ToString(indent: 0));
@@ -73,12 +73,12 @@ public class TreeTests
         Assert.AreEqual(43, leaf2.Value);
         Assert.AreEqual(42, leaf1.Value);
 
-        Assert.AreEqual(1, node3.Children.Count);
-        Assert.AreEqual(2, node2.Children.Count);
-        Assert.AreEqual(2, node1.Children.Count);
-        Assert.AreEqual(0, leaf3.Children.Count);
-        Assert.AreEqual(0, leaf2.Children.Count);
-        Assert.AreEqual(0, leaf1.Children.Count);
+        Assert.HasCount(1, node3.Children);
+        Assert.HasCount(2, node2.Children);
+        Assert.HasCount(2, node1.Children);
+        Assert.IsEmpty(leaf3.Children);
+        Assert.IsEmpty(leaf2.Children);
+        Assert.IsEmpty(leaf1.Children);
 
         Assert.IsTrue(new[] { node2 }.SequenceEqual(node3.Children));
         Assert.IsTrue(new[] { node1, leaf3 }.SequenceEqual(node2.Children));

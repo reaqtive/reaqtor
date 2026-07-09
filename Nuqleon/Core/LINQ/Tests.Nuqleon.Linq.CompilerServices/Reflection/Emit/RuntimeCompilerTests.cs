@@ -160,10 +160,10 @@ public class RuntimeCompilerTests
         Assert.IsTrue(ant.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
         var ctors = ant.GetConstructors();
-        Assert.AreEqual(1, ctors.Length);
+        Assert.HasCount(1, ctors);
 
         var ctorParams = ctors[0].GetParameters();
-        Assert.AreEqual(2, ctorParams.Length);
+        Assert.HasCount(2, ctorParams);
 
         var ctorParam0 = ctorParams[0];
         Assert.AreEqual("Name", ctorParam0.Name);
@@ -174,7 +174,7 @@ public class RuntimeCompilerTests
         Assert.AreEqual(typeof(int), ctorParam1.ParameterType);
 
         var props = ant.GetProperties().OrderByDescending(p => p.Name).ToArray();
-        Assert.AreEqual(2, props.Length);
+        Assert.HasCount(2, props);
 
         var prop0 = props[0];
         Assert.AreEqual("Name", prop0.Name);
@@ -248,10 +248,10 @@ public class RuntimeCompilerTests
         Assert.IsTrue(ant.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
         var ctors = ant.GetConstructors();
-        Assert.AreEqual(1, ctors.Length);
+        Assert.HasCount(1, ctors);
 
         var ctorParams = ctors[0].GetParameters();
-        Assert.AreEqual(2, ctorParams.Length);
+        Assert.HasCount(2, ctorParams);
 
         var ctorParam0 = ctorParams[0];
         Assert.AreEqual("Name", ctorParam0.Name);
@@ -262,7 +262,7 @@ public class RuntimeCompilerTests
         Assert.AreEqual(typeof(int), ctorParam1.ParameterType);
 
         var props = ant.GetProperties().OrderByDescending(p => p.Name).ToArray();
-        Assert.AreEqual(2, props.Length);
+        Assert.HasCount(2, props);
 
         var prop0 = props[0];
         Assert.AreEqual("Name", prop0.Name);
@@ -319,13 +319,13 @@ public class RuntimeCompilerTests
         Assert.IsTrue(ant.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
         var ctors = ant.GetConstructors();
-        Assert.AreEqual(1, ctors.Length);
+        Assert.HasCount(1, ctors);
 
         var ctorParams = ctors[0].GetParameters();
-        Assert.AreEqual(0, ctorParams.Length);
+        Assert.IsEmpty(ctorParams);
 
         var props = ant.GetProperties();
-        Assert.AreEqual(0, props.Length);
+        Assert.IsEmpty(props);
 
         var foo = Activator.CreateInstance(ant);
 
@@ -415,13 +415,19 @@ public class RuntimeCompilerTests
         var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props); });
+        var rtc = new RuntimeCompiler();
+        var atb = rtc.GetNewAnonymousTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineAnonymousType(atb, props));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props2));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props2); });
+        rtc = new RuntimeCompiler();
+        atb = rtc.GetNewAnonymousTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineAnonymousType(atb, props2));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props3));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props3); });
+        rtc = new RuntimeCompiler();
+        atb = rtc.GetNewAnonymousTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineAnonymousType(atb, props3));
 
     }
 
@@ -528,7 +534,7 @@ public class RuntimeCompilerTests
         Assert.IsTrue(clt.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
         var flds = clt.GetFields();
-        Assert.AreEqual(2, flds.Length);
+        Assert.HasCount(2, flds);
 
         var fld0 = flds[0];
         Assert.AreEqual("bar", fld0.Name);
@@ -552,7 +558,9 @@ public class RuntimeCompilerTests
         var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateClosureType(props));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewClosureTypeBuilder(); rtc.DefineClosureType(atb, props); });
+        var rtc = new RuntimeCompiler();
+        var atb = rtc.GetNewClosureTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineClosureType(atb, props));
     }
 
     #endregion
@@ -670,13 +678,13 @@ public class RuntimeCompilerTests
         Assert.IsTrue(rdt.IsDefined(typeof(CompilerGeneratedAttribute), inherit: false));
 
         var ctors = rdt.GetConstructors();
-        Assert.AreEqual(1, ctors.Length);
+        Assert.HasCount(1, ctors);
 
         var ctorParams = ctors[0].GetParameters();
-        Assert.AreEqual(0, ctorParams.Length);
+        Assert.IsEmpty(ctorParams);
 
         var props = rdt.GetProperties().OrderByDescending(p => p.Name).ToArray();
-        Assert.AreEqual(2, props.Length);
+        Assert.HasCount(2, props);
 
         var prop0 = props[0];
         Assert.AreEqual("Name", prop0.Name);
@@ -737,13 +745,19 @@ public class RuntimeCompilerTests
         var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props, valueEquality: true); });
+        var rtc = new RuntimeCompiler();
+        var atb = rtc.GetNewRecordTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineRecordType(atb, props, valueEquality: true));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props2, valueEquality: true));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props2, valueEquality: true); });
+        rtc = new RuntimeCompiler();
+        atb = rtc.GetNewRecordTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineRecordType(atb, props2, valueEquality: true));
 
         Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props3, valueEquality: true));
-        Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props3, valueEquality: true); });
+        rtc = new RuntimeCompiler();
+        atb = rtc.GetNewRecordTypeBuilder();
+        Assert.ThrowsExactly<InvalidOperationException>(() => rtc.DefineRecordType(atb, props3, valueEquality: true));
     }
 
     [TestMethod]

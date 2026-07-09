@@ -72,7 +72,7 @@ public class DataTypeTests
         Assert.AreEqual(DataTypeKinds.Structural, bar.Kind);
 
         var barStruct = (StructuralDataType)bar;
-        Assert.AreEqual(1, barStruct.Properties.Count);
+        Assert.HasCount(1, barStruct.Properties);
 
         var foosProp = barStruct.Properties[0];
         Assert.AreEqual("foos", foosProp.Name);
@@ -82,7 +82,7 @@ public class DataTypeTests
         Assert.AreEqual(DataTypeKinds.Structural, foosArray.ElementType.Kind);
 
         var fooStruct = (StructuralDataType)foosArray.ElementType;
-        Assert.AreEqual(1, fooStruct.Properties.Count);
+        Assert.HasCount(1, fooStruct.Properties);
 
         var barProp = fooStruct.Properties[0];
         Assert.AreEqual("bar", barProp.Name);
@@ -193,7 +193,7 @@ in  t1
         var s = (StructuralDataType)t;
 
         Assert.AreEqual(StructuralDataTypeKinds.Anonymous, s.StructuralKind);
-        Assert.AreEqual(2, s.Properties.Count);
+        Assert.HasCount(2, s.Properties);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateInstance(default));
         Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
@@ -220,7 +220,7 @@ in  t1
         var s = (StructuralDataType)t;
 
         Assert.AreEqual(StructuralDataTypeKinds.Record, s.StructuralKind);
-        Assert.AreEqual(2, s.Properties.Count);
+        Assert.HasCount(2, s.Properties);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateInstance(default));
         Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42));
@@ -246,7 +246,7 @@ in  t1
         var s = (StructuralDataType)t;
 
         Assert.AreEqual(StructuralDataTypeKinds.Tuple, s.StructuralKind);
-        Assert.AreEqual(2, s.Properties.Count);
+        Assert.HasCount(2, s.Properties);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
         Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42));
@@ -278,7 +278,7 @@ in  t1
 
         Assert.AreEqual(3, l[2]);
 
-        Assert.AreEqual(3, l.Count);
+        Assert.HasCount(3, l);
 
         Assert.ThrowsExactly<NotSupportedException>(() => l.Remove(2));
         Assert.ThrowsExactly<NotSupportedException>(() => l.RemoveAt(0));
@@ -287,7 +287,7 @@ in  t1
         var b = t.CreateInstance(4);
         Assert.IsTrue(b is int[]);
         var c = a.GetList(b);
-        Assert.AreEqual(4, c.Count);
+        Assert.HasCount(4, c);
 
         Assert.ThrowsExactly<ArgumentNullException>(() => a.CreateInstance(default));
         Assert.ThrowsExactly<InvalidOperationException>(() => t.CreateInstance());
@@ -310,7 +310,7 @@ in  t1
 
         Assert.AreEqual(3, l[2]);
 
-        Assert.AreEqual(3, l.Count);
+        Assert.HasCount(3, l);
 
         var b = t.CreateInstance(4);
         Assert.IsTrue(b is List<int>);
@@ -321,7 +321,7 @@ in  t1
         c.Add(3);
         c.Add(4);
 
-        Assert.AreEqual(4, c.Count);
+        Assert.HasCount(4, c);
 
         Assert.IsTrue(new[] { 1, 2, 3, 4 }.SequenceEqual(c.Cast<int>()));
 
@@ -378,7 +378,7 @@ in  t1
         Assert.AreEqual(DataTypeKinds.Function, t.Kind);
         var f = (FunctionDataType)t;
 
-        Assert.AreEqual(1, f.ParameterTypes.Count);
+        Assert.HasCount(1, f.ParameterTypes);
         Assert.AreEqual(DataTypeKinds.OpenGenericParameter, f.ReturnType.Kind);
         Assert.AreEqual(DataTypeKinds.OpenGenericParameter, f.ParameterTypes[0].Kind);
 
@@ -454,7 +454,7 @@ in  t1
     {
 
         Assert.IsTrue(DataTypeHelpers.TryCheckCached(typeof(CacheTest), allowCycles: false, out var e1));
-        Assert.AreEqual(0, e1.Count);
+        Assert.IsEmpty(e1);
 
         Assert.IsFalse(DataTypeHelpers.TryCheckCached(typeof(NonDTCacheTest), allowCycles: false, out var e2));
         Assert.IsFalse(DataTypeHelpers.TryCheckCached(typeof(NonDTCacheTest), allowCycles: false, out var e3));

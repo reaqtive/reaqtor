@@ -147,10 +147,24 @@ dotnet_diagnostic.CA1805.severity = none
 # CA1508: 'expr' is always 'bool'. Remove or refactor the condition(s) to avoid dead code. Many false positives due to bugs in the analyzer.
 dotnet_diagnostic.CA1508.severity = none
 
-# CA1859: Use concrete types when possible for improved performance. ~150 sites, each a judgment
+# CA1859: Use concrete types when possible for improved performance. ~220 sites, each a judgment
 # call about internal API shape (returning List<T> vs IEnumerable<T> etc.); deferred from the #143
-# analyzer-debt wave as churn without measured benefit - kept visible in the IDE as a suggestion.
-dotnet_diagnostic.CA1859.severity = suggestion
+# analyzer-debt wave as churn without measured benefit. Applying it wholesale would trade deliberate
+# interface-based abstraction for micro-optimizations no benchmark has shown to matter here, and even
+# as a suggestion it stays persistent IDE/scan noise that reviewers must re-triage every pass - so it
+# is excluded (severity none, like CA1805/CA1508 above). Re-enable per hot path if a measurement ever
+# justifies acting on a specific site.
+dotnet_diagnostic.CA1859.severity = none
+
+# MSTEST0049: Flow TestContext cancellation token. ~596 sites, ~2/3 of them in T4-generated arity tests.
+# The shipped code fixer re-resolves overloads (it rewrote CheckpointAsync(sw) -> CheckpointAsync(sw,
+# token) - a *different* overload - silently changing traced behaviour and breaking two QueryEngine
+# tests), and a manual fix needs TestContext plumbing the base fixtures lack plus token-threading through
+# static helpers. The cancellation payoff on these fast, mostly-blocking test calls does not justify that
+# churn/risk, so the rule is excluded (severity none, like the CA rules above) pending a safe adoption.
+# Full analysis, the overload-switching hazard, and the adoption options are tracked in GitHub issue #164
+# (https://github.com/reaqtive/reaqtor/issues/164).
+dotnet_diagnostic.MSTEST0049.severity = none
 
 # IDE warnings (with suppression of some nuisances)
 dotnet_analyzer_diagnostic.category-Style.severity = warning

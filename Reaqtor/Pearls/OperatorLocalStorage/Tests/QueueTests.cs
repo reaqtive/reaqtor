@@ -305,7 +305,7 @@ public class QueueTest : PersistedTestBase
         // Assert the queue element count.
         //
 
-        Assert.AreEqual(0, bar.Count);
+        Assert.IsEmpty(bar);
     });
 
     [TestMethod]
@@ -347,7 +347,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(queue));
         }
     });
@@ -400,7 +400,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(queue));
         }
     });
@@ -469,7 +469,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(queue));
         }
     });
@@ -533,7 +533,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 2, 3, 5, 7 }.SequenceEqual(queue));
         }
     });
@@ -600,7 +600,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(2, queue.Count);
+            Assert.HasCount(2, queue);
             Assert.IsTrue(new[] { 3, 5 }.SequenceEqual(queue));
         }
     });
@@ -664,7 +664,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(2, queue.Count);
+            Assert.HasCount(2, queue);
             Assert.IsTrue(new[] { 3, 5 }.SequenceEqual(queue));
         }
     });
@@ -737,7 +737,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 5, 7, 11, 13 }.SequenceEqual(queue));
         }
     });
@@ -810,7 +810,7 @@ public class QueueTest : PersistedTestBase
         {
             var queue = s.Space.GetQueue<int>("bar");
 
-            Assert.AreEqual(4, queue.Count);
+            Assert.HasCount(4, queue);
             Assert.IsTrue(new[] { 5, 7, 11, 13 }.SequenceEqual(queue));
         }
     });

@@ -11,6 +11,12 @@ using Nuqleon.DataModel.TypeSystem;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary;
 
+// CA2263 (prefer the generic overload) is intentional here: these tests exercise DataTypeBinarySerializer's
+// runtime-Type-based Serialize(Type, Stream, object) / Deserialize(Type, Stream) public API — including its
+// NotSupported and cyclic-type error paths — which is exactly the contract under test; a generic overload
+// would bypass that code path.
+#pragma warning disable CA2263
+
 [TestClass]
 public partial class DataModelSerializerFactoryTests
 {

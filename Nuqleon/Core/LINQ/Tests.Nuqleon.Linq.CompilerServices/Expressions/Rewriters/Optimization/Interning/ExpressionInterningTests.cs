@@ -1811,7 +1811,7 @@ public class ExpressionInterningTests
 #pragma warning disable MSTEST0055 // Return value should not be ignored. (These are where-clause predicates in expression-tree test data; nothing is discarded.)
         var ys = from x in xs
                  where x > 42 && !(-x < 17)
-                 where x.ToString().StartsWith("a")
+                 where x.ToString().StartsWith('a')
                  where Console.ReadLine().StartsWith("foo")
                  where Environment.MachineName.Length > 1
                  where new int[2].Length <= 3
@@ -1824,7 +1824,7 @@ public class ExpressionInterningTests
 
         var zs = from y in xs
                  where y > 42 && !(-y < 17)
-                 where y.ToString().StartsWith("a")
+                 where y.ToString().StartsWith('a')
                  where Console.ReadLine().StartsWith("foo")
                  where Environment.MachineName.Length > 1
                  where new int[2].Length <= 3

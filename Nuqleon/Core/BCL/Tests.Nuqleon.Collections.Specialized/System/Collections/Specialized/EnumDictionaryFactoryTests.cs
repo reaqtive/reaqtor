@@ -18,45 +18,13 @@ public partial class EnumDictionaryFactoryTests
     [TestMethod]
     public void EnumDictionaryFactory_Parameter_Validation()
     {
-        try
-        {
-            EnumDictionary.Create<int, bool>();
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => EnumDictionary.Create<int, bool>()).ParamName);
 
-        try
-        {
-            EnumDictionary.Create<Foo, bool>();
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => EnumDictionary.Create<Foo, bool>()).ParamName);
 
-        try
-        {
-            EnumDictionary.Create<Bar, bool>();
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => EnumDictionary.Create<Bar, bool>()).ParamName);
 
-        try
-        {
-            EnumDictionary.Create<Baz, bool>();
-            Assert.Fail();
-        }
-        catch (ArgumentException e)
-        {
-            Assert.AreEqual("TKey", e.ParamName);
-        }
+        Assert.AreEqual("TKey", Assert.ThrowsExactly<ArgumentException>(() => EnumDictionary.Create<Baz, bool>()).ParamName);
     }
 
     private enum Foo : long

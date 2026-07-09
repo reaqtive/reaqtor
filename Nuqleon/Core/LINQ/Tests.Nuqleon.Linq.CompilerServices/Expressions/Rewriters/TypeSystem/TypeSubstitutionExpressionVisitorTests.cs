@@ -952,7 +952,7 @@ public class TypeSubstitutionExpressionVisitorTests
     public void TypeSubstitutionExpressionVisitor_Anonymize()
     {
         var pers = typeof(Person);
-        var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
+        var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith('B') select name.ToUpper() + " is " + x.Age);
 
         var check1 = new TypeErasureChecker([typeof(Person)]);
         Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));

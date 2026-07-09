@@ -92,15 +92,15 @@ public partial class SkipUntil : OperatorTestBase
         Assert.IsNotNull(operatorName);
 
         var operatorVersionMajor = reader.Read<int>();
-        Assert.IsTrue(operatorVersionMajor > 0);
+        Assert.IsGreaterThan(0, operatorVersionMajor);
 
         var operatorVersionMinor = reader.Read<int>();
-        Assert.IsTrue(operatorVersionMinor >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, operatorVersionMinor);
 
         var operatorVersionBuild = reader.Read<int>();
-        Assert.IsTrue(operatorVersionBuild >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, operatorVersionBuild);
 
         var operatorVersionRevision = reader.Read<int>();
-        Assert.IsTrue(operatorVersionRevision >= 0);
+        Assert.IsGreaterThanOrEqualTo(0, operatorVersionRevision);
     }
 }

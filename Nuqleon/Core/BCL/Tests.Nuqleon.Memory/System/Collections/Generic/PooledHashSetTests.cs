@@ -141,7 +141,7 @@ public class PooledHashSetTests : TestBase
 
             var set = obj.HashSet;
 
-            Assert.AreEqual(0, set.Count);
+            Assert.IsEmpty(set);
 
             set.Add("qux");
             set.Add("foo");
@@ -161,7 +161,7 @@ public class PooledHashSetTests : TestBase
 
             var set = obj.HashSet;
 
-            Assert.AreEqual(0, set.Count);
+            Assert.IsEmpty(set);
 
             set.Add("qux");
             set.Add("foo");
@@ -179,7 +179,7 @@ public class PooledHashSetTests : TestBase
         {
             var set = PooledHashSet<string>.GetInstance();
 
-            Assert.AreEqual(0, set.Count);
+            Assert.IsEmpty(set);
 
             set.Add("qux");
             set.Add("foo");

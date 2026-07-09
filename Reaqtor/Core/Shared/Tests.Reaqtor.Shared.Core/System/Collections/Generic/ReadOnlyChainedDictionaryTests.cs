@@ -14,14 +14,14 @@ public class ReadOnlyChainedDictionaryTests
     {
         var ch = GetChainedDictionary();
 
-        Assert.IsTrue(ch.Contains(new KeyValuePair<string, int>("bar", 42)));
-        Assert.IsTrue(ch.Contains(new KeyValuePair<string, int>("foo", 43)));
-        Assert.IsTrue(ch.Contains(new KeyValuePair<string, int>("qux", 44)));
+        Assert.Contains(new KeyValuePair<string, int>("bar", 42), ch);
+        Assert.Contains(new KeyValuePair<string, int>("foo", 43), ch);
+        Assert.Contains(new KeyValuePair<string, int>("qux", 44), ch);
 
-        Assert.IsFalse(ch.Contains(new KeyValuePair<string, int>("bar", 45)));
-        Assert.IsFalse(ch.Contains(new KeyValuePair<string, int>("foo", 45)));
-        Assert.IsFalse(ch.Contains(new KeyValuePair<string, int>("qux", 45)));
-        Assert.IsFalse(ch.Contains(new KeyValuePair<string, int>("baz", 45)));
+        Assert.DoesNotContain(new KeyValuePair<string, int>("bar", 45), ch);
+        Assert.DoesNotContain(new KeyValuePair<string, int>("foo", 45), ch);
+        Assert.DoesNotContain(new KeyValuePair<string, int>("qux", 45), ch);
+        Assert.DoesNotContain(new KeyValuePair<string, int>("baz", 45), ch);
     }
 
     [TestMethod]
@@ -80,7 +80,7 @@ public class ReadOnlyChainedDictionaryTests
     {
         var ch = GetChainedDictionary();
 
-        Assert.AreEqual(3, ch.Count);
+        Assert.HasCount(3, ch);
     }
 
     [TestMethod]

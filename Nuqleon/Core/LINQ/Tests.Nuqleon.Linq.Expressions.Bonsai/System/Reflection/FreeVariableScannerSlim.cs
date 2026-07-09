@@ -26,8 +26,8 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.Lambda(p1);
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p1));
+        Assert.HasCount(1, free);
+        Assert.Contains(p1, free);
     }
 
     [TestMethod]
@@ -39,8 +39,8 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.Lambda(ExpressionSlim.Add(p1, p2), p1);
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p2));
+        Assert.HasCount(1, free);
+        Assert.Contains(p2, free);
     }
 
     [TestMethod]
@@ -51,8 +51,8 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.Block(p1);
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p1));
+        Assert.HasCount(1, free);
+        Assert.Contains(p1, free);
     }
 
     [TestMethod]
@@ -64,8 +64,8 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.Block([p1], ExpressionSlim.Add(p1, p2));
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p2));
+        Assert.HasCount(1, free);
+        Assert.Contains(p2, free);
     }
 
     [TestMethod]
@@ -76,8 +76,8 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.TryCatch(ExpressionSlim.Empty(), ExpressionSlim.Catch(SlimType, p1));
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p1));
+        Assert.HasCount(1, free);
+        Assert.Contains(p1, free);
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class FreeVariableScannerSlimTests : TestBase
         var slimExpr = ExpressionSlim.TryCatch(ExpressionSlim.Empty(), ExpressionSlim.Catch(p1, ExpressionSlim.Add(p1, p2)));
 
         var free = FreeVariableScannerSlim.Find(slimExpr);
-        Assert.AreEqual(1, free.Count);
-        Assert.IsTrue(free.Contains(p2));
+        Assert.HasCount(1, free);
+        Assert.Contains(p2, free);
     }
 }

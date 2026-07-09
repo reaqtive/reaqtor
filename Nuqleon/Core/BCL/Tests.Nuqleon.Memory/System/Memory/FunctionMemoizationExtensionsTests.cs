@@ -137,7 +137,7 @@ public partial class FunctionMemoizationExtensionsTests
             Assert.AreEqual(2, n);
             Assert.AreEqual(1, res.Cache.Count);
 
-            Assert.IsTrue(!string.IsNullOrEmpty(res.Cache.DebugView));
+            Assert.IsFalse(string.IsNullOrEmpty(res.Cache.DebugView));
         }
     }
 
@@ -234,10 +234,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate());
+        Assert.IsTrue(res.Delegate());
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate());
+        Assert.IsTrue(res.Delegate());
         Assert.AreEqual(1, n);
     }
 
@@ -272,10 +272,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate(42));
+        Assert.IsTrue(res.Delegate(42));
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate(42));
+        Assert.IsTrue(res.Delegate(42));
         Assert.AreEqual(1, n);
     }
 
@@ -327,10 +327,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate());
+        Assert.IsTrue(res.Delegate());
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate());
+        Assert.IsTrue(res.Delegate());
         Assert.AreEqual(1, n);
     }
 
@@ -426,10 +426,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate("foo", 3));
+        Assert.IsTrue(res.Delegate("foo", 3));
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate("foo", 3));
+        Assert.IsTrue(res.Delegate("foo", 3));
         Assert.AreEqual(1, n);
     }
 
@@ -447,10 +447,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate(3, "foo"));
+        Assert.IsTrue(res.Delegate(3, "foo"));
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate(3, "foo"));
+        Assert.IsTrue(res.Delegate(3, "foo"));
         Assert.AreEqual(1, n);
     }
 
@@ -479,10 +479,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate(3, "foo", false, 42L, "qux"));
+        Assert.IsTrue(res.Delegate(3, "foo", false, 42L, "qux"));
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate(3, "foo", false, 42L, "qux"));
+        Assert.IsTrue(res.Delegate(3, "foo", false, 42L, "qux"));
         Assert.AreEqual(1, n);
     }
 
@@ -500,10 +500,10 @@ public partial class FunctionMemoizationExtensionsTests
 
         Assert.AreEqual(0, n);
 
-        Assert.AreEqual(true, res.Delegate(3, null, false, 42L, "qux"));
+        Assert.IsTrue(res.Delegate(3, null, false, 42L, "qux"));
         Assert.AreEqual(1, n);
 
-        Assert.AreEqual(true, res.Delegate(3, null, false, 42L, "qux"));
+        Assert.IsTrue(res.Delegate(3, null, false, 42L, "qux"));
         Assert.AreEqual(1, n);
     }
 }

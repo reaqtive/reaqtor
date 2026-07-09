@@ -130,7 +130,7 @@ public class AccessTests
 
         Assert.AreEqual(AccessType.Composite, a.AccessType);
 
-        Assert.AreEqual(3, a.Accesses.Count);
+        Assert.HasCount(3, a.Accesses);
         Assert.AreSame(a0, a.Accesses[0]);
         Assert.AreSame(a1, a.Accesses[1]);
         Assert.AreSame(a2, a.Accesses[2]);

@@ -73,6 +73,64 @@
     </AssemblyAttribute>
   </ItemGroup>
 
+  <!--
+    Every test assembly states its parallelization policy explicitly (MSTEST0001). Synthesized here
+    (WriteCodeFragment) rather than 40 hand-written [assembly:] lines, mirroring CLSCompliant above.
+
+    The default is DoNotParallelize because it encodes what MSTest already does today (its no-attribute
+    default is serial), so this is a zero-behaviour-change declaration rather than an aspiration.
+
+    Enabling parallelism would not pay here. Microsoft.Testing.Platform already runs test modules
+    concurrently (see global.json "test.runner", and the max-parallel-test-modules option on
+    `dotnet test`), so [Parallelize] would only add *intra*-assembly concurrency. That shrinks a run's
+    critical path but never its total CPU work, and on the 2-vCPU CI agents a solution's wall clock is
+    bounded below by (sum of module times / cores) - a floor [Parallelize] cannot cross. Worse, the
+    assemblies slow enough to be worth parallelizing are precisely those that cannot be, at all:
+
+      * Tests.Reaqtor.QueryEngine  - PhysicalTimeEngineTest holds a *static* PhysicalScheduler whose
+                                     ClassSetup() begins by disposing it (ClassCleanup()); six classes
+                                     drive it from [ClassInitialize]. TestableEntityFactory adds static
+                                     unsynchronized dictionaries and a static Scheduler nulled per test.
+      * Tests.Reaqtive.Scheduler   - installs a process-wide AppDomain.UnhandledException handler,
+                                     asserts on Environment.ProcessorCount, and creates a
+                                     PhysicalScheduler (ProcessorCount foreground threads) per test.
+      * Tests.Nuqleon.Memory       - asserts weak-reference reachability around GC.Collect(). The GC is
+                                     process-global; locking cannot make this safe.
+
+    Measured 2026-07-08 (all 40 modules, both configs, CI filter, no coverage). Per CI area solution,
+    with T = sum of module times and C = 2 agent cores, the most [Parallelize] could ever save is
+    max(0, slowest_module - T/C):
+
+      area      config    T        slowest module                     ceiling
+      Nuqleon   Release   129.9s   Tests.Nuqleon.Memory       50.6s   0.0s  (throughput-bound)
+      Nuqleon   Debug      69.1s   DataModel.Serialization.Binary 20.6s 0.0s  (throughput-bound)
+      Reaqtor   Debug      40.2s   Tests.Reaqtor.QueryEngine  31.5s  11.0s  (pole is unsafe)
+      Reaqtive  Debug      11.6s   Tests.Reaqtive.Scheduler    7.6s   2.0s  (pole is unsafe)
+
+    Nuqleon cannot benefit at any worker count; Reaqtor/Reaqtive could only benefit by parallelizing
+    the very assemblies listed above. Total repo test execution is ~169s against a 120-minute job
+    budget, so test-level parallelism is not the lever - the build and coverage instrumentation are.
+    Several assemblies are also already internally parallel (DataModel.Serialization.Binary uses ~12
+    cores unaided), so MSTest workers on a 2-vCPU agent would only oversubscribe.
+
+    A project opts in with <TestParallelization>Parallelize</TestParallelization>. The two ItemGroups
+    below are mutually exclusive on that property, so an assembly can never receive both attributes.
+    NB: MSTEST0059 (the "not both" rule) does NOT guard this - it reports at the attribute's location,
+    which lands in generated code and is therefore suppressed. Directory.Build.targets validates the
+    property value instead, since a typo would otherwise emit neither attribute in silence.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <TestParallelization Condition="'$(TestParallelization)' == ''">DoNotParallelize</TestParallelization>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true' And '$(TestParallelization)' == 'DoNotParallelize'">
+    <AssemblyAttribute Include="Microsoft.VisualStudio.TestTools.UnitTesting.DoNotParallelizeAttribute" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true' And '$(TestParallelization)' == 'Parallelize'">
+    <AssemblyAttribute Include="Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
     <AnalysisMode>Default</AnalysisMode>
     <IsPackable>false</IsPackable>
@@ -103,6 +161,28 @@
   <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
     <EnableMSTestRunner>true</EnableMSTestRunner>
     <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <!--
+    MSTest analyzers at their package default (MSTestAnalysisMode=Default) leave rules such as
+    MSTEST0001 at 'suggestion', which TreatWarningsAsErrors cannot promote. Several of those rules
+    also report at compilation level with no source span, so `dotnet format` cannot see them either
+    (that is how 40 MSTEST0001 diagnostics accumulated unnoticed, visible only in the IDE).
+    'Recommended' raises them to warning, and TreatWarningsAsErrors then makes them build errors, so
+    the tier cannot rot again. Verified: 0 warnings solution-wide at this mode. Do NOT use 'All' -
+    it reports 610 (MSTEST0004 x608, MSTEST0026 x2), a separate triage.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <MSTestAnalysisMode>Recommended</MSTestAnalysisMode>
+  </PropertyGroup>
+
+  <!--
+    CA1861 (prefer 'static readonly' fields over constant array arguments) targets hot-path performance;
+    in unit test projects the constant arrays are one-shot test data, so the rule is noise there. It is
+    excluded for test projects but stays active for shipping code, where hoisting is worth acting on.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <NoWarn>$(NoWarn);CA1861</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">

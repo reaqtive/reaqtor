@@ -58,7 +58,7 @@ public class TemplatizationHelpersTests
         var appliedTemplate = withConstants.TemplatizeAndIdentify();
         Assert.AreNotSame(withConstants, appliedTemplate.Expression);
         Assert.AreEqual(typeof(Func<Tuple<int>, Func<string>>), appliedTemplate.Template.Type);
-        Assert.IsTrue(appliedTemplate.TemplateId.StartsWith(TemplatizationHelpers.TemplateBase));
+        Assert.StartsWith(TemplatizationHelpers.TemplateBase, appliedTemplate.TemplateId);
     }
 
     [TestMethod]

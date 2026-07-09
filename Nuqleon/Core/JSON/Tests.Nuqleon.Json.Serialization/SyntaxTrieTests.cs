@@ -29,20 +29,20 @@ public class SyntaxTrieTests
 
         Assert.ThrowsExactly<InvalidOperationException>(() => trie.Add("foo", "@XXX"));
 
-        Assert.AreEqual(3, trie.Root.Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['b'].Children.Count);
-        Assert.AreEqual(2, trie.Root.Children['b'].Children['a'].Children.Count);
-        Assert.AreEqual(0, trie.Root.Children['b'].Children['a'].Children['r'].Children.Count);
-        Assert.AreEqual(0, trie.Root.Children['b'].Children['a'].Children['z'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['f'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['f'].Children['o'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['f'].Children['o'].Children['o'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children['a'].Children.Count);
-        Assert.AreEqual(0, trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children['a'].Children['r'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['q'].Children.Count);
-        Assert.AreEqual(1, trie.Root.Children['q'].Children['u'].Children.Count);
-        Assert.AreEqual(0, trie.Root.Children['q'].Children['u'].Children['x'].Children.Count);
+        Assert.HasCount(3, trie.Root.Children);
+        Assert.HasCount(1, trie.Root.Children['b'].Children);
+        Assert.HasCount(2, trie.Root.Children['b'].Children['a'].Children);
+        Assert.IsEmpty(trie.Root.Children['b'].Children['a'].Children['r'].Children);
+        Assert.IsEmpty(trie.Root.Children['b'].Children['a'].Children['z'].Children);
+        Assert.HasCount(1, trie.Root.Children['f'].Children);
+        Assert.HasCount(1, trie.Root.Children['f'].Children['o'].Children);
+        Assert.HasCount(1, trie.Root.Children['f'].Children['o'].Children['o'].Children);
+        Assert.HasCount(1, trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children);
+        Assert.HasCount(1, trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children['a'].Children);
+        Assert.IsEmpty(trie.Root.Children['f'].Children['o'].Children['o'].Children['b'].Children['a'].Children['r'].Children);
+        Assert.HasCount(1, trie.Root.Children['q'].Children);
+        Assert.HasCount(1, trie.Root.Children['q'].Children['u'].Children);
+        Assert.IsEmpty(trie.Root.Children['q'].Children['u'].Children['x'].Children);
 
         Assert.IsNull(trie.Root.Terminal);
         Assert.IsNull(trie.Root.Children['b'].Terminal);

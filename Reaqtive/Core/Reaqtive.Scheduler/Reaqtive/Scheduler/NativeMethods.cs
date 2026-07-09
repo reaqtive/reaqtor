@@ -9,7 +9,7 @@ namespace Reaqtive.Scheduler;
 /// <summary>
 /// Provides access to a set of native methods.
 /// </summary>
-internal static class NativeMethods
+internal static partial class NativeMethods
 {
     private static bool s_failedToLoadKernel32 = false;
 
@@ -49,10 +49,10 @@ internal static class NativeMethods
     /// <param name="threadHandle">A handle to the thread.</param>
     /// <param name="cycleTime">The number of CPU clock cycles used by the thread. This value includes cycles spent in both user mode and kernel mode.</param>
     /// <returns><c>true</c> if the function succeeds; otherwise, <c>false</c>.</returns>
-    [DllImport("kernel32.dll", SetLastError = true)]
+    [LibraryImport("kernel32.dll", SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool QueryThreadCycleTime(IntPtr threadHandle, out ulong cycleTime);
+    private static partial bool QueryThreadCycleTime(IntPtr threadHandle, out ulong cycleTime);
 
     /// <summary>
     /// A pseudo-handle representing the current thread.

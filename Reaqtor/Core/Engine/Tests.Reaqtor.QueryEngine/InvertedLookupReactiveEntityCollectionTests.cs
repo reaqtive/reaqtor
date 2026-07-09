@@ -51,7 +51,7 @@ public class InvertedLookupReactiveEntityCollectionTests
 
         Assert.IsTrue(collection.RemovedKeys.SequenceEqual(["foo"]));
         collection.ClearRemovedKeys(["foo"]);
-        Assert.AreEqual(0, collection.RemovedKeys.Count());
+        Assert.IsEmpty(collection.RemovedKeys);
 
         collection.Add("foo", 1);
         collection.Add("qux", 3);
@@ -62,7 +62,7 @@ public class InvertedLookupReactiveEntityCollectionTests
             .SequenceEqual(new Dictionary<string, int> { { "foo", 1 }, { "bar", 2 }, { "qux", 3 }, { "baz", 4 } }.OrderBy(kv => kv.Value)));
 
         collection.Clear();
-        Assert.AreEqual(0, collection.Count());
+        Assert.IsEmpty(collection);
     }
 
     [TestMethod]

@@ -112,17 +112,17 @@ public class DataTypeCheckerTests
         {
             {
                 Assert.IsTrue(DataType.TryCheck(t, out var err), "Type check failed for: " + t.Name);
-                Assert.AreEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsTrue(DataType.TryCheck(t, allowCycles: false, out var err), "Type check failed for: " + t.Name);
-                Assert.AreEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsTrue(DataType.TryCheck(t, allowCycles: true, out var err), "Type check failed for: " + t.Name);
-                Assert.AreEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsEmpty(err, "Type check failed for: " + t.Name);
             }
 
             DataType.Check(t);
@@ -166,17 +166,17 @@ public class DataTypeCheckerTests
         {
             {
                 Assert.IsFalse(DataType.TryCheck(t, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, allowCycles: false, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, allowCycles: true, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t));
@@ -215,17 +215,17 @@ public class DataTypeCheckerTests
         {
             {
                 Assert.IsFalse(DataType.TryCheck(t, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, allowCycles: false, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, allowCycles: true, out var err), "Type check failed for: " + t.Name);
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t));
@@ -247,10 +247,10 @@ public class DataTypeCheckerTests
     {
         Assert.IsFalse(DataType.TryCheck(typeof(Func<int, List<AppDomain[]>>), out var err));
 
-        Assert.AreEqual(1, err.Count);
+        Assert.HasCount(1, err);
         Assert.IsTrue(new[] { typeof(Func<int, List<AppDomain[]>>), typeof(List<AppDomain[]>), typeof(AppDomain[]) }.Reverse().SequenceEqual(err[0].Stack));
 
-        Assert.IsTrue(err[0].ToString().Contains("AppDomain"));
+        Assert.Contains("AppDomain", err[0].ToString());
     }
 
     [TestMethod]
@@ -271,7 +271,7 @@ public class DataTypeCheckerTests
             DataType.Check(t, allowCycles: true);
 
             Assert.IsTrue(DataType.TryCheck(t, allowCycles: true, out var err));
-            Assert.AreEqual(0, err.Count, "Type check failed for: " + t.Name);
+            Assert.IsEmpty(err, "Type check failed for: " + t.Name);
 
             Assert.IsTrue(DataType.TryFromType(t, allowCycles: true, out _));
         }
@@ -298,12 +298,12 @@ public class DataTypeCheckerTests
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, out var err));
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             {
                 Assert.IsFalse(DataType.TryCheck(t, allowCycles: false, out var err));
-                Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
+                Assert.IsNotEmpty(err, "Type check failed for: " + t.Name);
             }
 
             Assert.IsFalse(DataType.TryFromType(t, out _));
@@ -320,7 +320,7 @@ public class DataTypeCheckerTests
 
         var structural = (StructuralDataType)simple;
 
-        Assert.AreEqual(1, structural.Properties.Count);
+        Assert.HasCount(1, structural.Properties);
 
         Assert.AreSame(structural, structural.Properties[0].Type);
     }

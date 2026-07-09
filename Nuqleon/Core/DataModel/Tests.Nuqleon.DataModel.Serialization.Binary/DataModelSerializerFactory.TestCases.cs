@@ -16,6 +16,12 @@ using IExpressionSerializer = Nuqleon.DataModel.Serialization.Binary.IExpression
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary;
 
+// CA2263 (prefer the generic overload) is intentional here: this hand-rolled expression-serializer fixture
+// is built on the runtime-Type-based DataSerializer API (it also serializes payloads by runtime Type, e.g.
+// DataSerializer.Deserialize(type, stream) where 'type' comes from Type.GetType), so the statically-known
+// typeof(T) calls stay consistent with that Type-based contract.
+#pragma warning disable CA2263
+
 public class DataModelSerializerFactoryTestCase
 {
 #pragma warning disable CA1822 // Mark static

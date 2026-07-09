@@ -42,7 +42,7 @@ public class StopwatchTests
 
         Assert.IsTrue(SpinWait.SpinUntil(() => sw.ElapsedTicks > 100, 60000));
 
-        Assert.IsTrue(sw.GetTimestamp() > 0L);
+        Assert.IsGreaterThan(0L, sw.GetTimestamp());
     }
 
     [TestMethod]

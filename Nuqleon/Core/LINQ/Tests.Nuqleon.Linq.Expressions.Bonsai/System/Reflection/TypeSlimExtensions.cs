@@ -353,11 +353,11 @@ public class TypeSlimExtensionsTest : TestBase
 
         var genType = (GenericTypeSlim)typeof(List<int>).ToTypeSlim();
         var res2 = genType.GetGenericArguments();
-        Assert.IsTrue(res2.Length == 1);
+        Assert.HasCount(1, res2);
         Assert.AreSame(res2[0], genType.GenericArguments[0]);
 
         var res3 = typeof(int).ToTypeSlim().GetGenericArguments();
-        Assert.IsTrue(res3.Length == 0);
+        Assert.IsEmpty(res3);
     }
 
     [TestMethod]
@@ -370,7 +370,7 @@ public class TypeSlimExtensionsTest : TestBase
         var res = (GenericTypeSlim)genDef.MakeGenericType(genArgs);
 
         Assert.AreSame(genDef, res.GenericTypeDefinition);
-        Assert.IsTrue(res.GenericArguments.Count == 1);
+        Assert.HasCount(1, res.GenericArguments);
         Assert.AreSame(genArg, res.GenericArguments[0]);
 
         Assert.ThrowsExactly<InvalidOperationException>(() => typeof(int).ToTypeSlim().MakeGenericType(genArgs));

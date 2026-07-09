@@ -26,7 +26,9 @@ public static class Program
             ((Expression<Func<Bar>>)(() => new Bar { Foo = "bar".Length, Qux = { int.Parse("42") }, Baz = "foo".Length })).Body,
             ((Expression<Func<int>>)(() => Enumerable.Range(0, 10).Sum())).Body,
             ((Expression<Func<int>>)(() => Enumerable.Range(0, 10).Sum(x => x))).Body,
+#pragma warning disable CA1861 // The array is a NewArrayExpression node inside the demonstrated expression tree, not a runtime argument; hoisting it to a static field would change the tree this sample evaluates.
             ((Expression<Func<int>>)(() => new[] { 1, 2, 3 }.Sum())).Body,
+#pragma warning restore CA1861
             ((Expression<Func<string>>)(() => Console.ReadLine())).Body, // side-effect
         })
         {

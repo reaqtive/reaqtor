@@ -246,7 +246,7 @@ public partial class DataSerializerTests
     {
         _jsonSerializer.Serialize((string)null, _stream);
         _stream.Position = 0;
-        Assert.AreEqual(null, _jsonSerializer.Deserialize<string>(_stream));
+        Assert.IsNull(_jsonSerializer.Deserialize<string>(_stream));
     }
 
     /// <summary>
@@ -897,7 +897,7 @@ public partial class DataSerializerTests
         var reader = new StreamReader(memoryStream);
         memoryStream.Position = 0;
         var json = reader.ReadToEnd();
-        Assert.IsTrue(json.Split(["\"Context\""], 10, StringSplitOptions.None).Length == 2);
+        Assert.HasCount(2, json.Split(["\"Context\""], 10, StringSplitOptions.None));
 
         memoryStream.Position = 0;
 

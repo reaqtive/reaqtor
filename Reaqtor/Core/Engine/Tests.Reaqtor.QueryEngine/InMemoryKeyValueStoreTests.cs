@@ -37,7 +37,7 @@ public class InMemoryKeyValueTableTests
 
             var contents = table.ToList();
 
-            Assert.AreEqual(1, contents.Count);
+            Assert.HasCount(1, contents);
             Assert.AreEqual("A", contents[0].Key);
             CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
@@ -52,7 +52,7 @@ public class InMemoryKeyValueTableTests
         {
             var table = subtable.Enter(tx);
 
-            Assert.AreEqual(0, table.Count());
+            Assert.IsEmpty(table);
         }
     }
 
@@ -192,7 +192,7 @@ public class InMemoryKeyValueTableTests
 
             var contents = table.ToList();
 
-            Assert.AreEqual(1, contents.Count);
+            Assert.HasCount(1, contents);
             Assert.AreEqual("A", contents[0].Key);
             CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
@@ -227,7 +227,7 @@ public class InMemoryKeyValueTableTests
         {
             var table = subtable.Enter(tx);
 
-            Assert.AreEqual(0, table.Count());
+            Assert.IsEmpty(table);
         }
     }
 

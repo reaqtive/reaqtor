@@ -16,6 +16,10 @@ using System.Text.RegularExpressions;
 
 namespace Tests.System.Linq.Expressions.Optimizers;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive here: the catch's Assert.Fail reports an
+// *unexpected* exception with context; the test expects the member access not to throw.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public class PureMemberCatalogTests
 {
@@ -114,7 +118,11 @@ public class PureMemberCatalogTests
     [TestMethod]
     public void PureMemberCatalog_Regex()
     {
+        // SYSLIB1045: 'new Regex(...)' is intentional expression-tree test data — the optimizer must see the
+        // Regex constructor/Match as a pure member to fold this to "bar"; a [GeneratedRegex] call would not be.
+#pragma warning disable SYSLIB1045
         Expression<Func<string>> f = () => new Regex("[0-9]([a-z]*)[0-9]").Match("1bar2").Groups[1].Value;
+#pragma warning restore SYSLIB1045
         AssertOptimize(f.Body, Expression.Constant("bar"));
     }
 
