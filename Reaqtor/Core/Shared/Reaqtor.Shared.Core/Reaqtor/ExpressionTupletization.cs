@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -9,6 +9,7 @@
 // HvR - July 2026 - Factored out of the archived Remoting sample (see #158).
 //
 
+using System.Globalization;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
@@ -28,6 +29,12 @@ public static class ExpressionTupletization
     /// </summary>
     /// <param name="expression">The expression to tupletize.</param>
     /// <returns>The tupletized expression.</returns>
+    /// <exception cref="NotSupportedException">
+    /// The root level lambda expression has a tuple-typed parameter. The packed form cannot represent
+    /// such lambdas unambiguously: after packing, the parameter's own tuple shape merges with the
+    /// packing tuple, and <see cref="Detupletize"/> on the receiving side cannot distinguish the two,
+    /// which would silently produce an incorrect expression.
+    /// </exception>
     public static Expression Tupletize(Expression expression)
     {
         ArgumentNullException.ThrowIfNull(expression);
@@ -36,6 +43,14 @@ public static class ExpressionTupletization
 
         if (result is LambdaExpression lambda)
         {
+            foreach (var parameter in lambda.Parameters)
+            {
+                if (ExpressionTupletizer.IsTuple(parameter.Type))
+                {
+                    throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Parameter '{0}' of the root level lambda expression has tuple type '{1}'. Lambda expressions with tuple-typed parameters cannot be represented unambiguously in the tupletized form and would not round-trip through Detupletize correctly.", parameter.Name, parameter.Type));
+                }
+            }
+
             result = ExpressionTupletizer.Pack(lambda);
         }
 
@@ -51,7 +66,10 @@ public static class ExpressionTupletization
     /// <returns>The detupletized expression.</returns>
     /// <remarks>
     /// A root level lambda expression is only unpacked when it has exactly one parameter whose type is
-    /// a tuple type; other lambda expressions pass through unchanged.
+    /// a tuple type; other lambda expressions pass through unchanged. Note that a unary lambda whose
+    /// parameter is genuinely tuple-typed is indistinguishable from the packed form and is therefore
+    /// always interpreted as packed; <see cref="Tupletize"/> refuses to produce such lambdas for the
+    /// same reason.
     /// </remarks>
     public static Expression Detupletize(Expression expression)
     {

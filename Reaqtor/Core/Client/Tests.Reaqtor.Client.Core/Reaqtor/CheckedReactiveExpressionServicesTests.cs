@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -125,6 +125,66 @@ public class CheckedReactiveExpressionServicesTests
     }
 
     [TestMethod]
+    public void CheckedReactiveExpressionServices_DateTimeNowAccessorForm_ExcludedFromAllowListTable()
+    {
+        // Uses the accessor MethodInfo call form (get_Now) rather than the property access form, and a
+        // subclass that stops blessing DateTime wholesale so the declarative table's exclusions engage.
+        var getNow = typeof(DateTime).GetProperty(nameof(DateTime.Now)).GetMethod;
+        var expr = Expression.Lambda<Func<DateTime>>(Expression.Call(getNow));
+
+        var services = new NoDateTimeBlessingExpressionServices(typeof(IReactiveClientProxy));
+        var normalized = services.Normalize(expr);
+
+        var lambda = (LambdaExpression)normalized;
+        Assert.AreEqual(ExpressionType.Constant, lambda.Body.NodeType);
+    }
+
+    [TestMethod]
+    public void CheckedReactiveExpressionServices_DateTimeArithmetic_AllowedByTableWhenBlessingNarrowed()
+    {
+        // With DateTime no longer blessed wholesale, non-excluded members still pass via the declarative table.
+        Expression<Func<DateTime, DateTime>> expr = d => d.AddDays(1);
+
+        var services = new NoDateTimeBlessingExpressionServices(typeof(IReactiveClientProxy));
+        var normalized = services.Normalize(expr);
+
+        var lambda = (LambdaExpression)normalized;
+        var call = (MethodCallExpression)lambda.Body;
+        Assert.AreEqual(nameof(DateTime.AddDays), call.Method.Name);
+    }
+
+    [TestMethod]
+    public void CheckedReactiveExpressionServices_MemberWithoutDeclaringType_RejectedNotCrashing()
+    {
+        var dynamicMethod = new System.Reflection.Emit.DynamicMethod("Answer", typeof(int), Type.EmptyTypes);
+        var il = dynamicMethod.GetILGenerator();
+        il.Emit(System.Reflection.Emit.OpCodes.Ldc_I4, 42);
+        il.Emit(System.Reflection.Emit.OpCodes.Ret);
+
+        Assert.IsNull(dynamicMethod.DeclaringType);
+        Assert.IsFalse(new ExposedExpressionServices(typeof(IReactiveClientProxy)).IsAllowed(dynamicMethod));
+    }
+
+    [TestMethod]
+    public void CheckedReactiveExpressionServices_AssemblyPrefixLookalike_NotBlessed()
+    {
+        var assemblyBuilder = System.Reflection.Emit.AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("ReaqtorContrib"), System.Reflection.Emit.AssemblyBuilderAccess.Run);
+        var moduleBuilder = assemblyBuilder.DefineDynamicModule("ReaqtorContrib");
+        var typeBuilder = moduleBuilder.DefineType("ReaqtorContrib.Lookalike", TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.Sealed);
+        var methodBuilder = typeBuilder.DefineMethod("Evil", MethodAttributes.Public | MethodAttributes.Static, typeof(int), Type.EmptyTypes);
+        var il = methodBuilder.GetILGenerator();
+        il.Emit(System.Reflection.Emit.OpCodes.Ldc_I4, 42);
+        il.Emit(System.Reflection.Emit.OpCodes.Ret);
+        var lookalike = typeBuilder.CreateType().GetMethod("Evil");
+
+        var services = new ExposedExpressionServices(typeof(IReactiveClientProxy));
+        Assert.IsFalse(services.IsAllowed(lookalike));
+
+        // Sanity check: genuine Reaqtor assemblies remain blessed.
+        Assert.IsTrue(services.IsAllowed(typeof(ReactiveExpressionServices).GetMethod(nameof(ReactiveExpressionServices.Normalize))));
+    }
+
+    [TestMethod]
     public void CheckedReactiveExpressionServices_RejectedElementInit_ArgumentsStillScanned()
     {
         Expression<Func<TestBag>> expr = () => new TestBag { Path.Combine("a", "b") };
@@ -198,8 +258,31 @@ public class CheckedReactiveExpressionServicesTests
     {
         public string Name { get; set; }
 
-        public void Add(string item) => _ = item;
+        public void Add(string item) => Name = item;
 
         public System.Collections.IEnumerator GetEnumerator() => throw new NotImplementedException();
+    }
+
+    private sealed class NoDateTimeBlessingExpressionServices : CheckedReactiveExpressionServices
+    {
+        public NoDateTimeBlessingExpressionServices(Type reactiveClientInterfaceType)
+            : base(reactiveClientInterfaceType)
+        {
+        }
+
+        protected override bool IsAllowedMember(MemberInfo member)
+        {
+            return member.DeclaringType != typeof(DateTime) && base.IsAllowedMember(member);
+        }
+    }
+
+    private sealed class ExposedExpressionServices : CheckedReactiveExpressionServices
+    {
+        public ExposedExpressionServices(Type reactiveClientInterfaceType)
+            : base(reactiveClientInterfaceType)
+        {
+        }
+
+        public bool IsAllowed(MemberInfo member) => IsAllowedMember(member);
     }
 }

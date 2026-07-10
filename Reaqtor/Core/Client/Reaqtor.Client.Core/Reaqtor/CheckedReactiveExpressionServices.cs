@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -59,13 +59,18 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
                           from member in type.GetMembers()
                           select member;
 
-            members = members.Except(
-            [
-                ReflectionHelpers.InfoOf(() => DateTime.Now),
-                ReflectionHelpers.InfoOf(() => DateTime.UtcNow),
-                ReflectionHelpers.InfoOf(() => DateTimeOffset.Now),
-                ReflectionHelpers.InfoOf(() => DateTimeOffset.UtcNow),
-            ]);
+            // NB: GetMembers() returns both the PropertyInfo and its accessor MethodInfo, and expression
+            //     trees can reference either form (a MemberExpression on the property or a MethodCallExpression
+            //     on get_Now), so both must be excluded for the exclusion to be effective.
+            var excludedProperties = new[]
+            {
+                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.Now),
+                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.UtcNow),
+                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.Now),
+                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.UtcNow),
+            };
+
+            members = members.Except(excludedProperties.SelectMany(property => new MemberInfo[] { property, property.GetMethod }));
 
             return [.. members];
         })();
@@ -133,6 +138,14 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
 
         var d = member.DeclaringType;
 
+        // Members without a declaring type (e.g. DynamicMethod-backed methods or module-global methods)
+        // cannot be vetted by any of the type-based rules below and are rejected here, causing the scanner
+        // to fall back to local evaluation of the containing subexpression.
+        if (d is null)
+        {
+            return false;
+        }
+
         // Annotation used for types that are deployed to the service and are well-known. This should be used sparingly, e.g. for custom feed adapters etc.
         if (d.IsDefined(typeof(KnownTypeAttribute)))
         {
@@ -151,13 +164,32 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
             return true;
         }
 
-        if (d.Assembly.FullName.StartsWith("Reaqtive", StringComparison.Ordinal) ||
-            d.Assembly.FullName.StartsWith("Reaqtor", StringComparison.Ordinal))
+        if (IsInKnownAssembly(d))
         {
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks whether the specified type is declared in a Reaqtive or Reaqtor assembly.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns><c>true</c> if the type is declared in a Reaqtive or Reaqtor assembly; otherwise, <c>false</c>.</returns>
+    /// <remarks>
+    /// The match requires a name boundary after the prefix, so unrelated assemblies whose names merely
+    /// start with these prefixes (e.g. <c>ReaqtorContrib</c>) are not blessed.
+    /// </remarks>
+    private static bool IsInKnownAssembly(Type type)
+    {
+        var fullName = type.Assembly.FullName;
+
+        return IsMatch(fullName, "Reaqtive") || IsMatch(fullName, "Reaqtor");
+
+        static bool IsMatch(string fullName, string name) =>
+            fullName.StartsWith(name, StringComparison.Ordinal) &&
+            (fullName.Length == name.Length || fullName[name.Length] is '.' or ',');
     }
 
     /// <summary>
@@ -243,6 +275,13 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
             if (_parent.IsAllowedMember(member))
             {
                 return true;
+            }
+
+            // Members without a declaring type cannot appear on the declarative list, and the base
+            // implementation assumes a non-null declaring type when chasing interface implementations.
+            if (member.DeclaringType is null)
+            {
+                return false;
             }
 
             // Checks against the declarative allow list (see CreateAllowListScanner to extend this list).

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -125,6 +125,16 @@ public class ExpressionTupletizationTests
         var actual = ExpressionTupletization.Detupletize(expr);
 
         AssertEqual(expr, actual);
+    }
+
+    [TestMethod]
+    public void ExpressionTupletization_Tupletize_RootLambda_TupleParameter_Throws()
+    {
+        Expression<Func<Tuple<int, int>, int, int>> binary = (t, y) => t.Item1 * 100 + y;
+        Assert.ThrowsExactly<NotSupportedException>(() => ExpressionTupletization.Tupletize(binary));
+
+        Expression<Func<Tuple<int, int>, int>> unary = t => t.Item1 + t.Item2;
+        Assert.ThrowsExactly<NotSupportedException>(() => ExpressionTupletization.Tupletize(unary));
     }
 
     [TestMethod]
