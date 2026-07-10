@@ -21,6 +21,22 @@ intra-archive references and the retained `.sln` files remain internally consist
 | `Nuqleon/Pearls/LINQ/BinaryExpressionSerialization/` | Prototype binary expression serializer whose default object serializer is built on **`BinaryFormatter`**, which is removed at runtime on .NET 9+. Leaf pearl; its raison d'être cannot function on modern .NET. |
 | `Common/TestUtilities/AssertEx.Legacy.cs` | The callback-based `AssertEx.ThrowsException{Async}` helpers, superseded in the live tree by MSTest 4's `Assert.ThrowsExactly{Async}` (which returns the caught exception). Kept because archived test projects still call them. |
 
+## Code factored back out of the archive
+
+Some transport-agnostic building blocks that lived in the archived Remoting sample have since
+been factored back into the shipped libraries (see #158):
+
+- The invocation tupletization/detupletization machinery from
+  `Reaqtor.Remoting.Client.Library/ExpressionServices/{Tupletizing,Detupletizing}ExpressionServices.cs`
+  now lives in `Reaqtor.ExpressionTupletization` (in `Reaqtor.Shared.Core`).
+- The allow-list based `ExpressionServices` family now lives in `Reaqtor.Client.Core` as
+  `CheckedReactiveExpressionServices`, `TupletizingReactiveExpressionServices`, and
+  `DetupletizingReactiveExpressionServices` (with the JSON allow list moved from Newtonsoft.Json
+  to `System.Text.Json.Nodes`; consumers can bless additional members by overriding
+  `CheckedReactiveExpressionServices.IsAllowedMember`).
+
+The archived copies remain for reference but should not be used as a source for new code.
+
 ## Resurrecting a project
 
 To revive any of these on modern .NET, the relevant Framework dependency must be replaced first
