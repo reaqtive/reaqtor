@@ -254,11 +254,11 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
         /// </summary>
         /// <param name="initializer">The initializer expression to resolve.</param>
         /// <param name="visit">Function to visit the element initializer.</param>
-        /// <returns>Original element initializer (see remarks).</returns>
-        /// <remarks>We allow element initializers with no questions asked, under the assumption that the containing ListInitExpression or ListMemberBinding node was allowed based on its collection type.</remarks>
+        /// <returns>The element initializer with its arguments visited (see remarks).</returns>
+        /// <remarks>We allow the add method with no questions asked, under the assumption that the containing ListInitExpression or ListMemberBinding node was allowed based on its collection type, but continue the visit so the initializer's arguments remain subject to allow list scanning. (The archived Remoting client library this code was factored out of returned the initializer without visiting its arguments, leaving them unscanned.)</remarks>
         protected override ElementInit ResolveElementInit(ElementInit initializer, Func<ElementInit, ElementInit> visit)
         {
-            return initializer;
+            return visit(initializer);
         }
 
         /// <summary>
@@ -267,11 +267,11 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
         /// <typeparam name="T">The concrete subtype of the binding expression.</typeparam>
         /// <param name="binding">The binding expression to resolve.</param>
         /// <param name="visit">Function to visit the member binding.</param>
-        /// <returns>Original member binding (see remarks).</returns>
-        /// <remarks>We allow member bindings with no questions asked, under the assumption that the containing MemberInitExpression or MemberBinding node was allowed based on its constructor's declaring type.</remarks>
+        /// <returns>The member binding with its child expressions visited (see remarks).</returns>
+        /// <remarks>We allow the bound member with no questions asked, under the assumption that the containing MemberInitExpression or MemberBinding node was allowed based on its constructor's declaring type, but continue the visit so the binding's child expressions remain subject to allow list scanning. (The archived Remoting client library this code was factored out of returned the binding without visiting its children, leaving them unscanned.)</remarks>
         protected override MemberBinding ResolveMemberBinding<T>(T binding, Func<T, MemberBinding> visit)
         {
-            return binding;
+            return visit(binding);
         }
 
         /// <summary>

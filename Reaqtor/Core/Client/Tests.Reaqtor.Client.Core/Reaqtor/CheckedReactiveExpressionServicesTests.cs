@@ -124,6 +124,39 @@ public class CheckedReactiveExpressionServicesTests
         Assert.AreEqual(typeof(Path), call.Method.DeclaringType);
     }
 
+    [TestMethod]
+    public void CheckedReactiveExpressionServices_RejectedElementInit_ArgumentsStillScanned()
+    {
+        Expression<Func<TestBag>> expr = () => new TestBag { Path.Combine("a", "b") };
+
+        var services = new CtorOnlyBlessingExpressionServices(typeof(IReactiveClientProxy));
+        var normalized = services.Normalize(expr);
+
+        // The rejected Add method is forgiven, but the initializer's arguments are still scanned,
+        // so the disallowed closed subexpression gets folded to a constant.
+        var lambda = (LambdaExpression)normalized;
+        var listInit = (ListInitExpression)lambda.Body;
+        var argument = (ConstantExpression)listInit.Initializers[0].Arguments[0];
+        Assert.AreEqual(Path.Combine("a", "b"), argument.Value);
+    }
+
+    [TestMethod]
+    public void CheckedReactiveExpressionServices_RejectedMemberBinding_ChildrenStillScanned()
+    {
+        Expression<Func<TestBag>> expr = () => new TestBag { Name = Path.Combine("a", "b") };
+
+        var services = new CtorOnlyBlessingExpressionServices(typeof(IReactiveClientProxy));
+        var normalized = services.Normalize(expr);
+
+        // The rejected bound member is forgiven, but the binding's child expression is still scanned,
+        // so the disallowed closed subexpression gets folded to a constant.
+        var lambda = (LambdaExpression)normalized;
+        var memberInit = (MemberInitExpression)lambda.Body;
+        var assignment = (MemberAssignment)memberInit.Bindings[0];
+        var value = (ConstantExpression)assignment.Expression;
+        Assert.AreEqual(Path.Combine("a", "b"), value.Value);
+    }
+
     private static Expression Normalize(Expression expression)
     {
         var services = new CheckedReactiveExpressionServices(typeof(IReactiveClientProxy));
@@ -141,5 +174,32 @@ public class CheckedReactiveExpressionServicesTests
         {
             return member.DeclaringType == typeof(Path) || base.IsAllowedMember(member);
         }
+    }
+
+    private sealed class CtorOnlyBlessingExpressionServices : CheckedReactiveExpressionServices
+    {
+        public CtorOnlyBlessingExpressionServices(Type reactiveClientInterfaceType)
+            : base(reactiveClientInterfaceType)
+        {
+        }
+
+        protected override bool IsAllowedMember(MemberInfo member)
+        {
+            if (member.DeclaringType == typeof(TestBag))
+            {
+                return member is ConstructorInfo;
+            }
+
+            return base.IsAllowedMember(member);
+        }
+    }
+
+    private sealed class TestBag : System.Collections.IEnumerable
+    {
+        public string Name { get; set; }
+
+        public void Add(string item) => _ = item;
+
+        public System.Collections.IEnumerator GetEnumerator() => throw new NotImplementedException();
     }
 }
