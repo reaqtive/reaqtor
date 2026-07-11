@@ -13,6 +13,11 @@ using Reaqtive.Linq;
 
 namespace Reaqtive.Testing;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: ReactiveAssert.Throws<T>
+// is itself a custom exception-assertion helper, so the Assert.Fail/Assert.AreSame in its catch blocks
+// are the intended verification logic, and the "no exception thrown" case is guarded by a 'failed' flag.
+#pragma warning disable MSTEST0058
+
 /// <summary>
 /// Helper class to write asserts in unit tests for applications and libraries built using Reactive Extensions.
 /// </summary>

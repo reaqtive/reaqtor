@@ -35,7 +35,7 @@ public class MultiSubjectBaseTests
     public void MultiSubjectBase_OperatorDefaults()
     {
         var subject = new TestMultiSubject();
-        Assert.AreEqual(0, subject.Inputs.Count());
+        Assert.IsEmpty(subject.Inputs);
     }
 
     [TestMethod]

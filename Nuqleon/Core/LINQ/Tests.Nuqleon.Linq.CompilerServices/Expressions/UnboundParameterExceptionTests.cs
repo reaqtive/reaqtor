@@ -33,7 +33,7 @@ public class UnboundParameterExceptionTests
         var e = Expression.Constant(42);
         var p = new[] { Expression.Parameter(typeof(int)) };
         var ex = new UnboundParameterException("Oops", e, p);
-        Assert.IsTrue(ex.Message.StartsWith("Oops"));
+        Assert.StartsWith("Oops", ex.Message);
         Assert.AreSame(e, ex.Expression);
         Assert.IsTrue(p.SequenceEqual(ex.Parameters));
     }

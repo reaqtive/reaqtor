@@ -29,6 +29,11 @@ using Reaqtor.Reliable;
 
 namespace Tests.Reaqtor.QueryEngine;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: the expected-exception
+// tests use a 'failed' flag with Assert.IsTrue(failed) after the try, so the catch-block asserts (on
+// ex.Message) run only on the expected throw and the test still fails if no exception is thrown.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public partial class CheckpointingTests : PhysicalTimeEngineTest
 {
@@ -841,10 +846,10 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
         var dir1 = Dir(chkpt1);
 
-        Assert.AreEqual(1, dir1["Subscriptions"].Count(s => s.StartsWith("rx://bridge")));
-        Assert.AreEqual(1, dir1["Subjects"].Count(s => s.StartsWith("rx://bridge")));
-        Assert.AreEqual(1, dir1["Subjects"].Count(s => s.StartsWith("rx://tunnel")));
-        Assert.AreEqual(1, dir1["Subjects"].Count(s => s.StartsWith("rx://tollbooth")));
+        Assert.ContainsSingle(s => s.StartsWith("rx://bridge"), dir1["Subscriptions"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://bridge"), dir1["Subjects"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://tunnel"), dir1["Subjects"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://tollbooth"), dir1["Subjects"]);
 
         // Clear state ------------------------------------------------------------
 
@@ -882,10 +887,10 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
         var dir2 = Dir(chkpt2);
 
-        Assert.AreEqual(1, dir2["Subscriptions"].Count(s => s.StartsWith("rx://bridge")));
-        Assert.AreEqual(1, dir2["Subjects"].Count(s => s.StartsWith("rx://bridge")));
-        Assert.AreEqual(1, dir2["Subjects"].Count(s => s.StartsWith("rx://tunnel")));
-        Assert.AreEqual(1, dir2["Subjects"].Count(s => s.StartsWith("rx://tollbooth")));
+        Assert.ContainsSingle(s => s.StartsWith("rx://bridge"), dir2["Subscriptions"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://bridge"), dir2["Subjects"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://tunnel"), dir2["Subjects"]);
+        Assert.ContainsSingle(s => s.StartsWith("rx://tollbooth"), dir2["Subjects"]);
 
         // Clear state ------------------------------------------------------------
 
@@ -2087,7 +2092,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         Assert.AreEqual(0, obv.Count(x => !x.StartsWith("mgmt"))); // none
 
         Assert.IsTrue(final.TryGetItemKeys("Subjects", out var str));
-        Assert.AreEqual(1, str.Count(x => !x.StartsWith("mgmt"))); // bridge
+        Assert.ContainsSingle(x => !x.StartsWith("mgmt"), str); // bridge
 
         Assert.IsTrue(final.TryGetItemKeys("Subscriptions", out var sub));
         Assert.AreEqual(2, sub.Count(x => !x.StartsWith("mgmt"))); // upstream + test
@@ -2409,7 +2414,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(4);
 
         var res = s3.Values;
-        Assert.AreEqual(1, res.Count);
+        Assert.HasCount(1, res);
         Assert.AreEqual(7, res[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -2645,7 +2650,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         var s1 = mgr1.GetReliableObserver<int>("s1");
         var s1s = s1.Synchronize(qe1.Scheduler);
         s1s.OnNext(42, 1L);
-        Assert.AreEqual(1, mv1.Values.Count);
+        Assert.HasCount(1, mv1.Values);
         Assert.AreEqual(42, mv1.Values[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -2677,7 +2682,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(43, 2L);
 
         // Note that the `Crash()` caused the MockObserver to be cleared
-        Assert.AreEqual(1, mv2.Values.Count);
+        Assert.HasCount(1, mv2.Values);
         Assert.AreEqual(43, mv2.Values[0]);
 
         Crash();
@@ -2719,9 +2724,9 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         var s1 = mgr1.GetReliableObserver<int>("s1");
         var s1s = s1.Synchronize(qe1.Scheduler);
         s1s.OnNext(42, 1L);
-        Assert.AreEqual(1, mv1.Values.Count);
+        Assert.HasCount(1, mv1.Values);
         Assert.AreEqual(44, mv1.Values[0]);
-        Assert.AreEqual(1, mv2.Values.Count);
+        Assert.HasCount(1, mv2.Values);
         Assert.AreEqual(42, mv2.Values[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -2754,9 +2759,9 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(43, 2L);
 
         // Note that the `Crash()` caused the MockObserver to be cleared
-        Assert.AreEqual(1, mv3.Values.Count);
+        Assert.HasCount(1, mv3.Values);
         Assert.AreEqual(45, mv3.Values[0]);
-        Assert.AreEqual(1, mv4.Values.Count);
+        Assert.HasCount(1, mv4.Values);
         Assert.AreEqual(43, mv4.Values[0]);
 
         Crash();
@@ -2791,7 +2796,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         var s1 = mgr1.GetObserver<int>("s1");
         var s1s = s1.Synchronize(qe1.Scheduler);
         s1s.OnNext(42);
-        Assert.AreEqual(1, mv1.Values.Count);
+        Assert.HasCount(1, mv1.Values);
         Assert.AreEqual(42, mv1.Values[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -2823,7 +2828,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(43);
 
         // Note that the `Crash()` caused the MockObserver to be cleared
-        Assert.AreEqual(1, mv2.Values.Count);
+        Assert.HasCount(1, mv2.Values);
         Assert.AreEqual(43, mv2.Values[0]);
 
         Crash();
@@ -2865,9 +2870,9 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         var s1 = mgr1.GetObserver<int>("s1");
         var s1s = s1.Synchronize(qe1.Scheduler);
         s1s.OnNext(42);
-        Assert.AreEqual(1, mv1.Values.Count);
+        Assert.HasCount(1, mv1.Values);
         Assert.AreEqual(44, mv1.Values[0]);
-        Assert.AreEqual(1, mv2.Values.Count);
+        Assert.HasCount(1, mv2.Values);
         Assert.AreEqual(42, mv2.Values[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -2900,9 +2905,9 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(43);
 
         // Note that the `Crash()` caused the MockObserver to be cleared
-        Assert.AreEqual(1, mv3.Values.Count);
+        Assert.HasCount(1, mv3.Values);
         Assert.AreEqual(45, mv3.Values[0]);
-        Assert.AreEqual(1, mv4.Values.Count);
+        Assert.HasCount(1, mv4.Values);
         Assert.AreEqual(43, mv4.Values[0]);
 
         Crash();
@@ -3231,7 +3236,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         var in1 = v1.Synchronize(qe1.Scheduler);
         in1.OnNext(42);
 
-        Assert.AreEqual(1, mv1.Values.Count);
+        Assert.HasCount(1, mv1.Values);
         Assert.AreEqual(42, mv1.Values[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -3259,7 +3264,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         in2.OnNext(43);
 
         // Note that the `Crash()` caused the MockObserver to be cleared
-        Assert.AreEqual(1, mv2.Values.Count);
+        Assert.HasCount(1, mv2.Values);
         Assert.AreEqual(43, mv2.Values[0]);
 
         Crash();
@@ -3397,7 +3402,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         Assert.IsTrue(LockManager.Wait(l));
 
         var mv1 = GetMockObserver<int>("v1");
-        Assert.AreEqual(0, mv1.Values.Count);
+        Assert.IsEmpty(mv1.Values);
 
         var state = Checkpoint(qe1);
         RemoveQueryEngine(qe1);
@@ -3410,7 +3415,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         Recover(qe2, state);
 
         // No state is recovered on first transition, so no values are pushed.
-        Assert.AreEqual(0, mv1.Values.Count);
+        Assert.IsEmpty(mv1.Values);
 
         var newState = Checkpoint(qe2);
         RemoveQueryEngine(qe2);
@@ -3462,7 +3467,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(4);
 
         var res = s3.Values;
-        Assert.AreEqual(1, res.Count);
+        Assert.HasCount(1, res);
         Assert.AreEqual(7, res[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -3568,7 +3573,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         s2s.OnNext(4);
 
         var res = s3.Values;
-        Assert.AreEqual(1, res.Count);
+        Assert.HasCount(1, res);
         Assert.AreEqual(7, res[0]);
 
         // Checkpoint -------------------------------------------------------------
@@ -3861,7 +3866,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
         Recover(qe, store);
 
-        Assert.IsTrue(failedUris.Contains(new Uri("rx://bridge/v2/e2d763c7-a0a1-4680-9020-a51e39576915/upstream-subscription")));
+        Assert.Contains(new Uri("rx://bridge/v2/e2d763c7-a0a1-4680-9020-a51e39576915/upstream-subscription"), failedUris);
 
         store = Checkpoint(qe);
 
@@ -3931,7 +3936,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
         // The upstream subscription will be reachable through any delete APIs for cleanup, but not through the metadata API.
         Assert.IsNotNull(upstreamSubscriptionUri);
-        Assert.IsFalse(ctx.Subscriptions.AsEnumerable().Any(kv => kv.Key == upstreamSubscriptionUri));
+        Assert.DoesNotContain(kv => kv.Key == upstreamSubscriptionUri, ctx.Subscriptions.AsEnumerable());
 
         // Does not throw KeyNotFoundException...
         ctx.GetSubscription(upstreamSubscriptionUri).Dispose();
@@ -4013,22 +4018,22 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         // Ensure we can't use these artifacts in subscriptions
         var failed = false;
         try { ctx.GetObservable<int>(intReturnUri).Subscribe(nopObserver, new Uri("test://subscription/2"), null); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intReturnUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intReturnUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { ctx.Never<int>().Subscribe(ctx.GetObserver<int>(intNopUri), new Uri("test://subscription/2"), null); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intNopUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intNopUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { ctx.GetObservable<int>(intStreamUri).Subscribe(nopObserver, new Uri("test://subscription/2"), null); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStreamUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStreamUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { ctx.Never<int>().Subscribe(ctx.GetObserver<int>(intStreamUri), new Uri("test://subscription/2"), null); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStreamUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStreamUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         // Can remove still...
@@ -4182,32 +4187,32 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
         // Ensure we can't use these artifacts in subscriptions
         var failed = false;
         try { await ctx.GetObservable<int>(intReturnUri).SubscribeAsync(nopObserver, new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intReturnUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intReturnUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { await ctx.Never<int>().SubscribeAsync(ctx.GetObserver<int>(intNopUri), new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intNopUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intNopUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { await ctx.GetObservable<int>(intStreamUri).SubscribeAsync(nopObserver, new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStreamUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStreamUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { await ctx.Never<int>().SubscribeAsync(ctx.GetObserver<int>(intStream2Uri), new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStream2Uri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStream2Uri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { await ctx.GetObservable<int>(intStream2Uri).SubscribeAsync(nopObserver, new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStream2Uri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStream2Uri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         failed = false;
         try { await ctx.Never<int>().SubscribeAsync(ctx.GetObserver<int>(intStreamUri), new Uri("test://subscription/2"), null, CancellationToken.None); }
-        catch (InvalidOperationException ex) { failed = true; Assert.IsTrue(ex.Message.Contains(intStreamUri.ToCanonicalString())); }
+        catch (InvalidOperationException ex) { failed = true; Assert.Contains(intStreamUri.ToCanonicalString(), ex.Message); }
         Assert.IsTrue(failed);
 
         // Can remove still...
@@ -4489,8 +4494,8 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
             foreach (var subUri in subUris)
             {
-                Assert.IsTrue(blobLogData.Contains("Subscriptions\t" + subUri), "Missing subscription for " + subUri);
-                Assert.IsTrue(blobLogData.Contains("SubscriptionsRuntimeState\t" + subUri), "Missing subscription runtime state for " + subUri);
+                Assert.Contains("Subscriptions\t" + subUri, blobLogData, "Missing subscription for " + subUri);
+                Assert.Contains("SubscriptionsRuntimeState\t" + subUri, blobLogData, "Missing subscription runtime state for " + subUri);
             }
 
             try
@@ -4535,24 +4540,24 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
 
         Recover(qe, store);
 
-        Assert.AreEqual(0, undefined.Count);
+        Assert.IsEmpty(undefined);
 
         Checkpoint(qe, CheckpointKind.Full);
 
-        Assert.AreEqual(1, undefined.Count);
+        Assert.HasCount(1, undefined);
 
         var final = Checkpoint(qe, CheckpointKind.Full);
 
-        Assert.AreEqual(2, undefined.Count);
+        Assert.HasCount(2, undefined);
 
         Assert.IsTrue(final.TryGetItemKeys("Observables", out var obs));
-        Assert.AreEqual(1, obs.Count(x => !x.StartsWith("mgmt"))); // upstream
+        Assert.ContainsSingle(x => !x.StartsWith("mgmt"), obs); // upstream
 
         Assert.IsTrue(final.TryGetItemKeys("Observers", out var obv));
         Assert.AreEqual(0, obv.Count(x => !x.StartsWith("mgmt"))); // none
 
         Assert.IsTrue(final.TryGetItemKeys("Subjects", out var str));
-        Assert.AreEqual(1, str.Count(x => !x.StartsWith("mgmt"))); // bridge
+        Assert.ContainsSingle(x => !x.StartsWith("mgmt"), str); // bridge
 
         Assert.IsTrue(final.TryGetItemKeys("Subscriptions", out var sub));
         Assert.AreEqual(2, sub.Count(x => !x.StartsWith("mgmt"))); // upstream + test
@@ -4842,7 +4847,7 @@ public partial class CheckpointingTests : PhysicalTimeEngineTest
                 }
                 catch (AggregateException ex)
                 {
-                    Assert.AreEqual(1, ex.InnerExceptions.Count);
+                    Assert.HasCount(1, ex.InnerExceptions);
                     throw ex.InnerException;
                 }
             }

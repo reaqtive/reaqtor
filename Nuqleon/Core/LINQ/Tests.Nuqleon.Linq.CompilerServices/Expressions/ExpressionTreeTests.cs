@@ -1105,7 +1105,7 @@ public class ExpressionTreeTests
         var tr = ei.ToExpressionTree();
 
         Assert.AreSame(ei, tr.ElementInit);
-        Assert.AreEqual(1, tr.Children.Count);
+        Assert.HasCount(1, tr.Children);
 
         var ce = tr.Children[0] as ExpressionTree<ConstantExpression>;
         Assert.IsNotNull(ce);
@@ -1172,7 +1172,7 @@ public class ExpressionTreeTests
         Assert.IsNotNull(tr);
 
         Assert.AreSame(ma, tr.MemberAssignment);
-        Assert.AreEqual(1, tr.Children.Count);
+        Assert.HasCount(1, tr.Children);
 
         var ce = tr.Children[0] as ExpressionTree<ConstantExpression>;
         Assert.IsNotNull(ce);
@@ -1265,7 +1265,7 @@ public class ExpressionTreeTests
         Assert.IsNotNull(tr);
 
         Assert.AreSame(mb, tr.MemberMemberBinding);
-        Assert.AreEqual(1, tr.Children.Count);
+        Assert.HasCount(1, tr.Children);
 
         var ma = tr.Children[0] as MemberAssignmentExpressionTree;
         Assert.IsNotNull(ma);
@@ -1362,7 +1362,7 @@ public class ExpressionTreeTests
         Assert.IsNotNull(tr);
 
         Assert.AreSame(lb, tr.MemberListBinding);
-        Assert.AreEqual(1, tr.Children.Count);
+        Assert.HasCount(1, tr.Children);
 
         var ei = tr.Children[0] as ElementInitExpressionTree;
         Assert.IsNotNull(ei);

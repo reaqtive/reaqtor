@@ -612,7 +612,7 @@ public class MemoizationCacheFactoryExtensionsTests
         Assert.AreEqual(42, c.GetOrAdd(21));
         Assert.AreEqual(1, c.Count);
 
-        Assert.IsTrue(!string.IsNullOrEmpty(c.DebugView));
+        Assert.IsFalse(string.IsNullOrEmpty(c.DebugView));
 
         c.Clear();
         Assert.AreEqual(0, c.Count);

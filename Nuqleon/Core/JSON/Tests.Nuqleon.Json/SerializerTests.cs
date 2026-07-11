@@ -175,9 +175,9 @@ public class SerializerTests
         var d = ys as IList;
         Assert.IsNotNull(d);
 
-        Assert.IsTrue(int.Parse((string)d[0]) == 1); // TODO: by design?
-        Assert.IsTrue(int.Parse((string)d[1]) == 2);
-        Assert.IsTrue(int.Parse((string)d[2]) == 3);
+        Assert.AreEqual(1, int.Parse((string)d[0])); // TODO: by design?
+        Assert.AreEqual(2, int.Parse((string)d[1]));
+        Assert.AreEqual(3, int.Parse((string)d[2]));
     }
 
     [TestMethod]
@@ -283,8 +283,8 @@ public class SerializerTests
         var d = q as Dictionary<string, object>;
         Assert.IsNotNull(d);
 
-        Assert.IsTrue(int.Parse((string)d["Age"]) == 21); // TODO: by design?
-        Assert.IsTrue((string)d["Name"] == "Bart");
+        Assert.AreEqual(21, int.Parse((string)d["Age"])); // TODO: by design?
+        Assert.AreEqual("Bart", (string)d["Name"]);
     }
 
     [TestMethod]

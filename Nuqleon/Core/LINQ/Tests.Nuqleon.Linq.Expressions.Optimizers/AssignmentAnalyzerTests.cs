@@ -34,7 +34,7 @@ public class AssignmentAnalyzerTests
 
         Assert.AreSame(b.Expressions, res);
 
-        Assert.AreEqual(0, analyze.Unassigned.Count);
+        Assert.IsEmpty(analyze.Unassigned);
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class AssignmentAnalyzerTests
 
         Assert.AreSame(b.Expressions, res);
 
-        Assert.AreEqual(0, analyze.Unassigned.Count);
+        Assert.IsEmpty(analyze.Unassigned);
     }
 
     [TestMethod]
@@ -78,7 +78,7 @@ public class AssignmentAnalyzerTests
 
         Assert.AreSame(b.Expressions, res);
 
-        Assert.AreEqual(0, analyze.Unassigned.Count);
+        Assert.IsEmpty(analyze.Unassigned);
     }
 
     [TestMethod]
@@ -98,7 +98,7 @@ public class AssignmentAnalyzerTests
 
         Assert.AreSame(b.Expressions, res);
 
-        Assert.AreEqual(0, analyze.Unassigned.Count);
+        Assert.IsEmpty(analyze.Unassigned);
     }
 
     [TestMethod]

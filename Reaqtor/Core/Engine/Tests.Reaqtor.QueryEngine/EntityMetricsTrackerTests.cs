@@ -47,7 +47,7 @@ public class EntityMetricsTrackerTests
         var elapsed = stopwatch.Elapsed;
         var metrics = Get(entity);
         var metric = metrics[Metric];
-        Assert.IsTrue(elapsed > metric);
+        Assert.IsGreaterThan(metric, elapsed);
         Set(entity, Metric, elapsed);
         metrics = Get(entity);
         metric = metrics[Metric];
@@ -59,7 +59,7 @@ public class EntityMetricsTrackerTests
     {
         var entity = new DummyResource();
         var metrics = Get(entity);
-        Assert.AreEqual(0, metrics.Count);
+        Assert.IsEmpty(metrics);
     }
 
     [TestMethod]
@@ -73,7 +73,7 @@ public class EntityMetricsTrackerTests
         entity.EndMetric(Metric);
         entity.SetMetric(Metric2, TimeSpan.Zero);
         var metrics = entity.GetMetrics();
-        Assert.AreEqual(0, metrics.Count);
+        Assert.IsEmpty(metrics);
 
         EntityMetricsTracker.ShouldTrack = wasTracking;
     }
@@ -85,7 +85,7 @@ public class EntityMetricsTrackerTests
         Set(entity, Metric, TimeSpan.Zero);
         End(entity, Metric);
         var metrics = Get(entity);
-        Assert.AreEqual(1, metrics.Count);
+        Assert.HasCount(1, metrics);
         Assert.AreEqual(TimeSpan.Zero, metrics[Metric]);
     }
 
@@ -95,7 +95,7 @@ public class EntityMetricsTrackerTests
         var entity = new DummyResource();
         Begin(entity, Metric);
         var metrics = Get(entity);
-        Assert.AreEqual(0, metrics.Count);
+        Assert.IsEmpty(metrics);
     }
 
     private static void Begin(IReactiveResource entity, EntityMetric metric)

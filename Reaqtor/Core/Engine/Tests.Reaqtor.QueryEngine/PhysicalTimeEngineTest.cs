@@ -115,7 +115,7 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
         {
             Assert.IsFalse(v.Completed);
             Assert.IsFalse(v.Error);
-            Assert.AreEqual(0, v.Values.Count);
+            Assert.IsEmpty(v.Values);
         }
 
         return v;
@@ -123,7 +123,7 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
 
     internal static void AssertResult<T>(MockObserver<T> observer, int expectedCount, Action<int, T> validator)
     {
-        Assert.AreEqual(expectedCount, observer.Values.Count);
+        Assert.HasCount(expectedCount, observer.Values);
         for (int i = 0; i < expectedCount; i++)
         {
             validator(i, observer.Values[i]);
@@ -132,7 +132,7 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
 
     internal static void AssertResultSequence<T>(MockObserver<T> observer, IEnumerable<T> expected)
     {
-        Assert.AreEqual(expected.Count(), observer.Values.Count);
+        Assert.HasCount(expected.Count(), observer.Values);
         foreach (var (Expected, Actual) in expected.Zip(observer.Values, (e, a) => (Expected: e, Actual: a)))
         {
             Assert.AreEqual(Expected, Actual);
@@ -141,7 +141,7 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
 
     internal static void AssertResultSequenceSet<T>(MockObserver<T> observer, IEnumerable<T> expected)
     {
-        Assert.AreEqual(expected.Count(), observer.Values.Count);
+        Assert.HasCount(expected.Count(), observer.Values);
 
         var obs = new HashSet<T>(observer.Values);
 

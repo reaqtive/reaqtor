@@ -141,7 +141,7 @@ public class PooledListTests : TestBase
 
             var lst = obj.List;
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -161,7 +161,7 @@ public class PooledListTests : TestBase
 
             var lst = obj.List;
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -179,7 +179,7 @@ public class PooledListTests : TestBase
         {
             var lst = PooledList<string>.GetInstance();
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -199,7 +199,7 @@ public class PooledListTests : TestBase
         {
             var lst = PooledList<string>.GetInstance();
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -222,7 +222,7 @@ public class PooledListTests : TestBase
         {
             var lst = PooledList<string>.GetInstance();
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -243,7 +243,7 @@ public class PooledListTests : TestBase
         {
             var lst = PooledList<string>.GetInstance();
 
-            Assert.AreEqual(0, lst.Count);
+            Assert.IsEmpty(lst);
 
             lst.Add("qux");
             lst.Add("foo");
@@ -254,7 +254,7 @@ public class PooledListTests : TestBase
 
             Assert.IsTrue(exp.SequenceEqual(res));
 
-            Assert.AreEqual(0, lst.Count); // Relies on implementation detail of timing of Free
+            Assert.IsEmpty(lst); // Relies on implementation detail of timing of Free
         }
     }
 

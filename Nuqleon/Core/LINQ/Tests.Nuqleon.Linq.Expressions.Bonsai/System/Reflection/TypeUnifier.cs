@@ -73,7 +73,7 @@ public class TypeUnifierTests : TestBase
         var typeToSlim = new TypeToTypeSlimConverter();
         var slim = typeToSlim.Visit(typeof(Func<int, int>));
         Assert.IsTrue(unifier.Unify(typeof(Func<T, T>), slim));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     [TestMethod]
@@ -83,7 +83,7 @@ public class TypeUnifierTests : TestBase
         var typeToSlim = new TypeToTypeSlimConverter();
         var slim = typeToSlim.Visit(typeof(Func<int, bool>));
         Assert.IsFalse(unifier.Unify(typeof(Func<T, T>), slim));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     [TestMethod]
@@ -115,7 +115,7 @@ public class TypeUnifierTests : TestBase
         var intSlim = typeToSlim.Visit(typeof(int));
 
         Assert.IsTrue(unifier.Unify(typeof(int), intSlim));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     #endregion
@@ -154,7 +154,7 @@ public class TypeUnifierTests : TestBase
         var intArraySlim = typeToSlim.Visit(typeof(int[]));
 
         Assert.IsTrue(unifier.Unify(typeof(int[]), intArraySlim));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     #endregion
@@ -234,7 +234,7 @@ public class TypeUnifierTests : TestBase
 
         Assert.IsTrue(unifier.Unify(structuralType, slimStructuralType));
 
-        Assert.AreEqual(1, unifier.Entries.Count);
+        Assert.HasCount(1, unifier.Entries);
 
         Assert.IsTrue(unifier.Entries.ContainsKey(slimStructuralType));
         Assert.AreEqual(unifier.Entries[slimStructuralType], structuralType);
@@ -321,7 +321,7 @@ public class TypeUnifierTests : TestBase
         var slimDefinition = typeToSlim.Visit(definition);
 
         Assert.IsTrue(unifier.Unify(definition, slimDefinition));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     #endregion
@@ -355,7 +355,7 @@ public class TypeUnifierTests : TestBase
         var slimGeneric = typeToSlim.Visit(generic);
 
         Assert.IsTrue(unifier.Unify(generic, slimGeneric));
-        Assert.AreEqual(0, unifier.Entries.Count);
+        Assert.IsEmpty(unifier.Entries);
     }
 
     #endregion
@@ -448,7 +448,7 @@ public class TypeUnifierTests : TestBase
         var slimList = typeToSlim.Visit(list);
 
         Assert.IsTrue(unifier.Unify(list, slimList));
-        Assert.AreEqual(2, unifier.Entries.Count);
+        Assert.HasCount(2, unifier.Entries);
     }
 
     [TestMethod]
@@ -476,7 +476,7 @@ public class TypeUnifierTests : TestBase
 
         Assert.IsTrue(unifier.Unify(rt1, slim));
         Assert.IsTrue(unifier.Unify(rt2, slim));
-        Assert.AreEqual(1, unifier.Entries.Count);
+        Assert.HasCount(1, unifier.Entries);
         Assert.AreSame(rt1, unifier.Entries[slim]);
     }
 

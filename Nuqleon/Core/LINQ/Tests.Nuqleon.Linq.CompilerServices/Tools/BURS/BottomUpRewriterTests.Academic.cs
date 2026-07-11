@@ -44,7 +44,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new Add(
             new Mul(
@@ -96,7 +96,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -144,7 +144,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -195,7 +195,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(
@@ -213,7 +213,7 @@ public partial class BottomUpRewriterTests
 
         var res = burw.Rewrite(e);
 
-        Assert.IsTrue(res.ToString().Contains("Lazy"));
+        Assert.Contains("Lazy", res.ToString());
         Assert.AreEqual(e.Eval(), res.Eval());
     }
 
@@ -249,7 +249,7 @@ public partial class BottomUpRewriterTests
 
         // Internal tables
         var debugView = burw.DebugView;
-        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        Assert.IsFalse(string.IsNullOrEmpty(debugView));
 
         var e = new TimesPlus(
             new Inc(

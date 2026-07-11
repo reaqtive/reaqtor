@@ -99,8 +99,8 @@ public class AccountingTests
         Assert.AreEqual(N, childCounters.TaskExecutionCount);
         Assert.AreEqual(0, childCounters.TimerTickCount);
 
-        Assert.IsTrue(childCounters.Uptime > TimeSpan.Zero);
-        Assert.IsTrue(childCounters.PausedTime > TimeSpan.Zero);
+        Assert.IsGreaterThan(TimeSpan.Zero, childCounters.Uptime);
+        Assert.IsGreaterThan(TimeSpan.Zero, childCounters.PausedTime);
 
         //
         // Check the counters of the root scheduler.
@@ -191,8 +191,8 @@ public class AccountingTests
         Assert.AreEqual(N, childCounters.TaskExecutionCount);
         AssertTimerTickCount(childCounters.TimerTickCount);
 
-        Assert.IsTrue(childCounters.Uptime > TimeSpan.Zero);
-        Assert.IsTrue(childCounters.PausedTime > TimeSpan.Zero);
+        Assert.IsGreaterThan(TimeSpan.Zero, childCounters.Uptime);
+        Assert.IsGreaterThan(TimeSpan.Zero, childCounters.PausedTime);
 
         //
         // Check the counters of the root scheduler.

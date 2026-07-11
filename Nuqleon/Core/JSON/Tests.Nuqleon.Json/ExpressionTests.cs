@@ -61,7 +61,7 @@ public class ExpressionTests
         var t = Json.Expression.Null();
         var j = t.ToString();
         var o = Json.Expression.Parse(j, ensureTopLevelObjectOrArray: false);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Null);
+        Assert.AreEqual(Json.ExpressionType.Null, o.NodeType);
 
         Assert.AreSame(Json.Expression.Null(), Json.Expression.Null());
     }
@@ -94,7 +94,7 @@ public class ExpressionTests
         var t = Json.Expression.Number(value: null);
         var j = t.ToString();
         var o = Json.Expression.Parse(j, ensureTopLevelObjectOrArray: false);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Null);
+        Assert.AreEqual(Json.ExpressionType.Null, o.NodeType);
     }
 
     [TestMethod]
@@ -146,7 +146,7 @@ public class ExpressionTests
         var t = Json.Expression.String(s);
         var j = t.ToString();
         var o = Json.Expression.Parse(j, ensureTopLevelObjectOrArray: false);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Null);
+        Assert.AreEqual(Json.ExpressionType.Null, o.NodeType);
     }
 
     [TestMethod]
@@ -168,15 +168,15 @@ public class ExpressionTests
         var t = Json.Expression.Array();
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(-1));
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => arr.GetElement(0));
 
-            Assert.IsTrue(arr.ElementCount == 0);
-            Assert.IsTrue(arr.Elements.Count == 0);
+            Assert.AreEqual(0, arr.ElementCount);
+            Assert.IsEmpty(arr.Elements);
         }
     }
 
@@ -186,7 +186,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -195,12 +195,12 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 1);
+                Assert.AreEqual(1, arr.ElementCount);
                 var elements = Enumerable.Range(0, 1).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 1);
+            Assert.HasCount(1, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
 
             var i = arr.ToString();
@@ -214,7 +214,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -223,12 +223,12 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 2);
+                Assert.AreEqual(2, arr.ElementCount);
                 var elements = Enumerable.Range(0, 2).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 2);
+            Assert.HasCount(2, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
 
@@ -243,7 +243,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true), Json.Expression.String("Hello"));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -252,12 +252,12 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 3);
+                Assert.AreEqual(3, arr.ElementCount);
                 var elements = Enumerable.Range(0, 3).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 3);
+            Assert.HasCount(3, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
@@ -273,7 +273,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true), Json.Expression.String("Hello"), Json.Expression.Null());
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -282,16 +282,16 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 4);
+                Assert.AreEqual(4, arr.ElementCount);
                 var elements = Enumerable.Range(0, 4).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 4);
+            Assert.HasCount(4, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
-            Assert.IsTrue(arr.Elements[3].NodeType == Json.ExpressionType.Null);
+            Assert.AreEqual(Json.ExpressionType.Null, arr.Elements[3].NodeType);
 
             var i = arr.ToString();
             Assert.AreEqual(j, i);
@@ -304,7 +304,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true), Json.Expression.String("Hello"), Json.Expression.Null(), Json.Expression.Number("2"));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -313,16 +313,16 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 5);
+                Assert.AreEqual(5, arr.ElementCount);
                 var elements = Enumerable.Range(0, 5).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 5);
+            Assert.HasCount(5, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
-            Assert.IsTrue(arr.Elements[3].NodeType == Json.ExpressionType.Null);
+            Assert.AreEqual(Json.ExpressionType.Null, arr.Elements[3].NodeType);
             Assert.IsTrue(arr.Elements[4].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[4]).Value == "2");
 
             var i = arr.ToString();
@@ -336,7 +336,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true), Json.Expression.String("Hello"), Json.Expression.Null(), Json.Expression.Number("2"), Json.Expression.Boolean(false));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -345,16 +345,16 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice to check before/after Elements allocation.
             {
-                Assert.IsTrue(arr.ElementCount == 6);
+                Assert.AreEqual(6, arr.ElementCount);
                 var elements = Enumerable.Range(0, 6).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements /* will allocate */));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 6);
+            Assert.HasCount(6, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
-            Assert.IsTrue(arr.Elements[3].NodeType == Json.ExpressionType.Null);
+            Assert.AreEqual(Json.ExpressionType.Null, arr.Elements[3].NodeType);
             Assert.IsTrue(arr.Elements[4].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[4]).Value == "2");
             Assert.IsTrue(arr.Elements[5].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[5]).Value == false);
 
@@ -369,7 +369,7 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Number("1"), Json.Expression.Boolean(true), Json.Expression.String("Hello"), Json.Expression.Null(), Json.Expression.Number("2"), Json.Expression.Boolean(false), Json.Expression.Null());
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
 
         foreach (var arr in new[] { t, (Json.ArrayExpression)o })
         {
@@ -378,19 +378,19 @@ public class ExpressionTests
 
             for (var k = 0; k < 2; k++) // Twice for consistency with other tests above.
             {
-                Assert.IsTrue(arr.ElementCount == 7);
+                Assert.AreEqual(7, arr.ElementCount);
                 var elements = Enumerable.Range(0, 7).Select(arr.GetElement).ToArray();
                 Assert.IsTrue(elements.SequenceEqual(arr.Elements));
             }
 
-            Assert.IsTrue(arr.Elements.Count == 7);
+            Assert.HasCount(7, arr.Elements);
             Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[0]).Value == "1");
             Assert.IsTrue(arr.Elements[1].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[1]).Value == true);
             Assert.IsTrue(arr.Elements[2].NodeType == Json.ExpressionType.String && (string)((Json.ConstantExpression)arr.Elements[2]).Value == "Hello");
-            Assert.IsTrue(arr.Elements[3].NodeType == Json.ExpressionType.Null);
+            Assert.AreEqual(Json.ExpressionType.Null, arr.Elements[3].NodeType);
             Assert.IsTrue(arr.Elements[4].NodeType == Json.ExpressionType.Number && (string)((Json.ConstantExpression)arr.Elements[4]).Value == "2");
             Assert.IsTrue(arr.Elements[5].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)arr.Elements[5]).Value == false);
-            Assert.IsTrue(arr.Elements[6].NodeType == Json.ExpressionType.Null);
+            Assert.AreEqual(Json.ExpressionType.Null, arr.Elements[6].NodeType);
 
             var i = arr.ToString();
             Assert.AreEqual(j, i);
@@ -403,12 +403,12 @@ public class ExpressionTests
         var t = Json.Expression.Array(Json.Expression.Array(Json.Expression.Boolean(true)));
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Array);
+        Assert.AreEqual(Json.ExpressionType.Array, o.NodeType);
         var arr = (Json.ArrayExpression)o;
-        Assert.IsTrue(arr.Elements.Count == 1);
-        Assert.IsTrue(arr.Elements[0].NodeType == Json.ExpressionType.Array);
+        Assert.HasCount(1, arr.Elements);
+        Assert.AreEqual(Json.ExpressionType.Array, arr.Elements[0].NodeType);
         var nst = (Json.ArrayExpression)arr.Elements[0];
-        Assert.IsTrue(nst.Elements.Count == 1);
+        Assert.HasCount(1, nst.Elements);
         Assert.IsTrue(nst.Elements[0].NodeType == Json.ExpressionType.Boolean && (bool)((Json.ConstantExpression)nst.Elements[0]).Value == true);
     }
 
@@ -420,8 +420,8 @@ public class ExpressionTests
         var arr2 = Json.Expression.Array(new List<Json.Expression>());
         var arr3 = Json.Expression.Array(Enumerable.Empty<Json.Expression>());
 
-        Assert.IsTrue(arr0.ElementCount == 0);
-        Assert.IsTrue(arr0.Elements.Count == 0);
+        Assert.AreEqual(0, arr0.ElementCount);
+        Assert.IsEmpty(arr0.Elements);
 
         Assert.AreSame(arr0, arr1);
         Assert.AreSame(arr0, arr2);
@@ -456,13 +456,13 @@ public class ExpressionTests
 
         foreach (var arr in new[] { arr1, arr2, arr3 })
         {
-            Assert.IsTrue(arr.ElementCount == n);
+            Assert.AreEqual(n, arr.ElementCount);
             Assert.IsTrue(exprs.SequenceEqual(Enumerable.Range(0, n).Select(i => arr.GetElement(i))));
 
-            Assert.IsTrue(arr.Elements.Count == n);
+            Assert.HasCount(n, arr.Elements);
             Assert.IsTrue(exprs.SequenceEqual(arr.Elements));
 
-            Assert.IsTrue(arr.GetType().Name.Contains("ArrayExpression" + n));
+            Assert.Contains("ArrayExpression" + n, arr.GetType().Name);
         }
     }
 
@@ -477,12 +477,12 @@ public class ExpressionTests
         });
         var j = t.ToString();
         var o = Json.Expression.Parse(j);
-        Assert.IsTrue(o.NodeType == Json.ExpressionType.Object);
+        Assert.AreEqual(Json.ExpressionType.Object, o.NodeType);
         var obj = (Json.ObjectExpression)o;
-        Assert.IsTrue(obj.Members.Keys.Count() == 3);
-        Assert.IsTrue((string)((Json.ConstantExpression)obj.Members["Name"]).Value == "Bart");
-        Assert.IsTrue((string)((Json.ConstantExpression)obj.Members["Age"]).Value == "21");
-        Assert.IsTrue((bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value == true);
+        Assert.HasCount(3, obj.Members.Keys);
+        Assert.AreEqual("Bart", (string)((Json.ConstantExpression)obj.Members["Name"]).Value);
+        Assert.AreEqual("21", (string)((Json.ConstantExpression)obj.Members["Age"]).Value);
+        Assert.IsTrue((bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value);
     }
 
     [TestMethod]

@@ -26,37 +26,37 @@ public class CacheDictionaryTests
 
         Assert.AreEqual(42, cd.GetOrAdd(21, x => x * 2));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(42));
+        Assert.HasCount(1, values);
+        Assert.Contains(42, values);
 
         Assert.AreEqual(42, cd.GetOrAdd(21, x => x * 2));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(42));
+        Assert.HasCount(1, values);
+        Assert.Contains(42, values);
 
         Assert.AreEqual(44, cd.GetOrAdd(22, x => x * 2));
         Assert.AreEqual(2, cd.Count);
-        Assert.AreEqual(2, values.Count());
+        Assert.HasCount(2, values);
         Assert.IsTrue(values.Contains(42) && values.Contains(44));
 
         Assert.IsTrue(cd.Remove(21));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(44));
+        Assert.HasCount(1, values);
+        Assert.Contains(44, values);
 
         Assert.IsFalse(cd.Remove(21));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(44));
+        Assert.HasCount(1, values);
+        Assert.Contains(44, values);
 
         Assert.IsFalse(cd.Remove(-1));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(44));
+        Assert.HasCount(1, values);
+        Assert.Contains(44, values);
 
         cd.Clear();
         Assert.AreEqual(0, cd.Count);
-        Assert.AreEqual(0, values.Count());
+        Assert.IsEmpty(values);
     }
 
     [TestMethod]
@@ -69,21 +69,21 @@ public class CacheDictionaryTests
 
         Assert.AreEqual(4, cd.GetOrAdd(key: null, x => (x ?? "null").Length));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(4));
+        Assert.HasCount(1, values);
+        Assert.Contains(4, values);
 
         Assert.AreEqual(4, cd.GetOrAdd(key: null, x => (x ?? "null").Length));
         Assert.AreEqual(1, cd.Count);
-        Assert.AreEqual(1, values.Count());
-        Assert.IsTrue(values.Contains(4));
+        Assert.HasCount(1, values);
+        Assert.Contains(4, values);
 
         Assert.IsTrue(cd.Remove(key: null));
         Assert.AreEqual(0, cd.Count);
-        Assert.AreEqual(0, values.Count());
+        Assert.IsEmpty(values);
 
         cd.Clear();
         Assert.AreEqual(0, cd.Count);
-        Assert.AreEqual(0, values.Count());
+        Assert.IsEmpty(values);
     }
 
     [TestMethod]
@@ -96,10 +96,10 @@ public class CacheDictionaryTests
 
         var res = cd.ToArray();
 
-        Assert.AreEqual(2, res.Length);
+        Assert.HasCount(2, res);
 
-        Assert.IsTrue(res.Any(x => x.Key == null && x.Value == 0));
-        Assert.IsTrue(res.Any(x => x.Key == "foo" && x.Value == 3));
+        Assert.Contains(x => x.Key == null && x.Value == 0, res);
+        Assert.Contains(x => x.Key == "foo" && x.Value == 3, res);
 
         Assert.IsNotNull(((IEnumerable)cd).GetEnumerator());
     }

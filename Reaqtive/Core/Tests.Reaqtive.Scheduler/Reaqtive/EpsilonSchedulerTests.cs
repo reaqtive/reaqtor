@@ -603,7 +603,7 @@ public sealed class EpsilonSchedulerTests
             }
             else
             {
-                Assert.AreEqual(true, Volatile.Read(ref firstHasCalled));
+                Assert.IsTrue(Volatile.Read(ref firstHasCalled));
             }
 
             while (!q.IsEmpty)
@@ -991,7 +991,7 @@ public sealed class EpsilonSchedulerTests
                     0));
         }
 
-        Assert.IsTrue(!ev.WaitOne(1000));
+        Assert.IsFalse(ev.WaitOne(1000));
     }
 
     private static void WaitForVerySoon(WaitHandle e) => WaitForExpected(e, ExpectedVerySoon);

@@ -3419,7 +3419,7 @@ public class LinkedListTests : PersistedTestBase
         //
         foreach (var value in values)
         {
-            Assert.IsTrue(list.Contains(value));
+            Assert.Contains(value, list);
         }
     }
 }

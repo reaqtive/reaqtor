@@ -141,7 +141,7 @@ public class PooledStackTests : TestBase
 
             var stack = obj.Stack;
 
-            Assert.AreEqual(0, stack.Count);
+            Assert.IsEmpty(stack);
 
             stack.Push("qux");
             stack.Push("foo");
@@ -161,7 +161,7 @@ public class PooledStackTests : TestBase
 
             var stack = obj.Stack;
 
-            Assert.AreEqual(0, stack.Count);
+            Assert.IsEmpty(stack);
 
             stack.Push("qux");
             stack.Push("foo");
@@ -179,7 +179,7 @@ public class PooledStackTests : TestBase
         {
             var stack = PooledStack<string>.GetInstance();
 
-            Assert.AreEqual(0, stack.Count);
+            Assert.IsEmpty(stack);
 
             stack.Push("qux");
             stack.Push("foo");

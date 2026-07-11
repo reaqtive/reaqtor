@@ -24,7 +24,7 @@ public class QueryEngineRegistryTemplatizerTests
         var registry = CreateRegistry();
         var templatizer = CreateTemplatizer(registry);
 
-        Assert.AreEqual(0, registry.Templates.Count());
+        Assert.IsEmpty(registry.Templates);
 
         var templatized = (InvocationExpression)templatizer.Templatize(SimpleExpression);
         Assert.AreEqual(SimpleExpression.Type, templatized.Type);
@@ -34,7 +34,7 @@ public class QueryEngineRegistryTemplatizerTests
 
         Assert.IsNotNull(templatizedBody);
         Assert.AreEqual(template.Key, templatizedBody.Name);
-        Assert.AreEqual(1, templatized.Arguments.Count);
+        Assert.HasCount(1, templatized.Arguments);
         Assert.AreEqual(Tuple.Create(42), templatized.Arguments.First().Evaluate());
     }
 
@@ -44,7 +44,7 @@ public class QueryEngineRegistryTemplatizerTests
         var registry = CreateRegistry();
         var templatizer = CreateTemplatizer(registry);
 
-        Assert.AreEqual(0, registry.Templates.Count());
+        Assert.IsEmpty(registry.Templates);
 
         var templatized = (InvocationExpression)templatizer.Templatize(SimpleExpression);
         var template = registry.Templates.First();
@@ -52,11 +52,11 @@ public class QueryEngineRegistryTemplatizerTests
 
         Assert.IsNotNull(templatizedBody);
         Assert.AreEqual(template.Key, templatizedBody.Name);
-        Assert.AreEqual(1, templatized.Arguments.Count);
+        Assert.HasCount(1, templatized.Arguments);
         Assert.AreEqual(Tuple.Create(42), templatized.Arguments.First().Evaluate());
 
         _ = templatizer.Templatize(SimpleExpression2);
-        Assert.AreEqual(1, registry.Templates.Count());
+        Assert.HasCount(1, registry.Templates);
     }
 
     [TestMethod]
@@ -103,7 +103,7 @@ public class QueryEngineRegistryTemplatizerTests
             var t2 = ((InvocationExpression)r2).Expression;
 
             Assert.AreEqual(((ParameterExpression)t1).Name, ((ParameterExpression)t2).Name);
-            Assert.AreEqual(1, registry.Templates.Count());
+            Assert.HasCount(1, registry.Templates);
         }
     }
 
@@ -116,7 +116,7 @@ public class QueryEngineRegistryTemplatizerTests
         Assert.AreNotSame(IdentityExpression, templated);
         var f = templatizer.Detemplatize(templated);
         AssertEquals(IdentityExpression, f);
-        Assert.AreEqual(1, registry.Templates.Count());
+        Assert.HasCount(1, registry.Templates);
     }
 
     [TestMethod]

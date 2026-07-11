@@ -240,7 +240,7 @@ public class TypeSlimEqualityComparerTests : TestBase
                       select (Collection: f, Version: v))
                      .ToArray();
 
-        Assert.IsTrue(fields.Length > 0);
+        Assert.IsNotEmpty(fields);
 
         var p1 = SlimType.GetProperty("Foo", SlimType, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
         var s1 = TypeSlim.Structural(new List<PropertyInfoSlim> { p1 }.AsReadOnly(), hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);

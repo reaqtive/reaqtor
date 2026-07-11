@@ -79,8 +79,12 @@ try {
         'Nuqleon/Core/LINQ/Tests.Nuqleon.Linq.CompilerServices/Expressions/Rewriters/Misc/ExpressionTupletizerTests.cs'
     )
 
-    # Excluded for performance (IDE0001 is pathologically slow), plus the linked files above.
-    $excludes = @('Nuqleon/Core/LINQ/Nuqleon.Linq.Expressions.Optimizers') + $linkedFiles
+    # Only the linked files above are excluded. Nuqleon.Linq.Expressions.Optimizers used to be excluded
+    # for performance - IDE0001 took ~15 minutes on PureMemberCatalog.cs, whose collection initializers
+    # full of lambdas defeat Roslyn's per-statement semantic caching. That was fixed at the source in
+    # #166 (the initializers became Add calls in a static constructor, and the lambdas became static),
+    # so the project is analyzed again: a full-solution style scan including it takes ~1m30s.
+    $excludes = $linkedFiles
 
     $formatArgs = @('format', 'style', $solution, '--exclude') + $excludes + @('--verbosity', 'diagnostic')
     if ($Verify)    { $formatArgs += '--verify-no-changes' }

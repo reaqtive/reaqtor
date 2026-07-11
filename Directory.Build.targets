@@ -6,4 +6,15 @@
   <PropertyGroup Condition="'$(GenerateDocumentationFile)' == 'false'">
     <NoWarn>$(NoWarn);IDE0005</NoWarn>
   </PropertyGroup>
+
+  <!--
+    A mistyped TestParallelization matches neither ItemGroup in Directory.Build.props, so the assembly
+    would silently get no parallelization attribute at all. MSTEST0001 is only a suggestion, so nothing
+    would go red. Fail loudly instead.
+  -->
+  <Target Name="ValidateTestParallelization" BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="'$(IsTestProject)' == 'true'">
+    <Error Condition="'$(TestParallelization)' != 'DoNotParallelize' And '$(TestParallelization)' != 'Parallelize'"
+           Text="TestParallelization must be 'DoNotParallelize' or 'Parallelize' (was '$(TestParallelization)')." />
+  </Target>
 </Project>

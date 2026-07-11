@@ -116,7 +116,7 @@ public class GenericTypeSlimTests : TestBase
 
     private static void AssertOptimized(GenericTypeSlim type, int arity, params TypeSlim[] args)
     {
-        Assert.IsTrue(type.GetType().Name.EndsWith(arity.ToString()));
+        Assert.EndsWith(arity.ToString(), type.GetType().Name);
 
         Assert.AreEqual(arity, type.GenericArgumentCount);
 
@@ -129,7 +129,7 @@ public class GenericTypeSlimTests : TestBase
 
         Assert.AreSame(genArgs, type.GenericArguments);
 
-        Assert.AreEqual(arity, genArgs.Count);
+        Assert.HasCount(arity, genArgs);
 
         for (var i = 0; i < args.Length; i++)
         {

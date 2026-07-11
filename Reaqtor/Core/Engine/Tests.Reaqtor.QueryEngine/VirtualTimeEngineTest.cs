@@ -15,7 +15,6 @@ namespace Tests.Reaqtor.QueryEngine;
 
 using TestScheduler = global::Reaqtive.TestingFramework.TestScheduler;
 
-[TestClass]
 public abstract class VirtualTimeEngineTest : QueryEngineTest
 {
     internal static readonly Uri TestableObservableUri = new("a:/TestableObservable");

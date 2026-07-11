@@ -234,7 +234,7 @@ public class StateChangeManagerTests
         //
         // Empty edit page.
         //
-        Assert.AreEqual(0, s.State.Count);
+        Assert.IsEmpty(s.State);
 
         //
         // Add to most recent edit page.
@@ -269,7 +269,7 @@ public class StateChangeManagerTests
         //
         // Most recent edit page is empty.
         //
-        Assert.AreEqual(0, s.State.Count);
+        Assert.IsEmpty(s.State);
 
         //
         // Add to most recent edit page.

@@ -32,7 +32,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(1, a.Count);
+        Assert.HasCount(1, a);
 
         var l = a[e];
 
@@ -40,7 +40,7 @@ public class AnalyzerTests
         Assert.IsNull(l.Parent);
         Assert.IsFalse(l.NeedsClosure);
         Assert.IsFalse(l.HasHoistedLocals);
-        Assert.AreEqual(0, l.Locals.Count);
+        Assert.IsEmpty(l.Locals);
     }
 
     [TestMethod]
@@ -51,7 +51,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(1, a.Count);
+        Assert.HasCount(1, a);
 
         var l = a[e];
 
@@ -59,7 +59,7 @@ public class AnalyzerTests
         Assert.IsNull(l.Parent);
         Assert.IsFalse(l.NeedsClosure);
         Assert.IsFalse(l.HasHoistedLocals);
-        Assert.AreEqual(1, l.Locals.Count);
+        Assert.HasCount(1, l.Locals);
 
         Assert.AreEqual(StorageKind.Local, l.Locals[x]);
     }
@@ -72,7 +72,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(1, a.Count);
+        Assert.HasCount(1, a);
 
         var l = a[e];
 
@@ -80,7 +80,7 @@ public class AnalyzerTests
         Assert.IsNull(l.Parent);
         Assert.IsFalse(l.NeedsClosure);
         Assert.IsFalse(l.HasHoistedLocals);
-        Assert.AreEqual(1, l.Locals.Count);
+        Assert.HasCount(1, l.Locals);
 
         Assert.AreEqual(StorageKind.Local, l.Locals[x]);
     }
@@ -95,7 +95,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -103,7 +103,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsFalse(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
@@ -113,7 +113,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, l2.Parent);
         Assert.IsFalse(l2.NeedsClosure);
         Assert.IsFalse(l2.HasHoistedLocals);
-        Assert.AreEqual(1, l2.Locals.Count);
+        Assert.HasCount(1, l2.Locals);
 
         Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
     }
@@ -128,7 +128,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -136,7 +136,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsTrue(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Hoisted, l1.Locals[x]);
 
@@ -146,7 +146,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, l2.Parent);
         Assert.IsTrue(l2.NeedsClosure);
         Assert.IsFalse(l2.HasHoistedLocals);
-        Assert.AreEqual(1, l2.Locals.Count);
+        Assert.HasCount(1, l2.Locals);
 
         Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
     }
@@ -161,7 +161,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -169,7 +169,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsTrue(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Hoisted | StorageKind.Boxed, l1.Locals[x]);
 
@@ -179,7 +179,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, l2.Parent);
         Assert.IsTrue(l2.NeedsClosure);
         Assert.IsFalse(l2.HasHoistedLocals);
-        Assert.AreEqual(1, l2.Locals.Count);
+        Assert.HasCount(1, l2.Locals);
 
         Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
     }
@@ -194,7 +194,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -202,7 +202,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsFalse(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
@@ -212,7 +212,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, b1.Parent);
         Assert.IsTrue(b1.NeedsClosure); // REVIEW
         Assert.IsFalse(b1.HasHoistedLocals);
-        Assert.AreEqual(1, b1.Locals.Count);
+        Assert.HasCount(1, b1.Locals);
 
         Assert.AreEqual(StorageKind.Local, b1.Locals[y]);
     }
@@ -225,7 +225,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(1, a.Count);
+        Assert.HasCount(1, a);
 
         var l = a[e];
 
@@ -233,7 +233,7 @@ public class AnalyzerTests
         Assert.IsNull(l.Parent);
         Assert.IsFalse(l.NeedsClosure);
         Assert.IsTrue(l.HasHoistedLocals);
-        Assert.AreEqual(1, l.Locals.Count);
+        Assert.HasCount(1, l.Locals);
 
         Assert.AreEqual(StorageKind.Boxed | StorageKind.Hoisted, l.Locals[x]);
     }
@@ -249,7 +249,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -257,7 +257,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsFalse(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
@@ -267,7 +267,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, c1.Parent);
         Assert.IsFalse(c1.NeedsClosure);
         Assert.IsFalse(c1.HasHoistedLocals);
-        Assert.AreEqual(1, c1.Locals.Count);
+        Assert.HasCount(1, c1.Locals);
 
         Assert.AreEqual(StorageKind.Local, c1.Locals[r]);
     }
@@ -282,7 +282,7 @@ public class AnalyzerTests
 
         var a = Analyzer.Analyze(e, methodTable: null);
 
-        Assert.AreEqual(2, a.Count);
+        Assert.HasCount(2, a);
 
         var l1 = a[e];
 
@@ -290,7 +290,7 @@ public class AnalyzerTests
         Assert.IsNull(l1.Parent);
         Assert.IsFalse(l1.NeedsClosure);
         Assert.IsFalse(l1.HasHoistedLocals);
-        Assert.AreEqual(1, l1.Locals.Count);
+        Assert.HasCount(1, l1.Locals);
 
         Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
@@ -300,7 +300,7 @@ public class AnalyzerTests
         Assert.AreSame(l1, c1.Parent);
         Assert.IsFalse(c1.NeedsClosure);
         Assert.IsFalse(c1.HasHoistedLocals);
-        Assert.AreEqual(0, c1.Locals.Count);
+        Assert.IsEmpty(c1.Locals);
     }
 
     private sealed class Extension : Expression

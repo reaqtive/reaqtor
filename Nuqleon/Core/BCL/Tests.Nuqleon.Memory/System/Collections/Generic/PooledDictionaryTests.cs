@@ -159,7 +159,7 @@ public class PooledDictionaryTests : TestBase
 
             var map = obj.Dictionary;
 
-            Assert.AreEqual(0, map.Count);
+            Assert.IsEmpty(map);
 
             map.Add("qux", 42);
             map.Add("foo", 43);
@@ -177,7 +177,7 @@ public class PooledDictionaryTests : TestBase
 
             var map = obj.Dictionary;
 
-            Assert.AreEqual(0, map.Count);
+            Assert.IsEmpty(map);
 
             map.Add("qux", 42);
             map.Add("foo", 43);
@@ -193,7 +193,7 @@ public class PooledDictionaryTests : TestBase
         {
             var map = PooledDictionary<string, int>.GetInstance();
 
-            Assert.AreEqual(0, map.Count);
+            Assert.IsEmpty(map);
 
             map.Add("qux", 42);
             map.Add("foo", 43);

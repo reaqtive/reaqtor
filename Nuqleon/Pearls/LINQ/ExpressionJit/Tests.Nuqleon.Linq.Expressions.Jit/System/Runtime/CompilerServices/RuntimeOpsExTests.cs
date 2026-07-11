@@ -103,7 +103,7 @@ public class RuntimeOpsExTests
         r[1] = true;
         r[2] = "foo";
         Assert.AreEqual(43, c.Item2);
-        Assert.AreEqual(true, c.Item1);
+        Assert.IsTrue(c.Item1);
         Assert.AreEqual("foo", c.Item3);
         Assert.AreEqual(c.Item2, r[0]);
         Assert.AreEqual(c.Item1, r[1]);

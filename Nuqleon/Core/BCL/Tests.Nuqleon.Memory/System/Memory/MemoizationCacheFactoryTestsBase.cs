@@ -107,7 +107,7 @@ public class MemoizationCacheFactoryTestsBase
             Assert.AreEqual(2, cache.Count);
             Assert.AreEqual(4, n);
 
-            Assert.IsTrue(!string.IsNullOrEmpty(cache.DebugView));
+            Assert.IsFalse(string.IsNullOrEmpty(cache.DebugView));
         }
     }
 

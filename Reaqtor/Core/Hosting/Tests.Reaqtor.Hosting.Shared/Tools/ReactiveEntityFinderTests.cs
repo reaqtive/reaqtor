@@ -94,7 +94,7 @@ public class ReactiveEntityFinderTests
         var comparer = new ExpressionEqualityComparer(() => new Comparator());
         var found = ReactiveEntityFinder.Find(expression.ToExpressionSlim());
         var total = found.SelectMany(kv => kv.Value).Count();
-        Assert.AreEqual(total, results.Length);
+        Assert.HasCount(total, results);
         foreach (var result in results)
         {
             Assert.IsTrue(found.ContainsKey(result.Item1));

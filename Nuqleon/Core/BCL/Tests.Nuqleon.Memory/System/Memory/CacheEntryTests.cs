@@ -13,6 +13,11 @@ using System.Text;
 
 namespace Tests;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: these tests deliberately
+// throw and catch to obtain a real exception instance (with a stack trace) to use as test data; the
+// assertions run legitimately on the caught exception, not as exception-expectation checks.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public class CacheEntryTests
 {
@@ -114,7 +119,7 @@ public class CacheEntryTests
 
             var sb = new StringBuilder();
             entry.ToDebugView(sb, "");
-            Assert.IsTrue(sb.ToString().Contains("="));
+            Assert.Contains("=", sb.ToString());
         }
     }
 
@@ -152,7 +157,7 @@ public class CacheEntryTests
 
         var sb = new StringBuilder();
         entry.ToDebugView(sb, "");
-        Assert.IsTrue(sb.ToString().Contains("=") && sb.ToString().Contains("DEGRADATION"));
+        Assert.IsTrue(sb.ToString().Contains('=') && sb.ToString().Contains("DEGRADATION"));
 
         entry.HitCount++;
         Assert.AreEqual(31415926535897931L / 2, entry.AverageAccessTime.Ticks);

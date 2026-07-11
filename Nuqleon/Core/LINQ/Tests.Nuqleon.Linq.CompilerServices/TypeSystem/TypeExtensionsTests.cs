@@ -389,8 +389,8 @@ public class TypeExtensionsTests
         Assert.ThrowsExactly<InvalidOperationException>(() => t.ToCSharpString());
 
         var n = t.ToCSharpString(useNamespaceQualifiedNames: true, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false);
-        Assert.IsTrue(n.StartsWith("<>f__AnonymousType"));
-        Assert.IsTrue(n.EndsWith("<System.Int32>"));
+        Assert.StartsWith("<>f__AnonymousType", n);
+        Assert.EndsWith("<System.Int32>", n);
     }
 
     [TestMethod]
@@ -426,13 +426,13 @@ public class TypeExtensionsTests
 
         Assert.IsTrue(TypeExtensions.TryUnifyExact(t1, t2, out IDictionary<Type, Type> r1));
 
-        Assert.AreEqual(2, r1.Count);
+        Assert.HasCount(2, r1);
         Assert.AreSame(typeof(string), r1[typeof(T)]);
         Assert.AreSame(typeof(bool), r1[typeof(R)]);
 
         Assert.IsTrue(TypeExtensions.TryUnifyExact(t1, t2, EqualityComparer<Type>.Default, out IDictionary<Type, Type> r2));
 
-        Assert.AreEqual(2, r2.Count);
+        Assert.HasCount(2, r2);
         Assert.AreSame(typeof(string), r2[typeof(T)]);
         Assert.AreSame(typeof(bool), r2[typeof(R)]);
     }
@@ -473,7 +473,7 @@ public class TypeExtensionsTests
 
         var res = t1.UnifyExact(t2);
 
-        Assert.AreEqual(0, res.Count);
+        Assert.IsEmpty(res);
     }
 
     [TestMethod]
@@ -484,7 +484,7 @@ public class TypeExtensionsTests
 
         var res = t1.UnifyExact(t2);
 
-        Assert.AreEqual(0, res.Count);
+        Assert.IsEmpty(res);
     }
 
     [TestMethod]
@@ -494,11 +494,11 @@ public class TypeExtensionsTests
         var t2 = typeof(T);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(1, res1.Count);
+        Assert.HasCount(1, res1);
         Assert.AreSame(t1, res1[typeof(T)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(t1, res2[typeof(T)]);
     }
 
@@ -509,11 +509,11 @@ public class TypeExtensionsTests
         var t2 = typeof(T);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(1, res1.Count);
+        Assert.HasCount(1, res1);
         Assert.AreSame(t1, res1[typeof(T)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(t1, res2[typeof(T)]);
     }
 
@@ -524,11 +524,11 @@ public class TypeExtensionsTests
         var t2 = typeof(T[]);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(1, res1.Count);
+        Assert.HasCount(1, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
     }
 
@@ -539,11 +539,11 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(1, res1.Count);
+        Assert.HasCount(1, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
     }
 
@@ -564,12 +564,12 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T, R>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(2, res1.Count);
+        Assert.HasCount(2, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
         Assert.AreSame(typeof(int), res1[typeof(R)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(2, res2.Count);
+        Assert.HasCount(2, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
         Assert.AreSame(typeof(int), res2[typeof(R)]);
     }
@@ -581,12 +581,12 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T, R>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(2, res1.Count);
+        Assert.HasCount(2, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
         Assert.AreSame(typeof(int), res1[typeof(R)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(2, res2.Count);
+        Assert.HasCount(2, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
         Assert.AreSame(typeof(int), res2[typeof(R)]);
     }
@@ -598,12 +598,12 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, R, T>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(2, res1.Count);
+        Assert.HasCount(2, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
         Assert.AreSame(typeof(int), res1[typeof(R)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(2, res2.Count);
+        Assert.HasCount(2, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
         Assert.AreSame(typeof(int), res2[typeof(R)]);
     }
@@ -620,13 +620,13 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T, R>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(3, res1.Count);
+        Assert.HasCount(3, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
         Assert.AreSame(typeof(int), res1[typeof(R)]);
         Assert.AreSame(typeof(int), res1[typeof(U)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(3, res2.Count);
+        Assert.HasCount(3, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
         Assert.AreSame(typeof(int), res2[typeof(R)]);
         Assert.AreSame(typeof(int), res2[typeof(U)]);
@@ -639,13 +639,13 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T, R, T>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(3, res1.Count);
+        Assert.HasCount(3, res1);
         Assert.AreSame(typeof(int), res1[typeof(T)]);
         Assert.AreSame(typeof(int), res1[typeof(R)]);
         Assert.AreSame(typeof(int), res1[typeof(U)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(3, res2.Count);
+        Assert.HasCount(3, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
         Assert.AreSame(typeof(int), res2[typeof(R)]);
         Assert.AreSame(typeof(int), res2[typeof(U)]);
@@ -678,13 +678,13 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T3, T1, T2, int>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(3, res1.Count);
+        Assert.HasCount(3, res1);
         Assert.AreSame(typeof(int), res1[typeof(T1)]);
         Assert.AreSame(typeof(int), res1[typeof(T2)]);
         Assert.AreSame(typeof(int), res1[typeof(T3)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(3, res2.Count);
+        Assert.HasCount(3, res2);
         Assert.AreSame(typeof(int), res2[typeof(T1)]);
         Assert.AreSame(typeof(int), res2[typeof(T2)]);
         Assert.AreSame(typeof(int), res2[typeof(T3)]);
@@ -697,13 +697,13 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T3, T1, T3, int>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(3, res1.Count);
+        Assert.HasCount(3, res1);
         Assert.AreSame(typeof(int), res1[typeof(T1)]);
         Assert.AreSame(typeof(int), res1[typeof(T2)]);
         Assert.AreSame(typeof(int), res1[typeof(T3)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(3, res2.Count);
+        Assert.HasCount(3, res2);
         Assert.AreSame(typeof(int), res2[typeof(T1)]);
         Assert.AreSame(typeof(int), res2[typeof(T2)]);
         Assert.AreSame(typeof(int), res2[typeof(T3)]);
@@ -766,14 +766,14 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T2, T4, T3, int, T3>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(4, res1.Count);
+        Assert.HasCount(4, res1);
         Assert.AreSame(typeof(int), res1[typeof(T1)]);
         Assert.AreSame(typeof(int), res1[typeof(T2)]);
         Assert.AreSame(typeof(int), res1[typeof(T3)]);
         Assert.AreSame(typeof(int), res1[typeof(T4)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(4, res2.Count);
+        Assert.HasCount(4, res2);
         Assert.AreSame(typeof(int), res2[typeof(T1)]);
         Assert.AreSame(typeof(int), res2[typeof(T2)]);
         Assert.AreSame(typeof(int), res2[typeof(T3)]);
@@ -787,14 +787,14 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T2, int, T4, T3>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(4, res1.Count);
+        Assert.HasCount(4, res1);
         Assert.AreSame(typeof(int), res1[typeof(T1)]);
         Assert.AreSame(typeof(int), res1[typeof(T2)]);
         Assert.AreSame(typeof(int), res1[typeof(T3)]);
         Assert.AreSame(typeof(int), res1[typeof(T4)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(4, res2.Count);
+        Assert.HasCount(4, res2);
         Assert.AreSame(typeof(int), res2[typeof(T1)]);
         Assert.AreSame(typeof(int), res2[typeof(T2)]);
         Assert.AreSame(typeof(int), res2[typeof(T3)]);
@@ -808,14 +808,14 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T2, T4, int, T3>);
 
         var res1 = t1.UnifyExact(t2);
-        Assert.AreEqual(4, res1.Count);
+        Assert.HasCount(4, res1);
         Assert.AreSame(typeof(int), res1[typeof(T1)]);
         Assert.AreSame(typeof(int), res1[typeof(T2)]);
         Assert.AreSame(typeof(int), res1[typeof(T3)]);
         Assert.AreSame(typeof(int), res1[typeof(T4)]);
 
         var res2 = t2.UnifyExact(t1);
-        Assert.AreEqual(4, res2.Count);
+        Assert.HasCount(4, res2);
         Assert.AreSame(typeof(int), res2[typeof(T1)]);
         Assert.AreSame(typeof(int), res2[typeof(T2)]);
         Assert.AreSame(typeof(int), res2[typeof(T3)]);
@@ -847,9 +847,9 @@ public class TypeExtensionsTests
 
         var r1 = t1.UnifyExact(t2, new TestTypeComparer());
         var r2 = t3.UnifyExact(t4, new TestTypeComparer());
-        Assert.AreEqual(1, r1.Count);
+        Assert.HasCount(1, r1);
         Assert.AreEqual(t1.GenericTypeArguments[0], r1[typeof(T)]);
-        Assert.AreEqual(1, r2.Count);
+        Assert.HasCount(1, r2);
         Assert.AreEqual(t3.GenericTypeArguments[1], r2[typeof(T)]);
     }
 
@@ -910,13 +910,13 @@ public class TypeExtensionsTests
 
         Assert.IsTrue(TypeExtensions.TryUnifyWith(t1, t2, out IDictionary<Type, Type> res));
 
-        Assert.AreEqual(2, res.Count);
+        Assert.HasCount(2, res);
         Assert.AreSame(typeof(string), res[typeof(T)]);
         Assert.AreSame(typeof(bool), res[typeof(R)]);
 
         Assert.IsTrue(TypeExtensions.TryUnifyWith(t1, t2, EqualityComparer<Type>.Default, out IDictionary<Type, Type> r2));
 
-        Assert.AreEqual(2, r2.Count);
+        Assert.HasCount(2, r2);
         Assert.AreSame(typeof(string), r2[typeof(T)]);
         Assert.AreSame(typeof(bool), r2[typeof(R)]);
     }
@@ -957,7 +957,7 @@ public class TypeExtensionsTests
 
         var res = t1.UnifyWith(t2);
 
-        Assert.AreEqual(0, res.Count);
+        Assert.IsEmpty(res);
     }
 
     [TestMethod]
@@ -968,7 +968,7 @@ public class TypeExtensionsTests
 
         var res = t1.UnifyWith(t2);
 
-        Assert.AreEqual(0, res.Count);
+        Assert.IsEmpty(res);
     }
 
     [TestMethod]
@@ -978,7 +978,7 @@ public class TypeExtensionsTests
         var t2 = typeof(T);
 
         var res2 = t2.UnifyWith(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(t1, res2[typeof(T)]);
     }
 
@@ -989,7 +989,7 @@ public class TypeExtensionsTests
         var t2 = typeof(T);
 
         var res2 = t2.UnifyWith(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(t1, res2[typeof(T)]);
     }
 
@@ -1000,7 +1000,7 @@ public class TypeExtensionsTests
         var t2 = typeof(T[]);
 
         var res2 = t2.UnifyWith(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
     }
 
@@ -1011,7 +1011,7 @@ public class TypeExtensionsTests
         var t2 = typeof(Func<T, T>);
 
         var res2 = t2.UnifyWith(t1);
-        Assert.AreEqual(1, res2.Count);
+        Assert.HasCount(1, res2);
         Assert.AreSame(typeof(int), res2[typeof(T)]);
     }
 
@@ -1058,9 +1058,9 @@ public class TypeExtensionsTests
 
         var r1 = t2.UnifyWith(t1, new TestTypeComparer());
         var r2 = t4.UnifyWith(t3, new TestTypeComparer());
-        Assert.AreEqual(1, r1.Count);
+        Assert.HasCount(1, r1);
         Assert.AreEqual(t1.GenericTypeArguments[0], r1[typeof(T)]);
-        Assert.AreEqual(1, r2.Count);
+        Assert.HasCount(1, r2);
         Assert.AreEqual(t3.GenericTypeArguments[1], r2[typeof(T)]);
     }
 
@@ -1404,7 +1404,7 @@ public class TypeExtensionsTests
         var res = target.IsReferenceAssignableFrom(value, out IDictionary<Type, Type> subst);
         Assert.IsTrue(res, $"{target} <: {value}");
 
-        Assert.AreEqual(unifications.Count, subst.Count);
+        Assert.HasCount(unifications.Count, subst);
         Assert.IsTrue(new HashSet<Type>(unifications.Keys).SetEquals(new HashSet<Type>(subst.Keys)));
 
         foreach (var kv in unifications)
@@ -1421,7 +1421,7 @@ public class TypeExtensionsTests
         if (errorSubstring != null)
         {
             var ex = Assert.ThrowsExactly<InvalidOperationException>(() => target.IsReferenceAssignableFrom(value, out ignored, throwException: true));
-            Assert.IsTrue(ex.Message.Contains(errorSubstring));
+            Assert.Contains(errorSubstring, ex.Message);
         }
     }
 }

@@ -14,6 +14,11 @@ using System.Reflection;
 
 namespace Tests.System.Linq.Expressions.Optimizers;
 
+// MSTEST0058 (no asserts in catch blocks) is a false positive for this file: AssertEval is a dual-path
+// helper — the catch verifies the optimizer's result for a throwing expression (NodeType == Throw),
+// while the code after the try verifies the value for a non-throwing one.
+#pragma warning disable MSTEST0058
+
 [TestClass]
 public partial class ExpressionOptimizerTests
 {

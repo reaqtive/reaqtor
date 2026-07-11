@@ -19,20 +19,20 @@ public class ThunkFactoryTests
 
         var g = t.GetGenericTypeDefinition();
         var a = g.GetGenericArguments();
-        Assert.AreEqual(4, a.Length);
+        Assert.HasCount(4, a);
 
         Assert.AreEqual(GenericParameterAttributes.NotNullableValueTypeConstraint | GenericParameterAttributes.DefaultConstructorConstraint, a[1].GenericParameterAttributes);
         var c1 = a[1].GetGenericParameterConstraints();
-        Assert.AreEqual(1, c1.Length);
+        Assert.HasCount(1, c1);
         Assert.AreEqual(typeof(ValueType), c1[0]);
 
         Assert.AreEqual(GenericParameterAttributes.DefaultConstructorConstraint, a[2].GenericParameterAttributes);
         var c2 = a[2].GetGenericParameterConstraints();
-        Assert.AreEqual(0, c2.Length);
+        Assert.IsEmpty(c2);
 
         Assert.AreEqual(GenericParameterAttributes.ReferenceTypeConstraint, a[3].GenericParameterAttributes);
         var c3 = a[3].GetGenericParameterConstraints();
-        Assert.AreEqual(1, c3.Length);
+        Assert.HasCount(1, c3);
         Assert.AreEqual(typeof(IBar<>).MakeGenericType(a[1]), c3[0]);
     }
 
@@ -133,11 +133,11 @@ public class ThunkFactoryTests
         // Assert we got only one constructor.
         //
         var ctors = t.GetConstructors();
-        Assert.AreEqual(1, ctors.Length);
+        Assert.HasCount(1, ctors);
 
         var ctor = ctors[0];
         var ctorParams = ctor.GetParameters();
-        Assert.AreEqual(1, ctorParams.Length);
+        Assert.HasCount(1, ctorParams);
 
         //
         // Obtain the expression tree type passed to the constructor.
@@ -209,7 +209,7 @@ public class ThunkFactoryTests
         Assert.IsTrue(createDelegate.IsPublic);
         Assert.AreEqual(delegateType, createDelegate.ReturnType);
         var createDelegateParams = createDelegate.GetParameters();
-        Assert.AreEqual(1, createDelegateParams.Length);
+        Assert.HasCount(1, createDelegateParams);
         Assert.AreEqual(closureType, createDelegateParams[0].ParameterType);
 
         //
@@ -325,7 +325,7 @@ internal sealed class AssertiveClosure
     {
         Assert.AreEqual(flag, _flag);
 
-        Assert.AreEqual(args.Length, _args.Count);
+        Assert.HasCount(args.Length, _args);
 
         for (var i = 0; i < args.Length; i++)
         {

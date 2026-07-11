@@ -32,7 +32,7 @@ public class FreeVariableScannerTests
         var e = Expression.Constant(42);
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }
@@ -54,7 +54,7 @@ public class FreeVariableScannerTests
         var e = (Expression<Func<int, int>>)(x => x);
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }
@@ -65,7 +65,7 @@ public class FreeVariableScannerTests
         var e = (Expression<Func<int, Func<int, int>>>)(x => y => x + y);
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }
@@ -89,7 +89,7 @@ public class FreeVariableScannerTests
         var e = Expression.Block([p], p);
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }
@@ -115,7 +115,7 @@ public class FreeVariableScannerTests
         var e = Expression.Lambda(Expression.Lambda(p, p), p);
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }
@@ -130,7 +130,7 @@ public class FreeVariableScannerTests
         var e = Expression.TryCatch(Expression.Call(writeLine, Expression.Constant("Hello")), Expression.Catch(p, Expression.Call(writeLine, Expression.MakeMemberAccess(p, exMessage))));
 
         var res = FreeVariableScanner.Scan(e);
-        Assert.AreEqual(0, res.Count());
+        Assert.IsEmpty(res);
 
         Assert.IsFalse(FreeVariableScanner.HasFreeVariables(e));
     }

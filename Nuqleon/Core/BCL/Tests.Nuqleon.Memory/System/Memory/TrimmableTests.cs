@@ -38,6 +38,6 @@ public class TrimmableTests
         values.Add(4);
 
         Assert.AreEqual(2, res.Trim(x => x % 2 == 0));
-        Assert.AreEqual(2, values.Count);
+        Assert.HasCount(2, values);
     }
 }

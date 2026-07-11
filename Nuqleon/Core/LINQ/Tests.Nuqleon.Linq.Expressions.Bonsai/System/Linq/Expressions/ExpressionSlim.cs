@@ -328,11 +328,11 @@ public class ExpressionSlimTests : TestBase
         var conv = ExpressionSlim.Lambda(ExpressionSlim.Empty());
 
         var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right));
-        Assert.IsTrue(ex.Message.Contains("not a valid binary expression type"));
+        Assert.Contains("not a valid binary expression type", ex.Message);
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method));
-        Assert.IsTrue(ex2.Message.Contains("not a valid binary expression type"));
+        Assert.Contains("not a valid binary expression type", ex2.Message);
         var ex3 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method, conv));
-        Assert.IsTrue(ex3.Message.Contains("not a valid binary expression type"));
+        Assert.Contains("not a valid binary expression type", ex3.Message);
     }
 
     [TestMethod]
@@ -571,7 +571,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(methodSlim, call.Method);
         Assert.AreEqual(ExpressionType.Call, call.NodeType);
         Assert.IsNull(call.Object);
-        Assert.IsTrue(call.Arguments.Count == 0);
+        Assert.IsEmpty(call.Arguments);
 
         call = ExpressionSlim.Call(methodSlim, new[] { arg0, arg1 }.ToList());
         Assert.AreSame(methodSlim, call.Method);
@@ -622,7 +622,7 @@ public class ExpressionSlimTests : TestBase
         var ifThen = ExpressionSlim.IfThen(test, ifTrue);
         Assert.AreSame(test, ifThen.Test);
         Assert.AreSame(ifTrue, ifThen.IfTrue);
-        Assert.IsTrue(ifThen.IfFalse.NodeType == ExpressionType.Default);
+        Assert.AreEqual(ExpressionType.Default, ifThen.IfFalse.NodeType);
         Assert.AreEqual(typeof(void).ToTypeSlim(), ifThen.Type);
         Assert.AreEqual(ExpressionType.Conditional, ifThen.NodeType);
 
@@ -696,7 +696,7 @@ public class ExpressionSlimTests : TestBase
         var body = ExpressionSlim.Parameter(SlimType);
         var lambda = ExpressionSlim.Lambda(delegateType: null, body, [body]);
         Assert.AreSame(body, lambda.Body);
-        Assert.AreEqual(1, lambda.Parameters.Count);
+        Assert.HasCount(1, lambda.Parameters);
         Assert.AreSame(body, lambda.Parameters[0]);
         Assert.AreEqual(ExpressionType.Lambda, lambda.NodeType);
     }
@@ -746,12 +746,12 @@ public class ExpressionSlimTests : TestBase
         var v5 = e5.Evaluate<List<int>>();
         var v6 = e6.Evaluate<List<int>>();
 
-        Assert.AreEqual(1, v1.Count);
-        Assert.AreEqual(1, v2.Count);
-        Assert.AreEqual(1, v3.Count);
-        Assert.AreEqual(1, v4.Count);
-        Assert.AreEqual(1, v5.Count);
-        Assert.AreEqual(1, v6.Count);
+        Assert.HasCount(1, v1);
+        Assert.HasCount(1, v2);
+        Assert.HasCount(1, v3);
+        Assert.HasCount(1, v4);
+        Assert.HasCount(1, v5);
+        Assert.HasCount(1, v6);
 
         Assert.AreEqual(42, v1[0]);
         Assert.AreEqual(42, v2[0]);
@@ -784,10 +784,10 @@ public class ExpressionSlimTests : TestBase
         var v3 = e3.Evaluate<List<int>>();
         var v4 = e4.Evaluate<List<int>>();
 
-        Assert.AreEqual(0, v1.Count);
-        Assert.AreEqual(0, v2.Count);
-        Assert.AreEqual(0, v3.Count);
-        Assert.AreEqual(0, v4.Count);
+        Assert.IsEmpty(v1);
+        Assert.IsEmpty(v2);
+        Assert.IsEmpty(v3);
+        Assert.IsEmpty(v4);
 
         Expression<Func<int>> a = () => new { X = 43, Y = "foo" }.X;
         var na = (NewExpressionSlim)((MemberExpression)a.Body).Expression.ToExpressionSlim();
@@ -970,9 +970,9 @@ public class ExpressionSlimTests : TestBase
         var typ = TypeSlimExtensions.IntegerType;
 
         var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ));
-        Assert.IsTrue(ex.Message.Contains("not a valid unary expression type"));
+        Assert.Contains("not a valid unary expression type", ex.Message);
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ, method));
-        Assert.IsTrue(ex2.Message.Contains("not a valid unary expression type"));
+        Assert.Contains("not a valid unary expression type", ex2.Message);
     }
 
     [TestMethod]
@@ -1256,7 +1256,7 @@ public class ExpressionSlimTests : TestBase
         {
             var blk = ExpressionSlim.Block(cs);
             AssertElementsAreSame(cs, blk.Expressions);
-            Assert.AreEqual(0, blk.Variables.Count);
+            Assert.IsEmpty(blk.Variables);
             Assert.IsNull(blk.Type);
             Assert.AreEqual(c, blk.Result);
         }
@@ -1264,7 +1264,7 @@ public class ExpressionSlimTests : TestBase
         {
             var blk = ExpressionSlim.Block(a, b, c);
             AssertElementsAreSame([a, b, c], blk.Expressions);
-            Assert.AreEqual(0, blk.Variables.Count);
+            Assert.IsEmpty(blk.Variables);
             Assert.IsNull(blk.Type);
             Assert.AreEqual(c, blk.Result);
         }
@@ -1300,7 +1300,7 @@ public class ExpressionSlimTests : TestBase
         {
             var blk = ExpressionSlim.Block(SlimType, cs);
             AssertElementsAreSame(cs, blk.Expressions);
-            Assert.AreEqual(0, blk.Variables.Count);
+            Assert.IsEmpty(blk.Variables);
             Assert.AreSame(SlimType, blk.Type);
             Assert.AreEqual(c, blk.Result);
         }
@@ -1308,7 +1308,7 @@ public class ExpressionSlimTests : TestBase
         {
             var blk = ExpressionSlim.Block(SlimType, a, b, c);
             AssertElementsAreSame([a, b, c], blk.Expressions);
-            Assert.AreEqual(0, blk.Variables.Count);
+            Assert.IsEmpty(blk.Variables);
             Assert.AreSame(SlimType, blk.Type);
             Assert.AreEqual(c, blk.Result);
         }
@@ -1373,7 +1373,7 @@ public class ExpressionSlimTests : TestBase
 
     private static void AssertElementsAreSame<T>(ICollection<T> expected, ICollection<T> actual)
     {
-        Assert.AreEqual(expected.Count, actual.Count);
+        Assert.HasCount(expected.Count, actual);
 
         foreach (var pair in expected.Zip(actual, (Expected, Actual) => (Expected, Actual)))
             Assert.AreSame(pair.Expected, pair.Actual);
@@ -1534,14 +1534,14 @@ public class ExpressionSlimTests : TestBase
 
             var tryfinally = ExpressionSlim.TryFinally(b, @finally);
             Assert.AreSame(b, tryfinally.Body);
-            Assert.AreEqual(0, tryfinally.Handlers.Count);
+            Assert.IsEmpty(tryfinally.Handlers);
             Assert.IsNull(tryfinally.Fault);
             Assert.AreSame(@finally, tryfinally.Finally);
             Assert.IsNull(tryfinally.Type);
 
             var tryfault = ExpressionSlim.TryFault(b, @fault);
             Assert.AreSame(b, tryfault.Body);
-            Assert.AreEqual(0, tryfault.Handlers.Count);
+            Assert.IsEmpty(tryfault.Handlers);
             Assert.AreSame(@fault, tryfault.Fault);
             Assert.IsNull(tryfault.Finally);
             Assert.IsNull(tryfault.Type);
@@ -1630,7 +1630,7 @@ public class ExpressionSlimTests : TestBase
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
-        Assert.AreEqual(0, i.Arguments.Count);
+        Assert.IsEmpty(i.Arguments);
 
         var n2 = (MethodCallExpressionSlim)new ArgVisitor(0).Visit(i);
 
@@ -1661,7 +1661,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a0, i.GetArgument(0));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
-        Assert.AreEqual(1, i.Arguments.Count);
+        Assert.HasCount(1, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
 
@@ -1710,7 +1710,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a1, i.GetArgument(1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
-        Assert.AreEqual(2, i.Arguments.Count);
+        Assert.HasCount(2, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -1763,7 +1763,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a2, i.GetArgument(2));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
-        Assert.AreEqual(3, i.Arguments.Count);
+        Assert.HasCount(3, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -1820,7 +1820,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a3, i.GetArgument(3));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
-        Assert.AreEqual(4, i.Arguments.Count);
+        Assert.HasCount(4, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -1881,7 +1881,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a4, i.GetArgument(4));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
-        Assert.AreEqual(5, i.Arguments.Count);
+        Assert.HasCount(5, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -1936,7 +1936,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a5, i.GetArgument(5));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(6));
 
-        Assert.AreEqual(6, i.Arguments.Count);
+        Assert.HasCount(6, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -1983,7 +1983,7 @@ public class ExpressionSlimTests : TestBase
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
-        Assert.AreEqual(0, i.Arguments.Count);
+        Assert.IsEmpty(i.Arguments);
 
         var n1 = (MethodCallExpressionSlim)new ObjectVisitor().Visit(i);
 
@@ -2020,7 +2020,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a0, i.GetArgument(0));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
-        Assert.AreEqual(1, i.Arguments.Count);
+        Assert.HasCount(1, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
 
@@ -2075,7 +2075,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a1, i.GetArgument(1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
-        Assert.AreEqual(2, i.Arguments.Count);
+        Assert.HasCount(2, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2134,7 +2134,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a2, i.GetArgument(2));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
-        Assert.AreEqual(3, i.Arguments.Count);
+        Assert.HasCount(3, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2197,7 +2197,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a3, i.GetArgument(3));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
-        Assert.AreEqual(4, i.Arguments.Count);
+        Assert.HasCount(4, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2264,7 +2264,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a4, i.GetArgument(4));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
-        Assert.AreEqual(5, i.Arguments.Count);
+        Assert.HasCount(5, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2325,7 +2325,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a5, i.GetArgument(5));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(6));
 
-        Assert.AreEqual(6, i.Arguments.Count);
+        Assert.HasCount(6, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2381,7 +2381,7 @@ public class ExpressionSlimTests : TestBase
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
-        Assert.AreEqual(0, i.Arguments.Count);
+        Assert.IsEmpty(i.Arguments);
 
         var n1 = (InvocationExpressionSlim)new FuncVisitor().Visit(i);
 
@@ -2415,7 +2415,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a0, i.GetArgument(0));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
-        Assert.AreEqual(1, i.Arguments.Count);
+        Assert.HasCount(1, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
 
@@ -2470,7 +2470,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a1, i.GetArgument(1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
-        Assert.AreEqual(2, i.Arguments.Count);
+        Assert.HasCount(2, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2529,7 +2529,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a2, i.GetArgument(2));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
-        Assert.AreEqual(3, i.Arguments.Count);
+        Assert.HasCount(3, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2592,7 +2592,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a3, i.GetArgument(3));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
-        Assert.AreEqual(4, i.Arguments.Count);
+        Assert.HasCount(4, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2659,7 +2659,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a4, i.GetArgument(4));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
-        Assert.AreEqual(5, i.Arguments.Count);
+        Assert.HasCount(5, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2709,7 +2709,7 @@ public class ExpressionSlimTests : TestBase
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
-        Assert.AreEqual(0, i.Arguments.Count);
+        Assert.IsEmpty(i.Arguments);
 
         var n2 = (NewExpressionSlim)new ArgVisitor(0).Visit(i);
 
@@ -2739,7 +2739,7 @@ public class ExpressionSlimTests : TestBase
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(-1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(0));
 
-        Assert.AreEqual(0, i.Arguments.Count);
+        Assert.IsEmpty(i.Arguments);
 
         var n2 = (NewExpressionSlim)new ArgVisitor(0).Visit(i);
 
@@ -2774,7 +2774,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a0, i.GetArgument(0));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(1));
 
-        Assert.AreEqual(1, i.Arguments.Count);
+        Assert.HasCount(1, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
 
@@ -2827,7 +2827,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a1, i.GetArgument(1));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(2));
 
-        Assert.AreEqual(2, i.Arguments.Count);
+        Assert.HasCount(2, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2884,7 +2884,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a2, i.GetArgument(2));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(3));
 
-        Assert.AreEqual(3, i.Arguments.Count);
+        Assert.HasCount(3, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -2945,7 +2945,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a3, i.GetArgument(3));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(4));
 
-        Assert.AreEqual(4, i.Arguments.Count);
+        Assert.HasCount(4, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);
@@ -3010,7 +3010,7 @@ public class ExpressionSlimTests : TestBase
         Assert.AreSame(a4, i.GetArgument(4));
         Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => i.GetArgument(5));
 
-        Assert.AreEqual(5, i.Arguments.Count);
+        Assert.HasCount(5, i.Arguments);
 
         Assert.AreSame(a0, i.Arguments[0]);
         Assert.AreSame(a1, i.Arguments[1]);

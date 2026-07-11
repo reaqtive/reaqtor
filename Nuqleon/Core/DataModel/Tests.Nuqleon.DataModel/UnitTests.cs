@@ -37,7 +37,7 @@ public class UnitTests
             u2
         };
 
-        Assert.AreEqual(1, d.Count);
+        Assert.HasCount(1, d);
     }
 
     [TestMethod]

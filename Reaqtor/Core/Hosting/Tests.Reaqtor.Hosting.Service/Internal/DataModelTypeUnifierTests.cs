@@ -25,32 +25,32 @@ public class DataModelTypeUnifierTests
     [TestMethod]
     public void DataModelTypeUnifier_UnifySimple_NoMappings()
     {
-        Assert.AreEqual(0, Unify(typeof(IAsyncReactiveQbservable<int>), typeof(IReactiveQbservable<int>)).ToArray().Length);
+        Assert.IsEmpty(Unify(typeof(IAsyncReactiveQbservable<int>), typeof(IReactiveQbservable<int>)).ToArray());
     }
 
     [TestMethod]
     public void DataModelTypeUnifier_UnifyEnum_NoMappings()
     {
-        Assert.AreEqual(0, Unify(typeof(IAsyncReactiveQbservable<int>), typeof(IReactiveQbservable<FooEnum>)).ToArray().Length);
+        Assert.IsEmpty(Unify(typeof(IAsyncReactiveQbservable<int>), typeof(IReactiveQbservable<FooEnum>)).ToArray());
     }
 
     [TestMethod]
     public void DataModelTypeUnifier_UnifyOther_NoMappings()
     {
-        Assert.AreEqual(0, Unify(typeof(IAsyncReactiveQbservable<int>), typeof(List<int>)).ToArray().Length);
-        Assert.AreEqual(0, Unify(typeof(IAsyncReactiveQbservable<int>), typeof(List<int>)).ToArray().Length);
+        Assert.IsEmpty(Unify(typeof(IAsyncReactiveQbservable<int>), typeof(List<int>)).ToArray());
+        Assert.IsEmpty(Unify(typeof(IAsyncReactiveQbservable<int>), typeof(List<int>)).ToArray());
     }
 
     [TestMethod]
     public void DataModelTypeUnifier_UnifyDataModelFromStructural()
     {
         var record = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "bar", typeof(int) } }, valueEquality: true);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQbserver<>).MakeGenericType(record), typeof(IReactiveQbserver<Foo>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQubjectFactory<,>).MakeGenericType(record, record), typeof(IReactiveQubjectFactory<Foo, Foo>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQubscriptionFactory<>).MakeGenericType(record), typeof(IReactiveQubscriptionFactory<Foo>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQubject<>).MakeGenericType(record), typeof(IReactiveQubject<Foo>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQubject<,>).MakeGenericType(record, record), typeof(IReactiveQubject<Foo, Foo>)).ToArray().Length);
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQbserver<>).MakeGenericType(record), typeof(IReactiveQbserver<Foo>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQubjectFactory<,>).MakeGenericType(record, record), typeof(IReactiveQubjectFactory<Foo, Foo>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQubscriptionFactory<>).MakeGenericType(record), typeof(IReactiveQubscriptionFactory<Foo>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQubject<>).MakeGenericType(record), typeof(IReactiveQubject<Foo>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQubject<,>).MakeGenericType(record, record), typeof(IReactiveQubject<Foo, Foo>)).ToArray());
     }
 
     [TestMethod]
@@ -58,14 +58,14 @@ public class DataModelTypeUnifierTests
     {
         var record1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "bar", typeof(int) } }, valueEquality: true);
         var record2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "qux", typeof(int) } }, valueEquality: true);
-        Assert.AreEqual(2, Unify(typeof(Func<,>).MakeGenericType(record2, typeof(IAsyncReactiveQbservable<>).MakeGenericType(record1)), typeof(Func<Bar, IReactiveQbservable<Foo>>)).ToArray().Length);
+        Assert.HasCount(2, Unify(typeof(Func<,>).MakeGenericType(record2, typeof(IAsyncReactiveQbservable<>).MakeGenericType(record1)), typeof(Func<Bar, IReactiveQbservable<Foo>>)).ToArray());
     }
 
     [TestMethod]
     public void DataModelTypeUnifier_UnifyRecursive()
     {
         var record = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "bar", typeof(int) } }, valueEquality: true);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record)), typeof(IReactiveQbservable<IReactiveQbservable<Foo>>)).ToArray().Length);
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record)), typeof(IReactiveQbservable<IReactiveQbservable<Foo>>)).ToArray());
     }
 
     [TestMethod]
@@ -78,15 +78,15 @@ public class DataModelTypeUnifierTests
         // Unfortunately, the type unifier is only informed of the expressible variants of the Reactive entity types. It
         // is not aware of implementation specific types, such as ISubscribable, which would more likely be found in
         // structural types.
-        Assert.AreEqual(2, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record2), typeof(IReactiveQbservable<Rec>)).ToArray().Length);
+        Assert.HasCount(2, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record2), typeof(IReactiveQbservable<Rec>)).ToArray());
     }
 
     [TestMethod]
     public void DataModelTypeUnifier_UnifyByPropertyName()
     {
         var record = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "Bar", typeof(int) } }, valueEquality: true);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<FooNoDM>)).ToArray().Length);
-        Assert.AreEqual(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray().Length);
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<FooNoDM>)).ToArray());
+        Assert.HasCount(1, Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray());
     }
 
     public enum FooEnum

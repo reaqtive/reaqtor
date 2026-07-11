@@ -51,16 +51,16 @@ public class HeapUsageAnalyzerTests
         Assert.IsTrue(sh.SetEquals([name]));
 
         var byGen1 = res.Reports[p1].SplitByGeneration();
-        Assert.AreEqual(GC.MaxGeneration + 1, byGen1.Length);
+        Assert.HasCount(GC.MaxGeneration + 1, byGen1);
         Assert.IsTrue(r1.SetEquals(byGen1.SelectMany(g => g.Objects)));
 
         var byGen2 = res.Reports[p2].SplitByGeneration();
-        Assert.AreEqual(GC.MaxGeneration + 1, byGen2.Length);
+        Assert.HasCount(GC.MaxGeneration + 1, byGen2);
         Assert.IsTrue(r2.SetEquals(byGen2.SelectMany(g => g.Objects)));
 
         var stats1 = res.Reports[p1].GetStats();
 
-        Assert.AreEqual(4, stats1.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
+        Assert.HasCount(4, stats1.InstanceCountPerType); // anon, string, KeyValuePair<string, int>, string[]
         Assert.AreEqual(1, stats1.InstanceCountPerType[anon1.GetType()]);
         Assert.AreEqual(3, stats1.InstanceCountPerType[typeof(string)]);
         Assert.AreEqual(1, stats1.InstanceCountPerType[typeof(KeyValuePair<string, int>)]);
@@ -74,7 +74,7 @@ public class HeapUsageAnalyzerTests
 
         var stats2 = res.Reports[p2].GetStats();
 
-        Assert.AreEqual(4, stats2.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
+        Assert.HasCount(4, stats2.InstanceCountPerType); // anon, string, KeyValuePair<string, int>, string[]
         Assert.AreEqual(1, stats2.InstanceCountPerType[anon2.GetType()]);
         Assert.AreEqual(2, stats2.InstanceCountPerType[typeof(string)]);
         Assert.AreEqual(1, stats2.InstanceCountPerType[typeof(Tuple<string, int>)]);
@@ -88,7 +88,7 @@ public class HeapUsageAnalyzerTests
 
         var statsS = res.Shared.GetStats();
 
-        Assert.AreEqual(1, statsS.InstanceCountPerType.Count); // string
+        Assert.HasCount(1, statsS.InstanceCountPerType); // string
         Assert.AreEqual(1, statsS.InstanceCountPerType[typeof(string)]);
 
         Assert.AreEqual(0, statsS.BoxedValueCount);
