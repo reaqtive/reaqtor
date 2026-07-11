@@ -74,21 +74,7 @@ public class DetupletizingReactiveExpressionServicesTests
         AssertEqual(expr, rt);
     }
 
-    private static void AssertEqual(Expression x, Expression y)
-    {
-        Assert.IsTrue(new ExpressionEqualityComparer(() => new Comparator()).Equals(x, y));
-    }
+    private static void AssertEqual(Expression x, Expression y) => ExpressionAssert.AreEqual(x, y);
 
-    private static void AssertNotEqual(Expression x, Expression y)
-    {
-        Assert.IsFalse(new ExpressionEqualityComparer(() => new Comparator()).Equals(x, y));
-    }
-
-    private sealed class Comparator : ExpressionEqualityComparator
-    {
-        protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
-        {
-            return x.Name == y.Name && Equals(x.Type, y.Type);
-        }
-    }
+    private static void AssertNotEqual(Expression x, Expression y) => ExpressionAssert.AreNotEqual(x, y);
 }

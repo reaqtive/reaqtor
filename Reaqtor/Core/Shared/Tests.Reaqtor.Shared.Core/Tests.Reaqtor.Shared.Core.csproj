@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\Common\TestUtilities\ExpressionAssert.cs" Link="ExpressionAssert.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
   </ItemGroup>
 

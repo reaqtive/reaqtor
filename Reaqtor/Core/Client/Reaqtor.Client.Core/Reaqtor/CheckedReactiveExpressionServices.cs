@@ -52,33 +52,48 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
     /// only take effect if that blessing is narrowed. This matches the behavior of the archived Remoting
     /// client library this code was factored out of.
     /// </para></remarks>
-    private static readonly IList<MemberInfo> MemberAllowList = new Func<IList<MemberInfo>>(
-        () =>
-        {
-            var members = from type in new[] { typeof(DateTime), typeof(DateTimeOffset) }
-                          from member in type.GetMembers()
-                          select member;
+    private static readonly IReadOnlyList<MemberInfo> MemberAllowList = CreateMemberAllowList();
 
-            // NB: GetMembers() returns both the PropertyInfo and its accessor MethodInfo, and expression
-            //     trees can reference either form (a MemberExpression on the property or a MethodCallExpression
-            //     on get_Now), so both must be excluded for the exclusion to be effective.
-            var excludedProperties = new[]
-            {
-                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.Now),
-                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.UtcNow),
-                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.Now),
-                (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.UtcNow),
-            };
+    /// <summary>
+    /// Unit value substituted for anonymous type instances during tupletization in <see cref="Normalize"/>.
+    /// </summary>
+    private static readonly ConstantExpression s_nullConstant = Expression.Constant(null);
 
-            members = members.Except(excludedProperties.SelectMany(property => new MemberInfo[] { property, property.GetMethod }));
-
-            return [.. members];
-        })();
+    /// <summary>
+    /// The parameterless <see cref="object.ToString"/> method, allowed as a member (see <see cref="CreateAllowListScanner"/>).
+    /// </summary>
+    private static readonly MethodInfo s_objectToString = typeof(object).GetMethod(nameof(ToString), Type.EmptyTypes);
 
     /// <summary>
     /// Allow list scanner to prevent remote execution of client-side only constructs.
     /// </summary>
     private readonly AllowListScanner _allowListScanner;
+
+    /// <summary>
+    /// Creates the member allow list.
+    /// </summary>
+    /// <returns>The member allow list.</returns>
+    private static MemberInfo[] CreateMemberAllowList()
+    {
+        var members = from type in new[] { typeof(DateTime), typeof(DateTimeOffset) }
+                      from member in type.GetMembers()
+                      select member;
+
+        // NB: GetMembers() returns both the PropertyInfo and its accessor MethodInfo, and expression
+        //     trees can reference either form (a MemberExpression on the property or a MethodCallExpression
+        //     on get_Now), so both must be excluded for the exclusion to be effective.
+        var excludedProperties = new[]
+        {
+            (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.Now),
+            (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.UtcNow),
+            (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.Now),
+            (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTimeOffset.UtcNow),
+        };
+
+        members = members.Except(excludedProperties.SelectMany(property => new MemberInfo[] { property, property.GetMethod }));
+
+        return [.. members];
+    }
 
     /// <summary>
     /// Creates a new checked expression service provider instance.
@@ -101,7 +116,7 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
         var normalized = base.Normalize(expression);
 
         // Replaces compiler-generated anonymous types, e.g. for transparent identifiers, by tuples which don't need reconstruction in the service.
-        var tupletized = AnonymousTypeTupletizer.Tupletize(normalized, Expression.Constant(null), excludeVisibleTypes: true);
+        var tupletized = AnonymousTypeTupletizer.Tupletize(normalized, s_nullConstant, excludeVisibleTypes: true);
 
         return tupletized;
     }
@@ -236,7 +251,7 @@ public class CheckedReactiveExpressionServices : ReactiveExpressionServices
                 ReflectionHelpers.InfoOf(() => Environment.MachineName), // used for diagnostics
 
                 // Enable e.g. new JsonObject { ... }.ToString()
-                typeof(object).GetMethod(nameof(ToString), Type.EmptyTypes),
+                s_objectToString,
             },
         };
 
