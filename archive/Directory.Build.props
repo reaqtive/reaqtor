@@ -1,14 +1,113 @@
 <Project>
 
   <!--
-    The archive/ tree is reference-only (.NET Framework code, excluded from every live solution) and is
-    deliberately NOT subject to the .NET 10 modernizations applied to the live tree. Inherit the repo
-    defaults, then opt out of implicit usings so the archived sources compile unchanged.
+    The archive/ tree is reference-only .NET Framework code (net472 and netstandard2.0/2.1), excluded
+    from every live solution and not built by CI. It is deliberately NOT subject to the .NET 10
+    modernizations applied to the live tree. Inherit the repo defaults, then relax the strict-build
+    regime (below) so the frozen sources open and compile quietly on the .NET 10 SDK: the Roslyn
+    analyzers are turned OFF for this subtree (RunAnalyzers=false, see below) and warnings never fail
+    the build, so opening these solutions in Visual Studio surfaces no analyzer noise on code nobody
+    will refactor.
   -->
   <Import Project="../Directory.Build.props" />
 
   <PropertyGroup>
+    <!-- Archived sources predate implicit usings (the root enables them). -->
     <ImplicitUsings>disable</ImplicitUsings>
+
+    <!--
+      The archive is reference-only, frozen .NET Framework code that nobody is going to refactor. Opening
+      these solutions in Visual Studio must not bury the developer under analyzer warnings/suggestions, and
+      building must not fail on them either (issue #169). RunAnalyzers=false turns the whole Roslyn analyzer
+      pass off for the archive subtree - both the CA* quality analyzers and the IDE* code-style analyzers,
+      in the IDE's live analysis AND at build - so the archived projects open and compile quietly.
+      (EnforceCodeStyleInBuild only governs the command-line build, not VS live analysis, so it cannot
+      achieve this on its own.) Warnings-as-errors stays off too, so any residual compiler (CS*) warning
+      remains a warning rather than failing the reference build.
+    -->
+    <RunAnalyzers>false</RunAnalyzers>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+
+    <!--
+      The root turns on XML documentation generation for shipping-style libraries, which makes the C#
+      compiler emit the CS1591 "missing XML comment" family (thousands of them - the Remoting sample code
+      is undocumented) as ordinary compiler warnings that RunAnalyzers cannot suppress. The archive ships
+      nothing and needs no doc files, so turn generation off: that removes the entire CS1591 / CS157x /
+      CS158x doc-warning flood from both the build and the Visual Studio Error List.
+    -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <!--
+    The root Directory.Build.props adds version-less Microsoft.SourceLink.GitHub and
+    Nerdbank.GitVersioning to every project, bound to the root's CENTRAL package versions. The archive
+    runs with Central Package Management OFF (archive/Directory.Packages.props), so those version-less
+    references have nothing to bind to and restore fails. The archive is never packed, shipped, or
+    versioned, so both build-time packages are dead weight here - remove them. (Removing NBGV also stops
+    it stamping assembly-version attributes that would clash with the retained legacy AssemblyInfo.cs.)
+    Both are PrivateAssets=All, so removal is invisible to any consumer.
+  -->
+  <ItemGroup>
+    <PackageReference Remove="Microsoft.SourceLink.GitHub" />
+    <PackageReference Remove="Nerdbank.GitVersioning" />
+  </ItemGroup>
+
+  <!--
+    Compile the net472 / netstandard targets on the .NET 10 SDK without Visual Studio or standalone
+    targeting packs installed (otherwise MSB3644 "reference assemblies not found"). CPM is OFF here, so
+    an inline Version is required. The meta-package self-conditions on the .NETFramework target framework
+    identifier, so it is a no-op for the net10.0 Pearls and for the non-net472 passes of the
+    multi-targeting Museum libraries.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    The archived libraries retain a legacy Properties\AssemblyInfo.cs whose sole content is
+    [assembly: CLSCompliant(true)]. The root synthesizes that same AllowMultiple=false attribute
+    (WriteCodeFragment) for every non-test/perf/playground project, so both copies land in the
+    compilation => CS0579 "Duplicate 'CLSCompliant' attribute", a hard error that TreatWarningsAsErrors
+    =false does not rescue. Drop the synthesized copy; the archived source keeps its own.
+  -->
+  <ItemGroup>
+    <AssemblyAttribute Remove="System.CLSCompliantAttribute" />
+  </ItemGroup>
+
+  <!--
+    Test projects. The frozen archived tests call MSTest APIs removed in MSTest 4 (Assert.ThrowsException
+    {Async}, [ExpectedException], the (message, params) assert overloads), so pin the whole MSTest package
+    set to the last 3.x that still carries them. Keep the repo's Microsoft.Testing.Platform runner
+    (inherited EnableMSTestRunner=true / OutputType=Exe from the root) so the archived tests are discovered
+    and run in Visual Studio's Test Explorer and via `dotnet test` exactly like the live tree - just on
+    MSTest 3.7.3 (which brings its own aligned MTP) rather than 4.
+
+    Drop the root's Microsoft.Testing.Extensions.* packages: the root pins them to the MTP 2.x line MSTest
+    4 uses, which is binary-incompatible with 3.7.3's MTP 1.x (a mismatch throws an IDataConsumer
+    TypeLoadException at run time). The coverage/trx/hangdump extensions are optional and are not needed to
+    discover or run the tests; the archive is reference-only and out of CI, so we leave them out rather
+    than re-pin an aligned 1.x set.
+  -->
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <PackageReference Update="MSTest.TestFramework" Version="3.7.3" />
+    <PackageReference Update="MSTest.TestAdapter" Version="3.7.3" />
+    <PackageReference Remove="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Remove="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Remove="Microsoft.Testing.Extensions.HangDump" />
+  </ItemGroup>
+
+  <!--
+    Archived test projects call only the legacy callback-style AssertEx.ThrowsException{Async}<T>, which
+    lives in archive/Common/TestUtilities/AssertEx.Legacy.cs (a partial of AssertEx with self-contained
+    explicit usings). The root injects the modernized Common/TestUtilities/AssertEx.cs into every Tests.*
+    project, but that file uses a file-scoped namespace and relies on implicit usings, so it will not
+    compile under this subtree's ImplicitUsings=disable. Drop the modernized file here and compile the
+    legacy shim instead (same partial class, disjoint members => merges cleanly).
+  -->
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <Compile Remove="$(MSBuildThisFileDirectory)..\Common\TestUtilities\AssertEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\TestUtilities\AssertEx.Legacy.cs" Link="AssertEx.Legacy.cs" />
+  </ItemGroup>
 
 </Project>

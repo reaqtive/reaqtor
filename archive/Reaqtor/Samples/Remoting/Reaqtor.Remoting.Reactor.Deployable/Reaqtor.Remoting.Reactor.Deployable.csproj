@@ -10,10 +10,10 @@
     <ProjectReference Include="..\Reaqtor.Remoting.Client.Library\Reaqtor.Remoting.Client.Library.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Client.Library\Reaqtor.Remoting.Reactor.Client.Library.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
-    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\BCL\Nuqleon.Collections.Specialized\Nuqleon.Collections.Specialized.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <PackageReference Include="Reaqtor.Client" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Collections.Specialized" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.DataModel" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.Linq" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

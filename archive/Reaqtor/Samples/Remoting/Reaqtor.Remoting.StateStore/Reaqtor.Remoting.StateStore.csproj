@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
-    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <PackageReference Include="Reaqtor.QueryEngine" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

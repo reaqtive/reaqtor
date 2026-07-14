@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- Benchmarks the BinaryFormatter-based prototype serializer; net472 keeps BinaryFormatter
+         functional (it is removed at runtime on .NET 9+). -->
+    <TargetFramework>net472</TargetFramework>
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
-    <!-- Benchmarks the BinaryFormatter-based prototype serializer, obsolete on .NET 10. -->
-    <NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,8 +31,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj" />
-    <ProjectReference Include="..\..\..\..\Core\JSON\Nuqleon.Json\Nuqleon.Json.csproj" />
-    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <PackageReference Include="Nuqleon.Json" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Linq.Expressions.Bonsai.Serialization" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

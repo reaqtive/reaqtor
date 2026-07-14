@@ -4,6 +4,6 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nuqleon.Memory.Diagnostics\Nuqleon.Memory.Diagnostics.csproj" />
+    <PackageReference Include="Nuqleon.Memory.Diagnostics" Version="1.0.0-beta.24" />
   </ItemGroup>
 </Project>

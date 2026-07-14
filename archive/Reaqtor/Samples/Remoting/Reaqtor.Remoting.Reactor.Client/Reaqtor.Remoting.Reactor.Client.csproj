@@ -20,10 +20,10 @@
     <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Client.Library\Reaqtor.Remoting.Reactor.Client.Library.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Deployable\Reaqtor.Remoting.Reactor.Deployable.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.TestingFramework\Reaqtor.Remoting.TestingFramework.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+    <PackageReference Include="Nuqleon.DataModel" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Linq.CompilerServices" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.Linq" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.TestingFramework" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

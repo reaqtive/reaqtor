@@ -8,7 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
-    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <PackageReference Include="Reaqtor.Hosting.Shared" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

@@ -11,12 +11,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
-    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
-    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
-    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel.CompilerServices\Nuqleon.DataModel.CompilerServices.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <PackageReference Include="Reaqtor.Client" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Hosting.Shared" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.QueryEngine" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.DataModel" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.DataModel.CompilerServices" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.Linq" Version="1.0.0-beta.24" />
   </ItemGroup>
 
   <ItemGroup>

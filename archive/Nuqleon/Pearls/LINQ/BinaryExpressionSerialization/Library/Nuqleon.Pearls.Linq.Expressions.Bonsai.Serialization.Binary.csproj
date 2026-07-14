@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <!-- Prototype whose default object serializer is BinaryFormatter, which is removed at runtime on
+         .NET 9+. Kept at net472, where BinaryFormatter is functional, so the prototype and its tests
+         actually run rather than throwing PlatformNotSupportedException. (The .NET 10 migration had
+         modernised this to net10.0, which broke it at run time - and made the SYSLIB0011 obsoletion
+         suppression that came with it moot.) -->
+    <TargetFramework>net472</TargetFramework>
     <Description>Prototype of binary expression tree serialization.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
     <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
-    <!-- Experimental prototype whose default object serializer is built on BinaryFormatter, which is
-         obsolete and throws at runtime on .NET 10. Kept as reference; suppress the obsoletion. -->
-    <NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
-    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj" />
+    <PackageReference Include="Nuqleon.Linq.CompilerServices" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Linq.Expressions.Bonsai" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>
