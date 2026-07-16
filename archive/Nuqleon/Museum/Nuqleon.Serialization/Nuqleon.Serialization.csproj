@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <PackageReference Include="Nuqleon.Linq.CompilerServices" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

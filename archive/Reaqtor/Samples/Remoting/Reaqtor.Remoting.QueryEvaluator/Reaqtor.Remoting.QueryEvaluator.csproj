@@ -8,11 +8,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
-    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
-    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
-    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Service\Reaqtor.Hosting.Service.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\JSON\Nuqleon.Json.Serialization\Nuqleon.Json.Serialization.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+    <PackageReference Include="Reaqtor.QueryEngine" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.QueryEngine.Serialization.DataModel" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Hosting.Service" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Json.Serialization" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.TestingFramework" Version="1.0.0-beta.24" />
 
     <!-- NB: This ensures that reactive artifact types can be loaded dynamically. -->
     <ProjectReference Include="..\Reaqtor.Remoting.Deployable\Reaqtor.Remoting.Deployable.csproj" />

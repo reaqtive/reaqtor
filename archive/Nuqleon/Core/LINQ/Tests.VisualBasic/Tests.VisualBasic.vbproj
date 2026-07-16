@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net472 shell over the live net10.0 Nuqleon/Core/LINQ/Tests.VisualBasic VB fixture, so the archived
+         net472 Tests.Nuqleon.Linq.Expressions.Serialization can reference it: the live copy is net10.0 and
+         unpublished, so it can be neither referenced nor swapped for a NuGet package. The single .vb source
+         is LINKED from the live project (like the archive's other reused live sources - Marvin.cs and the
+         Glitching *.Declarative.cs) so it stays one source of truth rather than a diverging copy. -->
+    <TargetFramework>net472</TargetFramework>
+    <IsTestProject>false</IsTestProject>
+    <!-- VB support library of test fixtures (not a test runner). Override the Exe output type that
+         Directory.Build.props applies by name to 'Tests.*' projects at evaluation time. -->
+    <OutputType>Library</OutputType>
+    <LangVersion>16</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\Nuqleon\Core\LINQ\Tests.VisualBasic\VisualBasicModule.vb" Link="VisualBasicModule.vb" />
+  </ItemGroup>
+
+</Project>

@@ -10,15 +10,15 @@
     <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Client.Library\Reaqtor.Remoting.Reactor.Client.Library.csproj" />
     <ProjectReference Include="..\Reaqtor.Remoting.TestingFramework\Reaqtor.Remoting.TestingFramework.csproj" />
-    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
-    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Core\Reaqtor.Client.Core.csproj" />
-    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
-    <ProjectReference Include="..\..\..\Core\Expressions\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
-    <ProjectReference Include="..\..\..\Core\Local\Reaqtor.Local.Model\Reaqtor.Local.Model.csproj" />
-    <ProjectReference Include="..\..\..\Core\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
-    <ProjectReference Include="..\..\..\Core\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
-    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <PackageReference Include="Reaqtor.Client.Model" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Client.Core" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Client" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Expressions.Model" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Local.Model" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Shared.Model" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtor.Shared.Core" Version="1.0.0-beta.24" />
+    <PackageReference Include="Reaqtive.Scheduler" Version="1.0.0-beta.24" />
+    <PackageReference Include="Nuqleon.Linq.CompilerServices" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>

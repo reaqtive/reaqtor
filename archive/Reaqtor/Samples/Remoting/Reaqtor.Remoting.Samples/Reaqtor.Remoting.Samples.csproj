@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.Remoting.Client.Library\Reaqtor.Remoting.Client.Library.csproj" />
-    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <PackageReference Include="Nuqleon.DataModel" Version="1.0.0-beta.24" />
   </ItemGroup>
 
 </Project>
