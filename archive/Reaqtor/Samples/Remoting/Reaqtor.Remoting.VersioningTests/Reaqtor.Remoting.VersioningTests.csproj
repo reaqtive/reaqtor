@@ -14,8 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Reaqtive.TestingFramework.TestRunner (used by Program.cs). This is the published, renamed form of
-         the fossil's original Microsoft.Reactive.TestingFramework project reference. -->
+    <!-- Reaqtive.TestingFramework.TestRunner (used by Program.cs). The original legacy-format version of
+         this project file referenced a sibling Microsoft.Reactive.TestingFramework project - the internal
+         pre-open-sourcing name for the code now published as the Reaqtive.TestingFramework package (not
+         to be confused with Rx.NET's Microsoft.Reactive.Testing, which is unrelated). -->
     <PackageReference Include="Reaqtive.TestingFramework" Version="1.0.0-beta.24" />
   </ItemGroup>
 
