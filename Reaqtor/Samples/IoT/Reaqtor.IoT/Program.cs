@@ -139,10 +139,12 @@ public static class Program
 
             // *** USER CODE STARTS HERE ***
 
-            var timer = ctx.GetObservable<TimeSpan, DateTimeOffset>(new Uri("iot://reactor/observables/timer"));
+            var unboundInput = ctx.GetObservable<TimeSpan, DateTimeOffset>(new Uri("ian://reactor/what/42"));
+            //var timer = ctx.GetObservable<TimeSpan, DateTimeOffset>(new Uri("iot://reactor/observables/timer"));
             var cout = ctx.GetObserver<DateTimeOffset>(new Uri("iot://reactor/observers/cout"));
 
-            await timer(TimeSpan.FromSeconds(1)).SubscribeAsync(cout, new Uri("iot://reactor/subscriptions/heartbeat"), null, CancellationToken.None);
+            //await timer(TimeSpan.FromSeconds(1)).SubscribeAsync(cout, new Uri("iot://reactor/subscriptions/heartbeat"), null, CancellationToken.None);
+            await unboundInput(TimeSpan.FromSeconds(1)).SubscribeAsync(cout, new Uri("iot://reactor/subscriptions/heartbeat"), null, CancellationToken.None);
 
             // *** USER CODE ENDS HERE ***
 
