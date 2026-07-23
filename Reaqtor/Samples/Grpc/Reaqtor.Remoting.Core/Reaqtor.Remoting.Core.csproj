@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Transport-agnostic core of the Reaqtor remoting stack (ported from the archived Reaqtor.Remoting.Protocol for use over gRPC).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Service\Reaqtor.Service.Contracts\Reaqtor.Service.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+  </ItemGroup>
+
+</Project>

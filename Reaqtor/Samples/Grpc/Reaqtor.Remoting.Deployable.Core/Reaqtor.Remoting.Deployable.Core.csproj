@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Deployable artifacts of the Reaqtor remoting stack (ported from the archived Reaqtor.Remoting.Deployable for use over gRPC; AppDomain ledger replaced with an in-process store).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Core\Reaqtor.Remoting.Platform.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Core\Reaqtor.Remoting.Client.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel.CompilerServices\Nuqleon.DataModel.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+  </ItemGroup>
+
+</Project>
