@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Build/versioning/source-link (referenced from Directory.Build.props) -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <!-- Build/versioning (referenced from Directory.Build.props). Source Link needs no package:
+         it has shipped in the .NET SDK since 8.0.100 and is on by default. -->
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.9.50" />
   </ItemGroup>
 
