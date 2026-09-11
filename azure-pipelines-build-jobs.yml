@@ -34,14 +34,30 @@
             # Tests run on Microsoft.Testing.Platform (see global.json "test.runner"). VSTest-style
             # arguments are translated to their MTP equivalents: --collect "XPlat Code Coverage" ->
             # --coverage (Microsoft.Testing.Extensions.CodeCoverage), --blame-hang-timeout ->
-            # --hangdump-timeout, coverlet.runsettings -> codecoverage.runsettings. --filter is unchanged.
+            # --hangdump-timeout, --logger trx -> --report-trx, coverlet.runsettings ->
+            # codecoverage.runsettings. --filter is unchanged.
+            #
+            # publishTestResults is off on purpose: left on, DotNetCoreCLI@2 injects its own
+            # --report-trx/--results-directory (duplicating the explicit ones below) and publishes one
+            # unmerged test run per test module. The TRX files are published explicitly instead, merged
+            # into a single run per matrix job.
             - task: DotNetCoreCLI@2
               inputs:
                 command: test
                 workingDirectory: ${{ project }}
-                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --filter "TestCategory!~NonDeterministic_Strong" --coverage --coverage-settings $(Build.SourcesDirectory)/codecoverage.runsettings --coverage-output-format cobertura --hangdump --hangdump-timeout 5m
-                testRunTitle: ${{ project }} ${{ configuration }}
+                publishTestResults: false
+                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --filter "TestCategory!~NonDeterministic_Strong" --report-trx --results-directory $(Agent.TempDirectory)/TestResults --coverage --coverage-settings $(Build.SourcesDirectory)/codecoverage.runsettings --coverage-output-format cobertura --hangdump --hangdump-timeout 5m
               displayName: Run Unit Tests
+
+            - task: PublishTestResults@2
+              displayName: Publish Test Results
+              condition: succeededOrFailed()
+              inputs:
+                testResultsFormat: VSTest
+                testResultsFiles: '**/*.trx'
+                searchFolder: $(Agent.TempDirectory)/TestResults
+                mergeTestResults: true
+                testRunTitle: ${{ pool.name }} ${{ project }} ${{ configuration }}
 
             - script: reportgenerator -reports:$(Agent.TempDirectory)/**/*.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
               displayName: Consolidate Coverage Runs
