@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
   </ItemGroup>
 

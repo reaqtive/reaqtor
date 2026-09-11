@@ -41,9 +41,20 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <!--
+    A live test module is a project built with the MSTest.Sdk project SDK (version pinned in
+    global.json "msbuild-sdks"). MSTest.Sdk sets UsingMSTestSdk=true before it imports
+    Microsoft.NET.Sdk, and therefore before this file, so live modules are classified by SDK.
+
+    The 'Tests.' name rule is kept as a fallback for projects that are NOT on MSTest.Sdk: the archived
+    net472 tests (Microsoft.NET.Sdk + MSTest 3.7.3, see archive/Directory.Build.props, which relies on
+    the legacy runner block below) and the two live Tests.*-named support libraries (Tests.VisualBasic,
+    Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.Catalog), which opt out in their project bodies.
+  -->
   <PropertyGroup>
+    <IsTestProject Condition="'$(IsTestProject)' == '' And '$(UsingMSTestSdk)' == 'true'">true</IsTestProject>
+    <IsTestProject Condition="'$(IsTestProject)' == '' And $(MSBuildProjectName.StartsWith('Tests.'))">true</IsTestProject>
     <IsTestProject Condition="'$(IsTestProject)' == ''">false</IsTestProject>
-    <IsTestProject Condition="$(MSBuildProjectName.StartsWith('Tests.'))">true</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -157,11 +168,38 @@
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Test projects run on Microsoft.Testing.Platform (MTP): each builds as a self-contained executable. -->
-  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+  <!--
+    Test modules run on Microsoft.Testing.Platform (MTP) via MSTest.Sdk: each builds as a
+    self-contained executable. The SDK owns OutputType=Exe, EnableMSTestRunner,
+    IsTestingPlatformApplication, IsPackable=false and the MSTest.TestFramework/TestAdapter
+    references plus the extensions of the selected profile; package versions come from
+    Directory.Packages.props (MSTestVersion et al.). In MSTest.Sdk 4.4 the 'Default' profile is
+    CodeCoverage + TrxReport; HangDump is opted in individually because CI requests hang dumps (the hangdump option).
+
+    NB: Test configuration belongs here rather than in a ProjectReference'd .csproj. Cross-referencing
+        test projects breaks the per-project test runtime config; with MTP each test project is its
+        own executable, so this guidance is more important, not less.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' And '$(UsingMSTestSdk)' == 'true'">
+    <TestingExtensionsProfile>Default</TestingExtensionsProfile>
+    <EnableMicrosoftTestingExtensionsHangDump>true</EnableMicrosoftTestingExtensionsHangDump>
+  </PropertyGroup>
+
+  <!--
+    Legacy runner block for test projects that are NOT on MSTest.Sdk. Only the archived net472 tests
+    take this path: archive/Directory.Build.props pins these version-less references to MSTest 3.7.3
+    with PackageReference Update (the archive runs with Central Package Management off). No live
+    module uses it.
+  -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' And '$(UsingMSTestSdk)' != 'true'">
     <EnableMSTestRunner>true</EnableMSTestRunner>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true' And '$(UsingMSTestSdk)' != 'true'">
+    <PackageReference Include="MSTest.TestAdapter" />
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
 
   <!--
     MSTest analyzers at their package default (MSTestAnalysisMode=Default) leave rules such as
@@ -186,16 +224,6 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
-    <!--
-      NB: These belong here rather than in a ProjectReference'd .csproj. Cross-referencing test
-          projects breaks the per-project test runtime config. With MTP each test project is its
-          own executable, so this guidance is more important, not less.
-    -->
-    <PackageReference Include="MSTest.TestAdapter" />
-    <PackageReference Include="MSTest.TestFramework" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
-    <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
   </ItemGroup>
 

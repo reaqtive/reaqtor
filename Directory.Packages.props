@@ -5,6 +5,24 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 
+  <!--
+    Test stack versions. Test modules are built with MSTest.Sdk (global.json "msbuild-sdks"), which
+    reads these properties before applying its own defaults: its Sdk.props imports Microsoft.NET.Sdk,
+    which imports this file, and every SDK default is guarded by an empty check.
+
+    MSTestVersion is the single source for the MSTest.TestFramework/TestAdapter versions on both
+    sides: the PackageVersion items MSTest.Sdk generates inside test modules, and the explicit pin
+    below for the shipping test-support libraries. Keep global.json's "MSTest.Sdk" version equal to
+    MSTestVersion; bump the two together. The Microsoft.Testing.* line (MicrosoftTestingPlatformVersion,
+    2.4.0 for MSTest 4.4.0) is taken from the SDK so all Microsoft.Testing.* packages stay on one
+    MTP major version (a mismatch surfaces as a runtime IDataConsumer TypeLoadException).
+    CodeCoverage is pinned to the newer 18.11.2 patch (the SDK default is 18.11.0).
+  -->
+  <PropertyGroup>
+    <MSTestVersion>4.4.0</MSTestVersion>
+    <MicrosoftTestingExtensionsCodeCoverageVersion>18.11.2</MicrosoftTestingExtensionsCodeCoverageVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Build/versioning (referenced from Directory.Build.props) -->
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
@@ -17,17 +35,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Test stack: MSTest on Microsoft.Testing.Platform (MTP). No Microsoft.NET.Test.Sdk
-         (VSTest host) and no coverlet; coverage/trx/hangdump are MTP extensions. -->
-    <!-- All Microsoft.Testing.* packages must share a Microsoft.Testing.Platform major version.
-         MSTest 4.4.0 depends on MTP 2.4.0, so the extensions are pinned to the aligned 2.x line
-         (CodeCoverage 18.x tracks MTP 2.x; a mismatch surfaces as a runtime IDataConsumer
-         TypeLoadException). -->
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.4.0" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.4.0" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.4.0" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="2.4.0" />
+    <!-- MSTest pins for projects that are NOT on MSTest.Sdk: MSTest.TestFramework for the shipping
+         test-support libraries (Reaqtive.Testing, Reaqtive.TestingFramework, Reaqtor.TestingFramework.*),
+         which stay on Microsoft.NET.Sdk because MSTest.Sdk forces IsPackable=false, and both packages for
+         the legacy runner block in Directory.Build.props. Inside MSTest.Sdk modules the SDK emits these
+         same PackageVersion items itself, so they are excluded there to avoid NU1506 (duplicate item). -->
+    <PackageVersion Include="MSTest.TestFramework" Version="$(MSTestVersion)" Condition="'$(UsingMSTestSdk)' != 'true'" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="$(MSTestVersion)" Condition="'$(UsingMSTestSdk)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>

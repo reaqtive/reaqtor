@@ -1,16 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSTest.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="ParameterTableTests.Generated.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ParameterTableTests.Generated.tt</DependentUpon>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
