@@ -152,8 +152,8 @@ public class QueryEngineRegistryTemplatizerTests
     {
         var registry = CreateRegistry();
         var templatizer = CreateTemplatizer(registry);
-        _ = templatizer.Detemplatize(SimpleExpression);
-        Assert.AreSame(SimpleExpression, SimpleExpression);
+        var detemplatized = templatizer.Detemplatize(SimpleExpression);
+        Assert.AreSame(SimpleExpression, detemplatized);
     }
 
     private static void AssertEquals(Expression x, Expression y)
