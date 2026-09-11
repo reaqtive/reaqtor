@@ -30,11 +30,11 @@ public class LoggingStateReaderTests
             using var reader = new LoggingStateReader(r, sw);
 
             var cat = reader.GetCategories();
-            CollectionAssert.AreEqual(new[] { "A" }, cat.ToList());
+            Assert.AreSequenceEqual(["A"], cat.ToList());
 
             var f1 = reader.TryGetItemKeys("foo", out var keys);
             Assert.IsTrue(f1);
-            CollectionAssert.AreEqual(new[] { "B" }, keys.ToList());
+            Assert.AreSequenceEqual(["B"], keys.ToList());
 
             var f2 = reader.TryGetItemReader("foo", "bar", out var s);
             Assert.IsTrue(f2);

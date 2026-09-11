@@ -25,7 +25,7 @@ public class InMemoryKeyValueTableTests
 
             var one = table["A"];
 
-            CollectionAssert.AreEqual(new byte[] { 1 }, one);
+            Assert.AreSequenceEqual(new byte[] { 1 }, one);
 
             table.Update("A", [2]);
 
@@ -33,13 +33,13 @@ public class InMemoryKeyValueTableTests
 
             var two = table["A"];
 
-            CollectionAssert.AreEqual(new byte[] { 2 }, two);
+            Assert.AreSequenceEqual(new byte[] { 2 }, two);
 
             var contents = table.ToList();
 
             Assert.HasCount(1, contents);
             Assert.AreEqual("A", contents[0].Key);
-            CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
+            Assert.AreSequenceEqual(contents[0].Value, new byte[] { 2 }, SequenceOrder.InAnyOrder);
 
             table.Remove("A");
 
@@ -93,7 +93,7 @@ public class InMemoryKeyValueTableTests
             Assert.IsFalse(table.TryGet("A", out var value));
             table.Add("A", [1]);
             Assert.IsTrue(table.TryGet("A", out value));
-            CollectionAssert.AreEquivalent(value, new byte[] { 1 });
+            Assert.AreSequenceEqual(value, new byte[] { 1 }, SequenceOrder.InAnyOrder);
         }
 
         Assert.ThrowsExactly<ArgumentNullException>(() => Transaction.CommitAsync(null));
@@ -144,7 +144,7 @@ public class InMemoryKeyValueTableTests
 
             var one = table["A"];
 
-            CollectionAssert.AreEqual(new byte[] { 1 }, one);
+            Assert.AreSequenceEqual(new byte[] { 1 }, one);
 
             tx.CommitAsync().Wait();
         }
@@ -179,7 +179,7 @@ public class InMemoryKeyValueTableTests
 
             var two = table["A"];
 
-            CollectionAssert.AreEqual(new byte[] { 2 }, two);
+            Assert.AreSequenceEqual(new byte[] { 2 }, two);
 
             tx.CommitAsync().Wait();
         }
@@ -194,7 +194,7 @@ public class InMemoryKeyValueTableTests
 
             Assert.HasCount(1, contents);
             Assert.AreEqual("A", contents[0].Key);
-            CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
+            Assert.AreSequenceEqual(contents[0].Value, new byte[] { 2 }, SequenceOrder.InAnyOrder);
 
             tx.CommitAsync().Wait();
         }
@@ -280,8 +280,8 @@ public class InMemoryKeyValueTableTests
             var table1 = subtable1.Enter(tx);
             var table2 = subtable2.Enter(tx);
 
-            CollectionAssert.AreEquivalent(table1["C"], new byte[] { 1 });
-            CollectionAssert.AreEquivalent(table2["C"], new byte[] { 2 });
+            Assert.AreSequenceEqual(table1["C"], new byte[] { 1 }, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(table2["C"], new byte[] { 2 }, SequenceOrder.InAnyOrder);
         }
 
         // Same table, same keys

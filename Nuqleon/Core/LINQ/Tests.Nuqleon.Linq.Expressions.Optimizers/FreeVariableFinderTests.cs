@@ -42,6 +42,6 @@ public partial class FreeVariableFinderTests
 
         finder.Visit(e);
 
-        CollectionAssert.AreEquivalent(new[] { z }, finder.FreeVariables.ToArray());
+        Assert.AreSequenceEqual([z], finder.FreeVariables.ToArray(), SequenceOrder.InAnyOrder);
     }
 }

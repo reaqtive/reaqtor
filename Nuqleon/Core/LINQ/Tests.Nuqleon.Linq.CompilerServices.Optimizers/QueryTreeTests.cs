@@ -214,13 +214,13 @@ public class QueryTreeTests
 
             Assert.AreNotSame(la, la2);
             Assert.AreSame(updatedLambda, la2.Body);
-            CollectionAssert.AreEqual(parameters, la2.Parameters);  // A ToReadOnly is called on the IE<QT>
+            Assert.AreSequenceEqual(parameters, la2.Parameters);  // A ToReadOnly is called on the IE<QT>
 
             var la3 = la.Update(lambda, updatedParameters);
 
             Assert.AreNotSame(la, la3);
             Assert.AreSame(lambda, la3.Body);
-            CollectionAssert.AreEqual(updatedParameters, la3.Parameters);
+            Assert.AreSequenceEqual(updatedParameters, la3.Parameters);
         }
     }
 

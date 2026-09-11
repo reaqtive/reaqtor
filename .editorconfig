@@ -166,13 +166,6 @@ dotnet_diagnostic.CA1859.severity = none
 # (https://github.com/reaqtive/reaqtor/issues/164).
 dotnet_diagnostic.MSTEST0049.severity = none
 
-# MSTEST0066 ([Ignore] should state a reason) and MSTEST0068 (prefer the Assert.* collection APIs over
-# CollectionAssert.*) arrived with MSTest 4.3/4.4 and fire at ~120 existing sites. They are downgraded
-# to suggestion here so the package bump lands on its own; the next PR in this stack migrates every site
-# with the shipped MSTEST0068 code fixer, gives each [Ignore] its reason, and deletes this block.
-dotnet_diagnostic.MSTEST0066.severity = suggestion
-dotnet_diagnostic.MSTEST0068.severity = suggestion
-
 # IDE warnings (with suppression of some nuisances)
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_diagnostic.IDE0001.severity = none # `Name can be simplified.` often reduces clarity.

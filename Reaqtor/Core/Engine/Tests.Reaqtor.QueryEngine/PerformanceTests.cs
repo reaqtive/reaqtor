@@ -58,7 +58,7 @@ public class PerformanceTests : PhysicalTimeEngineTest
 
     [TestMethod]
     [TestCategory("Performance")]
-    [Ignore, Description("Please, use it for profiling.")]
+    [Ignore("Please, use it for profiling.")]
     public void HundredQeWithThousandSubscriptions()
     {
         const int NumberOfEngines = 100;

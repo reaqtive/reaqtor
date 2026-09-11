@@ -52,7 +52,7 @@ public class InMemoryStorageTests
 
                     int byteRead = stream.Read(actualBuffer, 0, actualBuffer.Length);
                     Assert.AreEqual(byteRead, stream.Length);
-                    CollectionAssert.AreEqual(expectedBuffer, actualBuffer);
+                    Assert.AreSequenceEqual(expectedBuffer, actualBuffer);
                 }
             }
             finally

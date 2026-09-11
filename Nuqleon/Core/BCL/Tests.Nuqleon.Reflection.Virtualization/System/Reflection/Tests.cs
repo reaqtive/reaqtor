@@ -159,7 +159,7 @@ public class Tests
         })
         {
             Assert.AreEqual(t.GetGenericTypeDefinition(), p.GetGenericTypeDefinition(t));
-            CollectionAssert.AreEqual(t.GetGenericArguments(), p.GetGenericArguments(t).ToArray());
+            Assert.AreSequenceEqual(t.GetGenericArguments(), p.GetGenericArguments(t).ToArray());
         }
 
         {
@@ -196,15 +196,15 @@ public class Tests
         {
             // NB: Using AreEquivalent because some APIs do not consistently return in the same order (e.g. GetMembers).
 
-            CollectionAssert.AreEquivalent(t.GetInterfaces(), p.GetInterfaces(t).ToArray());
+            Assert.AreSequenceEqual(t.GetInterfaces(), p.GetInterfaces(t).ToArray(), SequenceOrder.InAnyOrder);
 
-            CollectionAssert.AreEquivalent(t.GetConstructors(), p.GetConstructors(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetEvents(), p.GetEvents(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetFields(), p.GetFields(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetMembers(), p.GetMembers(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetMethods(), p.GetMethods(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetNestedTypes(), p.GetNestedTypes(t).ToArray());
-            CollectionAssert.AreEquivalent(t.GetProperties(), p.GetProperties(t).ToArray());
+            Assert.AreSequenceEqual(t.GetConstructors(), p.GetConstructors(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetEvents(), p.GetEvents(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetFields(), p.GetFields(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetMembers(), p.GetMembers(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetMethods(), p.GetMethods(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetNestedTypes(), p.GetNestedTypes(t).ToArray(), SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(t.GetProperties(), p.GetProperties(t).ToArray(), SequenceOrder.InAnyOrder);
 
             for (var i = 0; i < 3; i++)
             {
@@ -219,13 +219,13 @@ public class Tests
                     BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance,
                 })
                 {
-                    CollectionAssert.AreEquivalent(t.GetConstructors(f), p.GetConstructors(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetEvents(f), p.GetEvents(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetFields(f), p.GetFields(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetMembers(f), p.GetMembers(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetMethods(f), p.GetMethods(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetNestedTypes(f), p.GetNestedTypes(t, f).ToArray());
-                    CollectionAssert.AreEquivalent(t.GetProperties(f), p.GetProperties(t, f).ToArray());
+                    Assert.AreSequenceEqual(t.GetConstructors(f), p.GetConstructors(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetEvents(f), p.GetEvents(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetFields(f), p.GetFields(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetMembers(f), p.GetMembers(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetMethods(f), p.GetMethods(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetNestedTypes(f), p.GetNestedTypes(t, f).ToArray(), SequenceOrder.InAnyOrder);
+                    Assert.AreSequenceEqual(t.GetProperties(f), p.GetProperties(t, f).ToArray(), SequenceOrder.InAnyOrder);
                 }
             }
         }
@@ -370,7 +370,7 @@ public class Tests
 
             Assert.AreEqual(m.GetBaseDefinition(), p.GetBaseDefinition(m));
 
-            CollectionAssert.AreEqual(m.GetParameters(), p.GetParameters(m).ToArray());
+            Assert.AreSequenceEqual(m.GetParameters(), p.GetParameters(m).ToArray());
 
             foreach (var par in m.GetParameters())
             {
@@ -414,15 +414,15 @@ public class Tests
     [TestMethod]
     public void Type_FindMethods() => WithProviders(p =>
     {
-        CollectionAssert.AreEquivalent(
+        Assert.AreSequenceEqual(
             typeof(string).FindInterfaces(new TypeFilter((t, _) => true), filterCriteria: null),
-            p.FindInterfaces(typeof(string), new TypeFilter((t, _) => true), filterCriteria: null).ToArray()
-        );
+            p.FindInterfaces(typeof(string), new TypeFilter((t, _) => true), filterCriteria: null).ToArray(),
+            SequenceOrder.InAnyOrder);
 
-        CollectionAssert.AreEquivalent(
+        Assert.AreSequenceEqual(
             typeof(string).FindMembers(MemberTypes.Method, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, new MemberFilter((m, _) => true), filterCriteria: null),
-            p.FindMembers(typeof(string), MemberTypes.Method, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, new MemberFilter((m, _) => true), filterCriteria: null).ToArray()
-        );
+            p.FindMembers(typeof(string), MemberTypes.Method, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance, new MemberFilter((m, _) => true), filterCriteria: null).ToArray(),
+            SequenceOrder.InAnyOrder);
     });
 
     [TestMethod]
@@ -430,12 +430,12 @@ public class Tests
     {
 #pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
 #pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
-        CollectionAssert.AreEquivalent(
+        Assert.AreSequenceEqual(
             typeof(string).Module.FindTypes(new TypeFilter((t, _) => t.Name.Contains("q")), filterCriteria: null),
-            p.FindTypes(typeof(string).Module, new TypeFilter((t, _) => t.Name.Contains("q")), filterCriteria: null).ToArray()
+            p.FindTypes(typeof(string).Module, new TypeFilter((t, _) => t.Name.Contains("q")), filterCriteria: null).ToArray(),
+            SequenceOrder.InAnyOrder);
 #pragma warning restore CA1847
 #pragma warning restore IDE0079
-        );
     });
 
     [TestMethod]
@@ -457,7 +457,7 @@ public class Tests
         var m = m2.MakeGenericMethod([typeof(int), typeof(bool)]);
 
         Assert.AreEqual(m.GetGenericMethodDefinition(), p.GetGenericMethodDefinition(m));
-        CollectionAssert.AreEqual(m.GetGenericArguments(), p.GetGenericArguments(m).ToArray());
+        Assert.AreSequenceEqual(m.GetGenericArguments(), p.GetGenericArguments(m).ToArray());
 
         var arg1 = m1.GetGenericArguments()[0];
         Assert.AreEqual(arg1.DeclaringMethod, p.GetDeclaringMethod(arg1));
@@ -488,9 +488,9 @@ public class Tests
             Assert.AreEqual(prop.GetSetMethod(), p.GetSetMethod(prop));
             Assert.AreEqual(prop.GetSetMethod(nonPublic: true), p.GetSetMethod(prop, nonPublic: true));
 
-            CollectionAssert.AreEqual(prop.GetAccessors(), p.GetAccessors(prop).ToArray());
+            Assert.AreSequenceEqual(prop.GetAccessors(), p.GetAccessors(prop).ToArray());
 
-            CollectionAssert.AreEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
+            Assert.AreSequenceEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
         }
     });
 
@@ -630,8 +630,8 @@ public class Tests
             Assert.AreEqual(e.GetRaiseMethod(), p.GetRaiseMethod(e));
             Assert.AreEqual(e.GetRaiseMethod(nonPublic: true), p.GetRaiseMethod(e, nonPublic: true));
 
-            CollectionAssert.AreEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
-            CollectionAssert.AreEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
+            Assert.AreSequenceEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
+            Assert.AreSequenceEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
         }
     });
 
@@ -722,28 +722,28 @@ public class Tests
             var attrs1 = typeof(string).Assembly.GetCustomAttributes().Select(a => a.GetType().FullName).ToArray();
             var attrs2 = p.GetCustomAttributes(typeof(string).Assembly).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).Assembly.GetCustomAttributes(inherit: true).Select(a => a.GetType().FullName).ToArray();
             var attrs2 = p.GetCustomAttributes(typeof(string).Assembly, inherit: true).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).Assembly.GetCustomAttributes<AssemblyTitleAttribute>().Select(a => a.Title).ToArray();
             var attrs2 = p.GetCustomAttributes<AssemblyTitleAttribute>(typeof(string).Assembly).Select(a => a.Title).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).Cast<AssemblyTitleAttribute>().Select(a => a.Title).ToArray();
             var attrs2 = p.GetCustomAttributes(typeof(string).Assembly, typeof(AssemblyTitleAttribute)).Cast<AssemblyTitleAttribute>().Select(a => a.Title).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -751,8 +751,8 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(typeof(string).Assembly, typeof(AssemblyTitleAttribute), inherit: true).Cast<AssemblyTitleAttribute>().Select(a => a.Title).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, typeof(string).Assembly, typeof(AssemblyTitleAttribute)).Cast<AssemblyTitleAttribute>().Select(a => a.Title).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -791,7 +791,7 @@ public class Tests
             var attrs1 = typeof(string).GetCustomAttributes().Select(a => a.GetType().FullName).ToArray();
             var attrs2 = p.GetCustomAttributes(typeof(string)).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -799,29 +799,29 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(typeof(string), inherit: true).Select(a => a.GetType().FullName).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, typeof(string), inherit: true).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).GetCustomAttributes<SerializableAttribute>().Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes<SerializableAttribute>(typeof(string)).Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).GetCustomAttributes<SerializableAttribute>(inherit: true).Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes<SerializableAttribute>(typeof(string), inherit: true).Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = typeof(string).GetCustomAttributes(typeof(SerializableAttribute)).Cast<SerializableAttribute>().Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes(typeof(string), typeof(SerializableAttribute)).Cast<SerializableAttribute>().Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -829,8 +829,8 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(typeof(string), typeof(SerializableAttribute), inherit: true).Cast<SerializableAttribute>().Select(a => a.ToString()).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, typeof(string), typeof(SerializableAttribute), inherit: true).Cast<SerializableAttribute>().Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -871,7 +871,7 @@ public class Tests
             var attrs1 = m.GetCustomAttributes().Select(a => a.GetType().FullName).ToArray();
             var attrs2 = p.GetCustomAttributes(m).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -879,29 +879,29 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(m, inherit: true).Select(a => a.GetType().FullName).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, m, inherit: true).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = m.GetCustomAttributes<ExtensionAttribute>().Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes<ExtensionAttribute>(m).Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = m.GetCustomAttributes<ExtensionAttribute>(inherit: true).Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes<ExtensionAttribute>(m, inherit: true).Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = m.GetCustomAttributes(typeof(ExtensionAttribute)).Cast<ExtensionAttribute>().Select(a => a.ToString()).ToArray();
             var attrs2 = p.GetCustomAttributes(m, typeof(ExtensionAttribute)).Cast<ExtensionAttribute>().Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -909,8 +909,8 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(m, typeof(ExtensionAttribute), inherit: true).Cast<ExtensionAttribute>().Select(a => a.ToString()).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, m, typeof(ExtensionAttribute), inherit: true).Cast<ExtensionAttribute>().Select(a => a.ToString()).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -965,7 +965,7 @@ public class Tests
             var attrs1 = par.GetCustomAttributes().Select(a => a.GetType().FullName).ToArray();
             var attrs2 = p.GetCustomAttributes(par).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -973,29 +973,29 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(par, inherit: true).Select(a => a.GetType().FullName).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, par, inherit: true).Select(a => a.GetType().FullName).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = par.GetCustomAttributes<MyAttribute>().Select(a => a.Value).ToArray();
             var attrs2 = p.GetCustomAttributes<MyAttribute>(par).Select(a => a.Value).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = par.GetCustomAttributes<MyAttribute>(inherit: true).Select(a => a.Value).ToArray();
             var attrs2 = p.GetCustomAttributes<MyAttribute>(par, inherit: true).Select(a => a.Value).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
             var attrs1 = par.GetCustomAttributes(typeof(MyAttribute)).Cast<MyAttribute>().Select(a => a.Value).ToArray();
             var attrs2 = p.GetCustomAttributes(par, typeof(MyAttribute)).Cast<MyAttribute>().Select(a => a.Value).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -1003,8 +1003,8 @@ public class Tests
             var attrs2 = p.GetCustomAttributes(par, typeof(MyAttribute), inherit: true).Cast<MyAttribute>().Select(a => a.Value).ToArray();
             var attrs3 = CustomAttributeProviderExtensions.GetCustomAttributes(p, par, typeof(MyAttribute), inherit: true).Cast<MyAttribute>().Select(a => a.Value).ToArray();
 
-            CollectionAssert.AreEquivalent(attrs1, attrs2);
-            CollectionAssert.AreEquivalent(attrs1, attrs3);
+            Assert.AreSequenceEqual(attrs1, attrs2, SequenceOrder.InAnyOrder);
+            Assert.AreSequenceEqual(attrs1, attrs3, SequenceOrder.InAnyOrder);
         }
 
         {
@@ -1073,13 +1073,13 @@ public class Tests
     {
         var asm = typeof(Tests).Assembly;
 
-        CollectionAssert.AreEquivalent(asm.DefinedTypes.ToArray(), p.GetDefinedTypes(asm).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetExportedTypes(), p.GetExportedTypes(asm).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetLoadedModules().Select(a => a.FullyQualifiedName).ToArray(), p.GetLoadedModules(asm).Select(a => a.FullyQualifiedName).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetLoadedModules(getResourceModules: true).Select(a => a.FullyQualifiedName).ToArray(), p.GetLoadedModules(asm, getResourceModules: true).Select(a => a.FullyQualifiedName).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetModules().Select(a => a.FullyQualifiedName).ToArray(), p.GetModules(asm).Select(a => a.FullyQualifiedName).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetReferencedAssemblies().Select(a => a.FullName).ToArray(), p.GetReferencedAssemblies(asm).Select(a => a.FullName).ToArray());
-        CollectionAssert.AreEquivalent(asm.GetTypes(), p.GetTypes(asm).ToArray());
+        Assert.AreSequenceEqual(asm.DefinedTypes.ToArray(), p.GetDefinedTypes(asm).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetExportedTypes(), p.GetExportedTypes(asm).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetLoadedModules().Select(a => a.FullyQualifiedName).ToArray(), p.GetLoadedModules(asm).Select(a => a.FullyQualifiedName).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetLoadedModules(getResourceModules: true).Select(a => a.FullyQualifiedName).ToArray(), p.GetLoadedModules(asm, getResourceModules: true).Select(a => a.FullyQualifiedName).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetModules().Select(a => a.FullyQualifiedName).ToArray(), p.GetModules(asm).Select(a => a.FullyQualifiedName).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetReferencedAssemblies().Select(a => a.FullName).ToArray(), p.GetReferencedAssemblies(asm).Select(a => a.FullName).ToArray(), SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(asm.GetTypes(), p.GetTypes(asm).ToArray(), SequenceOrder.InAnyOrder);
 
         foreach (var m in asm.Modules)
         {
@@ -1109,7 +1109,7 @@ public class Tests
     {
         var mod = typeof(Tests).Assembly.Modules.First();
 
-        CollectionAssert.AreEquivalent(mod.GetTypes(), p.GetTypes(mod).ToArray());
+        Assert.AreSequenceEqual(mod.GetTypes(), p.GetTypes(mod).ToArray(), SequenceOrder.InAnyOrder);
     });
 
     private static void WithProviders(Action<ReflectionProvider> invoke)
