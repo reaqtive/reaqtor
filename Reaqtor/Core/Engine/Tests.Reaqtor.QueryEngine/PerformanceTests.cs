@@ -21,20 +21,6 @@ public class PerformanceTests : PhysicalTimeEngineTest
 {
     #region Test Setup
 
-    [ClassInitialize]
-    public static void ClassInitialize(TestContext testContext)
-    {
-        _ = testContext;
-
-        PhysicalTimeEngineTest.ClassSetup();
-    }
-
-    [ClassCleanup]
-    public static void ClassTeardown()
-    {
-        PhysicalTimeEngineTest.ClassCleanup();
-    }
-
     [TestInitialize]
     public void TestSetup()
     {

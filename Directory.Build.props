@@ -99,8 +99,9 @@
     assemblies slow enough to be worth parallelizing are precisely those that cannot be, at all:
 
       * Tests.Reaqtor.QueryEngine  - PhysicalTimeEngineTest holds a *static* PhysicalScheduler whose
-                                     ClassSetup() begins by disposing it (ClassCleanup()); six classes
-                                     drive it from [ClassInitialize]. TestableEntityFactory adds static
+                                     ClassSetup() begins by disposing it (ClassCleanup()); the base's
+                                     [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+                                     drives it for six derived classes. TestableEntityFactory adds static
                                      unsynchronized dictionaries and a static Scheduler nulled per test.
       * Tests.Reaqtive.Scheduler   - installs a process-wide AppDomain.UnhandledException handler,
                                      asserts on Environment.ProcessorCount, and creates a
