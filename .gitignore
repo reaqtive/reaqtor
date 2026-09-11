@@ -389,11 +389,16 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 
-.docs/
+# AI Agents
 .agents/
 .claude/
+.github/skills/
+.opencode/
+
+# Local Dev Infrastructure
 .devcontainer/
 .endjin/
+.docs/
 
 # .NET SDK run-file discovery cache (machine-specific, generated)
 dotnet/runfile-discovery/
