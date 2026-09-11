@@ -87,11 +87,13 @@ built, not shipped; their project references are not maintained. See `archive/RE
   `Assert.ThrowsException(Async)` → `Assert.ThrowsExactly(Async)` (~2,700 call sites),
   `[ExpectedException]` → `Assert.ThrowsExactly` (44 sites), the removed
   `(message, params object[])` assert overloads folded into interpolated messages, and
-  `TestMethodAttribute.Execute` → `ExecuteAsync` in `Common/TestUtilities/AssertEx.cs`.
+  `TestMethodAttribute.Execute` → `ExecuteAsync` in the (since retired) `Common/TestUtilities/AssertEx.cs`.
   The repo's own callback-based `AssertEx.ThrowsException(Async)` helpers (~640 call sites) were
   subsequently retired in favor of `Assert.ThrowsExactly(Async)`, whose returned exception makes the
   callback pattern redundant; the legacy helpers moved to `archive/Common/TestUtilities/AssertEx.Legacy.cs`
-  because archived test projects still call them.
+  because archived test projects still call them. With MSTest 4.4 the rest of `AssertEx.cs` went too:
+  `AssertEx.AreSequenceEqual` is superseded by `Assert.AreSequenceEqual`, and the unused
+  `FlakyTestMethod`/`FlakyTestClass` attributes by MSTest's built-in `[Retry]`.
 - **MTP package versions must be aligned.** All `Microsoft.Testing.*` packages share a platform major
   version; they are pinned to the **MTP 2.2.3** that MSTest 4.2.3 depends on (a mismatch surfaces as a
   runtime `IDataConsumer` `TypeLoadException`); CodeCoverage 18.x tracks MTP 2.x.
@@ -162,9 +164,10 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
      there is nothing to merge — and build-time enforcement keeps them clean. `Nuqleon.Linq.Expressions.Optimizers`
      stays excluded for a different reason (IDE0001 is pathologically slow there); project-scoped
      runs with an explicit `--diagnostics` list avoid loading IDE0001 entirely.
-     (Empirically re-verified: `Common/TestUtilities/AssertEx.cs` — linked into every test project
-     but with *identical* symbols — merges cleanly under solution-scoped format and needs no
-     exclusion; an earlier revision of this document was wrong to list it.)
+     (Empirically re-verified at the time: `Common/TestUtilities/AssertEx.cs` — then linked into every
+     test project but with *identical* symbols — merged cleanly under solution-scoped format and needed
+     no exclusion; an earlier revision of this document was wrong to list it. The file has since been
+     retired in favour of MSTest 4.4's `Assert.AreSequenceEqual` and `[Retry]`.)
 2. **`AnalysisLevel` is `latest` and the migration-era `NoWarn` lists are retired** (resolved,
    issue #143). The `IDE0079;IDE0090;CA1305;CA1822;CA1854` list was fixed at its sites (47 IDE0090
    via `dotnet format`, the rest by hand; public-API CA1822 hits carry a rationale `#pragma`). The

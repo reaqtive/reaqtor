@@ -232,7 +232,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+        Assert.AreSequenceEqual([0, 1], v1.Values);
 
         sub.Dispose();
 
@@ -259,7 +259,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+        Assert.AreSequenceEqual([0, 1], v1.Values);
 
         sub = src.Subscribe(obv, uri, null);
 
@@ -278,7 +278,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
+        Assert.AreSequenceEqual([0, 1, 4, 5], v1.Values);
     }
 
     [TestMethod]
@@ -316,7 +316,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+        Assert.AreSequenceEqual([0, 1], v1.Values);
 
         await sub.DisposeAsync(CancellationToken.None);
 
@@ -343,7 +343,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+        Assert.AreSequenceEqual([0, 1], v1.Values);
 
         sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
 
@@ -362,7 +362,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 
         Assert.IsFalse(v1.Completed);
         Assert.IsFalse(v1.Error);
-        AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
+        Assert.AreSequenceEqual([0, 1, 4, 5], v1.Values);
     }
 
     [TestMethod]
@@ -1591,7 +1591,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
     {
         var relId = Guid.NewGuid().ToString();
 
-        void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
+        void AssertActions(ReliableEvent[] events) => Assert.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
 
         InMemoryStateStore chkpt1, chkpt2, chkpt3, chkpt4;
 
@@ -1763,7 +1763,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
     {
         var relId = Guid.NewGuid().ToString();
 
-        void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
+        void AssertActions(ReliableEvent[] events) => Assert.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
 
         var l1 = LockManager.NewAutoReset();
 

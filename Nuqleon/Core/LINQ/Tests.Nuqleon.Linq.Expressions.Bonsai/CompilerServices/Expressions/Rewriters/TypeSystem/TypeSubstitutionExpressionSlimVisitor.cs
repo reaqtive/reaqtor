@@ -67,7 +67,6 @@ public class TypeSubstitutionExpressionSlimVisitorTests : TestBase
             Assert.AreEqual("originalProperty", ex4.ParamName);
             var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts));
             Assert.AreEqual("declaringType", ex5.ParamName);
-            //AssertEx.Throws<ArgumentNullException>(() => base.ResolveProperty(prop, t, propertyType: null, ts), ex => Assert.AreEqual("propertyType", ex.ParamName));
             var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null));
             Assert.AreEqual("indexerParameters", ex6.ParamName);
 
@@ -77,7 +76,6 @@ public class TypeSubstitutionExpressionSlimVisitorTests : TestBase
             Assert.AreEqual("originalField", ex7.ParamName);
             var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t));
             Assert.AreEqual("declaringType", ex8.ParamName);
-            //AssertEx.Throws<ArgumentNullException>(() => base.ResolveField(fld, t, fieldType: null), ex => Assert.AreEqual("fieldType", ex.ParamName));
 
             var mtd = typeof(string).ToTypeSlim().GetSimpleMethod("ToUpper", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(string).ToTypeSlim());
 
