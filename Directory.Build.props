@@ -152,8 +152,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <!-- Source Link for GitHub ships inside the .NET SDK (8.0+), so no Microsoft.SourceLink.GitHub package is needed. -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
   </ItemGroup>
 
