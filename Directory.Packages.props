@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Build/versioning/source-link (referenced from Directory.Build.props) -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.9.50" />
+    <!-- Build/versioning (referenced from Directory.Build.props) -->
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
   </ItemGroup>
 
   <ItemGroup>
