@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Standalone Kestrel/HTTP-2 gRPC host for the Messaging broker role (plan §4.3 / Milestone 5). Runs only the broker (a MessagingConnection fan-out kernel behind the gRPC Messaging service) with no engine; the query-evaluator host and external clients connect here, exercising both broker legs across processes.</Description>
+    <!-- A host exe, not a packable library. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Server\Reaqtor.Remoting.Grpc.Server.csproj" />
+    <!-- The broker kernel (the ConcurrentDictionary topic fan-out MessagingConnection). -->
+    <ProjectReference Include="..\Reaqtor.Remoting.Engine\Reaqtor.Remoting.Engine.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Prototype + demos of StreamJsonRpc as an alternative RPC transport for the remoting spike: bidirectional JSON-RPC over a duplex pipe with marshaled callback objects (the Reply&lt;T&gt; analog), IProgress&lt;T&gt;, IAsyncEnumerable&lt;T&gt;, CancellationToken, and server-calls-client (the ClientAction/§3.4 analog). Showcases the capabilities the gRPC port could not express. See GRPC-REMOTING-SPIKE-PLAN.md §13.9.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StreamJsonRpc" />
+    <PackageReference Include="Nerdbank.Streams" />
+  </ItemGroup>
+
+</Project>

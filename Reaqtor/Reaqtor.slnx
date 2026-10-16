@@ -106,6 +106,26 @@
     <Project Path="Pearls/PartitionedSubject/Reaqtor.Pearls.PartitionedSubject.csproj" />
   </Folder>
   <Folder Name="/src/Samples/" />
+  <Folder Name="/src/Samples/Grpc/">
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Client.Core/Reaqtor.Remoting.Client.Core.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Core/Reaqtor.Remoting.Core.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Deployable.Core/Reaqtor.Remoting.Deployable.Core.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Engine/Reaqtor.Remoting.Engine.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.Client/Reaqtor.Remoting.Grpc.Client.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.Contracts/Reaqtor.Remoting.Grpc.Contracts.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.MessagingHost/Reaqtor.Remoting.Grpc.MessagingHost.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.Protocol/Reaqtor.Remoting.Grpc.Protocol.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.QueryEvaluatorHost/Reaqtor.Remoting.Grpc.QueryEvaluatorHost.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Grpc.Server/Reaqtor.Remoting.Grpc.Server.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Platform.Core/Reaqtor.Remoting.Platform.Core.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Platform.Grpc/Reaqtor.Remoting.Platform.Grpc.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.Platform.InMemory.Core/Reaqtor.Remoting.Platform.InMemory.Core.csproj" />
+    <Project Path="Samples/Grpc/Reaqtor.Remoting.TestingFramework.Core/Reaqtor.Remoting.TestingFramework.Core.csproj" />
+    <Project Path="Samples/Grpc/Tests.Reaqtor.Remoting.Core/Tests.Reaqtor.Remoting.Core.csproj" />
+    <Project Path="Samples/Grpc/Tests.Reaqtor.Remoting.Grpc/Tests.Reaqtor.Remoting.Grpc.csproj" />
+    <Project Path="Samples/Grpc/Tests.Reaqtor.Remoting.MagicOnion/Tests.Reaqtor.Remoting.MagicOnion.csproj" />
+    <Project Path="Samples/Grpc/Tests.Reaqtor.Remoting.StreamJsonRpc/Tests.Reaqtor.Remoting.StreamJsonRpc.csproj" />
+  </Folder>
   <Folder Name="/src/Samples/IoT/">
     <Project Path="Samples/IoT/Reaqtor.IoT/Reaqtor.IoT.csproj" />
   </Folder>

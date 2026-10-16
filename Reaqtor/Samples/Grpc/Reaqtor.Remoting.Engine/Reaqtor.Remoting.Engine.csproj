@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Query coordinator + query evaluator + messaging engine of the Reaqtor remoting stack (ported from the archived Reaqtor.Remoting.QueryCoordinator/.QueryEvaluator/.Messaging and the .Metadata StorageConnection for use over gRPC; .NET Remoting / MarshalByRefObject / AppDomain couplings removed).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Core\Reaqtor.Remoting.Platform.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Deployable.Core\Reaqtor.Remoting.Deployable.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Service\Reaqtor.Hosting.Service.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\JSON\Nuqleon.Json.Serialization\Nuqleon.Json.Serialization.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+  </ItemGroup>
+
+</Project>

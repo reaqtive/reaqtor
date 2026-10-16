@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Client driver and operators of the Reaqtor remoting stack (ported from the archived Reaqtor.Remoting.Client.Library for use over gRPC; the .NET Remoting connection wiring is replaced by an injected IReactiveServiceConnection).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Core\Reaqtor.Client.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Service\Reaqtor.Service.Contracts\Reaqtor.Service.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Core\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+  </ItemGroup>
+
+</Project>

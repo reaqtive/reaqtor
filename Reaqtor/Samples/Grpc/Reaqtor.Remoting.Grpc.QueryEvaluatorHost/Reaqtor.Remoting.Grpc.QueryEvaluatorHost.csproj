@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Kestrel/HTTP-2 gRPC host exe for the query evaluator role (plan §7). Replaces the archived console TcpRemoteServiceHost. Milestone 0b: boots and answers ReactiveServiceControl.Ping over h2c on a loopback port.</Description>
+    <!-- A host exe, not a packable library. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Server\Reaqtor.Remoting.Grpc.Server.csproj" />
+    <!-- Milestone 5: when launched with a broker address, the host routes its firehose legs to a standalone
+         Messaging broker host via the gRPC messaging client adapter. -->
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Client\Reaqtor.Remoting.Grpc.Client.csproj" />
+  </ItemGroup>
+
+</Project>

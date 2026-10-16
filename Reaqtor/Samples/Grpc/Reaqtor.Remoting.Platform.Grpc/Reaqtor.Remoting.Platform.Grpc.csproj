@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>gRPC transport leaf for the Reaqtor remoting spike: launches the Kestrel host exes (GrpcProcessRunnable), exposes typed code-first clients (GrpcRunnable&lt;T&gt; — the §3.1 Instance seam), and (Milestone 1) GrpcReactivePlatform/GrpcReactiveEnvironment over the service graph. See GRPC-REMOTING-SPIKE-PLAN.md §3, §7.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- gRPC's public surface (GrpcChannel, CallContext, protobuf-net types, ...) is not CLS-compliant,
+         so this assembly cannot be. Opt out of the repo-wide synthesized [assembly: CLSCompliant(true)]
+         (Directory.Build.props) and declare it non-CLS-compliant, as the archived Remoting sample did. -->
+    <AssemblyAttribute Remove="System.CLSCompliantAttribute" />
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>false</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Client\Reaqtor.Remoting.Grpc.Client.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Grpc.Contracts\Reaqtor.Remoting.Grpc.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

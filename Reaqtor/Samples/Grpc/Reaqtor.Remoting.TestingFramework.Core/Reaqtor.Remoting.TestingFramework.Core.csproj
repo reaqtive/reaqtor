@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Testing framework for the Reaqtor remoting stack — the in-process net10.0 oracle test harness for the gRPC spike (ported from the archived Reaqtor.Remoting.TestingFramework). Drives TestDeployable end-to-end against the ported InMemory platform; .NET Remoting / MarshalByRefObject / AppDomain couplings removed (the AppDomain test platform is dropped and the firehose subscription ledger is DI-injected).</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Core\Reaqtor.Remoting.Platform.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Deployable.Core\Reaqtor.Remoting.Deployable.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Engine\Reaqtor.Remoting.Engine.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Core\Reaqtor.Remoting.Client.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.InMemory.Core\Reaqtor.Remoting.Platform.InMemory.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- NB: RemotingTestBase / the assertion helpers reference Microsoft.VisualStudio.TestTools.UnitTesting (Assert).
+         CPM is in force, so no Version attribute (pinned centrally in Directory.Packages.props). -->
+    <PackageReference Include="MSTest.TestFramework" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Description>Code-first gRPC contracts (protobuf-net.Grpc) for the Reaqtor remoting spike: the command channel, lifecycle/control, and messaging broker service definitions + DTOs. Reuses the CommandVerb/CommandNoun/NotificationKind/MetadataStorageType enums from Reaqtor.Remoting.Core. See GRPC-REMOTING-SPIKE-PLAN.md §4.</Description>
+    <!-- These are protobuf-net.Grpc DTOs: the serializer requires settable collection/array members and the
+         wire shapes are plain data carriers, so the data-modelling analyzers (settable collections, List<T>,
+         array-valued and string-URI properties) do not apply. Scoped to this contracts project. -->
+    <NoWarn>$(NoWarn);CA2227;CA1002;CA1819;CA1056</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- gRPC's public surface (GrpcChannel, CallContext, protobuf-net types, ...) is not CLS-compliant,
+         so this assembly cannot be. Opt out of the repo-wide synthesized [assembly: CLSCompliant(true)]
+         (Directory.Build.props) and declare it non-CLS-compliant, as the archived Remoting sample did. -->
+    <AssemblyAttribute Remove="System.CLSCompliantAttribute" />
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>false</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net.Grpc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Core\Reaqtor.Remoting.Core.csproj" />
+  </ItemGroup>
+
+</Project>
