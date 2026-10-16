@@ -17,6 +17,6 @@ public class ReificationClientContext : ReactiveClientContext
     public ReificationClientContext(IReactiveExpressionServices expressionServices, IReactiveServiceProvider serviceProvider)
         : base(expressionServices, serviceProvider)
     {
-        // NB: base used to accept new TupletizingExpressionServices(typeof(IReactiveClientProxy)), which has dependencies on DataModel etc.
+        // NB: A typical choice for the expression services is new TupletizingReactiveExpressionServices(typeof(IReactiveClientProxy)).
     }
 }

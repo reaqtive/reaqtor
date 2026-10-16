@@ -31,5 +31,5 @@ public abstract class ReificationTestBase
     /// Gets the expression services used to construct a <see cref="ReificationClientContext"/>.
     /// </summary>
     /// <returns>An expression services implementation.</returns>
-    protected abstract IReactiveExpressionServices GetExpressionServices(); // E.g. "return new TupletizingExpressionServices(typeof(IReactiveClientProxy))".
+    protected virtual IReactiveExpressionServices GetExpressionServices() => new TupletizingReactiveExpressionServices(typeof(IReactiveClientProxy));
 }

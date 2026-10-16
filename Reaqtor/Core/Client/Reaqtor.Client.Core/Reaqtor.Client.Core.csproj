@@ -13,6 +13,8 @@
     <ProjectReference Include="..\..\Metadata\Reaqtor.Metadata.Model\Reaqtor.Metadata.Model.csproj" />
     <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
     <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel.CompilerServices\Nuqleon.DataModel.CompilerServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>
