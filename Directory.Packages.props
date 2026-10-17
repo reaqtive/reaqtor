@@ -13,7 +13,7 @@
   <ItemGroup>
     <!-- Library dependencies -->
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageVersion Include="System.Reactive" Version="6.1.0" />
+    <PackageVersion Include="System.Reactive" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
