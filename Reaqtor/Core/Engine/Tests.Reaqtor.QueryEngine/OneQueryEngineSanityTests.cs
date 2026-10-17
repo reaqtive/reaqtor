@@ -22,22 +22,6 @@ namespace Tests.Reaqtor.QueryEngine;
 [TestClass]
 public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 {
-#pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5.0)
-#pragma warning disable IDE0060 // Remove unused parameter (MSTest)
-    [ClassInitialize]
-    public static void ClassSetup(TestContext ignored)
-    {
-        PhysicalTimeEngineTest.ClassSetup();
-    }
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore IDE0079 // Remove unnecessary suppression
-
-    [ClassCleanup]
-    public static void ClassTeardown()
-    {
-        PhysicalTimeEngineTest.ClassCleanup();
-    }
-
     [TestInitialize]
     public void TestSetup()
     {

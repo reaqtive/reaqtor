@@ -37,14 +37,6 @@ namespace Tests.Reaqtor.QueryEngine;
 [TestClass]
 public partial class CheckpointingTests : PhysicalTimeEngineTest
 {
-#pragma warning disable IDE0060 // Remove unused parameter (MSTest)
-    [ClassInitialize]
-    public static void ClassSetup(TestContext ignored) => PhysicalTimeEngineTest.ClassSetup();
-#pragma warning restore IDE0060 // Remove unused parameter
-
-    [ClassCleanup]
-    public static void ClassTeardown() => PhysicalTimeEngineTest.ClassCleanup();
-
     [TestInitialize]
     public void TestSetup() => base.Setup();
 

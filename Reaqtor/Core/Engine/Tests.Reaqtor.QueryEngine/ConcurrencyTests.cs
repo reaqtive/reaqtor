@@ -19,20 +19,6 @@ public class ConcurrencyTests : PhysicalTimeEngineTest
 
     private static readonly Uri NopUri = new(NopId);
 
-#pragma warning disable IDE0060 // Remove unused parameter (MSTest)
-    [ClassInitialize]
-    public static void ClassSetup(TestContext ignored)
-    {
-        PhysicalTimeEngineTest.ClassSetup();
-    }
-#pragma warning restore IDE0060 // Remove unused parameter
-
-    [ClassCleanup]
-    public static void ClassTeardown()
-    {
-        PhysicalTimeEngineTest.ClassCleanup();
-    }
-
     [TestInitialize]
     public void TestSetup()
     {

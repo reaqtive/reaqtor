@@ -28,15 +28,20 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
     private static PhysicalScheduler _physicalScheduler;
     private static LogicalScheduler _scheduler;
 
-    public static void ClassSetup()
+    [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+    public static void ClassSetup(TestContext testContext)
     {
+        _ = testContext;
+
         //
-        // NB: The scheduler is held in static fields shared by all derived test classes, each
-        //     of which calls ClassSetup/ClassCleanup from its [ClassInitialize]/[ClassCleanup].
-        //     The scheduler's worker threads are foreground threads, so a leaked instance
-        //     keeps the Microsoft.Testing.Platform test executable from ever exiting. Dispose
-        //     defensively here in case a previous class's cleanup did not run before the next
-        //     class's setup (as was the case with MSTest v3's end-of-assembly cleanup).
+        // NB: The scheduler is held in static fields shared by all derived test classes. MSTest runs
+        //     this method before, and ClassCleanup after, each derived [TestClass] through
+        //     InheritanceBehavior.BeforeEachDerivedClass, so no derived class declares its own
+        //     [ClassInitialize]/[ClassCleanup] forwarders. The scheduler's worker threads are
+        //     foreground threads, so a leaked instance keeps the Microsoft.Testing.Platform test
+        //     executable from ever exiting. Dispose defensively here in case a previous class's
+        //     cleanup did not run before the next class's setup (as was the case with MSTest v3's
+        //     end-of-assembly cleanup).
         //
         ClassCleanup();
 
@@ -44,6 +49,7 @@ public abstract class PhysicalTimeEngineTest : QueryEngineTest
         _scheduler = new LogicalScheduler(_physicalScheduler);
     }
 
+    [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass)]
     public static void ClassCleanup()
     {
         _scheduler?.Dispose();
