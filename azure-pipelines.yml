@@ -182,7 +182,7 @@ stages:
             inputs:
               command: custom
               custom: tool
-              arguments: install --tool-path . sign --version 0.9.1-beta.26371.2
+              arguments: install --tool-path . sign --version 0.9.1-beta.26475.3
 
           # Run the signing command. Authentication to Key Vault flows from the AzureCLI@2
           # service connection via DefaultAzureCredential (hence no tenant/client/secret
