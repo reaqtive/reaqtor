@@ -223,10 +223,6 @@
     <NoWarn>$(NoWarn);CA1861</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
-    <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
-  </ItemGroup>
-
   <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">
     <InternalsVisibleTo Include="Tests.$(AssemblyName)" />
   </ItemGroup>
