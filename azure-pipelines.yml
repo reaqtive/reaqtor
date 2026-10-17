@@ -88,10 +88,6 @@ stages:
         arguments: -c Release /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
       displayName: Build and Pack
 
-    - publish:  config
-      artifact: SigningScripts
-      displayName: Publish signing config
-
     - script: del $(Build.ArtifactStagingDirectory)\artifacts\*.symbols.nupkg
       displayName: Remove redundant packages from upload
 
@@ -168,30 +164,45 @@ stages:
           steps:
 
           - download: current
-            artifact: SigningScripts
-
-          - download: current
             artifact: BuildPackages
 
+          # The sign tool ships as a net8.0 tool, and this deployment job does not
+          # check out the repo, so global.json's .NET 10 pin does not apply here.
+          - task: UseDotNet@2
+            displayName: Use .NET 8.0.x SDK
+            inputs:
+              version: 8.0.x
+              performMultiLevelLookup: true
+
+          # NB: pin the version. The Microsoft tool (https://github.com/dotnet/sign)
+          # only ever ships 0.9.1-beta.*; the "Sign" 1.x versions on nuget.org are an
+          # unrelated, unlisted third-party package.
           - task: DotNetCoreCLI@2
+            displayName: Install SignTool tool
             inputs:
               command: custom
               custom: tool
-              arguments: install --tool-path . SignClient
-            displayName: Install SignTool tool
+              arguments: install --tool-path . sign --version 0.9.1-beta.26475.3
 
-          - pwsh: |
-              .\SignClient "Sign" `
-              --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
-              --input "**/*.nupkg" `
-              --config "$(Pipeline.Workspace)\SigningScripts\signclient.json" `
-              --user "$(SignClientUser)" `
-              --secret "$(SignClientSecret)" `
-              --name "Reaqtive" `
-              --description "Reaqtive" `
-              --descriptionUrl "https://github.com/reaqtive/reaqtor" `
-              --logLevel "Verbose"
+          # Run the signing command. Authentication to Key Vault flows from the AzureCLI@2
+          # service connection via DefaultAzureCredential (hence no tenant/client/secret
+          # arguments), so no critical secret is present on the agent. The tool sends only a
+          # digest to Key Vault for signing - the private key never leaves the vault.
+          - task: AzureCLI@2
             displayName: Sign packages
+            inputs:
+              azureSubscription: 'Reaqtive Sign Connection'
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                .\sign code azure-key-vault `
+                "**/*.nupkg" `
+                --base-directory "$(Pipeline.Workspace)\BuildPackages" `
+                --publisher-name "Reaqtive (.NET Foundation)" `
+                --description "Reaqtive" `
+                --description-url "https://github.com/reaqtive/reaqtor" `
+                --azure-key-vault-url "$(SignKeyVaultUrl)" `
+                --azure-key-vault-certificate "$(SignKeyVaultCertificateName)"
 
           - publish: $(Pipeline.Workspace)/BuildPackages
             displayName: Publish Signed Packages
