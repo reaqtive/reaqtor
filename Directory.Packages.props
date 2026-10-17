@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Build/versioning/source-link (referenced from Directory.Build.props) -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.9.50" />
+    <!-- Build/versioning (referenced from Directory.Build.props) -->
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.10.94" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,14 +20,14 @@
     <!-- Test stack: MSTest on Microsoft.Testing.Platform (MTP). No Microsoft.NET.Test.Sdk
          (VSTest host) and no coverlet; coverage/trx/hangdump are MTP extensions. -->
     <!-- All Microsoft.Testing.* packages must share a Microsoft.Testing.Platform major version.
-         MSTest 4.2.3 depends on MTP 2.2.3, so the extensions are pinned to the aligned 2.x line
+         MSTest 4.4.0 depends on MTP 2.4.0, so the extensions are pinned to the aligned 2.x line
          (CodeCoverage 18.x tracks MTP 2.x; a mismatch surfaces as a runtime IDataConsumer
          TypeLoadException). -->
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.2.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.4.1" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.2.3" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="2.2.3" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.4.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.4.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.4.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>

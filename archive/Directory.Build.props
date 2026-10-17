@@ -40,16 +40,15 @@
   </PropertyGroup>
 
   <!--
-    The root Directory.Build.props adds version-less Microsoft.SourceLink.GitHub and
-    Nerdbank.GitVersioning to every project, bound to the root's CENTRAL package versions. The archive
-    runs with Central Package Management OFF (archive/Directory.Packages.props), so those version-less
-    references have nothing to bind to and restore fails. The archive is never packed, shipped, or
-    versioned, so both build-time packages are dead weight here - remove them. (Removing NBGV also stops
-    it stamping assembly-version attributes that would clash with the retained legacy AssemblyInfo.cs.)
-    Both are PrivateAssets=All, so removal is invisible to any consumer.
+    The root Directory.Build.props adds a version-less Nerdbank.GitVersioning reference to every
+    project, bound to the root's CENTRAL package version. The archive runs with Central Package
+    Management OFF (archive/Directory.Packages.props), so that version-less reference has nothing to
+    bind to and restore fails. The archive is never packed, shipped, or versioned, so the build-time
+    package is dead weight here - remove it. (Removing NBGV also stops it stamping assembly-version
+    attributes that would clash with the retained legacy AssemblyInfo.cs.) It is PrivateAssets=All,
+    so removal is invisible to any consumer.
   -->
   <ItemGroup>
-    <PackageReference Remove="Microsoft.SourceLink.GitHub" />
     <PackageReference Remove="Nerdbank.GitVersioning" />
   </ItemGroup>
 

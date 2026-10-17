@@ -24,24 +24,24 @@ public class AsyncReactiveQubjectTests
     }
 
     [TestMethod]
-    public void AsyncReactiveQubject_Subscribe_ArgumentChecking()
+    public async Task AsyncReactiveQubject_Subscribe_ArgumentChecking()
     {
         var q = new MyAsyncReactiveQubject<bool, int>(null);
         var o = new MyAsyncReactiveQbserver<int>(null);
         var u = new Uri("bar://foo");
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents the signature)
-        Assert.ThrowsExactly<ArgumentNullException>(() => q.SubscribeAsync(default(IAsyncReactiveQbserver<int>), u, null).GetAwaiter().GetResult());
-        Assert.ThrowsExactly<ArgumentNullException>(() => q.SubscribeAsync(o, default(Uri), null).GetAwaiter().GetResult());
+        await Assert.ThrowsExactlyAsync<ArgumentNullException>(() => q.SubscribeAsync(default(IAsyncReactiveQbserver<int>), u, null));
+        await Assert.ThrowsExactlyAsync<ArgumentNullException>(() => q.SubscribeAsync(o, default(Uri), null));
 #pragma warning restore IDE0034 // Simplify 'default' expression
     }
 
     [TestMethod]
-    public void AsyncReactiveQubject_Subscribe_NoLocalObserverSupportYet()
+    public async Task AsyncReactiveQubject_Subscribe_NoLocalObserverSupportYet()
     {
         var q = new MyAsyncReactiveQubject<bool, int>(null);
         var o = new MyLocalAsyncObserver<int>();
-        Assert.ThrowsExactly<NotSupportedException>(() => q.SubscribeAsync(o, new Uri("bar://foo"), null).GetAwaiter().GetResult());
+        await Assert.ThrowsExactlyAsync<NotSupportedException>(() => q.SubscribeAsync(o, new Uri("bar://foo"), null));
     }
 
     [TestMethod]

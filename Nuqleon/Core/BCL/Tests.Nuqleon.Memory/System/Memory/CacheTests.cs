@@ -201,7 +201,6 @@ public partial class CacheTests
         var copy1 = Copy(str);
         var copy2 = Copy(str);
 
-        Assert.AreSame(str, str);
         Assert.AreNotSame(str, copy1);
         Assert.AreNotSame(str, copy2);
         Assert.AreNotSame(copy1, copy2);
