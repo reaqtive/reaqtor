@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Reactive\Reaqtor.Reactive.HigherOrder\Reaqtor.Reactive.HigherOrder.csproj" />
     <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
   </ItemGroup>
