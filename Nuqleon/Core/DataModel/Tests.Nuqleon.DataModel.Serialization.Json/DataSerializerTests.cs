@@ -796,7 +796,7 @@ public partial class DataSerializerTests
     /// Tests serialization of private fields.
     /// </summary>
     [TestMethod]
-    [Ignore, Description("Run this test in isolation, otherwise reflection cache will contain mapping from previous run without private serialization.")]
+    [Ignore("Run this test in isolation, otherwise reflection cache will contain mapping from previous run without private serialization.")]
     public void DataSerializer_SerializationOfPrivateFieldsWithCustomSettings()
     {
         var expected = CheckpointState.Create();
@@ -883,7 +883,7 @@ public partial class DataSerializerTests
     }
 
     [TestMethod]
-    [Ignore, Description("We have backed out this feature for the meantime.")]
+    [Ignore("We have backed out this feature for the meantime.")]
     public void DataSerializer_ExpressionMergedContextTest()
     {
         var expr = (Expression<Func<ExpressionContainer>>)(() => new ExpressionContainer { Expression = Expression.Constant("foo") });

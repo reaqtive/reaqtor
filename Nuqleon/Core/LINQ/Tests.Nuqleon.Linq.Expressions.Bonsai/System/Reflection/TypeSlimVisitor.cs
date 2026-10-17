@@ -39,7 +39,7 @@ public class TypeSlimVisitorTests : TestBase
     }
 
     [TestMethod]
-    [Ignore, Description("Ignoring until we can correctly enable reference equal results.")]
+    [Ignore("Ignoring until we can correctly enable reference equal results.")]
     public void TypeSlimVisitor_VisitStructural_Recursive_ResultIsSame()
     {
         var visitor = new TypeSlimVisitor();
@@ -52,7 +52,7 @@ public class TypeSlimVisitorTests : TestBase
     }
 
     [TestMethod]
-    [Ignore, Description("Ignoring until we can correctly enable reference equal results.")]
+    [Ignore("Ignoring until we can correctly enable reference equal results.")]
     public void TypeSlimVisitor_VisitStructural_DeepRecursive_ResultIsSame()
     {
         var visitor = new TypeSlimVisitor();

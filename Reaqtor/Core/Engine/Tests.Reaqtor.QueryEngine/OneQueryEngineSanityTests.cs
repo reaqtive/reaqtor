@@ -2432,11 +2432,11 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
         Assert.ThrowsExactly<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
 
         var l = syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList();
-        CollectionAssert.AreEquivalent(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList());
-        CollectionAssert.AreEquivalent(ctx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList());
-        CollectionAssert.AreEquivalent(ctx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList());
-        CollectionAssert.AreEquivalent(ctx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList());
-        CollectionAssert.AreEquivalent(ctx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList());
+        Assert.AreSequenceEqual(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), [.. syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key)], SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(ctx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList(), [.. syncCtx.Observers.AsEnumerable().Select(kvp => kvp.Key)], SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(ctx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList(), [.. syncCtx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key)], SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(ctx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList(), [.. syncCtx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key)], SequenceOrder.InAnyOrder);
+        Assert.AreSequenceEqual(ctx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList(), [.. syncCtx.Streams.AsEnumerable().Select(kvp => kvp.Key)], SequenceOrder.InAnyOrder);
     }
 
     private CheckpointingQueryEngine CrashAndRecreate(CheckpointingQueryEngine qe, IKeyValueStore keyValueStore)
@@ -2474,7 +2474,7 @@ public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
         };
 
         for (var i = 0; i < artifacts.Length; i++)
-            CollectionAssert.AreEquivalent(artifacts[i], recoveredArtifacts[i]);
+            Assert.AreSequenceEqual(artifacts[i], recoveredArtifacts[i], SequenceOrder.InAnyOrder);
 
         return newQe;
     }

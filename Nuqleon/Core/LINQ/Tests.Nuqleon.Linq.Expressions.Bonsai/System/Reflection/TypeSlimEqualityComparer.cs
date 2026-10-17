@@ -226,7 +226,7 @@ public class TypeSlimEqualityComparerTests : TestBase
         _ = comp.GetHashCode(null); // does not throw
     }
 
-    [Ignore] // See NB comment below; the implementation detail changed in .NET Core 3.1 and above.
+    [Ignore("The pooling implementation detail changed in .NET Core 3.1 and above; see the NB comment below.")]
     [TestMethod]
     public void TypeSlimEqualityComparator_Pooling()
     {

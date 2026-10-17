@@ -349,7 +349,7 @@ public partial class ExpressionSlimEntityTypeRecordizerTests
     }
 
     [TestMethod]
-    [Ignore, Description("TODO: enable dictionaries in DataType, EqualityChecker, etc.")]
+    [Ignore("TODO: enable dictionaries in DataType, EqualityChecker, etc.")]
     public void RecordizeSlim_WithConstantDictionaryType_Success()
     {
         var obj = new Dictionary<string, Foo2>
@@ -361,7 +361,7 @@ public partial class ExpressionSlimEntityTypeRecordizerTests
     }
 
     [TestMethod]
-    [Ignore, Description("Serialization layer does not support recursion, these tests require serialization to work.")]
+    [Ignore("Serialization layer does not support recursion, these tests require serialization to work.")]
     public void RecordizeSlim_WithConstantRecordTypeRecursiveReference_Success()
     {
         var obj = new RecursivePropertyTest();

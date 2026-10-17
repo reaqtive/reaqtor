@@ -394,7 +394,7 @@ public class ObjectSetTests
 
             set.IntersectWith([o2]);
 
-            CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+            Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
         }
 
         {
@@ -402,7 +402,7 @@ public class ObjectSetTests
 
             set.IntersectWith(new ObjectSet([o2]));
 
-            CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+            Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
         }
     }
 
@@ -417,7 +417,7 @@ public class ObjectSetTests
 
             set.IntersectWith([o1, null]);
 
-            CollectionAssert.AreEquivalent(new[] { o1, null }, set.ToList());
+            Assert.AreSequenceEqual([o1, null], set.ToList(), SequenceOrder.InAnyOrder);
         }
 
         {
@@ -425,7 +425,7 @@ public class ObjectSetTests
 
             set.IntersectWith(new ObjectSet([o1, null]));
 
-            CollectionAssert.AreEquivalent(new[] { o1, null }, set.ToList());
+            Assert.AreSequenceEqual([o1, null], set.ToList(), SequenceOrder.InAnyOrder);
         }
     }
 
@@ -440,7 +440,7 @@ public class ObjectSetTests
 
             set.IntersectWith([o2, null]);
 
-            CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+            Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
         }
 
         {
@@ -448,7 +448,7 @@ public class ObjectSetTests
 
             set.IntersectWith(new ObjectSet([o2, null]));
 
-            CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+            Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
         }
     }
 
@@ -483,7 +483,7 @@ public class ObjectSetTests
 
         set.CopyTo(arr);
 
-        CollectionAssert.AreEquivalent(set.ToList(), arr);
+        Assert.AreSequenceEqual(set.ToList(), arr, SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -504,7 +504,7 @@ public class ObjectSetTests
 
         set.CopyTo(arr, P);
 
-        CollectionAssert.AreEquivalent(set.ToList(), arr.Skip(P).Take(N).ToList());
+        Assert.AreSequenceEqual(set.ToList(), [.. arr.Skip(P).Take(N)], SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -525,7 +525,7 @@ public class ObjectSetTests
 
         set.CopyTo(arr);
 
-        CollectionAssert.AreEquivalent(set.ToList(), arr);
+        Assert.AreSequenceEqual(set.ToList(), arr, SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -948,7 +948,7 @@ public class ObjectSetTests
 
         set.ExceptWith([]);
 
-        CollectionAssert.AreEquivalent(new[] { o1, o2 }, set.ToList());
+        Assert.AreSequenceEqual([o1, o2], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -961,7 +961,7 @@ public class ObjectSetTests
 
         set.ExceptWith([o1]);
 
-        CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+        Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -987,7 +987,7 @@ public class ObjectSetTests
 
         set.ExceptWith([new object(), o1, new object()]);
 
-        CollectionAssert.AreEquivalent(new[] { o2 }, set.ToList());
+        Assert.AreSequenceEqual([o2], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -1019,7 +1019,7 @@ public class ObjectSetTests
 
             set.SymmetricExceptWith(other);
 
-            CollectionAssert.AreEquivalent(set.ToList(), other.ToList());
+            Assert.AreSequenceEqual(set.ToList(), [.. other], SequenceOrder.InAnyOrder);
         }
     }
 
@@ -1048,7 +1048,7 @@ public class ObjectSetTests
 
         set.SymmetricExceptWith(other);
 
-        CollectionAssert.AreEquivalent(new[] { o1, o3 }, set.ToList());
+        Assert.AreSequenceEqual([o1, o3], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -1063,7 +1063,7 @@ public class ObjectSetTests
 
         set.SymmetricExceptWith(other);
 
-        CollectionAssert.AreEquivalent(new[] { o1, o3 }, set.ToList());
+        Assert.AreSequenceEqual([o1, o3], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -1078,7 +1078,7 @@ public class ObjectSetTests
 
         set.SymmetricExceptWith(other);
 
-        CollectionAssert.AreEquivalent(new[] { o1, o3, null }, set.ToList());
+        Assert.AreSequenceEqual([o1, o3, null], set.ToList(), SequenceOrder.InAnyOrder);
     }
 
     [TestMethod]
@@ -1093,6 +1093,6 @@ public class ObjectSetTests
 
         set.SymmetricExceptWith(other);
 
-        CollectionAssert.AreEquivalent(new[] { o1, o3, null }, set.ToList());
+        Assert.AreSequenceEqual([o1, o3, null], set.ToList(), SequenceOrder.InAnyOrder);
     }
 }

@@ -40,10 +40,7 @@ public partial class LvalExpressionVisitorTests
 
         Assert.AreSame(e, r);
 
-        CollectionAssert.AreEqual(
-            new Expression[] { x, xs0, xs, val, sb },
-            visitor.Lvals
-        );
+        Assert.AreSequenceEqual([x, xs0, xs, val, sb], visitor.Lvals);
     }
 
     private sealed class MyVisitor : LvalExpressionVisitor

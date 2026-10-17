@@ -165,7 +165,7 @@ public class CollectionExtensionsTests
         var xs = new List<int> { 2, 3, 5 };
         Assert.AreSame(xs, xs.ToIListUnsafe());
 
-        CollectionAssert.AreEqual(xs, xs.Select(x => x).ToIListUnsafe().ToArray());
+        Assert.AreSequenceEqual(xs, [.. xs.Select(x => x).ToIListUnsafe()]);
     }
 
     [TestMethod]
@@ -174,34 +174,34 @@ public class CollectionExtensionsTests
         var xs = new List<int> { 2, 3, 5 };
         Assert.AreSame(xs, xs.ToIReadOnlyListUnsafe());
 
-        CollectionAssert.AreEqual(xs, xs.Select(x => x).ToIReadOnlyListUnsafe().ToArray());
+        Assert.AreSequenceEqual(xs, [.. xs.Select(x => x).ToIReadOnlyListUnsafe()]);
     }
 
     [TestMethod]
     public void ToReadOnlyUnsafe()
     {
-        CollectionAssert.AreEqual(Array.Empty<int>(), Enumerable.Empty<int>().ToReadOnlyUnsafe());
-        CollectionAssert.AreEqual(Array.Empty<int>(), Array.Empty<int>().ToReadOnlyUnsafe());
-        CollectionAssert.AreEqual(Array.Empty<int>(), new List<int>().ToReadOnlyUnsafe());
+        Assert.AreSequenceEqual([], Enumerable.Empty<int>().ToReadOnlyUnsafe());
+        Assert.AreSequenceEqual([], Array.Empty<int>().ToReadOnlyUnsafe());
+        Assert.AreSequenceEqual([], new List<int>().ToReadOnlyUnsafe());
 
         var xs = new List<int> { 2, 3, 5 };
-        CollectionAssert.AreEqual(xs, xs.ToReadOnlyUnsafe());
+        Assert.AreSequenceEqual(xs, xs.ToReadOnlyUnsafe());
 
         var ys = new ReadOnlyCollection<int>(xs);
         Assert.AreSame(ys, ys.ToReadOnlyUnsafe());
 
-        CollectionAssert.AreEqual(xs, xs.Select(x => x).ToReadOnlyUnsafe());
+        Assert.AreSequenceEqual(xs, xs.Select(x => x).ToReadOnlyUnsafe());
     }
 
     [TestMethod]
     public void ToArrayUnsafe()
     {
         var xs = new List<int> { 2, 3, 5 };
-        CollectionAssert.AreEqual(xs, new ReadOnlyCollection<int>(xs).ToArrayUnsafe());
+        Assert.AreSequenceEqual(xs, new ReadOnlyCollection<int>(xs).ToArrayUnsafe());
 
         var ys = new int[] { 2, 3, 5 };
-        CollectionAssert.AreEqual(ys, new ReadOnlyCollection<int>(ys).ToArrayUnsafe());
-        CollectionAssert.AreEqual(ys, ys.ToReadOnly().ToArrayUnsafe());
+        Assert.AreSequenceEqual(ys, new ReadOnlyCollection<int>(ys).ToArrayUnsafe());
+        Assert.AreSequenceEqual(ys, ys.ToReadOnly().ToArrayUnsafe());
     }
 
     private static void AssertEmpty<T>(ReadOnlyCollection<T> c)

@@ -329,7 +329,7 @@ public partial class ExpressionEntityTypeRecordizerTests
     }
 
     [TestMethod]
-    [Ignore, Description("TODO: enable dictionaries in DataType, EqualityChecker, etc.")]
+    [Ignore("TODO: enable dictionaries in DataType, EqualityChecker, etc.")]
     public void Recordize_WithConstantDictionaryType_Success()
     {
         var obj = new Dictionary<string, Foo2>

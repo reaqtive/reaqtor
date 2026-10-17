@@ -54,7 +54,7 @@ public class SymbolTableTests
 
         Assert.IsNotNull(((IEnumerable)st).GetEnumerator());
 
-        CollectionAssert.AreEqual(new[] { "bar", "baz" }, st.Symbols.ToArray());
+        Assert.AreSequenceEqual(["bar", "baz"], st.Symbols.ToArray());
     }
 
     [TestMethod]
