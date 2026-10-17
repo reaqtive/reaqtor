@@ -66,7 +66,7 @@ public class LoggingStateWriterTests
     }
 
     [TestMethod]
-    public void LoggingStateWriter_Errors()
+    public async Task LoggingStateWriter_Errors()
     {
         var sb = new StringBuilder();
 
@@ -78,7 +78,7 @@ public class LoggingStateWriterTests
             Assert.ThrowsExactly<NotImplementedException>(() => _ = writer.GetItemWriter("bar", "foo"));
             Assert.ThrowsExactly<NotImplementedException>(() => writer.DeleteItem("bar", "foo"));
             Assert.ThrowsExactly<NotImplementedException>(() => writer.Rollback());
-            Assert.ThrowsExactly<NotImplementedException>(() => writer.CommitAsync().GetAwaiter().GetResult());
+            await Assert.ThrowsExactlyAsync<NotImplementedException>(() => writer.CommitAsync());
             Assert.ThrowsExactly<NotImplementedException>(() => writer.Dispose());
 
             w.Throw = false;
